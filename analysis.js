@@ -176,7 +176,6 @@ function HigherHigh(storeData) {
 
 function patternMatching(storeData) {
 
-
     let HH = HigherHigh(storeData);
 
     if (HH !== -1) {
@@ -191,7 +190,6 @@ function patternMatching(storeData) {
             console.log("Founded LL")
             console.log(LL)
         }
-
     }
 
     // if (HH !== -1) {
