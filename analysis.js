@@ -1,5 +1,5 @@
 const Binance = require('node-binance-api');
-const { getFibRetracement, levels } = require('fib-retracement');
+const {getFibRetracement, levels} = require('fib-retracement');
 
 const binance = new Binance().options({
     APIKEY: '<key>',
@@ -10,22 +10,44 @@ const binance = new Binance().options({
 let storeData = []
 let tickCounter = 0
 
-function MaxTickHigh(storeData) {
+function MaxTickHigh(storeData, startIndex = undefined) {
 
     let idMaxTickHigh;
     let tickerFounded;
     let highArray = [];
+    let max = 0;
 
-    for (const tick of storeData) {
-        highArray.push(tick['high'])
-    }
 
-    let max = Math.max(...highArray)
+    if (startIndex !== undefined) {
 
-    for (const tick of storeData) {
-        if (tick['high'] === max) {
-            idMaxTickHigh = tick['index']
-            tickerFounded = tick;
+        for (let index = startIndex; index < storeData.length; ++index) {
+            let tick = storeData[index];
+            highArray.push(tick['low'])
+        }
+
+        // Trovo il minimo tra tutte le candele low partendo dall'indice trovato dall' HH
+        let max = Math.min(...highArray)
+
+        for (let index = startIndex; index < storeData.length; ++index) {
+            let tick = storeData[index];
+            if (tick['low'] === max) {
+                idMaxTickHigh = tick['index']
+                tickerFounded = tick;
+            }
+        }
+    } else {
+
+        for (const tick of storeData) {
+            highArray.push(tick['high'])
+        }
+
+        let max = Math.max(...highArray)
+
+        for (const tick of storeData) {
+            if (tick['high'] === max) {
+                idMaxTickHigh = tick['index']
+                tickerFounded = tick;
+            }
         }
     }
 
@@ -66,7 +88,7 @@ function MinTickLow(storeData, indexMax) {
 
 }
 
-function LowerHigh(storeData){
+function LowerHigh(storeData) {
 
 }
 
@@ -211,14 +233,30 @@ function patternMatching(storeData) {
         let LL = LowerLow(storeData, indexMin, highMin)
 
         if (LL !== -1) {
+
             console.log("TROVATO LL")
             console.log(LL)
 
+            let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
+            let lowMax = maxTickHighVariable['tick']['low']
+            let LH = HigherHigh(storeData, LL['indexLL'], lowMax)
 
-            let LH = LowerHigh(storeData, )
+            // HO TROVATO LOWER HIGH
+            if (LH !== -1) {
+                console.log("TROVATO LH")
 
+                let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
+                let highMin = minTickLowVariable['tick']['high']
+                let HL = LowerLow(storeData, LH['indexHH'], highMin)
+
+                if (HL !== -1) {
+                    return true
+                }
+            }
         }
     }
+
+    return false;
 }
 
 
@@ -256,7 +294,11 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
             'time': new Date().toString()
         });
 
-        patternMatching(storeData)
+        if (patternMatching(storeData)) {
+            console.log("PATTERN FOUND")
+        } else {
+            console.log("CERCO IL PATTERN")
+        }
         tickCounter++;
     }
 
