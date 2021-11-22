@@ -1,4 +1,5 @@
 const Binance = require('node-binance-api');
+const { getFibRetracement, levels } = require('fib-retracement');
 
 const binance = new Binance().options({
     APIKEY: '<key>',
@@ -62,6 +63,10 @@ function MinTickLow(storeData, indexMax) {
         'index': indexMin,
         'tick': tickerFounded,
     };
+
+}
+
+function LowerHigh(storeData){
 
 }
 
@@ -208,58 +213,12 @@ function patternMatching(storeData) {
         if (LL !== -1) {
             console.log("TROVATO LL")
             console.log(LL)
+
+
+            let LH = LowerHigh(storeData, )
+
         }
     }
-
-    //HigherHigh(storeData)
-    // let HH = HigherHigh(storeData);
-    //
-    // if (HH !== -1) {
-    //
-    //     console.log("Founded HH")
-    //     console.log(HH)
-    //     console.log(HH['indexHH'])
-    //
-    //     let LL = LowerLow(storeData, HH['indexHH'])
-    //
-    //     if (LL !== -1) {
-    //
-    //         console.log("Founded LL")
-    //         console.log(LL['indexLL'])
-    //         console.log(LL)
-    //     }
-    // }
-
-    // if (HH !== -1) {
-    //     console.log("TROVATO HH")
-    //     console.log(HH)
-    //     let LL = LowerLow(storeData);
-    //
-    //     if (LL !== -1) {
-    //
-    //         console.log("TROVATO LL")
-    //         console.log(LL)
-    //
-    //         let maxTickHighVariable = MaxTickHigh(storeData);
-    //         let LH = -1
-    //         if (maxTickHighVariable['max'] < HH['high']) {
-    //             LH = HigherHigh(storeData);
-    //         }
-    //
-    //         if (LH !== -1) {
-    //
-    //             let HL = -1;
-    //             let minTickLowVariable = MinTickLow(storeData);
-    //             if (minTickLowVariable['min'] > LL['low']) {
-    //                 HL = LowerLow(storeData);
-    //             }
-    //             if (HL !== -1) {
-    //                 console.log("PATTERN FOUND")
-    //                 return true
-    //             }
-    //         }
-    //     }
-    // }
 }
 
 
