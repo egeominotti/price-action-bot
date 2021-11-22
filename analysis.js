@@ -187,7 +187,6 @@ function HigherHigh(storeData, indexMax, lowMax) {
                 }
             }
         }
-
     }
 
     return -1;
@@ -280,8 +279,6 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
     // - Controlla il Ticker sempre a chiusura
     if (isFinal) {
 
-        //console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
-
         storeData.push({
             'index': tickCounter,
             'symbol': symbol,
@@ -297,7 +294,10 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
         if (patternMatching(storeData)) {
             console.log("PATTERN FOUND")
         } else {
+            console.log("----------------")
+            console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
             console.log("CERCO IL PATTERN")
+            console.log("----------------")
         }
         tickCounter++;
     }
