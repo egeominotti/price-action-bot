@@ -110,7 +110,8 @@ function LowerLow(storeData, indexMin, highMin) {
 
             return {
                 'indexMin': indexMin,
-                'indexLL': index
+                'indexLL': index,
+                'tick': tick
             };
 
         } else {
@@ -134,7 +135,8 @@ function LowerLow(storeData, indexMin, highMin) {
                         console.log("Seconda condizione confermata LL")
                         return {
                             'indexMin': indexMin,
-                            'indexLL': index
+                            'indexLL': index,
+                            'tick': tick
                         };
 
                     }
@@ -159,7 +161,8 @@ function HigherHigh(storeData, indexMax, lowMax) {
 
             return {
                 'indexMax': indexMax,
-                'indexHH': index - 1
+                'indexHH': index - 1,
+                'tick': tick
             };
 
         } else {
@@ -184,7 +187,8 @@ function HigherHigh(storeData, indexMax, lowMax) {
                         console.log("Seconda condizione confermata HH")
                         return {
                             'indexMax': indexMax,
-                            'indexHH': index - 1
+                            'indexHH': index - 1,
+                            'tick': tick
                         };
 
                     }
@@ -245,6 +249,7 @@ function patternMatching(storeData) {
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
             let lowMax = maxTickHighVariable['tick']['low']
             let LH = HigherHigh(storeData, LL['indexLL'], lowMax)
+
 
             // HO TROVATO LOWER HIGH
             if (LH !== -1) {
