@@ -204,7 +204,7 @@ function patternMatching(storeData) {
 }
 
 
-binance.websockets.candlesticks(['BNBUSDT'], "1m", (candlesticks) => {
+binance.websockets.candlesticks(['ETHBUSD'], "1m", (candlesticks) => {
 
     let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
     let {
