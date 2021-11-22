@@ -28,6 +28,8 @@ function MaxTickHigh(storeData) {
         }
     }
 
+    console.log("Massimo: " + max)
+
     return {
         'max': max,
         'index': idMaxTickHigh,
@@ -37,7 +39,7 @@ function MaxTickHigh(storeData) {
 
 function MinTickLow(storeData) {
 
-    let idMinTickHigh;
+    let index;
     let tickerFounded;
     let lowArray = [];
 
@@ -49,14 +51,14 @@ function MinTickLow(storeData) {
 
     for (const tick of storeData) {
         if (tick['low'] === min) {
-            idMinTickHigh = tick['index']
+            index = tick['index']
             tickerFounded = tick;
         }
     }
 
     return {
         'min': min,
-        'index': idMinTickHigh,
+        'index': index,
         'tick': tickerFounded,
     };
 }
@@ -77,8 +79,6 @@ function LowerLow(storeData) {
         for (let index = indexMin + 1; index < storeData.length; ++index) {
 
             let tick = storeData[index];
-            console.log(tick['low'])
-            console.log(highMin)
             if (highMin < tick['high']) {
                 return minTickLowVariable;
             } else {
@@ -113,48 +113,54 @@ function LowerLow(storeData) {
 
 function HigherHigh(storeData) {
 
-    if (storeData.length > 2) {
+    let maxTickHighVariable = MaxTickHigh(storeData);
+    let lowMax = maxTickHighVariable['tick']['low']
+    let indexMax = maxTickHighVariable['index']
 
-        let maxTickHighVariable = MaxTickHigh(storeData);
-        let lowMax = maxTickHighVariable['tick']['low']
-        let indexMax = maxTickHighVariable['index']
+    let fail = false
+    let failIndex;
 
-        let fail = false
-        let failIndex;
+    // Pattern recognition matcher ( 1 )
+    for (let index = indexMax + 1; index < storeData.length; ++index) {
 
-        // Pattern recognition matcher ( 1 )
-        for (let index = indexMax + 1; index < storeData.length; ++index) {
+        let tick = storeData[index];
+        if (lowMax > tick['low']) {
 
-            let tick = storeData[index];
-            console.log(tick['low'])
-            console.log(lowMax)
-            if (lowMax > tick['low']) {
-                return maxTickHighVariable;
-            } else {
-                fail = true
-                failIndex = index;
-                break;
-            }
+            return {
+                'indexConfirm': index,
+                'maxTickHighVariable': maxTickHighVariable
+            };
+
+        } else {
+            fail = true
+            failIndex = index;
+            break;
         }
+    }
 
-        // Pattern recognition matcher ( 2 )
-        if (fail) {
+    // Pattern recognition matcher ( 2 )
+    if (fail) {
 
-            for (let index = failIndex; index < storeData.length; ++index) {
+        for (let index = failIndex; index < storeData.length; ++index) {
 
-                if (storeData[index] !== undefined) {
-                    let tick = storeData[index];
-                    if (storeData[index + 1] !== undefined) {
-                        let nextTick = storeData[index + 1]
-                        if (tick['low'] > nextTick['low']) {
-                            console.log("Seconda condizione confermata HH")
-                            return maxTickHighVariable;
-                        }
+            if (storeData[index] !== undefined) {
+                let tick = storeData[index];
+                if (storeData[index + 1] !== undefined) {
+                    let nextTick = storeData[index + 1]
+                    if (tick['low'] > nextTick['low']) {
+
+                        console.log("Seconda condizione confermata HH")
+
+                        return {
+                            'indexConfirm': index,
+                            'maxTickHighVariable': maxTickHighVariable
+                        };
+
                     }
                 }
             }
-
         }
+
     }
 
     return -1;
@@ -163,37 +169,38 @@ function HigherHigh(storeData) {
 function patternMatching(storeData) {
 
     let HH = HigherHigh(storeData);
+    console.log(HH)
 
-    if (HH !== -1) {
-        console.log("TROVATO HH")
-        console.log(HH)
-        let LL = LowerLow(storeData);
-
-        if (LL !== -1) {
-
-            console.log("TROVATO LL")
-            console.log(LL)
-
-            let maxTickHighVariable = MaxTickHigh(storeData);
-            let LH = -1
-            if (maxTickHighVariable['max'] < HH['high']) {
-                LH = HigherHigh(storeData);
-            }
-
-            if (LH !== -1) {
-
-                let HL = -1;
-                let minTickLowVariable = MinTickLow(storeData);
-                if (minTickLowVariable['min'] > LL['low']) {
-                    HL = LowerLow(storeData);
-                }
-                if (HL !== -1) {
-                    console.log("PATTERN FOUND")
-                    return true
-                }
-            }
-        }
-    }
+    // if (HH !== -1) {
+    //     console.log("TROVATO HH")
+    //     console.log(HH)
+    //     let LL = LowerLow(storeData);
+    //
+    //     if (LL !== -1) {
+    //
+    //         console.log("TROVATO LL")
+    //         console.log(LL)
+    //
+    //         let maxTickHighVariable = MaxTickHigh(storeData);
+    //         let LH = -1
+    //         if (maxTickHighVariable['max'] < HH['high']) {
+    //             LH = HigherHigh(storeData);
+    //         }
+    //
+    //         if (LH !== -1) {
+    //
+    //             let HL = -1;
+    //             let minTickLowVariable = MinTickLow(storeData);
+    //             if (minTickLowVariable['min'] > LL['low']) {
+    //                 HL = LowerLow(storeData);
+    //             }
+    //             if (HL !== -1) {
+    //                 console.log("PATTERN FOUND")
+    //                 return true
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 
@@ -231,7 +238,7 @@ binance.websockets.candlesticks(['BNBUSDT'], "1m", (candlesticks) => {
             'time': new Date().toString()
         });
 
-        if (patternMatching(storeData)) console.log("OK")
+        patternMatching(storeData)
         tickCounter++;
     }
 
