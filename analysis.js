@@ -10,12 +10,11 @@ const binance = new Binance().options({
 let storeData = []
 let tickCounter = 0
 
-function MaxTickHigh(storeData, startIndex = undefined) {
+function MaxTickHigh(storeData, startIndex) {
 
     let idMaxTickHigh;
     let tickerFounded;
     let highArray = [];
-    let max = 0;
 
 
     if (startIndex !== undefined) {
@@ -35,6 +34,13 @@ function MaxTickHigh(storeData, startIndex = undefined) {
                 tickerFounded = tick;
             }
         }
+
+        return {
+            'max': max,
+            'index': idMaxTickHigh,
+            'tick': tickerFounded,
+        };
+
     } else {
 
         for (const tick of storeData) {
@@ -49,13 +55,15 @@ function MaxTickHigh(storeData, startIndex = undefined) {
                 tickerFounded = tick;
             }
         }
+
+        return {
+            'max': max,
+            'index': idMaxTickHigh,
+            'tick': tickerFounded,
+        };
     }
 
-    return {
-        'max': max,
-        'index': idMaxTickHigh,
-        'tick': tickerFounded,
-    };
+
 }
 
 function MinTickLow(storeData, indexMax) {
@@ -155,7 +163,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
 
             return {
                 'indexMax': indexMax,
-                'indexHH': index - 1
+                'indexHH': index
             };
 
         } else {
@@ -180,7 +188,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
                         console.log("Seconda condizione confermata HH")
                         return {
                             'indexMax': indexMax,
-                            'indexHH': index - 1
+                            'indexHH': index
                         };
 
                     }
@@ -204,6 +212,7 @@ function patternMatching(storeData) {
     let indexMax = maxTickHighVariable['index']
 
     console.log("----- MASSIMO ----------- ")
+    console.log(new Date().toString())
     console.log(indexMax)
     console.log(max)
     console.log(lowMax)
@@ -211,7 +220,7 @@ function patternMatching(storeData) {
     let HH = HigherHigh(storeData, indexMax, lowMax)
 
     if (HH !== -1) {
-
+        console.log(new Date().toString())
         console.log("TROVATO HH")
         console.log(HH)
 
@@ -234,6 +243,7 @@ function patternMatching(storeData) {
         if (LL !== -1) {
 
             console.log("TROVATO LL")
+            console.log(new Date().toString())
             console.log(LL)
 
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
@@ -243,12 +253,17 @@ function patternMatching(storeData) {
             // HO TROVATO LOWER HIGH
             if (LH !== -1) {
                 console.log("TROVATO LH")
-
+                console.log(LH)
+                console.log(new Date().toString())
                 let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
                 let highMin = minTickLowVariable['tick']['high']
                 let HL = LowerLow(storeData, LH['indexHH'], highMin)
 
                 if (HL !== -1) {
+                    console.log(new Date().toString())
+                    console.log("TROVATO HL")
+                    console.log(HL)
+
                     return true
                 }
             }
