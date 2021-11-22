@@ -163,11 +163,11 @@ function HigherHigh(storeData) {
 function patternMatching(storeData) {
 
     let HH = HigherHigh(storeData);
-    let LL = LowerLow(storeData);
 
     if (HH !== -1) {
         console.log("TROVATO HH")
         console.log(HH)
+        let LL = LowerLow(storeData);
 
         if (LL !== -1) {
 
