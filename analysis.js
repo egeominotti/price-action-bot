@@ -109,9 +109,10 @@ function LowerLow(storeData, indexMin, highMin) {
         if (highMin < tick['high']) {
 
             return {
+                'tickIndex': tick['index'],
                 'indexMin': indexMin,
                 'indexLL': index,
-                'tick': tick
+                'tick': tick,
             };
 
         } else {
@@ -134,6 +135,7 @@ function LowerLow(storeData, indexMin, highMin) {
 
                         console.log("Seconda condizione confermata LL")
                         return {
+                            'tickIndex': tick['index'],
                             'indexMin': indexMin,
                             'indexLL': index,
                             'tick': tick
@@ -160,6 +162,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
         if (lowMax > tick['low']) {
 
             return {
+                'tickIndex': tick['index'],
                 'indexMax': indexMax,
                 'indexHH': index - 1,
                 'tick': tick
@@ -186,6 +189,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
 
                         console.log("Seconda condizione confermata HH")
                         return {
+                            'tickIndex': tick['index'],
                             'indexMax': indexMax,
                             'indexHH': index - 1,
                             'tick': tick
