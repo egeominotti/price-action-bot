@@ -39,7 +39,6 @@ function MaxTickHigh(storeData) {
 
 function MinTickLow(storeData, indexMax) {
 
-    let index;
     let tickerFounded;
     let lowArray = [];
 
@@ -61,7 +60,7 @@ function MinTickLow(storeData, indexMax) {
 
     return {
         'min': min,
-        'index': index,
+        'index': indexMax,
         'tick': tickerFounded,
     };
 }
@@ -183,12 +182,14 @@ function patternMatching(storeData) {
 
         console.log("Founded HH")
         console.log(HH)
+        console.log(HH['indexHH'])
 
         let LL = LowerLow(storeData, HH['indexHH'])
 
         if (LL !== -1) {
 
             console.log("Founded LL")
+            console.log(LL['indexLL'])
             console.log(LL)
         }
     }
