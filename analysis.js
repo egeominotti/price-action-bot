@@ -96,10 +96,6 @@ function MinTickLow(storeData, indexMax) {
 
 }
 
-function LowerHigh(storeData) {
-
-}
-
 function LowerLow(storeData, indexMin, highMin) {
 
     let fail = false
@@ -163,7 +159,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
 
             return {
                 'indexMax': indexMax,
-                'indexHH': index
+                'indexHH': index - 1
             };
 
         } else {
@@ -188,7 +184,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
                         console.log("Seconda condizione confermata HH")
                         return {
                             'indexMax': indexMax,
-                            'indexHH': index
+                            'indexHH': index - 1
                         };
 
                     }
