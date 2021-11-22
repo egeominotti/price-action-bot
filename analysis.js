@@ -28,8 +28,6 @@ function MaxTickHigh(storeData) {
         }
     }
 
-    console.log("Massimo: " + max)
-
     return {
         'max': max,
         'index': idMaxTickHigh,
@@ -37,19 +35,22 @@ function MaxTickHigh(storeData) {
     };
 }
 
-function MinTickLow(storeData) {
+function MinTickLow(storeData, indexMax) {
 
     let index;
     let tickerFounded;
     let lowArray = [];
 
-    for (const tick of storeData) {
-        lowArray.push(tick['low'])
+    for (let index = indexMax; index < storeData.length; ++index) {
+        let tick = storeData[index];
+        lowArray.push((tick['low']))
     }
 
+    // Trovo il minimo tra tutte le candele low partendo dall'indice trovato dall' HH
     let min = Math.min(...lowArray)
 
-    for (const tick of storeData) {
+    for (let index = indexMax; index < storeData.length; ++index) {
+        let tick = storeData[index];
         if (tick['low'] === min) {
             index = tick['index']
             tickerFounded = tick;
@@ -63,49 +64,54 @@ function MinTickLow(storeData) {
     };
 }
 
-function LowerLow(storeData) {
+function LowerLow(storeData, indexHH) {
 
-    if (storeData.length > 2) {
+    let minTickLowVariable = MinTickLow(storeData, indexHH);
+    let highMin = minTickLowVariable['tick']['high']
+    //let indexMin = minTickLowVariable['index']
 
-        let minTickLowVariable = MinTickLow(storeData);
-        let highMin = minTickLowVariable['tick']['high']
-        let indexMin = minTickLowVariable['index']
+    let fail = false
+    let failIndex;
 
-        let fail = false
-        let failIndex;
+    // Pattern recognition matcher ( 1 )
 
-        // Pattern recognition matcher ( 1 )
+    for (let index = indexHH; index < storeData.length; ++index) {
 
-        for (let index = indexMin + 1; index < storeData.length; ++index) {
+        let tick = storeData[index];
+        if (highMin < tick['high']) {
 
-            let tick = storeData[index];
-            if (highMin < tick['high']) {
-                return minTickLowVariable;
-            } else {
-                fail = true
-                failIndex = index;
-                break;
-            }
+            return {
+                'indexLL': index,
+                'minTickHighVariable': minTickLowVariable
+            };
+
+        } else {
+            fail = true
+            failIndex = index;
+            break;
         }
+    }
 
-        // Pattern recognition matcher ( 2 )
-        if (fail) {
+    // Pattern recognition matcher ( 2 )
+    if (fail) {
 
-            for (let index = failIndex; index < storeData.length; ++index) {
+        for (let index = failIndex; index < storeData.length; ++index) {
 
-                if (storeData[index] !== undefined) {
-                    let tick = storeData[index];
-                    if (storeData[index + 1] !== undefined) {
-                        let nextTick = storeData[index + 1]
-                        if (tick['high'] < nextTick['high']) {
-                            console.log("Seconda condizione confermata LL")
-                            return minTickLowVariable;
-                        }
+            if (storeData[index] !== undefined) {
+                let tick = storeData[index];
+                if (storeData[index + 1] !== undefined) {
+                    let nextTick = storeData[index + 1]
+                    if (tick['high'] < nextTick['high']) {
+                        console.log("Seconda condizione confermata LL")
+                        return {
+                            'indexLL': index,
+                            'minTickHighVariable': minTickLowVariable
+                        };
                     }
                 }
             }
-
         }
+
     }
 
     return -1;
@@ -127,7 +133,7 @@ function HigherHigh(storeData) {
         if (lowMax > tick['low']) {
 
             return {
-                'indexConfirm': index,
+                'indexHH': index,
                 'maxTickHighVariable': maxTickHighVariable
             };
 
@@ -152,7 +158,7 @@ function HigherHigh(storeData) {
                         console.log("Seconda condizione confermata HH")
 
                         return {
-                            'indexConfirm': index,
+                            'indexHH': index,
                             'maxTickHighVariable': maxTickHighVariable
                         };
 
@@ -168,8 +174,20 @@ function HigherHigh(storeData) {
 
 function patternMatching(storeData) {
 
-    let HH = HigherHigh(storeData);
-    console.log(HH)
+    if (storeData.length > 2) {
+        let HH = HigherHigh(storeData);
+        if (HH !== -1) {
+            console.log("Found HH")
+            console.log(HH)
+            let LL = LowerLow(storeData, HH['indexHH'])
+            if (LL !== -1) {
+                console.log("FOUND LL")
+                let LH = 0
+                console.log(LL['indexLL'])
+            }
+            console.log(LL)
+        }
+    }
 
     // if (HH !== -1) {
     //     console.log("TROVATO HH")
@@ -224,7 +242,7 @@ binance.websockets.candlesticks(['ETHBUSD'], "1m", (candlesticks) => {
     // - Controlla il Ticker sempre a chiusura
     if (isFinal) {
 
-        console.log("SCANNING for pattern.... " + symbol)
+        console.log("SCANNING for found HH | LL | HL | LH | .... " + symbol)
 
         storeData.push({
             'index': tickCounter,
