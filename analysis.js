@@ -28,6 +28,8 @@ function MaxTickHigh(storeData) {
         }
     }
 
+    console.log("Founded Max Tick Value: " + max)
+
     return {
         'max': max,
         'index': idMaxTickHigh,
@@ -111,7 +113,6 @@ function LowerLow(storeData, indexHH) {
                 }
             }
         }
-
     }
 
     return -1;
@@ -134,7 +135,7 @@ function HigherHigh(storeData) {
 
             return {
                 'indexHH': index,
-                'maxTickHighVariable': maxTickHighVariable
+                'maxTickHighVariable': maxTickHighVariable,
             };
 
         } else {
@@ -145,6 +146,7 @@ function HigherHigh(storeData) {
     }
 
     // Pattern recognition matcher ( 2 )
+
     if (fail) {
 
         for (let index = failIndex; index < storeData.length; ++index) {
@@ -174,19 +176,22 @@ function HigherHigh(storeData) {
 
 function patternMatching(storeData) {
 
-    if (storeData.length > 2) {
-        let HH = HigherHigh(storeData);
-        if (HH !== -1) {
-            console.log("Found HH")
-            console.log(HH)
-            let LL = LowerLow(storeData, HH['indexHH'])
-            if (LL !== -1) {
-                console.log("FOUND LL")
-                let LH = 0
-                console.log(LL['indexLL'])
-            }
+
+    let HH = HigherHigh(storeData);
+
+    if (HH !== -1) {
+
+        console.log("Founded HH")
+        console.log(HH)
+
+        let LL = LowerLow(storeData, HH['indexHH'])
+
+        if (LL !== -1) {
+
+            console.log("Founded LL")
             console.log(LL)
         }
+
     }
 
     // if (HH !== -1) {
