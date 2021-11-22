@@ -104,11 +104,13 @@ function LowerLow(storeData, indexHH) {
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
                     if (tick['high'] < nextTick['high']) {
+
                         console.log("Seconda condizione confermata LL")
                         return {
                             'indexLL': index,
                             'minTickHighVariable': minTickLowVariable
                         };
+
                     }
                 }
             }
@@ -158,7 +160,6 @@ function HigherHigh(storeData) {
                     if (tick['low'] > nextTick['low']) {
 
                         console.log("Seconda condizione confermata HH")
-
                         return {
                             'indexHH': index,
                             'maxTickHighVariable': maxTickHighVariable
@@ -225,7 +226,7 @@ function patternMatching(storeData) {
 }
 
 
-binance.websockets.candlesticks(['ETHBUSD'], "1m", (candlesticks) => {
+binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
 
     let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
     let {
@@ -245,7 +246,7 @@ binance.websockets.candlesticks(['ETHBUSD'], "1m", (candlesticks) => {
     // - Controlla il Ticker sempre a chiusura
     if (isFinal) {
 
-        console.log("SCANNING for found HH | LL | HL | LH | .... " + symbol)
+        console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
 
         storeData.push({
             'index': tickCounter,
