@@ -248,9 +248,11 @@ function patternMatching(storeData) {
 
             // HO TROVATO LOWER HIGH
             if (LH !== -1) {
+
                 console.log("TROVATO LH")
                 console.log(LH)
                 console.log(new Date().toString())
+
                 let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
                 let highMin = minTickLowVariable['tick']['high']
                 let HL = LowerLow(storeData, LH['indexHH'], highMin)
