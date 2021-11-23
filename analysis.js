@@ -1,11 +1,8 @@
 const Binance = require('node-binance-api');
 const {getFibRetracement, levels} = require('fib-retracement');
-const TelegramBot = require('node-telegram-bot-api');
-
-const token = 'YOUR_TELEGRAM_BOT_TOKEN';
-
-// Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, {polling: true});
+const axios = require('axios');
+const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
+const bot_chat_id = '-558016221'
 
 const binance = new Binance().options({
     APIKEY: '<key>',
@@ -22,6 +19,24 @@ let tickCounter = 0
 let fibonacciPointMax = 0
 let fibonacciPointMin = 0
 let fib = 0
+
+function sendMessageTelegram(text) {
+    const send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chat_id + '&parse_mode=Markdown&text=' + text
+
+    axios.get(send_text)
+        .then(function (response) {
+            // handle success
+            console.log(response);
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
+
+}
 
 function MaxTickHigh(storeData, startIndex) {
 
@@ -324,7 +339,6 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
     // - Controlla il Ticker sempre a chiusura
     if (isFinal) {
 
-
         storeData.push({
             'index': tickCounter,
             'symbol': symbol,
@@ -350,20 +364,6 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
         } else {
 
             console.log(fib)
-
-            // Matches "/echo [whatever]"
-            bot.onText(/\/echo (.+)/, (msg, match) => {
-              // 'msg' is the received Message from Telegram
-              // 'match' is the result of executing the regexp above on the text content
-              // of the message
-
-              const chatId = msg.chat.id;
-              const resp = match[1]; // the captured "whatever"
-
-              // send back the matched "whatever" to the chat
-              bot.sendMessage(chatId, resp);
-            });
-
             /*
             JSON body
             {
