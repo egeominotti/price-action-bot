@@ -321,26 +321,40 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
             'time': new Date().toString()
         });
 
-        if (patternMatching(storeData)) {
-            ispatternMatching = true;
-            console.log("PATTERN FOUND")
+        if (ispatternMatching === false) {
+            if (patternMatching(storeData)) {
+                ispatternMatching = true;
+                console.log("PATTERN FOUND")
+            } else {
+                console.log("----------------")
+                console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
+                console.log("CERCO IL PATTERN")
+                console.log("----------------")
+            }
         } else {
-            console.log("----------------")
-            console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
-            console.log("CERCO IL PATTERN")
-            console.log("----------------")
-        }
 
-        if (ispatternMatching) {
+            /*
+            JSON body
+            {
+                "action": "{{strategy.order.action}}",
+                "exchange": "{{exchange}}",
+                "ticker": "{{ticker}}",
+                "asset": "BUSD" / or "USDT"
+            }
+             */
+
             if (parseFloat(close) > entryPrice * 1.015) {
                 console.log("HO COMPRATO")
                 ispatternMatching = false;
+                //CHiamo api spot trading view
             }
             if (parseFloat(close) < stopLoss) {
                 console.log("HO PERSO")
                 ispatternMatching = false;
+                //CHiamo api spot trading view
             }
         }
+
 
         tickCounter++;
     }
