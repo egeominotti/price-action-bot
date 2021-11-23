@@ -1,5 +1,11 @@
 const Binance = require('node-binance-api');
 const {getFibRetracement, levels} = require('fib-retracement');
+const TelegramBot = require('node-telegram-bot-api');
+
+const token = 'YOUR_TELEGRAM_BOT_TOKEN';
+
+// Create a bot that uses 'polling' to fetch new updates
+const bot = new TelegramBot(token, {polling: true});
 
 const binance = new Binance().options({
     APIKEY: '<key>',
@@ -344,6 +350,20 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
         } else {
 
             console.log(fib)
+
+            // Matches "/echo [whatever]"
+            bot.onText(/\/echo (.+)/, (msg, match) => {
+              // 'msg' is the received Message from Telegram
+              // 'match' is the result of executing the regexp above on the text content
+              // of the message
+
+              const chatId = msg.chat.id;
+              const resp = match[1]; // the captured "whatever"
+
+              // send back the matched "whatever" to the chat
+              bot.sendMessage(chatId, resp);
+            });
+
             /*
             JSON body
             {
