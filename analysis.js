@@ -96,7 +96,7 @@ function MinTickLow(storeData, indexMax) {
 
 }
 
-function LowerLow(storeData, indexMin, highMin) {
+function LowerLow(storeData, indexMin, highMin, min) {
 
     let fail = false
     let failIndex;
@@ -106,7 +106,7 @@ function LowerLow(storeData, indexMin, highMin) {
     for (let index = indexMin + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (highMin < tick['high']) {
+        if (highMin < tick['high'] && tick['high'] > min) {
 
             return {
                 'tickIndex': tick['index'],
@@ -131,7 +131,7 @@ function LowerLow(storeData, indexMin, highMin) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (tick['high'] < nextTick['high']) {
+                    if (tick['high'] < nextTick['high'] && nextTick['high'] > min) {
 
                         console.log("Seconda condizione confermata LL")
 
@@ -151,7 +151,7 @@ function LowerLow(storeData, indexMin, highMin) {
     return -1;
 }
 
-function HigherHigh(storeData, indexMax, lowMax) {
+function HigherHigh(storeData, indexMax, lowMax, max) {
 
     let fail = false
     let failIndex;
@@ -160,7 +160,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
     for (let index = indexMax + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (lowMax > tick['low']) {
+        if (lowMax > tick['low'] && tick['low'] < max) {
 
             return {
                 'tickIndex': tick['index'],
@@ -186,7 +186,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (tick['low'] > nextTick['low']) {
+                    if (tick['low'] > nextTick['low'] && nextTick['low'] < max) {
 
                         console.log("Seconda condizione confermata HH")
                         return {
@@ -222,20 +222,16 @@ function patternMatching(storeData) {
     console.log(max)
     console.log(lowMax)
 
-    let HH = HigherHigh(storeData, indexMax, lowMax)
+    let HH = HigherHigh(storeData, indexMax, lowMax, max)
 
     if (HH !== -1) {
         console.log(new Date().toString())
         console.log("TROVATO HH")
         console.log(HH)
 
-        // Calcola il minimo (il valore low piu' basso di tutti tra le candele arrivate da binance)
         let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
-        // Valore del minimo trovato tra tutte le candele arrivate da binance ( low )
         let min = minTickLowVariable['min']
-        // High del valore minimo trovato
         let highMin = minTickLowVariable['tick']['high']
-        // Indice della candela del minimo
         let indexMin = minTickLowVariable['index']
 
         console.log("----- MINIMO ----------- ")
@@ -243,7 +239,7 @@ function patternMatching(storeData) {
         console.log(min)
         console.log(highMin)
 
-        let LL = LowerLow(storeData, indexMin, highMin)
+        let LL = LowerLow(storeData, indexMin, highMin, min)
 
         if (LL !== -1) {
 
@@ -253,8 +249,7 @@ function patternMatching(storeData) {
 
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
             let lowMax = maxTickHighVariable['tick']['low']
-            let LH = HigherHigh(storeData, LL['indexLL'], lowMax)
-
+            let LH = HigherHigh(storeData, LL['indexLL'], lowMax, max)
 
             // HO TROVATO LOWER HIGH
             if (LH !== -1) {
@@ -264,8 +259,9 @@ function patternMatching(storeData) {
                 console.log(new Date().toString())
 
                 let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
+                let min = minTickLowVariable['min']
                 let highMin = minTickLowVariable['tick']['high']
-                let HL = LowerLow(storeData, LH['indexHH'], highMin)
+                let HL = LowerLow(storeData, LH['indexHH'], highMin, min)
 
                 if (HL !== -1) {
                     console.log(new Date().toString())
