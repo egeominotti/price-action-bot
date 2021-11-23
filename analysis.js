@@ -9,6 +9,17 @@ const binance = new Binance().options({
     APISECRET: '<secret>'
 });
 
+let coins = [
+    'ENJUSDT',
+    'SANDUSDT',
+    'MANAUSDT',
+    'ATLASUSDT',
+    'BLOKUSDT',
+    'AXSUSDT',
+    'ALICEUSDT',
+    'DARUSDT',
+    'MBOXUSDT',
+    'TLMUSDT']
 
 let storeData = []
 let entryPrice = 0
@@ -314,8 +325,69 @@ function patternMatching(storeData) {
     return false;
 }
 
+function start(symbol, low, high, close, open, volume, interval) {
 
-binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
+    storeData.push({
+        'index': tickCounter,
+        'symbol': symbol,
+        'open': parseFloat(open),
+        'close': parseFloat(close),
+        'low': parseFloat(low),
+        'high': parseFloat(high),
+        'volume': volume,
+        'interval': interval,
+        'time': new Date().toString()
+    });
+
+    if (ispatternMatching === false) {
+        if (patternMatching(storeData)) {
+            ispatternMatching = true;
+            tickCounter = 0;
+            storeData = [];
+            sendMessageTelegram("PATTERN TROVATO: " + symbol + " " + new Date().toString())
+            console.log(fib)
+            console.log("PATTERN FOUND")
+        } else {
+            console.log("----------------")
+            console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
+            console.log("CERCO IL PATTERN")
+            console.log("----------------")
+        }
+    } else {
+
+        /*
+        JSON body
+        {
+            "action": "{{strategy.order.action}}",
+            "exchange": "{{exchange}}",
+            "ticker": "{{ticker}}",
+            "asset": "BUSD" / or "USDT"
+        }
+         */
+
+        if (buy === false) {
+
+            if (parseFloat(close) > entryPrice) {
+                console.log("HO COMPRATO")
+                ispatternMatching = false;
+                buy = true
+                sendMessageTelegram("Ho comprato: " + symbol + " " + new Date().toString())
+                //CHiamo api spot trading view
+            }
+        } else {
+
+            if (parseFloat(close) < stopLoss) {
+                console.log("HO PERSO")
+                ispatternMatching = false;
+                //CHiamo api spot trading view
+            }
+        }
+    }
+
+    tickCounter++;
+}
+
+binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
 
     let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
     let {
@@ -334,65 +406,8 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
 
     // - Controlla il Ticker sempre a chiusura
     if (isFinal) {
-
-        storeData.push({
-            'index': tickCounter,
-            'symbol': symbol,
-            'open': parseFloat(open),
-            'close': parseFloat(close),
-            'low': parseFloat(low),
-            'high': parseFloat(high),
-            'volume': volume,
-            'interval': interval,
-            'time': new Date().toString()
-        });
-
-        if (ispatternMatching === false) {
-            if (patternMatching(storeData)) {
-                ispatternMatching = true;
-                tickCounter = 0;
-                storeData = [];
-                sendMessageTelegram("PATTERN TROVATO: " + symbol + " " +  new Date().toString())
-                console.log(fib)
-                console.log("PATTERN FOUND")
-            } else {
-                console.log("----------------")
-                console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
-                console.log("CERCO IL PATTERN")
-                console.log("----------------")
-            }
-        } else {
-
-            /*
-            JSON body
-            {
-                "action": "{{strategy.order.action}}",
-                "exchange": "{{exchange}}",
-                "ticker": "{{ticker}}",
-                "asset": "BUSD" / or "USDT"
-            }
-             */
-
-            if (buy === false) {
-
-                if (parseFloat(close) > entryPrice) {
-                    console.log("HO COMPRATO")
-                    ispatternMatching = false;
-                    buy = true
-                    sendMessageTelegram("Ho comprato: " + symbol + " " +  new Date().toString())
-                    //CHiamo api spot trading view
-                }
-            } else {
-
-                if (parseFloat(close) < stopLoss) {
-                    console.log("HO PERSO")
-                    ispatternMatching = false;
-                    //CHiamo api spot trading view
-                }
-            }
-        }
-
-        tickCounter++;
+        console.log(symbol)
+        //start(symbol, low, high, close, open, volume, interval)
     }
 
 });
