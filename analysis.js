@@ -103,7 +103,7 @@ function LowerLow(storeData, indexMin, highMin) {
 
     // Pattern recognition matcher ( 1 )
 
-    for (let index = indexMin + 1; index < storeData.length; ++index) {
+    for (let index = indexMin; index < storeData.length; ++index) {
 
         let tick = storeData[index];
         if (highMin < tick['high']) {
@@ -134,6 +134,7 @@ function LowerLow(storeData, indexMin, highMin) {
                     if (tick['high'] < nextTick['high']) {
 
                         console.log("Seconda condizione confermata LL")
+
                         return {
                             'tickIndex': tick['index'],
                             'indexMin': indexMin,
@@ -156,7 +157,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
     let failIndex;
 
     // Pattern recognition matcher ( 1 )
-    for (let index = indexMax + 1; index < storeData.length; ++index) {
+    for (let index = indexMax; index < storeData.length; ++index) {
 
         let tick = storeData[index];
         if (lowMax > tick['low']) {
