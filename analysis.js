@@ -1,4 +1,5 @@
 const Binance = require('node-binance-api');
+const {getFibRetracement, levels} = require('fib-retracement');
 
 const binance = new Binance().options({
     APIKEY: '<key>',
@@ -10,7 +11,10 @@ let storeData = []
 let entryPrice = 0
 let stopLoss = 0
 let ispatternMatching = false
+let buy = false
 let tickCounter = 0
+let fibonacciPointMax = 0
+let fibonacciPointMin = 0
 
 function MaxTickHigh(storeData, startIndex) {
 
@@ -228,6 +232,8 @@ function patternMatching(storeData) {
 
     if (HH !== -1) {
 
+        fibonacciPointMax = HH['tick']['high'];
+
         console.log(new Date().toString())
         console.log("TROVATO HH")
         console.log(HH)
@@ -250,6 +256,7 @@ function patternMatching(storeData) {
             console.log(new Date().toString())
             console.log(LL)
 
+            fibonacciPointMin = LL['tick']['low']
 
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
             let lowMax = maxTickHighVariable['tick']['low']
@@ -308,6 +315,7 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
     // - Controlla il Ticker sempre a chiusura
     if (isFinal) {
 
+
         storeData.push({
             'index': tickCounter,
             'symbol': symbol,
@@ -332,6 +340,9 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
             }
         } else {
 
+            const fib = getFibRetracement({levels: {0: fibonacciPointMax, fibonacciPointMin: 0}});
+            console.log(fib)
+
             /*
             JSON body
             {
@@ -342,15 +353,22 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
             }
              */
 
-            if (parseFloat(close) > entryPrice * 1.015) {
-                console.log("HO COMPRATO")
-                ispatternMatching = false;
-                //CHiamo api spot trading view
-            }
-            if (parseFloat(close) < stopLoss) {
-                console.log("HO PERSO")
-                ispatternMatching = false;
-                //CHiamo api spot trading view
+            if (buy === false) {
+
+                if (parseFloat(close) > entryPrice * 1.015) {
+                    console.log("HO COMPRATO")
+                    ispatternMatching = false;
+                    buy = true
+
+                    //CHiamo api spot trading view
+                }
+            } else {
+
+                if (parseFloat(close) < stopLoss) {
+                    console.log("HO PERSO")
+                    ispatternMatching = false;
+                    //CHiamo api spot trading view
+                }
             }
         }
 
