@@ -15,6 +15,7 @@ let buy = false
 let tickCounter = 0
 let fibonacciPointMax = 0
 let fibonacciPointMin = 0
+let fib = 0
 
 function MaxTickHigh(storeData, startIndex) {
 
@@ -262,6 +263,8 @@ function patternMatching(storeData) {
             let lowMax = maxTickHighVariable['tick']['low']
             let LH = HigherHigh(storeData, LL['indexLL'], lowMax, max)
 
+            fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
+            console.log(fib)
 
             // HO TROVATO LOWER HIGH
             if (LH !== -1) {
@@ -340,9 +343,7 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
             }
         } else {
 
-            const fib = getFibRetracement({levels: {0: fibonacciPointMax, fibonacciPointMin: 0}});
             console.log(fib)
-
             /*
             JSON body
             {
