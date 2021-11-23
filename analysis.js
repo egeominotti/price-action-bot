@@ -8,6 +8,7 @@ const binance = new Binance().options({
 
 
 let storeData = []
+let targetPrice = 0
 let tickCounter = 0
 
 function MaxTickHigh(storeData, startIndex) {
@@ -106,7 +107,7 @@ function LowerLow(storeData, indexMin, highMin, min) {
     for (let index = indexMin + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (highMin < tick['high'] && tick['high'] > min) {
+        if (highMin < tick['high']) {
 
             return {
                 'tickIndex': tick['index'],
@@ -131,7 +132,7 @@ function LowerLow(storeData, indexMin, highMin, min) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (tick['high'] < nextTick['high'] && nextTick['high'] > min) {
+                    if (tick['high'] < nextTick['high']) {
 
                         console.log("Seconda condizione confermata LL")
 
@@ -160,7 +161,7 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
     for (let index = indexMax + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (lowMax > tick['low'] && tick['low'] < max) {
+        if (lowMax > tick['low']) {
 
             return {
                 'tickIndex': tick['index'],
@@ -186,7 +187,7 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (tick['low'] > nextTick['low'] && nextTick['low'] < max) {
+                    if (tick['low'] > nextTick['low']) {
 
                         console.log("Seconda condizione confermata HH")
                         return {
