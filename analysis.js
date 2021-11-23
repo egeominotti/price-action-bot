@@ -21,19 +21,17 @@ let fibonacciPointMin = 0
 let fib = 0
 
 function sendMessageTelegram(text) {
+
     const send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chat_id + '&parse_mode=Markdown&text=' + text
 
     axios.get(send_text)
         .then(function (response) {
-            // handle success
             console.log(response);
         })
         .catch(function (error) {
-            // handle error
             console.log(error);
         })
         .then(function () {
-            // always executed
         });
 
 }
@@ -363,7 +361,9 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
             }
         } else {
 
+            sendMessageTelegram("PATTERN TROVATO: " + symbol)
             console.log(fib)
+
             /*
             JSON body
             {
