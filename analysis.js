@@ -8,7 +8,8 @@ const binance = new Binance().options({
 
 
 let storeData = []
-let targetPrice = 0
+let entryPrice = 0
+let ispatternMatching = false
 let tickCounter = 0
 
 function MaxTickHigh(storeData, startIndex) {
@@ -226,6 +227,7 @@ function patternMatching(storeData) {
     let HH = HigherHigh(storeData, indexMax, lowMax, max)
 
     if (HH !== -1) {
+
         console.log(new Date().toString())
         console.log("TROVATO HH")
         console.log(HH)
@@ -251,6 +253,8 @@ function patternMatching(storeData) {
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
             let lowMax = maxTickHighVariable['tick']['low']
             let LH = HigherHigh(storeData, LL['indexLL'], lowMax, max)
+
+            entryPrice = LH['tick']['high'];
 
             // HO TROVATO LOWER HIGH
             if (LH !== -1) {
@@ -312,6 +316,7 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
         });
 
         if (patternMatching(storeData)) {
+            ispatternMatching = true;
             console.log("PATTERN FOUND")
         } else {
             console.log("----------------")
@@ -319,6 +324,14 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
             console.log("CERCO IL PATTERN")
             console.log("----------------")
         }
+
+        if (ispatternMatching) {
+            if (parseFloat(close) > entryPrice * 1.015) {
+                console.log("HO COMPRATO")
+                ispatternMatching = false;
+            }
+        }
+
         tickCounter++;
     }
 
