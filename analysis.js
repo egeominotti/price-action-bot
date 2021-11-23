@@ -1,5 +1,4 @@
 const Binance = require('node-binance-api');
-const {getFibRetracement, levels} = require('fib-retracement');
 
 const binance = new Binance().options({
     APIKEY: '<key>',
