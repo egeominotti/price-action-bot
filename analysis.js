@@ -26,10 +26,8 @@ function sendMessageTelegram(text) {
 
     axios.get(send_text)
         .then(function (response) {
-            console.log(response);
         })
         .catch(function (error) {
-            console.log(error);
         })
         .then(function () {
         });
