@@ -379,6 +379,7 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
                     console.log("HO COMPRATO")
                     ispatternMatching = false;
                     buy = true
+                    sendMessageTelegram("Ho comprato: " + symbol + " " +  new Date().toString())
                     //CHiamo api spot trading view
                 }
             } else {
