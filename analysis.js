@@ -9,6 +9,7 @@ const binance = new Binance().options({
 
 let storeData = []
 let entryPrice = 0
+let stopLoss = 0
 let ispatternMatching = false
 let tickCounter = 0
 
@@ -250,11 +251,11 @@ function patternMatching(storeData) {
             console.log(new Date().toString())
             console.log(LL)
 
+
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
             let lowMax = maxTickHighVariable['tick']['low']
             let LH = HigherHigh(storeData, LL['indexLL'], lowMax, max)
 
-            entryPrice = LH['tick']['high'];
 
             // HO TROVATO LOWER HIGH
             if (LH !== -1) {
@@ -263,12 +264,17 @@ function patternMatching(storeData) {
                 console.log(LH)
                 console.log(new Date().toString())
 
+                entryPrice = LH['tick']['high'];
+
                 let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
                 let min = minTickLowVariable['min']
                 let highMin = minTickLowVariable['tick']['high']
                 let HL = LowerLow(storeData, LH['indexHH'], highMin, min)
 
                 if (HL !== -1) {
+
+                    stopLoss = HL['tick']['low']
+
                     console.log(new Date().toString())
                     console.log("TROVATO HL")
                     console.log(HL)
@@ -328,6 +334,10 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
         if (ispatternMatching) {
             if (parseFloat(close) > entryPrice * 1.015) {
                 console.log("HO COMPRATO")
+                ispatternMatching = false;
+            }
+            if (parseFloat(close) < stopLoss) {
+                console.log("HO PERSO")
                 ispatternMatching = false;
             }
         }
