@@ -125,7 +125,7 @@ function LowerLow(storeData, indexMin, highMin) {
     // Pattern recognition matcher ( 2 )
     if (fail) {
 
-        for (let index = failIndex; index < storeData.length; ++index) {
+        for (let index = failIndex; index <= storeData.length; ++index) {
 
             if (storeData[index] !== undefined) {
                 let tick = storeData[index];
@@ -179,7 +179,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
 
     if (fail) {
 
-        for (let index = failIndex; index < storeData.length; ++index) {
+        for (let index = failIndex; index <= storeData.length; ++index) {
 
             if (storeData[index] !== undefined) {
                 let tick = storeData[index];
