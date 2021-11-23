@@ -352,6 +352,8 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
         if (ispatternMatching === false) {
             if (patternMatching(storeData)) {
                 ispatternMatching = true;
+                sendMessageTelegram("PATTERN TROVATO: " + symbol)
+                console.log(fib)
                 console.log("PATTERN FOUND")
             } else {
                 console.log("----------------")
@@ -360,9 +362,6 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
                 console.log("----------------")
             }
         } else {
-
-            sendMessageTelegram("PATTERN TROVATO: " + symbol)
-            console.log(fib)
 
             /*
             JSON body
@@ -391,7 +390,6 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
                 }
             }
         }
-
 
         tickCounter++;
     }
