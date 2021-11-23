@@ -356,11 +356,10 @@ binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
 
             if (buy === false) {
 
-                if (parseFloat(close) > entryPrice * 1.015) {
+                if (parseFloat(close) > entryPrice) {
                     console.log("HO COMPRATO")
                     ispatternMatching = false;
                     buy = true
-
                     //CHiamo api spot trading view
                 }
             } else {
