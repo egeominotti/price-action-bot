@@ -111,7 +111,7 @@ function LowerLow(storeData, indexMin, highMin) {
             return {
                 'tickIndex': tick['index'],
                 'indexMin': indexMin,
-                'indexLL': index,
+                'indexLL': tick['index'],
                 'tick': tick,
             };
 
@@ -137,7 +137,7 @@ function LowerLow(storeData, indexMin, highMin) {
                         return {
                             'tickIndex': tick['index'],
                             'indexMin': indexMin,
-                            'indexLL': index,
+                            'indexLL': tick['index'],
                             'tick': tick
                         };
 
@@ -164,7 +164,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
             return {
                 'tickIndex': tick['index'],
                 'indexMax': indexMax,
-                'indexHH': index - 1,
+                'indexHH': tick['index'],
                 'tick': tick
             };
 
@@ -191,7 +191,7 @@ function HigherHigh(storeData, indexMax, lowMax) {
                         return {
                             'tickIndex': tick['index'],
                             'indexMax': indexMax,
-                            'indexHH': index - 1,
+                            'indexHH': tick['index'],
                             'tick': tick
                         };
 
