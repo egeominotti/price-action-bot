@@ -1,8 +1,8 @@
 # https://hub.docker.com/r/mhart/alpine-node
-FROM node:lts-alpine
-WORKDIR /app
-COPY ./package.json ./
+FROM node:lts
+WORKDIR /usr/src/app
+COPY package*.json ./
 RUN npm install
-COPY ./ ./
-RUN chmod +x  ./entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]
+COPY . /usr/src/app
+CMD [ "node", "Manager.js" ]
+
