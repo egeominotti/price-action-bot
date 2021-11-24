@@ -8,12 +8,7 @@ client.on("error", function (error) {
     console.error(error);
 });
 
-client.flushall((err, success) => {
-  if (err) {
-    throw new Error(err);
-  }
-  console.log(success); // will be true if successfull
-});
+
 
 const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
 const bot_chat_id = '-558016221'
