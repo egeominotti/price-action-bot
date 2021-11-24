@@ -28,9 +28,6 @@ const coins = [
 
 let entryPrice = 0
 let stopLoss = 0
-let ispatternMatching = false
-let buy = false
-let tickCounter = 0
 let fibonacciPointMax = 0
 let fibonacciPointMin = 0
 let fib = 0
@@ -335,54 +332,25 @@ function start() {
 
         client.zrangebyscore(token, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
 
-            let data = []
-            for(const k of results){
+            let ispatternMatching = false;
+            let data = [];
+
+            for (const k of results) {
                 data.push(JSON.parse(k))
             }
-            patternMatching(data)
 
-                // if (ispatternMatching === false) {
-                //     if (patternMatching(storeData)) {
-                //         ispatternMatching = true;
-                //         storeData = [];
-                //         sendMessageTelegram("PATTERN TROVATO: " + token + " " + new Date().toString())
-                //         console.log(fib)
-                //         console.log("PATTERN FOUND")
-                //     } else {
-                //         console.log("----------------")
-                //         console.log("SCANNING for found HH | LL | LH | HL | .... " + token)
-                //         console.log("CERCO IL PATTERN")
-                //         console.log("----------------")
-                //     }
-                // } else {
-
-                /*
-                JSON body
-                {
-                    "action": "{{strategy.order.action}}",
-                    "exchange": "{{exchange}}",
-                    "ticker": "{{ticker}}",
-                    "asset": "BUSD" / or "USDT"
+            if (ispatternMatching === false) {
+                if (patternMatching(data)) {
+                    ispatternMatching = true;
+                    // Cancello tutte le chiavi per quella moneta cosi riparte a scaricare
+                    console.log("PATTERN FOUND")
+                } else {
+                    console.log("----------------")
+                    console.log("SCANNING for found HH | LL | LH | HL | .... " + token)
+                    console.log("CERCO IL PATTERN")
+                    console.log("----------------")
                 }
-                 */
-
-                // if (buy === false) {
-                //
-                //     if (parseFloat(close) > entryPrice) {
-                //         console.log("HO COMPRATO")
-                //         ispatternMatching = false;
-                //         buy = true
-                //         sendMessageTelegram("Ho comprato: " + symbol + " " + new Date().toString())
-                //         //CHiamo api spot trading view
-                //     }
-                // } else {
-                //
-                //     if (parseFloat(close) < stopLoss) {
-                //         console.log("HO PERSO")
-                //         ispatternMatching = false;
-                //         //CHiamo api spot trading view
-                //     }
-                // }
+            }
 
         });
     }
@@ -390,7 +358,7 @@ function start() {
 
 setInterval(function () {
     start()
-}, 5000);
+}, 10000);
 
 
 
