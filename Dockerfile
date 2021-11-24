@@ -4,5 +4,5 @@ WORKDIR /bot
 COPY app/package.json app/yarn.lock ./
 RUN npm install
 COPY /bot .
-
-
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
