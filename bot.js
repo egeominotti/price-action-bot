@@ -57,34 +57,35 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
             let message = 'Pattern found pair: ' + symbol + "\n" +
                 'Interval: ' + interval + "\n" +
                 'Pattern Found Time: ' + pattern['patternFoundTime'] + "\n" +
-                "entryPrice: " + pattern['entryPrice'] + "\n" +
-                "stopLoss:: " + pattern['stopLoss'] + "\n" +
-                "min: " + pattern['min'] + "\n" +
-                "max: " + pattern['max'] + "\n" +
+                "ENTRY_PRICE: " + pattern['ENTRY_PRICE'] + "\n" +
+                "TAKE_PROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
+                "STOP_LOSS:: " + pattern['STOP_LOSS'] + "\n" +
+                "MIN_LL: " + pattern['MIN'] + "\n" +
+                "MAX_HH: " + pattern['MAX']
 
-                "HH_confirm open: " + pattern['HH']['tick']['open'] + "\n" +
-                "HH_confirm high: " + pattern['HH']['tick']['high'] + "\n" +
-                "HH_confirm low: " + pattern['HH']['tick']['low'] + "\n" +
-                "HH_confirm close: " + pattern['HH']['tick']['close'] + "\n" +
-                "HH_confirm time: " + pattern['HH']['tick']['time'] + "\n" +
-
-                "LL_confirm open: " + pattern['LL']['tick']['open'] + "\n" +
-                "LL_confirm high: " + pattern['LL']['tick']['high'] + "\n" +
-                "LL_confirm low: " + pattern['LL']['tick']['low'] + "\n" +
-                "LL_confirm close: " + pattern['LL']['tick']['close'] + "\n" +
-                "LL_confirm time: " + pattern['LL']['tick']['time'] + "\n" +
-
-                "LH_confirm open: " + pattern['LH']['tick']['open'] + "\n" +
-                "LH_confirm high: " + pattern['LH']['tick']['high'] + "\n" +
-                "LH_confirm low: " + pattern['LH']['tick']['low'] + "\n" +
-                "LH_confirm close: " + pattern['LH']['tick']['close'] + "\n" +
-                "LH_confirm time: " + pattern['LH']['tick']['time'] + "\n" +
-
-                "HL_confirm open: " + pattern['HL']['tick']['open'] + "\n" +
-                "HL_confirm high: " + pattern['HL']['tick']['high'] + "\n" +
-                "HL_confirm low: " + pattern['HL']['tick']['low'] + "\n" +
-                "HL_confirm close: " + pattern['HL']['tick']['close'] + "\n" +
-                "HL_confirm time: " + pattern['HL']['tick']['time']
+                // "HH_confirm open: " + pattern['HH']['tick']['open'] + "\n" +
+                // "HH_confirm high: " + pattern['HH']['tick']['high'] + "\n" +
+                // "HH_confirm low: " + pattern['HH']['tick']['low'] + "\n" +
+                // "HH_confirm close: " + pattern['HH']['tick']['close'] + "\n" +
+                // "HH_confirm time: " + pattern['HH']['tick']['time'] + "\n" +
+                //
+                // "LL_confirm open: " + pattern['LL']['tick']['open'] + "\n" +
+                // "LL_confirm high: " + pattern['LL']['tick']['high'] + "\n" +
+                // "LL_confirm low: " + pattern['LL']['tick']['low'] + "\n" +
+                // "LL_confirm close: " + pattern['LL']['tick']['close'] + "\n" +
+                // "LL_confirm time: " + pattern['LL']['tick']['time'] + "\n" +
+                //
+                // "LH_confirm open: " + pattern['LH']['tick']['open'] + "\n" +
+                // "LH_confirm high: " + pattern['LH']['tick']['high'] + "\n" +
+                // "LH_confirm low: " + pattern['LH']['tick']['low'] + "\n" +
+                // "LH_confirm close: " + pattern['LH']['tick']['close'] + "\n" +
+                // "LH_confirm time: " + pattern['LH']['tick']['time'] + "\n" +
+                //
+                // "HL_confirm open: " + pattern['HL']['tick']['open'] + "\n" +
+                // "HL_confirm high: " + pattern['HL']['tick']['high'] + "\n" +
+                // "HL_confirm low: " + pattern['HL']['tick']['low'] + "\n" +
+                // "HL_confirm close: " + pattern['HL']['tick']['close'] + "\n" +
+                // "HL_confirm time: " + pattern['HL']['tick']['time']
 
             logic.sendMessageTelegram(message)
 

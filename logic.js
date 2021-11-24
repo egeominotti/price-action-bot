@@ -220,8 +220,7 @@ function patternMatching(storeData) {
     let lowMax = maxTickHighVariable['tick']['low']
     let indexMax = maxTickHighVariable['index']
 
-
-    let HH = HigherHigh(storeData, indexMax, lowMax, ABSOLUTE_MAX)
+    let HH = HigherHigh(storeData, indexMax, lowMax, HH_MAX)
 
     if (HH !== -1) {
 
@@ -250,6 +249,7 @@ function patternMatching(storeData) {
             if (LH !== -1) {
 
                 let entryPrice = LH['tick']['high'];
+                let takeProfit = LH['tick']['close'] + (HH_MAX - LL_MIN)
 
                 let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
                 let LH_MIN = minTickLowVariable['min']
@@ -262,11 +262,12 @@ function patternMatching(storeData) {
 
                     return {
                         'patternFoundTime': new Date().toISOString(),
-                        'fibonacci': fib,
-                        'entryPrice': entryPrice,
-                        'stopLoss': stopLoss,
-                        'min': min,
-                        'max': max,
+                        'FIBONACCI': fib,
+                        'TAKE_PROFIT': takeProfit,
+                        'ENTRY_PRICE': entryPrice,
+                        'STOP_LOSS': stopLoss,
+                        'MIN': LL_MIN,
+                        'MAX': HH_MAX,
                         'HH': HH,
                         'LL': LL,
                         'LH': LH,
