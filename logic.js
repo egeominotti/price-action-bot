@@ -215,20 +215,11 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
 
 function patternMatching(storeData) {
 
-    // Calcola il massimo (il valore high piu' alto di tutti tra le candele arrivate da binance)
     let maxTickHighVariable = MaxTickHigh(storeData);
-    // Valore del massimo trovato tra tutte le candele arrivate da binance (high)
     let max = maxTickHighVariable['max']
-    // Low del massimo trovato
     let lowMax = maxTickHighVariable['tick']['low']
-    // Indice della candela del massimo
     let indexMax = maxTickHighVariable['index']
 
-    // console.log("----- MASSIMO ----------- ")
-    // console.log(new Date().toString())
-    // console.log(indexMax)
-    // console.log(max)
-    // console.log(lowMax)
 
     let HH = HigherHigh(storeData, indexMax, lowMax, max)
 
@@ -236,27 +227,19 @@ function patternMatching(storeData) {
 
         let fibonacciPointMax = HH['tick']['high'];
 
-        // console.log(new Date().toString())
-        // console.log("TROVATO HH")
-        // console.log(HH)
-
         let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
         let min = minTickLowVariable['min']
         let highMin = minTickLowVariable['tick']['high']
         let indexMin = minTickLowVariable['index']
         //
-        // console.log("----- MINIMO ----------- ")
-        // console.log(indexMin)
-        // console.log(min)
-        // console.log(highMin)
 
         let LL = LowerLow(storeData, indexMin, highMin, min)
 
         if (LL !== -1) {
 
-            // console.log("TROVATO LL")
-            // console.log(new Date().toString())
-            // console.log(LL)
+
+            let minTickLowVariable = MinTickLow(storeData, LL['indexLL']);
+            let LL_MIN = minTickLowVariable['min']
 
             let fibonacciPointMin = LL['tick']['low']
 
@@ -266,12 +249,7 @@ function patternMatching(storeData) {
 
             let fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
 
-            // HO TROVATO LOWER HIGH
             if (LH !== -1) {
-
-                // console.log("TROVATO LH")
-                // console.log(LH)
-                // console.log(new Date().toString())
 
                 let entryPrice = LH['tick']['high'];
 
@@ -283,10 +261,6 @@ function patternMatching(storeData) {
                 if (HL !== -1) {
 
                     let stopLoss = HL['tick']['low']
-
-                    // console.log(new Date().toString())
-                    // console.log("TROVATO HL")
-                    // console.log(HL)
 
                     return {
                         'patternFoundTime': new Date().toISOString(),
