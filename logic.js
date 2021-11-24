@@ -25,7 +25,6 @@ function MaxTickHigh(storeData, startIndex) {
     let tickerFounded;
     let highArray = [];
 
-
     if (startIndex !== undefined) {
 
         for (let index = startIndex; index < storeData.length; ++index) {
@@ -114,7 +113,7 @@ function LowerLow(storeData, indexMin, highMin, min) {
     for (let index = indexMin + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (highMin < tick['high']) {
+        if (tick['high'] > highMin) {
 
             return {
                 'tickIndex': tick['index'],
@@ -139,7 +138,7 @@ function LowerLow(storeData, indexMin, highMin, min) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (tick['high'] < nextTick['high']) {
+                    if (nextTick['high'] > tick['high']) {
 
                         //console.log("Seconda condizione confermata LL")
 
@@ -168,7 +167,7 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
     for (let index = indexMax + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (lowMax > tick['low']) {
+        if (tick['low'] < lowMax) {
 
             return {
                 'tickIndex': tick['index'],
@@ -194,7 +193,7 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (tick['low'] > nextTick['low']) {
+                    if (nextTick['low'] < tick['low']) {
 
                         //console.log("Seconda condizione confermata HH")
                         return {
@@ -216,18 +215,20 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
 function patternMatching(storeData) {
 
     let maxTickHighVariable = MaxTickHigh(storeData);
+    let maxTickAbsolute = maxTickHighVariable['tick']['high']
     let HH_MAX = maxTickHighVariable['max']
     let lowMax = maxTickHighVariable['tick']['low']
     let indexMax = maxTickHighVariable['index']
 
+    // Algoritmo che cerca una candela per confermare che il massimo è un HH
     let HH = HigherHigh(storeData, indexMax, lowMax, HH_MAX)
 
     if (HH !== -1) {
 
-        let fibonacciPointMax = HH['tick']['high'];
-
+        let fibonacciPointMax = maxTichAbsolute;
         let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
         let HH_MIN = minTickLowVariable['min']
+        let minTickAbsolute = minTickLowVariable['tick']['low']
         let highMin = minTickLowVariable['tick']['high']
         let indexMin = minTickLowVariable['index']
 
@@ -256,6 +257,7 @@ function patternMatching(storeData) {
                 let highMin = minTickLowVariable['tick']['high']
                 let HL = LowerLow(storeData, LH['indexHH'], highMin, LH_MIN)
 
+
                 if (HL !== -1) {
 
                     let stopLoss = HL['tick']['low']
@@ -266,12 +268,10 @@ function patternMatching(storeData) {
                         'TAKE_PROFIT': takeProfit,
                         'ENTRY_PRICE': entryPrice,
                         'STOP_LOSS': stopLoss,
-                        'MIN': LL_MIN,
-                        'MAX': HH_MAX,
-                        'HH': HH,
-                        'LL': LL,
+                        'HH': maxTickAbsolute,
+                        'LL': minTickAbsolute,
                         'LH': LH,
-                        'HL': HL
+                        'HL': HL['tick']['low']
                     }
                 }
             }
