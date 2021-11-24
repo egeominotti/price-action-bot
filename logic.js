@@ -72,7 +72,6 @@ function MaxTickHigh(storeData, startIndex) {
         };
     }
 
-
 }
 
 function MinTickLow(storeData, indexMax) {
