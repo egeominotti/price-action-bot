@@ -26,7 +26,6 @@ const coins = [
 ];
 
 
-
 function sendMessageTelegram(text) {
 
     const send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chat_id + '&parse_mode=Markdown&text=' + text
@@ -351,6 +350,8 @@ function start() {
 
         });
     }
+
+    console.log("Pattern iteration end")
 }
 
 setInterval(function () {
