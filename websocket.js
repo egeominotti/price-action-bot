@@ -22,7 +22,7 @@ const coins = [
 
 let indexArray = {};
 for (const token of coins) {
-    indexArray[token] = 0;
+    indexArray[token] = -1;
 }
 
 binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
