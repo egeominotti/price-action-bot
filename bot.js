@@ -83,9 +83,7 @@ client.flushall((err, success) => {
                     'time': new Date()
                 }
 
-                console.log(tokenArray)
                 tokenArray[symbol].push(ticker)
-
                 let pattern = logic.patternMatching(tokenArray[symbol])
                 if (!_.isEmpty(pattern)) {
 
@@ -106,7 +104,6 @@ client.flushall((err, success) => {
                         "LH: " + pattern['LH']['tick']['time'] + "\n" +
                         "HL: " + pattern['HL']['tick']['time']
 
-                    console.log(message)
                     logic.sendMessageTelegram(message)
 
                 } else {
