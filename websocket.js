@@ -81,6 +81,8 @@ client.flushall((err, success) => {
                     'time': new Date()
                 }
 
+                console.log(tokenArray)
+
                 tokenArray[symbol].push(ticker)
                 client.publish(symbol, JSON.stringify(tokenArray[symbol]))
             }
