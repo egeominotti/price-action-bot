@@ -54,9 +54,9 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
             tokenArray[symbol] = [];
             indexArray[symbol] = -1
 
-            let message = 'Pattern found pair: ' + symbol + "\n" +
-                'Interval: ' + interval + "\n" +
-                'Pattern Found Time: ' + pattern['patternFoundTime'] + "\n" +
+            let message = 'SYMBOL: ' + symbol + "\n" +
+                'INTERVAL: ' + interval + "\n" +
+                'PATTERN FOUND AT: ' + pattern['patternFoundTime'] + "\n" +
                 "ENTRY_PRICE: " + pattern['ENTRY_PRICE'] + "\n" +
                 "TAKE_PROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
                 "STOP_LOSS:: " + pattern['STOP_LOSS'] + "\n" +
