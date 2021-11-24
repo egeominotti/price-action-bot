@@ -49,9 +49,6 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
         let pattern = logic.patternMatching(tokenArray[symbol])
         if (!_.isEmpty(pattern)) {
 
-            console.log("Pattern found: " + symbol)
-            console.log(pattern)
-
             tokenArray[symbol] = [];
             indexArray[symbol] = -1
 
