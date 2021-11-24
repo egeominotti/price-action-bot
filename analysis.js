@@ -306,9 +306,9 @@ function patternMatching(storeData) {
 
                     let stopLoss = HL['tick']['low']
 
-                    console.log(new Date().toString())
-                    console.log("TROVATO HL")
-                    console.log(HL)
+                    // console.log(new Date().toString())
+                    // console.log("TROVATO HL")
+                    // console.log(HL)
 
                     return {
                         'fibonacci': fib,
@@ -342,11 +342,11 @@ function start() {
 
             let pattern = patternMatching(data)
             if (!_.isEmpty(pattern)) {
-                console.log("PATTERN FOUND")
+                console.log("Pattern found: " + token)
                 console.log(pattern)
             } else {
                 console.log("----------------")
-                console.log("SCANNING for found HH | LL | LH | HL | .... " + token)
+                console.log("Running for found HH | LL | LH | HL | .... " + token)
                 console.log("----------------")
             }
 
