@@ -375,5 +375,3 @@ client.on("message", function (channel, message) {
     }
 });
 
-console.log("ok")
-
