@@ -142,7 +142,7 @@ function LowerLow(storeData, indexMin, highMin, min) {
                     let nextTick = storeData[index + 1]
                     if (tick['high'] < nextTick['high']) {
 
-                        console.log("Seconda condizione confermata LL")
+                        //console.log("Seconda condizione confermata LL")
 
                         return {
                             'tickIndex': nextTick['index'],
@@ -197,7 +197,7 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
                     let nextTick = storeData[index + 1]
                     if (tick['low'] > nextTick['low']) {
 
-                        console.log("Seconda condizione confermata HH")
+                        //console.log("Seconda condizione confermata HH")
                         return {
                             'tickIndex': nextTick['index'],
                             'indexMax': indexMax,
