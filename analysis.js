@@ -1,15 +1,24 @@
 const Binance = require('node-binance-api');
 const {getFibRetracement, levels} = require('fib-retracement');
 const axios = require('axios');
+const redis = require("redis");
+const client = redis.createClient();
+
+client.on("error", function (error) {
+    console.error(error);
+});
+
 const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
 const bot_chat_id = '-558016221'
+
+
 
 const binance = new Binance().options({
     APIKEY: '<key>',
     APISECRET: '<secret>'
 });
 
-let coins = [
+const coins = [
     'ENJUSDT',
     'SANDUSDT',
     'MANAUSDT',
@@ -19,7 +28,13 @@ let coins = [
     'ALICEUSDT',
     'DARUSDT',
     'MBOXUSDT',
-    'TLMUSDT']
+    'TLMUSDT'];
+
+let indexArray = {};
+for (const token of coins) {
+    indexArray['ispatternMatching'] = false;
+}
+
 
 let storeData = []
 let entryPrice = 0
@@ -327,22 +342,10 @@ function patternMatching(storeData) {
 
 function start(symbol, low, high, close, open, volume, interval) {
 
-    storeData.push({
-        'index': tickCounter,
-        'symbol': symbol,
-        'open': parseFloat(open),
-        'close': parseFloat(close),
-        'low': parseFloat(low),
-        'high': parseFloat(high),
-        'volume': volume,
-        'interval': interval,
-        'time': new Date().toString()
-    });
-
+    console.log(indexArray)
     if (ispatternMatching === false) {
         if (patternMatching(storeData)) {
             ispatternMatching = true;
-            tickCounter = 0;
             storeData = [];
             sendMessageTelegram("PATTERN TROVATO: " + symbol + " " + new Date().toString())
             console.log(fib)
@@ -383,31 +386,12 @@ function start(symbol, low, high, close, open, volume, interval) {
             }
         }
     }
-
-    tickCounter++;
 }
 
-binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
 
-    let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
-    let {
-        o: open,
-        h: high,
-        l: low,
-        c: close,
-        v: volume,
-        n: trades,
-        i: interval,
-        x: isFinal,
-        q: quoteVolume,
-        V: buyVolume,
-        Q: quoteBuyVolume
-    } = ticks;
+while(true) {
+    start()
+}
 
-    // - Controlla il Ticker sempre a chiusura
-    if (isFinal) {
-        console.log(symbol)
-        //start(symbol, low, high, close, open, volume, interval)
-    }
 
-});
+
