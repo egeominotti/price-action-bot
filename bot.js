@@ -1,50 +1,21 @@
 const Binance = require('node-binance-api');
 const logic = require('./logic');
+const coins = require('./coins');
 const _ = require("lodash");
 const binance = new Binance();
 
 const args = process.argv;
 let timeFrame = args[2]
 
-const coins = [
-    'ENJUSDT',
-    'SANDUSDT',
-    'MANAUSDT',
-    'AXSUSDT',
-    'ALICEUSDT',
-    'DARUSDT',
-    'MBOXUSDT',
-    'TLMUSDT',
-    'CROUSDT',
-    'KDAUSDT',
-    'DOTUSDT',
-    'ETHUSDT',
-    'BTCUSDT',
-    'LUNAUSDT',
-    'SOLUSDT',
-    'AUDIOUSDT',
-    'AVAXUSDT',
-    'UNIUSDT',
-    'MATICUSDT',
-    'ADAUSDT',
-    'EGLDUSDT',
-    'ATOMUSDT',
-    'FTMUSDT',
-    'AAVEUSDT',
-    'BNBUSDT',
-    'VETUSDT',
-    'FTTUSDT'
-];
-
 let tokenArray = {}
 let indexArray = {};
-for (const token of coins) {
+for (const token of coins.getCoins()) {
     indexArray[token] = -1;
     tokenArray[token] = [];
 }
 
 
-binance.websockets.candlesticks(coins, timeFrame, (candlesticks) => {
+binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
 
     let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
     let {
@@ -52,13 +23,8 @@ binance.websockets.candlesticks(coins, timeFrame, (candlesticks) => {
         h: high,
         l: low,
         c: close,
-        v: volume,
-        n: trades,
         i: interval,
         x: isFinal,
-        q: quoteVolume,
-        V: buyVolume,
-        Q: quoteBuyVolume
     } = ticks;
 
     if (isFinal) {
@@ -75,8 +41,11 @@ binance.websockets.candlesticks(coins, timeFrame, (candlesticks) => {
             'interval': interval.toString(),
             'time': new Date()
         }
+
+        console.log(interval)
         console.log(tokenArray[symbol])
         tokenArray[symbol].push(ticker)
+
         let pattern = logic.patternMatching(tokenArray[symbol])
         if (!_.isEmpty(pattern)) {
 
