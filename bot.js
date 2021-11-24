@@ -50,7 +50,7 @@ client.flushall((err, success) => {
     }
 
     if (success) {
-        binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
+        binance.websockets.candlesticks(coins, "15m", (candlesticks) => {
 
             let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
             let {
