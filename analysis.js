@@ -354,19 +354,21 @@ function start() {
 
         client.zrangebyscore(token, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
 
-            let data = [];
-            for (const k of results) {
-                data.push(JSON.parse(k))
-            }
+            if (results.length > 1) {
+                let data = [];
+                for (const k of results) {
+                    data.push(JSON.parse(k))
+                }
 
-            let pattern = patternMatching(data)
-            if (!_.isEmpty(pattern)) {
-                console.log("Pattern found: " + token)
-                console.log(pattern)
-            } else {
-                console.log("----------------")
-                console.log("Running for found HH | LL | LH | HL | .... " + token)
-                console.log("----------------")
+                let pattern = patternMatching(data)
+                if (!_.isEmpty(pattern)) {
+                    console.log("Pattern found: " + token)
+                    console.log(pattern)
+                } else {
+                    console.log("----------------")
+                    console.log("Running for found HH | LL | LH | HL | .... " + token)
+                    console.log("----------------")
+                }
             }
 
         });
