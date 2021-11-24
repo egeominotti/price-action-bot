@@ -4,5 +4,6 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 COPY . /usr/src/app
-CMD [ "node", "Manager.js" ]
-
+#COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
