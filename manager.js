@@ -8,6 +8,7 @@ let timeFrame = [
     '8h',
     '1D',
     '3D',
+    '1W',
 ]
 
 for (let time of timeFrame) {

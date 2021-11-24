@@ -14,7 +14,7 @@ for (const token of coins.getCoins()) {
     tokenArray[token] = [];
 }
 
-let startMessage = 'Bot Pattern Analysis System Started'
+let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
 logic.sendMessageTelegram(startMessage)
 
 binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
@@ -91,7 +91,6 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
         } else {
             console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol)
         }
-
     }
 });
 
