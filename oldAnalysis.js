@@ -1,31 +1,13 @@
 const Binance = require('node-binance-api');
 const {getFibRetracement, levels} = require('fib-retracement');
-const axios = require('axios');
-const redis = require("redis");
-const client = redis.createClient();
-const _ = require('lodash');
-client.on("error", function (error) {
-    console.error(error);
+
+const binance = new Binance().options({
+    APIKEY: '<key>',
+    APISECRET: '<secret>'
 });
 
-const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
-const bot_chat_id = '-558016221'
 
-
-const binance = new Binance();
-
-const coins = [
-    'ENJUSDT',
-    'SANDUSDT',
-    'MANAUSDT',
-    'AXSUSDT',
-    'ALICEUSDT',
-    'DARUSDT',
-    'MBOXUSDT',
-    'TLMUSDT'
-];
-
-
+let storeData = []
 let entryPrice = 0
 let stopLoss = 0
 let ispatternMatching = false
@@ -35,25 +17,12 @@ let fibonacciPointMax = 0
 let fibonacciPointMin = 0
 let fib = 0
 
-function sendMessageTelegram(text) {
-
-    const send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chat_id + '&parse_mode=Markdown&text=' + text
-
-    axios.get(send_text)
-        .then(function (response) {
-        })
-        .catch(function (error) {
-        })
-        .then(function () {
-        });
-
-}
-
 function MaxTickHigh(storeData, startIndex) {
 
     let idMaxTickHigh;
     let tickerFounded;
     let highArray = [];
+
 
     if (startIndex !== undefined) {
 
@@ -244,7 +213,7 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
 }
 
 function patternMatching(storeData) {
-    console.log(storeData)
+
     // Calcola il massimo (il valore high piu' alto di tutti tra le candele arrivate da binance)
     let maxTickHighVariable = MaxTickHigh(storeData);
     // Valore del massimo trovato tra tutte le candele arrivate da binance (high)
@@ -328,72 +297,84 @@ function patternMatching(storeData) {
     return false;
 }
 
-function start() {
 
-    for (const token of coins) {
+binance.websockets.candlesticks(['SANDBUSD'], "1m", (candlesticks) => {
 
-        client.zrangebyscore(token, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
+    let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
+    let {
+        o: open,
+        h: high,
+        l: low,
+        c: close,
+        v: volume,
+        n: trades,
+        i: interval,
+        x: isFinal,
+        q: quoteVolume,
+        V: buyVolume,
+        Q: quoteBuyVolume
+    } = ticks;
 
-            console.log(token)
-            console.log(results)
+    // - Controlla il Ticker sempre a chiusura
+    if (isFinal) {
 
-            for (let candle of results) {
 
-                let candleParsed = JSON.parse(candle)
-                patternMatching(candle)
-
-                // if (ispatternMatching === false) {
-                //     if (patternMatching(storeData)) {
-                //         ispatternMatching = true;
-                //         storeData = [];
-                //         sendMessageTelegram("PATTERN TROVATO: " + token + " " + new Date().toString())
-                //         console.log(fib)
-                //         console.log("PATTERN FOUND")
-                //     } else {
-                //         console.log("----------------")
-                //         console.log("SCANNING for found HH | LL | LH | HL | .... " + token)
-                //         console.log("CERCO IL PATTERN")
-                //         console.log("----------------")
-                //     }
-                // } else {
-
-                /*
-                JSON body
-                {
-                    "action": "{{strategy.order.action}}",
-                    "exchange": "{{exchange}}",
-                    "ticker": "{{ticker}}",
-                    "asset": "BUSD" / or "USDT"
-                }
-                 */
-
-                // if (buy === false) {
-                //
-                //     if (parseFloat(close) > entryPrice) {
-                //         console.log("HO COMPRATO")
-                //         ispatternMatching = false;
-                //         buy = true
-                //         sendMessageTelegram("Ho comprato: " + symbol + " " + new Date().toString())
-                //         //CHiamo api spot trading view
-                //     }
-                // } else {
-                //
-                //     if (parseFloat(close) < stopLoss) {
-                //         console.log("HO PERSO")
-                //         ispatternMatching = false;
-                //         //CHiamo api spot trading view
-                //     }
-                // }
-
-            }
+        storeData.push({
+            'index': tickCounter,
+            'symbol': symbol,
+            'open': parseFloat(open),
+            'close': parseFloat(close),
+            'low': parseFloat(low),
+            'high': parseFloat(high),
+            'volume': volume,
+            'interval': interval,
+            'time': new Date().toString()
         });
+
+        if (ispatternMatching === false) {
+            if (patternMatching(storeData)) {
+                ispatternMatching = true;
+                console.log("PATTERN FOUND")
+            } else {
+                console.log("----------------")
+                console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
+                console.log("CERCO IL PATTERN")
+                console.log("----------------")
+            }
+        } else {
+
+            console.log(fib)
+            /*
+            JSON body
+            {
+                "action": "{{strategy.order.action}}",
+                "exchange": "{{exchange}}",
+                "ticker": "{{ticker}}",
+                "asset": "BUSD" / or "USDT"
+            }
+             */
+
+            if (buy === false) {
+
+                if (parseFloat(close) > entryPrice * 1.015) {
+                    console.log("HO COMPRATO")
+                    ispatternMatching = false;
+                    buy = true
+
+                    //CHiamo api spot trading view
+                }
+            } else {
+
+                if (parseFloat(close) < stopLoss) {
+                    console.log("HO PERSO")
+                    ispatternMatching = false;
+                    //CHiamo api spot trading view
+                }
+            }
+        }
+
+
+        tickCounter++;
     }
-}
 
-setInterval(function () {
-    start()
-}, 1000);
-
-
-
-
+});
