@@ -55,9 +55,11 @@ function MaxTickHigh(storeData, startIndex) {
     let tickerFounded;
     let highArray = [];
 
+
     if (startIndex !== undefined) {
 
         for (let index = startIndex; index < storeData.length; ++index) {
+            console.log(typeof storeData[index])
             let tick = storeData[index];
             highArray.push(tick['low'])
         }
@@ -82,18 +84,20 @@ function MaxTickHigh(storeData, startIndex) {
     } else {
 
         for (const tick of storeData) {
-            highArray.push(tick['high'])
+            let tickParsed = JSON.parse(tick)
+            highArray.push(tickParsed['high'])
         }
 
         let max = Math.max(...highArray)
 
         for (const tick of storeData) {
-            if (tick['high'] === max) {
-                idMaxTickHigh = tick['index']
-                tickerFounded = tick;
+            let tickParsed = JSON.parse(tick)
+            if (tickParsed['high'] === max) {
+                idMaxTickHigh = tickParsed['index']
+                tickerFounded = tickParsed;
             }
         }
-
+        console.log(storeData)
         return {
             'max': max,
             'index': idMaxTickHigh,
@@ -333,14 +337,9 @@ function start() {
     for (const token of coins) {
 
         client.zrangebyscore(token, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
-
-            console.log(token)
-            console.log(results)
-
-            for (let candle of results) {
-
-                let candleParsed = JSON.parse(candle)
-                patternMatching(candle)
+            let parsedObject = JSON.parse(results)
+            console.log(parsedObject)
+            //patternMatching(results)
 
                 // if (ispatternMatching === false) {
                 //     if (patternMatching(storeData)) {
@@ -385,7 +384,6 @@ function start() {
                 //     }
                 // }
 
-            }
         });
     }
 }

@@ -42,15 +42,14 @@ binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
         indexArray[symbol] += 1
 
         let ticker = {
-            'index': indexArray[symbol],
-            'symbol': symbol,
+            'index': parseInt(indexArray[symbol]),
+            'symbol': symbol.toString(),
             'open': parseFloat(open),
             'close': parseFloat(close),
             'low': parseFloat(low),
             'high': parseFloat(high),
-            'volume': volume,
-            'interval': interval,
-            'time': new Date().toString()
+            'interval': interval.toString(),
+            'time': new Date()
         }
 
         client.zadd(symbol, indexArray[symbol], JSON.stringify(ticker));
