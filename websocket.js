@@ -2,10 +2,7 @@ const Binance = require('node-binance-api');
 const redis = require("redis");
 const client = redis.createClient();
 
-const binance = new Binance().options({
-    APIKEY: '<key>',
-    APISECRET: '<secret>'
-});
+const binance = new Binance();
 
 const coins = [
     'ENJUSDT',
@@ -59,5 +56,4 @@ binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
         client.sadd(symbol, JSON.stringify(ticker));
         console.log(indexArray)
     }
-
 });
