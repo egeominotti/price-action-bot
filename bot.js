@@ -1,9 +1,9 @@
-const Binance = require('node-binance-api');
-const logic = require('./logic');
-const coins = require('./coins');
-const _ = require("lodash");
-const binance = new Binance();
-const args = process.argv;
+const Binance =     require('node-binance-api');
+const logic =       require('./logic');
+const coins =       require('./coins');
+const _ =           require("lodash");
+const binance =     new Binance();
+const args =        process.argv;
 
 let timeFrame = args[2]
 let tokenArray = {}
