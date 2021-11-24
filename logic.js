@@ -225,7 +225,7 @@ function patternMatching(storeData) {
 
     if (HH !== -1) {
 
-        let fibonacciPointMax =     maxTichAbsolute;
+        let fibonacciPointMax =     maxTickAbsolute;
         let minTickLowVariable =    MinTickLow(storeData, HH['indexHH']);
         let HH_MIN =                minTickLowVariable['min']
         let minTickAbsolute =       minTickLowVariable['tick']['low']
