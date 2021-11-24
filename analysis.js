@@ -349,13 +349,6 @@ function patternMatching(storeData) {
     return false;
 }
 
-for (const token of coins) {
-    client.subscribe(token, (err, count) => {
-        if (err) console.error(err.message);
-        console.log(`Subscribed to ${count} channels.`);
-    });
-}
-
 
 client.on("message", function (channel, message) {
 
@@ -366,7 +359,7 @@ client.on("message", function (channel, message) {
         if (!_.isEmpty(pattern)) {
             console.log("Pattern found: " + channel)
             console.log(pattern)
-            sendMessageTelegram(pattern.toString())
+            sendMessageTelegram(JSON.stringify(pattern))
         } else {
             console.log("----------------")
             console.log("Running for found HH | LL | LH | HL | .... " + channel)
