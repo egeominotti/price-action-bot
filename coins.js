@@ -27,7 +27,10 @@ function getCoins() {
         'AAVEUSDT',
         'BNBUSDT',
         'VETUSDT',
-        'FTTUSDT'
+        'FTTUSDT',
+        'GALAXUSDT',
+        'CHRUSDT',
+        'TVKUSDT',
     ];
 }
 

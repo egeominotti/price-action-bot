@@ -14,6 +14,8 @@ for (const token of coins.getCoins()) {
     tokenArray[token] = [];
 }
 
+let startMessage = 'Bot Pattern Analysis System Started'
+logic.sendMessageTelegram(startMessage)
 
 binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
 
