@@ -1,5 +1,7 @@
 const Binance = require('node-binance-api');
 const redis = require("redis");
+const logic = require('./logic');
+const _ = require("lodash");
 const client = redis.createClient();
 const binance = new Binance();
 
@@ -82,9 +84,37 @@ client.flushall((err, success) => {
                 }
 
                 console.log(tokenArray)
-
                 tokenArray[symbol].push(ticker)
-                client.publish(symbol, JSON.stringify(tokenArray[symbol]))
+
+                let pattern = logic.patternMatching(tokenArray[symbol])
+                if (!_.isEmpty(pattern)) {
+
+                    console.log("Pattern found: " + symbol)
+                    console.log(pattern)
+
+                    tokenArray[symbol] = {}
+                    indexArray[symbol] = -1
+
+                    let message = 'Pattern found pair: ' + symbol + "\n" +
+                        'Pattern Found Time: ' + pattern['patternFoundTime'] + "\n" +
+                        "entryPrice: " + pattern['entryPrice'] + "\n" +
+                        "stopLoss:: " + pattern['stopLoss'] + "\n" +
+                        "min: " + pattern['min'] + "\n" +
+                        "max: " + pattern['max'] + "\n" +
+                        "HH: " + pattern['HH']['tick']['time'] + "\n" +
+                        "LL: " + pattern['LL']['tick']['time'] + "\n" +
+                        "LH: " + pattern['LH']['tick']['time'] + "\n" +
+                        "HL: " + pattern['HL']['tick']['time']
+
+                    console.log(message)
+                    logic.sendMessageTelegram(message)
+
+                } else {
+                    console.log("----------------")
+                    console.log("Running for found HH | LL | LH | HL | .... " + symbol)
+                    console.log("----------------")
+                }
+
             }
         });
     }

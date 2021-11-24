@@ -1,49 +1,8 @@
-const Binance = require('node-binance-api');
 const {getFibRetracement, levels} = require('fib-retracement');
 const axios = require('axios');
-const redis = require("redis");
-const client = redis.createClient();
 const _ = require('lodash');
-
-client.on("error", function (error) {
-    console.error(error);
-});
-
-client.setMaxListeners(0);
-
 const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
 const bot_chat_id = '-558016221'
-const binance = new Binance();
-
-const coins = [
-    'ENJUSDT',
-    'SANDUSDT',
-    'MANAUSDT',
-    'AXSUSDT',
-    'ALICEUSDT',
-    'DARUSDT',
-    'MBOXUSDT',
-    'TLMUSDT',
-    'CROUSDT',
-    'KDAUSDT',
-    'DOTUSDT',
-    'ETHUSDT',
-    'BTCUSDT',
-    'LUNAUSDT',
-    'SOLUSDT',
-    'AUDIOUSDT',
-    'AVAXUSDT',
-    'UNIUSDT',
-    'MATICUSDT',
-    'ADAUSDT',
-    'EGLDUSDT',
-    'ATOMUSDT',
-    'FTMUSDT',
-    'AAVEUSDT',
-    'BNBUSDT',
-    'VETUSDT',
-    'FTTUSDT'
-];
 
 
 function sendMessageTelegram(text) {
@@ -331,6 +290,7 @@ function patternMatching(storeData) {
                     // console.log(HL)
 
                     return {
+                        'patternFoundTime': new Date().toISOString(),
                         'fibonacci': fib,
                         'entryPrice': entryPrice,
                         'stopLoss': stopLoss,
@@ -349,28 +309,6 @@ function patternMatching(storeData) {
     return false;
 }
 
-for (const token of coins) {
-    client.subscribe(token, (err, count) => {
-        if (err) console.error(err.message);
-        console.log(`Subscribed to ${count} channels.`);
-    });
+module.exports = {
+    patternMatching, sendMessageTelegram
 }
-
-client.on("message", function (channel, message) {
-
-    if (message !== undefined) {
-
-        let messageParsed = JSON.parse(message)
-        let pattern = patternMatching(messageParsed)
-        if (!_.isEmpty(pattern)) {
-            console.log("Pattern found: " + channel)
-            console.log(pattern)
-            sendMessageTelegram(JSON.stringify(pattern))
-        } else {
-            console.log("----------------")
-            console.log("Running for found HH | LL | LH | HL | .... " + channel)
-            console.log("----------------")
-        }
-    }
-});
-
