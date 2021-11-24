@@ -45,20 +45,34 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
     } = ticks;
 
     for (const user of users) {
+
+        let buy = false;
         let binanceUserTrade = new Binance().options({
             APIKEY: user.key,
             APISECRET: user.secret
         });
         // Con api compro o vendo
-        for (const position of tradePosition) {
+        for (const position of tradePosition)
+        {
             // Controllo STOP_LOSS
             // Controllo TAKE_PROFIT
+            if (close >= position.MAX_LH) {
+                // Compro a prezzo di mercato
+                //binance.marketBuy("BNBBTC", quantity);
+                buy = true;
+            }
 
-            let quantity = 1;
-            binance.marketBuy(position.pair, quantity);
-            binance.marketSell(position.pair, quantity);
-
-
+            if (buy) {
+                // Stop Loss
+                if (close < position.STOP_LOSS) {
+                    // binance.marketSell("ETHBTC", quantity);
+                } else {
+                    // TAKE PROFIT
+                    if (close >= position.TAKE_PROFIT) {
+                        //binance.marketSell("ETHBTC", quantity);
+                    }
+                }
+            }
         }
     }
 
@@ -88,9 +102,13 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
             indexArray[symbol] = -1
 
             let tradePosition = {
-                'pair': symbol,
+                'symbol': symbol,
                 'STOP_LOSS': pattern['STOP_LOSS'],
                 'TAKE_PROFIT': pattern['TAKE_PROFIT'],
+                "MAX_HH": pattern['MAX'],
+                "MIN_LL:": pattern['MIN'],
+                "MAX_LH": pattern['LH'],
+                "MIN_HL": pattern['HL']
             }
             tradePosition[symbol].push(tradePosition)
 
@@ -99,11 +117,11 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
                 'PATTERN FOUND AT: ' + pattern['patternFoundTime'] + "\n" +
                 "ENTRY_PRICE: " + pattern['ENTRY_PRICE'] + "\n" +
                 "TAKE_PROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
-                "STOP_LOSS:: " + pattern['STOP_LOSS'] + "\n" +
+                "STOP_LOSS:  " + pattern['STOP_LOSS'] + "\n" +
                 "MAX_HH: " + pattern['MAX'] + "\n" +
                 "MIN_LL: " + pattern['MIN'] + "\n" +
                 "MAX_LH: " + pattern['LH'] + "\n" +
-                "MAX_HL " + pattern['HL']
+                "MIN_HL " + pattern['HL']
 
             logic.sendMessageTelegram(message)
 
