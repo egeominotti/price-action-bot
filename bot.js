@@ -45,15 +45,15 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
     } = ticks;
 
     for (const user of users) {
-
+        console.log(user)
         let buy = false;
         let binanceUserTrade = new Binance().options({
             APIKEY: user.key,
             APISECRET: user.secret
         });
+        console.log(tradePosition)
         // Con api compro o vendo
-        for (const position of tradePosition)
-        {
+        for (const position of tradePosition[symbol]) {
             // Controllo STOP_LOSS
             // Controllo TAKE_PROFIT
             if (close >= position.MAX_LH) {
@@ -66,10 +66,12 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
                 // Stop Loss
                 if (close < position.STOP_LOSS) {
                     // binance.marketSell("ETHBTC", quantity);
+                    tradePosition[symbol] = {}
                 } else {
                     // TAKE PROFIT
                     if (close >= position.TAKE_PROFIT) {
                         //binance.marketSell("ETHBTC", quantity);
+                        tradePosition[symbol] = {}
                     }
                 }
             }
