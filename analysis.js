@@ -3,7 +3,7 @@ const {getFibRetracement, levels} = require('fib-retracement');
 const axios = require('axios');
 const redis = require("redis");
 const client = redis.createClient();
-
+const _ = require('lodash');
 client.on("error", function (error) {
     console.error(error);
 });
@@ -12,28 +12,18 @@ const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
 const bot_chat_id = '-558016221'
 
 
-
-const binance = new Binance().options({
-    APIKEY: '<key>',
-    APISECRET: '<secret>'
-});
+const binance = new Binance();
 
 const coins = [
     'ENJUSDT',
     'SANDUSDT',
     'MANAUSDT',
-    'ATLASUSDT',
-    'BLOKUSDT',
     'AXSUSDT',
     'ALICEUSDT',
     'DARUSDT',
     'MBOXUSDT',
-    'TLMUSDT'];
-
-let indexArray = {};
-for (const token of coins) {
-    indexArray['ispatternMatching'] = false;
-}
+    'TLMUSDT'
+];
 
 
 let storeData = []
@@ -340,58 +330,71 @@ function patternMatching(storeData) {
     return false;
 }
 
-function start(symbol, low, high, close, open, volume, interval) {
+function start() {
 
-    console.log(indexArray)
-    if (ispatternMatching === false) {
-        if (patternMatching(storeData)) {
-            ispatternMatching = true;
-            storeData = [];
-            sendMessageTelegram("PATTERN TROVATO: " + symbol + " " + new Date().toString())
-            console.log(fib)
-            console.log("PATTERN FOUND")
-        } else {
-            console.log("----------------")
-            console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
-            console.log("CERCO IL PATTERN")
-            console.log("----------------")
-        }
-    } else {
+    for (const token of coins) {
 
-        /*
-        JSON body
-        {
-            "action": "{{strategy.order.action}}",
-            "exchange": "{{exchange}}",
-            "ticker": "{{ticker}}",
-            "asset": "BUSD" / or "USDT"
-        }
-         */
+        client.zrangebyscore(token, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
+            console.log(token)
+            console.log(results)
 
-        if (buy === false) {
-
-            if (parseFloat(close) > entryPrice) {
-                console.log("HO COMPRATO")
-                ispatternMatching = false;
-                buy = true
-                sendMessageTelegram("Ho comprato: " + symbol + " " + new Date().toString())
-                //CHiamo api spot trading view
+            for (let k of results) {
+                console.log(k)
             }
-        } else {
+        });
 
-            if (parseFloat(close) < stopLoss) {
-                console.log("HO PERSO")
-                ispatternMatching = false;
-                //CHiamo api spot trading view
-            }
-        }
+        // console.log(indexArray)
+        // if (ispatternMatching === false) {
+        //     if (patternMatching(storeData)) {
+        //         ispatternMatching = true;
+        //         storeData = [];
+        //         sendMessageTelegram("PATTERN TROVATO: " + symbol + " " + new Date().toString())
+        //         console.log(fib)
+        //         console.log("PATTERN FOUND")
+        //     } else {
+        //         console.log("----------------")
+        //         console.log("SCANNING for found HH | LL | LH | HL | .... " + symbol)
+        //         console.log("CERCO IL PATTERN")
+        //         console.log("----------------")
+        //     }
+        // } else {
+        //
+        //     /*
+        //     JSON body
+        //     {
+        //         "action": "{{strategy.order.action}}",
+        //         "exchange": "{{exchange}}",
+        //         "ticker": "{{ticker}}",
+        //         "asset": "BUSD" / or "USDT"
+        //     }
+        //      */
+        //
+        //     if (buy === false) {
+        //
+        //         if (parseFloat(close) > entryPrice) {
+        //             console.log("HO COMPRATO")
+        //             ispatternMatching = false;
+        //             buy = true
+        //             sendMessageTelegram("Ho comprato: " + symbol + " " + new Date().toString())
+        //             //CHiamo api spot trading view
+        //         }
+        //     } else {
+        //
+        //         if (parseFloat(close) < stopLoss) {
+        //             console.log("HO PERSO")
+        //             ispatternMatching = false;
+        //             //CHiamo api spot trading view
+        //         }
+        //     }
+        //
+        // }
     }
 }
 
-
-while(true) {
+setInterval(function () {
     start()
-}
+}, 1000);
+
 
 
 

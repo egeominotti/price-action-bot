@@ -53,7 +53,7 @@ binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
             'time': new Date().toString()
         }
 
-        client.sadd(symbol, JSON.stringify(ticker));
+        client.zadd(symbol, indexArray[symbol], JSON.stringify(ticker));
         console.log(indexArray)
     }
 });
