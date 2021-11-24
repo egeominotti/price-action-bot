@@ -44,7 +44,16 @@ binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
     // - Controlla il Ticker sempre a chiusura
     if (isFinal) {
 
-        let token = {
+        client.get(symbol, function (err, reply) {
+            console.log(reply)
+            if (reply !== undefined) {
+                indexArray[symbol] += 1
+            } else {
+                indexArray[symbol] = 0
+            }
+        });
+
+        let ticker = {
             'index': indexArray[symbol],
             'symbol': symbol,
             'open': parseFloat(open),
@@ -56,18 +65,7 @@ binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
             'time': new Date().toString()
         }
 
-        client.get(symbol, function (err, reply) {
-            console.log(reply)
-            if (reply !== null && reply !== undefined) {
-                indexArray[symbol] += 1
-
-            } else {
-                indexArray[symbol] = 0
-            }
-        });
-
-        client.sadd(symbol, JSON.stringify(token));
-
+        client.sadd(symbol, JSON.stringify(ticker));
         console.log(indexArray)
     }
 
