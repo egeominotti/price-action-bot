@@ -90,7 +90,7 @@ client.flushall((err, success) => {
                     console.log("Pattern found: " + symbol)
                     console.log(pattern)
 
-                    tokenArray[symbol] = {}
+                    tokenArray[symbol] = [];
                     indexArray[symbol] = -1
 
                     let message = 'Pattern found pair: ' + symbol + "\n" +
@@ -99,10 +99,30 @@ client.flushall((err, success) => {
                         "stopLoss:: " + pattern['stopLoss'] + "\n" +
                         "min: " + pattern['min'] + "\n" +
                         "max: " + pattern['max'] + "\n" +
-                        "HH: " + pattern['HH']['tick']['time'] + "\n" +
-                        "LL: " + pattern['LL']['tick']['time'] + "\n" +
-                        "LH: " + pattern['LH']['tick']['time'] + "\n" +
-                        "HL: " + pattern['HL']['tick']['time']
+
+                        "HH open: " + +pattern['HH']['tick']['open'] + "\n" +
+                        "HH high: " + +pattern['HH']['tick']['high'] + "\n" +
+                        "HH low: " + +pattern['HH']['tick']['low'] + "\n" +
+                        "HH close: " + +pattern['HH']['tick']['close'] + "\n" +
+                        "HH time: " + +pattern['HH']['tick']['time'] + "\n" +
+
+                        "LL open: " + +pattern['LL']['tick']['open'] + "\n" +
+                        "LL high: " + +pattern['LL']['tick']['high'] + "\n" +
+                        "LL low: " + +pattern['LL']['tick']['low'] + "\n" +
+                        "LL close: " + +pattern['LL']['tick']['close'] + "\n" +
+                        "LL time: " + +pattern['LL']['tick']['time'] + "\n" +
+
+                        "LH open: " + +pattern['LH']['tick']['open'] + "\n" +
+                        "LH high: " + +pattern['LH']['tick']['high'] + "\n" +
+                        "LH low: " + +pattern['LH']['tick']['low'] + "\n" +
+                        "LH close: " + +pattern['LH']['tick']['close'] + "\n" +
+                        "LH time: " + +pattern['LH']['tick']['time'] + "\n" +
+
+                        "HL open: " + +pattern['HL']['tick']['open'] + "\n" +
+                        "HL high: " + +pattern['HL']['tick']['high'] + "\n" +
+                        "HL low: " + +pattern['HL']['tick']['low'] + "\n" +
+                        "HL close: " + +pattern['HL']['tick']['close'] + "\n" +
+                        "HL time: " + +pattern['HL']['tick']['time']
 
                     logic.sendMessageTelegram(message)
 
