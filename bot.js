@@ -3,6 +3,8 @@ const logic = require('./logic');
 const _ = require("lodash");
 const binance = new Binance();
 
+const args = process.argv;
+let timeFrame = args[2]
 
 const coins = [
     'ENJUSDT',
@@ -42,7 +44,7 @@ for (const token of coins) {
 }
 
 
-binance.websockets.candlesticks(coins, "15m", (candlesticks) => {
+binance.websockets.candlesticks(coins, timeFrame, (candlesticks) => {
 
     let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
     let {
@@ -59,7 +61,6 @@ binance.websockets.candlesticks(coins, "15m", (candlesticks) => {
         Q: quoteBuyVolume
     } = ticks;
 
-    // - Controlla il Ticker sempre a chiusura
     if (isFinal) {
 
         indexArray[symbol] += 1
@@ -74,7 +75,7 @@ binance.websockets.candlesticks(coins, "15m", (candlesticks) => {
             'interval': interval.toString(),
             'time': new Date()
         }
-
+        console.log(tokenArray[symbol])
         tokenArray[symbol].push(ticker)
         let pattern = logic.patternMatching(tokenArray[symbol])
         if (!_.isEmpty(pattern)) {
