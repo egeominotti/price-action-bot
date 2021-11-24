@@ -13,8 +13,6 @@ client.setMaxListeners(0);
 
 const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
 const bot_chat_id = '-558016221'
-
-
 const binance = new Binance();
 
 const coins = [
@@ -368,6 +366,7 @@ client.on("message", function (channel, message) {
         if (!_.isEmpty(pattern)) {
             console.log("Pattern found: " + channel)
             console.log(pattern)
+            sendMessageTelegram(pattern.toString())
         } else {
             console.log("----------------")
             console.log("Running for found HH | LL | LH | HL | .... " + channel)
