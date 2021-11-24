@@ -107,7 +107,7 @@ client.flushall((err, success) => {
                     logic.sendMessageTelegram(message)
 
                 } else {
-                    console.log("Running for found HH | LL | LH | HL | .... " + symbol)
+                    console.log("Running for found | HH | LL | LH | HL .... " + symbol)
                 }
 
             }
