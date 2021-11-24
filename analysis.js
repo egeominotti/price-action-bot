@@ -85,7 +85,7 @@ function MaxTickHigh(storeData, startIndex) {
                 tickerFounded = tick;
             }
         }
-        console.log(storeData)
+
         return {
             'max': max,
             'index': idMaxTickHigh,
@@ -236,7 +236,7 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
 }
 
 function patternMatching(storeData) {
-    console.log(storeData)
+
     // Calcola il massimo (il valore high piu' alto di tutti tra le candele arrivate da binance)
     let maxTickHighVariable = MaxTickHigh(storeData);
     // Valore del massimo trovato tra tutte le candele arrivate da binance (high)
@@ -246,11 +246,11 @@ function patternMatching(storeData) {
     // Indice della candela del massimo
     let indexMax = maxTickHighVariable['index']
 
-    console.log("----- MASSIMO ----------- ")
-    console.log(new Date().toString())
-    console.log(indexMax)
-    console.log(max)
-    console.log(lowMax)
+    // console.log("----- MASSIMO ----------- ")
+    // console.log(new Date().toString())
+    // console.log(indexMax)
+    // console.log(max)
+    // console.log(lowMax)
 
     let HH = HigherHigh(storeData, indexMax, lowMax, max)
 
@@ -258,27 +258,27 @@ function patternMatching(storeData) {
 
         let fibonacciPointMax = HH['tick']['high'];
 
-        console.log(new Date().toString())
-        console.log("TROVATO HH")
-        console.log(HH)
+        // console.log(new Date().toString())
+        // console.log("TROVATO HH")
+        // console.log(HH)
 
         let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
         let min = minTickLowVariable['min']
         let highMin = minTickLowVariable['tick']['high']
         let indexMin = minTickLowVariable['index']
-
-        console.log("----- MINIMO ----------- ")
-        console.log(indexMin)
-        console.log(min)
-        console.log(highMin)
+        //
+        // console.log("----- MINIMO ----------- ")
+        // console.log(indexMin)
+        // console.log(min)
+        // console.log(highMin)
 
         let LL = LowerLow(storeData, indexMin, highMin, min)
 
         if (LL !== -1) {
 
-            console.log("TROVATO LL")
-            console.log(new Date().toString())
-            console.log(LL)
+            // console.log("TROVATO LL")
+            // console.log(new Date().toString())
+            // console.log(LL)
 
             let fibonacciPointMin = LL['tick']['low']
 
@@ -287,17 +287,15 @@ function patternMatching(storeData) {
             let LH = HigherHigh(storeData, LL['indexLL'], lowMax, max)
 
             let fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
-            console.log(fib)
 
             // HO TROVATO LOWER HIGH
             if (LH !== -1) {
 
-                console.log("TROVATO LH")
-                console.log(LH)
-                console.log(new Date().toString())
+                // console.log("TROVATO LH")
+                // console.log(LH)
+                // console.log(new Date().toString())
 
                 let entryPrice = LH['tick']['high'];
-                console.log(entryPrice)
 
                 let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
                 let min = minTickLowVariable['min']
@@ -307,13 +305,22 @@ function patternMatching(storeData) {
                 if (HL !== -1) {
 
                     let stopLoss = HL['tick']['low']
-                    console.log(stopLoss)
 
                     console.log(new Date().toString())
                     console.log("TROVATO HL")
                     console.log(HL)
 
-                    return true
+                    return {
+                        'fibonacci': fib,
+                        'entryPrice': entryPrice,
+                        'stopLoss': stopLoss,
+                        'min': min,
+                        'max': max,
+                        'HH': HH,
+                        'LL': LL,
+                        'LH': LH,
+                        'HL': HL
+                    }
                 }
             }
         }
@@ -328,24 +335,19 @@ function start() {
 
         client.zrangebyscore(token, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
 
-            let ispatternMatching = false;
             let data = [];
-
             for (const k of results) {
                 data.push(JSON.parse(k))
             }
 
-            if (ispatternMatching === false) {
-                if (patternMatching(data)) {
-                    ispatternMatching = true;
-                    // Cancello tutte le chiavi per quella moneta cosi riparte a scaricare
-                    console.log("PATTERN FOUND")
-                } else {
-                    console.log("----------------")
-                    console.log("SCANNING for found HH | LL | LH | HL | .... " + token)
-                    console.log("CERCO IL PATTERN")
-                    console.log("----------------")
-                }
+            let pattern = patternMatching(data)
+            if (!_.isEmpty(pattern)) {
+                console.log("PATTERN FOUND")
+                console.log(pattern)
+            } else {
+                console.log("----------------")
+                console.log("SCANNING for found HH | LL | LH | HL | .... " + token)
+                console.log("----------------")
             }
 
         });
