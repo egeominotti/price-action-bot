@@ -91,8 +91,6 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
             'time': new Date()
         }
 
-        console.log(interval)
-        console.log(tokenArray[symbol])
         tokenArray[symbol].push(ticker)
 
         let pattern = logic.patternMatching(tokenArray[symbol])
@@ -110,6 +108,7 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
                 "MAX_LH": pattern['LH'],
                 "MIN_HL": pattern['HL']
             }
+
             tradePosition[symbol].push(tradeData)
 
             let message = 'SYMBOL: ' + symbol + "\n" +
