@@ -1,24 +1,25 @@
-const Binance =     require('node-binance-api');
-const logic =       require('./logic');
-const coins =       require('./coins');
-const _ =           require("lodash");
-const binance =     new Binance();
-const args =        process.argv;
+const Binance = require('node-binance-api');
+const logic = require('./logic');
+const coins = require('./coins');
+const _ = require("lodash");
+const binance = new Binance();
+const args = process.argv;
 
 let timeFrame = args[2]
 let tokenArray = {}
 let indexArray = {};
 let tradePosition = {}
+
 let users = [
     {
         'nome': 'egeo',
-        'api_keu': '144',
-        'api_secre': '334'
+        'key': 'g4m5LHCwMI1evVuaf6zgKXtszDnSboQla5O5c7uWVtBmdbaiTLNQWPnO9ImbYB9U',
+        'secret': 'b2kxHirJLXDrXuFGvLWUtXvRyUXQu4NvsY8lSy94bJjnJFn0SmESuBq60DJi9b0B'
     },
-        {
+    {
         'nome': 'carlo',
-        'api_keu': '144',
-        'api_secre': '334'
+        'key': 'qElsCKJ7X6Dk8W7WmC5ww3z5nYl3mrAGHGhq1TtG3pOlje6cE0tX2bjSpwrWbJwC',
+        'secret': 'Vyx1jqaKWHv4SWr7aoRoalVIkaDQXh8pg5E9bi3lPDLh9p7tieHfCDvQaFKcsKJj'
     }
 ]
 
@@ -43,11 +44,21 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
         x: isFinal,
     } = ticks;
 
-    for(const user of users){
+    for (const user of users) {
+        let binanceUserTrade = new Binance().options({
+            APIKEY: user.key,
+            APISECRET: user.secret
+        });
         // Con api compro o vendo
-        for(const position of tradePosition){
+        for (const position of tradePosition) {
             // Controllo STOP_LOSS
             // Controllo TAKE_PROFIT
+
+            let quantity = 1;
+            binance.marketBuy(position.pair, quantity);
+            binance.marketSell(position.pair, quantity);
+
+
         }
     }
 
@@ -77,7 +88,8 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
             indexArray[symbol] = -1
 
             let tradePosition = {
-                'STOP_LOSS' : pattern['STOP_LOSS'],
+                'pair': symbol,
+                'STOP_LOSS': pattern['STOP_LOSS'],
                 'TAKE_PROFIT': pattern['TAKE_PROFIT'],
             }
             tradePosition[symbol].push(tradePosition)
@@ -88,32 +100,10 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
                 "ENTRY_PRICE: " + pattern['ENTRY_PRICE'] + "\n" +
                 "TAKE_PROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
                 "STOP_LOSS:: " + pattern['STOP_LOSS'] + "\n" +
+                "MAX_HH: " + pattern['MAX'] + "\n" +
                 "MIN_LL: " + pattern['MIN'] + "\n" +
-                "MAX_HH: " + pattern['MAX']
-
-                // "HH_confirm open: " + pattern['HH']['tick']['open'] + "\n" +
-                // "HH_confirm high: " + pattern['HH']['tick']['high'] + "\n" +
-                // "HH_confirm low: " + pattern['HH']['tick']['low'] + "\n" +
-                // "HH_confirm close: " + pattern['HH']['tick']['close'] + "\n" +
-                // "HH_confirm time: " + pattern['HH']['tick']['time'] + "\n" +
-                //
-                // "LL_confirm open: " + pattern['LL']['tick']['open'] + "\n" +
-                // "LL_confirm high: " + pattern['LL']['tick']['high'] + "\n" +
-                // "LL_confirm low: " + pattern['LL']['tick']['low'] + "\n" +
-                // "LL_confirm close: " + pattern['LL']['tick']['close'] + "\n" +
-                // "LL_confirm time: " + pattern['LL']['tick']['time'] + "\n" +
-                //
-                // "LH_confirm open: " + pattern['LH']['tick']['open'] + "\n" +
-                // "LH_confirm high: " + pattern['LH']['tick']['high'] + "\n" +
-                // "LH_confirm low: " + pattern['LH']['tick']['low'] + "\n" +
-                // "LH_confirm close: " + pattern['LH']['tick']['close'] + "\n" +
-                // "LH_confirm time: " + pattern['LH']['tick']['time'] + "\n" +
-                //
-                // "HL_confirm open: " + pattern['HL']['tick']['open'] + "\n" +
-                // "HL_confirm high: " + pattern['HL']['tick']['high'] + "\n" +
-                // "HL_confirm low: " + pattern['HL']['tick']['low'] + "\n" +
-                // "HL_confirm close: " + pattern['HL']['tick']['close'] + "\n" +
-                // "HL_confirm time: " + pattern['HL']['tick']['time']
+                "MAX_LH: " + pattern['LH'] + "\n" +
+                "MAX_HL " + pattern['HL']
 
             logic.sendMessageTelegram(message)
 
