@@ -3,12 +3,12 @@ const logic = require('./logic');
 const coins = require('./coins');
 const _ = require("lodash");
 const binance = new Binance();
-
 const args = process.argv;
-let timeFrame = args[2]
 
+let timeFrame = args[2]
 let tokenArray = {}
 let indexArray = {};
+
 for (const token of coins.getCoins()) {
     indexArray[token] = -1;
     tokenArray[token] = [];
