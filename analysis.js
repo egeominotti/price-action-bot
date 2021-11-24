@@ -4,11 +4,12 @@ const axios = require('axios');
 const redis = require("redis");
 const client = redis.createClient();
 const _ = require('lodash');
+
 client.on("error", function (error) {
     console.error(error);
 });
 
-
+client.setMaxListeners(0);
 
 const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
 const bot_chat_id = '-558016221'
@@ -350,37 +351,45 @@ function patternMatching(storeData) {
     return false;
 }
 
-function start() {
-
-    for (const token of coins) {
-
-        client.zrangebyscore(token, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
-
-            if (results.length > 1) {
-                let data = [];
-                for (const k of results) {
-                    data.push(JSON.parse(k))
-                }
-
-                let pattern = patternMatching(data)
-                if (!_.isEmpty(pattern)) {
-                    console.log("Pattern found: " + token)
-                    console.log(pattern)
-                } else {
-                    console.log("----------------")
-                    console.log("Running for found HH | LL | LH | HL | .... " + token)
-                    console.log("----------------")
-                }
-            }
-
-        });
-    }
+for (const token of coins) {
+    client.subscribe(token, (err, count) => {
+        if (err) console.error(err.message);
+        console.log(`Subscribed to ${count} channels.`);
+    });
 }
 
-setInterval(function () {
-    start()
-}, 65000);
+function getData(channel) {
+    client.zrangebyscore(channel, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
 
+        console.log(results)
+        // if (results.length > 1) {
+        //     let data = [];
+        //     for (const k of results) {
+        //         data.push(JSON.parse(k))
+        //     }
+        //
+        //     let pattern = patternMatching(data)
+        //     if (!_.isEmpty(pattern)) {
+        //         console.log("Pattern found: " + channel)
+        //         console.log(pattern)
+        //     } else {
+        //         console.log("----------------")
+        //         console.log("Running for found HH | LL | LH | HL | .... " + channel)
+        //         console.log("----------------")
+        //     }
+        // }
 
+    });
+}
+
+client.on("message", function (channel, message) {
+
+    if (message !== undefined) {
+        console.log(channel)
+        console.log(`Received the following message from ${channel}: ${message}`);
+        getData(message)
+
+    }
+});
 
 

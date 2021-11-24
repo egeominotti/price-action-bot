@@ -79,6 +79,7 @@ client.flushall((err, success) => {
                     'time': new Date()
                 }
                 client.zadd(symbol, indexArray[symbol], JSON.stringify(ticker));
+                client.publish(symbol, {})
             }
         });
     }
