@@ -82,9 +82,6 @@ client.flushall((err, success) => {
                 }
 
                 tokenArray[symbol].push(ticker)
-                console.log(tokenArray);
-
-                //client.zadd(symbol, indexArray[symbol], JSON.stringify(ticker));
                 client.publish(symbol, JSON.stringify(tokenArray[symbol]))
             }
         });
