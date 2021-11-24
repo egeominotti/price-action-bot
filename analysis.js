@@ -26,11 +26,6 @@ const coins = [
 ];
 
 
-let entryPrice = 0
-let stopLoss = 0
-let fibonacciPointMax = 0
-let fibonacciPointMin = 0
-let fib = 0
 
 function sendMessageTelegram(text) {
 
@@ -262,7 +257,7 @@ function patternMatching(storeData) {
 
     if (HH !== -1) {
 
-        fibonacciPointMax = HH['tick']['high'];
+        let fibonacciPointMax = HH['tick']['high'];
 
         console.log(new Date().toString())
         console.log("TROVATO HH")
@@ -286,13 +281,13 @@ function patternMatching(storeData) {
             console.log(new Date().toString())
             console.log(LL)
 
-            fibonacciPointMin = LL['tick']['low']
+            let fibonacciPointMin = LL['tick']['low']
 
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
             let lowMax = maxTickHighVariable['tick']['low']
             let LH = HigherHigh(storeData, LL['indexLL'], lowMax, max)
 
-            fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
+            let fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
             console.log(fib)
 
             // HO TROVATO LOWER HIGH
@@ -302,7 +297,8 @@ function patternMatching(storeData) {
                 console.log(LH)
                 console.log(new Date().toString())
 
-                entryPrice = LH['tick']['high'];
+                let entryPrice = LH['tick']['high'];
+                console.log(entryPrice)
 
                 let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
                 let min = minTickLowVariable['min']
@@ -311,7 +307,8 @@ function patternMatching(storeData) {
 
                 if (HL !== -1) {
 
-                    stopLoss = HL['tick']['low']
+                    let stopLoss = HL['tick']['low']
+                    console.log(stopLoss)
 
                     console.log(new Date().toString())
                     console.log("TROVATO HL")
