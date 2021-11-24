@@ -45,13 +45,11 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
     } = ticks;
 
     for (const user of users) {
-        console.log(user)
         let buy = false;
         let binanceUserTrade = new Binance().options({
             APIKEY: user.key,
             APISECRET: user.secret
         });
-        console.log(tradePosition)
         // Con api compro o vendo
         for (const position of tradePosition[symbol]) {
             // Controllo STOP_LOSS
@@ -103,7 +101,7 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
             tokenArray[symbol] = [];
             indexArray[symbol] = -1
 
-            let tradePosition = {
+            let tradeData = {
                 'symbol': symbol,
                 'STOP_LOSS': pattern['STOP_LOSS'],
                 'TAKE_PROFIT': pattern['TAKE_PROFIT'],
@@ -112,7 +110,7 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
                 "MAX_LH": pattern['LH'],
                 "MIN_HL": pattern['HL']
             }
-            tradePosition[symbol].push(tradePosition)
+            tradePosition[symbol].push(tradeData)
 
             let message = 'SYMBOL: ' + symbol + "\n" +
                 'INTERVAL: ' + interval + "\n" +

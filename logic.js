@@ -113,8 +113,8 @@ function LowerLow(storeData, indexMin, highMin, min) {
     for (let index = indexMin + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (tick['high'] > highMin) {
-
+        if (highMin < tick['high']) {
+            console.log("Confermato LL")
             return {
                 'tickIndex': tick['index'],
                 'indexMin': indexMin,
@@ -138,9 +138,9 @@ function LowerLow(storeData, indexMin, highMin, min) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (nextTick['high'] > tick['high']) {
+                    if (tick['high'] < nextTick['high']) {
 
-                        //console.log("Seconda condizione confermata LL")
+                        console.log("Seconda condizione confermata LL")
 
                         return {
                             'tickIndex': nextTick['index'],
@@ -167,8 +167,8 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
     for (let index = indexMax + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (tick['low'] < lowMax) {
-
+        if (lowMax > tick['low']) {
+            console.log("Confermato HH")
             return {
                 'tickIndex': tick['index'],
                 'indexMax': indexMax,
@@ -193,9 +193,9 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (nextTick['low'] < tick['low']) {
+                    if (tick['low'] > nextTick['low']) {
 
-                        //console.log("Seconda condizione confermata HH")
+                        console.log("Seconda condizione confermata HH")
                         return {
                             'tickIndex': nextTick['index'],
                             'indexMax': indexMax,
