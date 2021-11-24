@@ -8,10 +8,24 @@ const args =        process.argv;
 let timeFrame = args[2]
 let tokenArray = {}
 let indexArray = {};
+let tradePosition = {}
+let users = [
+    {
+        'nome': 'egeo',
+        'api_keu': '144',
+        'api_secre': '334'
+    },
+        {
+        'nome': 'carlo',
+        'api_keu': '144',
+        'api_secre': '334'
+    }
+]
 
 for (const token of coins.getCoins()) {
     indexArray[token] = -1;
     tokenArray[token] = [];
+    tradePosition[token] = [];
 }
 
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
@@ -28,6 +42,14 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
         i: interval,
         x: isFinal,
     } = ticks;
+
+    for(const user of users){
+        // Con api compro o vendo
+        for(const position of tradePosition){
+            // Controllo STOP_LOSS
+            // Controllo TAKE_PROFIT
+        }
+    }
 
     if (isFinal) {
 
@@ -53,6 +75,12 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
 
             tokenArray[symbol] = [];
             indexArray[symbol] = -1
+
+            let tradePosition = {
+                'STOP_LOSS' : pattern['STOP_LOSS'],
+                'TAKE_PROFIT': pattern['TAKE_PROFIT'],
+            }
+            tradePosition[symbol].push(tradePosition)
 
             let message = 'SYMBOL: ' + symbol + "\n" +
                 'INTERVAL: ' + interval + "\n" +
