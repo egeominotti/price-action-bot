@@ -216,24 +216,23 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
 function patternMatching(storeData) {
 
     let maxTickHighVariable = MaxTickHigh(storeData);
-    let max = maxTickHighVariable['max']
+    let HH_MAX = maxTickHighVariable['max']
     let lowMax = maxTickHighVariable['tick']['low']
     let indexMax = maxTickHighVariable['index']
 
 
-    let HH = HigherHigh(storeData, indexMax, lowMax, max)
+    let HH = HigherHigh(storeData, indexMax, lowMax, ABSOLUTE_MAX)
 
     if (HH !== -1) {
 
         let fibonacciPointMax = HH['tick']['high'];
 
         let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
-        let min = minTickLowVariable['min']
+        let HH_MIN = minTickLowVariable['min']
         let highMin = minTickLowVariable['tick']['high']
         let indexMin = minTickLowVariable['index']
-        //
 
-        let LL = LowerLow(storeData, indexMin, highMin, min)
+        let LL = LowerLow(storeData, indexMin, highMin, HH_MIN)
 
         if (LL !== -1) {
 
@@ -242,11 +241,10 @@ function patternMatching(storeData) {
             let LL_MIN = minTickLowVariable['min']
 
             let fibonacciPointMin = LL['tick']['low']
-
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
             let lowMax = maxTickHighVariable['tick']['low']
-            let LH = HigherHigh(storeData, LL['indexLL'], lowMax, max)
 
+            let LH = HigherHigh(storeData, LL['indexLL'], lowMax, HH_MAX)
             let fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
 
             if (LH !== -1) {
@@ -254,9 +252,9 @@ function patternMatching(storeData) {
                 let entryPrice = LH['tick']['high'];
 
                 let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
-                let min = minTickLowVariable['min']
+                let LH_MIN = minTickLowVariable['min']
                 let highMin = minTickLowVariable['tick']['high']
-                let HL = LowerLow(storeData, LH['indexHH'], highMin, min)
+                let HL = LowerLow(storeData, LH['indexHH'], highMin, LH_MIN)
 
                 if (HL !== -1) {
 
