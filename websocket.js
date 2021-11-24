@@ -34,9 +34,11 @@ const coins = [
     'FTTUSDT'
 ];
 
+let tokenArray = {}
 let indexArray = {};
 for (const token of coins) {
     indexArray[token] = -1;
+    tokenArray[token] = [];
 }
 
 client.flushall((err, success) => {
@@ -78,8 +80,12 @@ client.flushall((err, success) => {
                     'interval': interval.toString(),
                     'time': new Date()
                 }
-                client.zadd(symbol, indexArray[symbol], JSON.stringify(ticker));
-                client.publish(symbol, {})
+
+                tokenArray[symbol].push(ticker)
+                console.log(tokenArray);
+
+                //client.zadd(symbol, indexArray[symbol], JSON.stringify(ticker));
+                client.publish(symbol, JSON.stringify(tokenArray[symbol]))
             }
         });
     }

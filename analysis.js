@@ -360,7 +360,7 @@ for (const token of coins) {
 
 function getData(channel) {
     client.zrangebyscore(channel, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
-
+        console.log(err)
         console.log(results)
         // if (results.length > 1) {
         //     let data = [];
@@ -388,8 +388,8 @@ client.on("message", function (channel, message) {
         console.log(channel)
         console.log(`Received the following message from ${channel}: ${message}`);
         getData(message)
-
     }
 });
 
+console.log("ok")
 
