@@ -11,8 +11,6 @@ const coins = [
     'ENJUSDT',
     'SANDUSDT',
     'MANAUSDT',
-    'ATLASUSDT',
-    'BLOKUSDT',
     'AXSUSDT',
     'ALICEUSDT',
     'DARUSDT',
