@@ -373,8 +373,6 @@ function start() {
 
         });
     }
-
-    console.log("Pattern iteration end")
 }
 
 setInterval(function () {
