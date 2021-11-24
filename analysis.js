@@ -361,7 +361,6 @@ client.on("message", function (channel, message) {
     if (message !== undefined) {
 
         let messageParsed = JSON.parse(message)
-        console.log(messageParsed)
         let pattern = patternMatching(messageParsed)
         if (!_.isEmpty(pattern)) {
             console.log("Pattern found: " + channel)
