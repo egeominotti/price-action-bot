@@ -39,6 +39,7 @@ for (const token of coins) {
 }
 
 binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
+
     let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
     let {
         o: open,
