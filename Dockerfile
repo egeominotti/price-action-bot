@@ -1,8 +1,8 @@
 # https://hub.docker.com/r/mhart/alpine-node
 FROM node:lts-alpine
-WORKDIR /bot
-COPY app/package.json app/yarn.lock ./
+WORKDIR /app
+COPY ./package.json ./
 RUN npm install
-COPY /bot .
+COPY ./ ./
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
