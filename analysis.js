@@ -358,36 +358,21 @@ for (const token of coins) {
     });
 }
 
-function getData(channel) {
-    client.zrangebyscore(channel, 0, Date.now() + 100 * 60 * 1000, function (err, results) {
-        console.log(err)
-        console.log(results)
-        // if (results.length > 1) {
-        //     let data = [];
-        //     for (const k of results) {
-        //         data.push(JSON.parse(k))
-        //     }
-        //
-        //     let pattern = patternMatching(data)
-        //     if (!_.isEmpty(pattern)) {
-        //         console.log("Pattern found: " + channel)
-        //         console.log(pattern)
-        //     } else {
-        //         console.log("----------------")
-        //         console.log("Running for found HH | LL | LH | HL | .... " + channel)
-        //         console.log("----------------")
-        //     }
-        // }
-
-    });
-}
 
 client.on("message", function (channel, message) {
 
     if (message !== undefined) {
-        console.log(channel)
-        console.log(`Received the following message from ${channel}: ${message}`);
-        getData(message)
+
+        let messageParsed = JSON.parse(message)
+        let pattern = patternMatching(messageParsed)
+        if (!_.isEmpty(pattern)) {
+            console.log("Pattern found: " + channel)
+            console.log(pattern)
+        } else {
+            console.log("----------------")
+            console.log("Running for found HH | LL | LH | HL | .... " + channel)
+            console.log("----------------")
+        }
     }
 });
 
