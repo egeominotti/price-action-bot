@@ -1,8 +1,7 @@
-const Binance = require('node-binance-api');
-const redis = require("redis");
-const client = redis.createClient();
-
-const binance = new Binance();
+const Binance =     require('node-binance-api');
+const redis =       require("redis");
+const client =      redis.createClient();
+const binance =     new Binance();
 
 const coins = [
     'ENJUSDT',
@@ -51,8 +50,6 @@ binance.websockets.candlesticks(coins, "1m", (candlesticks) => {
             'interval': interval.toString(),
             'time': new Date()
         }
-
         client.zadd(symbol, indexArray[symbol], JSON.stringify(ticker));
-        console.log(indexArray)
     }
 });
