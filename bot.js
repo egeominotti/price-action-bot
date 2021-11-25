@@ -92,7 +92,9 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
                 "LL: " + pattern['LL'] + "\n" +
                 "LH: " + pattern['LH'] + "\n" +
                 "HL " + pattern['HL']
-
+            console.log(message)
+            console.log(message)
+            console.log(message)
             logic.sendMessageTelegram(message)
 
         } else {
