@@ -18,7 +18,7 @@ let timeFrame = [
 
 binance.exchangeInfo(function (error, data) {
 
-    let minimums = {};
+    let symbolData = {};
 
     for (let obj of data.symbols) {
 
@@ -41,11 +41,12 @@ binance.exchangeInfo(function (error, data) {
 
             filters.baseAssetPrecision = obj.baseAssetPrecision;
             filters.quoteAssetPrecision = obj.quoteAssetPrecision;
-            minimums[obj.symbol] = filters;
+            symbolData[obj.symbol] = filters;
         }
     }
-    fs.writeFile("symbols.json", JSON.stringify(minimums, null, 4), function (err) {
+    fs.writeFile("symbols.json", JSON.stringify(symbolData, null, 4), function (err) {
     });
+
 });
 
 
