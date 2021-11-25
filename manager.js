@@ -6,14 +6,14 @@ const fs = require("fs");
 
 let timeFrame = [
     '1m',
-    '5m',
-    '15m',
-    '1h',
-    '4h',
-    '8h',
-    '1D',
-    '3D',
-    '1W',
+    // '5m',
+    // '15m',
+    // '1h',
+    // '4h',
+    // '8h',
+    // '1D',
+    // '3D',
+    // '1W',
 ]
 
 binance.exchangeInfo(function (error, data) {
