@@ -242,7 +242,6 @@ function patternMatching(storeData) {
             let fibonacciPointMin = LL['tick']['low']
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
             let closeMax = maxTickHighVariable['tick']['close']
-            let maxTick_LH = maxTickHighVariable['tick']['high']
             let lowMax = maxTickHighVariable['tick']['low']
 
             let LH = HigherHigh(storeData, LL['indexLL'], lowMax, closeMax, HH_MAX)
