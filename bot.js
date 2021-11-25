@@ -65,6 +65,8 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
         let pattern = logic.patternMatching(tokenArray[symbol])
         if (!_.isEmpty(pattern)) {
 
+            console.log("Pattern found")
+
             tokenArray[symbol] = [];
             indexArray[symbol] = -1
 
@@ -86,10 +88,10 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
                 "ENTRY_PRICE: " + pattern['ENTRY_PRICE'] + "\n" +
                 "TAKE_PROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
                 "STOP_LOSS:  " + pattern['STOP_LOSS'] + "\n" +
-                "MAX_HH: " + pattern['MAX'] + "\n" +
-                "MIN_LL: " + pattern['MIN'] + "\n" +
-                "MAX_LH: " + pattern['LH'] + "\n" +
-                "MIN_HL " + pattern['HL']
+                "HH: " + pattern['HH'] + "\n" +
+                "LL: " + pattern['LL'] + "\n" +
+                "LH: " + pattern['LH'] + "\n" +
+                "HL " + pattern['HL']
 
             logic.sendMessageTelegram(message)
 
