@@ -51,6 +51,7 @@ let timeFrame = [
 ]
 
 
+
 for (let time of timeFrame) {
 
     const bot = spawn('node', ['bot.js', time]);
