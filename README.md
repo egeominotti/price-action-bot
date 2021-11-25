@@ -13,7 +13,8 @@
             -e REPO_PASS=cevfag12 \
             -v /var/run/docker.sock:/var/run/docker.sock \
             containrrr/watchtower --interval 300 -c --include-restarting
-    - Run bot    
+
+    - Run bot
 
         docker run --restart unless-stopped -d  egeominotti/bot-price-action:latest
 
