@@ -13,6 +13,7 @@ function sendMessageTelegram(text) {
         .then(function (response) {
         })
         .catch(function (error) {
+            console.log(error)
         })
         .then(function () {
         });
