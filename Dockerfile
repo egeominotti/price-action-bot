@@ -4,5 +4,5 @@ WORKDIR /app
 RUN chown -R node:node /app
 COPY package*.json ./
 RUN npm install
-COPY . /app
+COPY . .
 CMD node manager.js
