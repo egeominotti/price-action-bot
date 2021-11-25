@@ -104,7 +104,7 @@ function MinTickLow(storeData, indexMax) {
 
 }
 
-function LowerLow(storeData, indexMin, highMin, min) {
+function LowerLow(storeData, indexMin, highMin, closeMin, min) {
 
     let fail = false
     let failIndex;
@@ -114,7 +114,7 @@ function LowerLow(storeData, indexMin, highMin, min) {
     for (let index = indexMin + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (highMin < tick['high']) {
+        if (tick['high'] > highMin && tick['close'] > closeMin) {
 
             return {
                 'tickIndex': tick['index'],
@@ -139,7 +139,7 @@ function LowerLow(storeData, indexMin, highMin, min) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (tick['high'] < nextTick['high']) {
+                    if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
 
                         return {
                             'tickIndex': nextTick['index'],
@@ -157,7 +157,7 @@ function LowerLow(storeData, indexMin, highMin, min) {
     return -1;
 }
 
-function HigherHigh(storeData, indexMax, lowMax, max) {
+function HigherHigh(storeData, indexMax, lowMax, closeMax, max) {
 
     let fail = false
     let failIndex;
@@ -166,7 +166,7 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
     for (let index = indexMax + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (lowMax > tick['low']) {
+        if (tick['low'] < lowMax && tick['close'] < closeMax) {
             return {
                 'tickIndex': tick['index'],
                 'indexMax': indexMax,
@@ -191,7 +191,7 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
                 let tick = storeData[index];
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
-                    if (tick['low'] > nextTick['low']) {
+                    if (nextTick['low'] < tick['low'] && nextTick['close'] < tick['close']) {
 
                         return {
                             'tickIndex': nextTick['index'],
@@ -215,10 +215,11 @@ function patternMatching(storeData) {
     let maxTickAbsolute = maxTickHighVariable['tick']['high']
     let HH_MAX = maxTickHighVariable['max']
     let lowMax = maxTickHighVariable['tick']['low']
+    let closeMax = maxTickHighVariable['tick']['close']
     let indexMax = maxTickHighVariable['index']
 
     // Algoritmo che cerca una candela per confermare che il massimo è un HH
-    let HH = HigherHigh(storeData, indexMax, lowMax, HH_MAX)
+    let HH = HigherHigh(storeData, indexMax, lowMax, closeMax, HH_MAX)
 
     if (HH !== -1) {
 
@@ -229,9 +230,10 @@ function patternMatching(storeData) {
         let HH_MIN = minTickLowVariable['min']
         let minTickAbsolute = minTickLowVariable['tick']['low']
         let highMin = minTickLowVariable['tick']['high']
+        let closeMin = minTickLowVariable['tick']['close']
         let indexMin = minTickLowVariable['index']
 
-        let LL = LowerLow(storeData, indexMin, highMin, HH_MIN)
+        let LL = LowerLow(storeData, indexMin, highMin, closeMin, HH_MIN)
 
         if (LL !== -1) {
 
@@ -239,10 +241,11 @@ function patternMatching(storeData) {
 
             let fibonacciPointMin = LL['tick']['low']
             let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
+            let closeMax = maxTickHighVariable['tick']['close']
             let maxTick_LH = maxTickHighVariable['tick']['high']
             let lowMax = maxTickHighVariable['tick']['low']
 
-            let LH = HigherHigh(storeData, LL['indexLL'], lowMax, HH_MAX)
+            let LH = HigherHigh(storeData, LL['indexLL'], lowMax, closeMax, HH_MAX)
             let fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
 
             if (LH !== -1) {
@@ -254,8 +257,9 @@ function patternMatching(storeData) {
 
                 let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
                 let LH_MIN = minTickLowVariable['min']
+                let closeMin = minTickLowVariable['tick']['close']
                 let highMin = minTickLowVariable['tick']['high']
-                let HL = LowerLow(storeData, LH['indexHH'], highMin, LH_MIN)
+                let HL = LowerLow(storeData, LH['indexHH'], highMin, closeMin, LH_MIN)
 
                 if (HL !== -1) {
 
