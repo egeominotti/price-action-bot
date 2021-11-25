@@ -82,16 +82,17 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
 
             //tradePosition[symbol].push(tradeData)
 
-            let message = 'SYMBOL: ' + symbol + "\n" +
-                'INTERVAL: ' + interval + "\n" +
-                'PATTERN FOUND AT: ' + pattern['patternFoundTime'] + "\n" +
-                "ENTRY_PRICE: " + pattern['ENTRY_PRICE'] + "\n" +
-                "TAKE_PROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
-                "STOP_LOSS:  " + pattern['STOP_LOSS'] + "\n" +
+            let message = "SYMBOL: " + symbol + "\n" +
+                "INTERVAL: " + interval + "\n" +
+                "PATTERN FOUND AT: " + pattern['patternFoundTime'] + "\n" +
+                "ENTRYPRICE: " + pattern['ENTRY_PRICE'] + "\n" +
+                "TAKEPROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
+                "STOPLOSS:  " + pattern['STOP_LOSS'] + "\n" +
                 "HH: " + pattern['HH'] + "\n" +
                 "LL: " + pattern['LL'] + "\n" +
                 "LH: " + pattern['LH'] + "\n" +
-                "HL " + pattern['HL']
+                "HL: " + pattern['HL']
+
             console.log(message)
             console.log(message)
             console.log(message)
