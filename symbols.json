@@ -1187,18 +1187,6 @@
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
     },
-    "BTCUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "12.12700000",
-        "maxPrice": "230.40600000",
-        "tickSize": "0.00100000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "3000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
     "GXSUSDT": {
         "status": "TRADING",
         "minPrice": "0.00010000",
@@ -1343,42 +1331,6 @@
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
     },
-    "ETHUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "11.78200000",
-        "maxPrice": "223.84600000",
-        "tickSize": "0.00100000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "3000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "ADAUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "5.89900000",
-        "maxPrice": "112.06700000",
-        "tickSize": "0.00100000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "LINKUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.15540000",
-        "maxPrice": "2.95180000",
-        "tickSize": "0.00010000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
     "VTHOUSDT": {
         "status": "TRADING",
         "minPrice": "0.00000100",
@@ -1459,30 +1411,6 @@
         "stepSize": "1.00000000",
         "minQty": "1.00000000",
         "maxQty": "900000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "BNBUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "87.43000000",
-        "maxPrice": "1661.08000000",
-        "tickSize": "0.01000000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "500.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "XTZUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.00319000",
-        "maxPrice": "0.06051000",
-        "tickSize": "0.00001000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
         "minNotional": "10.00000000",
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
@@ -1835,54 +1763,6 @@
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
     },
-    "EOSUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.05100000",
-        "maxPrice": "0.96840000",
-        "tickSize": "0.00010000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "TRXUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.03118000",
-        "maxPrice": "0.59231000",
-        "tickSize": "0.00001000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "XRPUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.39650000",
-        "maxPrice": "7.53220000",
-        "tickSize": "0.00010000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "DOTUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "1.01300000",
-        "maxPrice": "19.24000000",
-        "tickSize": "0.00100000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
     "BELUSDT": {
         "status": "TRADING",
         "minPrice": "0.00100000",
@@ -1903,18 +1783,6 @@
         "stepSize": "0.01000000",
         "minQty": "0.01000000",
         "maxQty": "90000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "LTCUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.54300000",
-        "maxPrice": "10.31400000",
-        "tickSize": "0.00100000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
         "minNotional": "10.00000000",
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
@@ -2003,18 +1871,6 @@
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
     },
-    "UNIUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.21200000",
-        "maxPrice": "4.01800000",
-        "tickSize": "0.00100000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
     "ORNUSDT": {
         "status": "TRADING",
         "minPrice": "0.00100000",
@@ -2099,30 +1955,6 @@
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
     },
-    "FILUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.05540000",
-        "maxPrice": "1.05220000",
-        "tickSize": "0.00010000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "YFIUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.01480000",
-        "maxPrice": "0.28070000",
-        "tickSize": "0.00010000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
     "INJUSDT": {
         "status": "TRADING",
         "minPrice": "0.00100000",
@@ -2155,18 +1987,6 @@
         "stepSize": "0.10000000",
         "minQty": "0.10000000",
         "maxQty": "900000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "BCHUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.03310000",
-        "maxPrice": "0.62760000",
-        "tickSize": "0.00010000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
         "minNotional": "10.00000000",
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
@@ -2299,30 +2119,6 @@
         "stepSize": "0.10000000",
         "minQty": "0.10000000",
         "maxQty": "900000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "SUSHIUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.00227000",
-        "maxPrice": "0.04307000",
-        "tickSize": "0.00001000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "150000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "XLMUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.00727000",
-        "maxPrice": "0.13806000",
-        "tickSize": "0.00001000",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "920000.00000000",
         "minNotional": "10.00000000",
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
@@ -2675,18 +2471,6 @@
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
     },
-    "SUPERUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.00010000",
-        "maxPrice": "10000.00000000",
-        "tickSize": "0.00010000",
-        "stepSize": "1.00000000",
-        "minQty": "1.00000000",
-        "maxQty": "9222449.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
     "CFXUSDT": {
         "status": "TRADING",
         "minPrice": "0.00010000",
@@ -2755,18 +2539,6 @@
         "stepSize": "1.00000000",
         "minQty": "1.00000000",
         "maxQty": "900000.00000000",
-        "minNotional": "10.00000000",
-        "baseAssetPrecision": 8,
-        "quoteAssetPrecision": 8
-    },
-    "1INCHUPUSDT": {
-        "status": "TRADING",
-        "minPrice": "0.00944700",
-        "maxPrice": "0.17948300",
-        "tickSize": "0.00000100",
-        "stepSize": "0.01000000",
-        "minQty": "0.01000000",
-        "maxQty": "300000.00000000",
         "minNotional": "10.00000000",
         "baseAssetPrecision": 8,
         "quoteAssetPrecision": 8
