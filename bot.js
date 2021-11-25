@@ -166,7 +166,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     'hl': pattern['HL']
                 }
 
-                fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
                 });
 
                 logic.sendMessageTelegram(message)
