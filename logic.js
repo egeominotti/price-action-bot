@@ -142,7 +142,7 @@ function LowerLow(storeData, indexMin, highMin, closeMin, min) {
                     if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
 
                         return {
-                            'tickIndex': nextTick['index'],
+                            'tickIndex': storeData[index]['index'],
                             'indexMin': indexMin,
                             'indexLL': nextTick['index'],
                             'tick': tick
@@ -182,7 +182,6 @@ function HigherHigh(storeData, indexMax, lowMax, closeMax, max) {
     }
 
     // Pattern recognition matcher ( 2 )
-
     if (fail) {
 
         for (let index = failIndex; index <= storeData.length; ++index) {
@@ -194,9 +193,9 @@ function HigherHigh(storeData, indexMax, lowMax, closeMax, max) {
                     if (nextTick['low'] < tick['low'] && nextTick['close'] < tick['close']) {
 
                         return {
-                            'tickIndex': nextTick['index'],
+                            'tickIndex': storeData[index]['index'],
                             'indexMax': indexMax,
-                            'indexHH': nextTick['index'],
+                            'indexHH': index,
                             'tick': tick
                         };
 
