@@ -264,16 +264,19 @@ function patternMatching(storeData) {
 
                     console.log("Confermato HL");
 
-                    return {
-                        'patternFoundTime': new Date().toISOString(),
-                        'FIBONACCI': fib,
-                        'TAKE_PROFIT': takeProfit,
-                        'ENTRY_PRICE': entryPrice,
-                        'STOP_LOSS': LH_MIN,
-                        'HH': maxTickAbsolute,
-                        'LL': minTickAbsolute,
-                        'LH': entryPrice,
-                        'HL': LH_MIN
+                    if (storeData['close'] > LH['tick']['high']) {
+
+                        return {
+                            'patternFoundTime': new Date().toISOString(),
+                            'FIBONACCI': fib,
+                            'TAKE_PROFIT': takeProfit,
+                            'ENTRY_PRICE': entryPrice,
+                            'STOP_LOSS': LH_MIN,
+                            'HH': maxTickAbsolute,
+                            'LL': minTickAbsolute,
+                            'LH': entryPrice,
+                            'HL': LH_MIN
+                        }
                     }
                 }
             }
