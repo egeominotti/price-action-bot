@@ -3,6 +3,7 @@
     "axios": "^0.24.0",
     "fib-retracement": "0.0.4",
     "loadsh": "0.0.4",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "node-binance-api": "^0.13.1"
   }
 }
