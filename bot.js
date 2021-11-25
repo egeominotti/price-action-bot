@@ -74,7 +74,7 @@ let users = [
 
 
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
-//logic.sendMessageTelegram(startMessage)
+logic.sendMessageTelegram(startMessage)
 
 fs.readFile('symbols.json', 'utf8', function (err, data) {
 
