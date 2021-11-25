@@ -11,7 +11,7 @@ binance.exchangeInfo(function (error, data) {
     for (let obj of data.symbols) {
 
         if (obj.status === 'TRADING' && obj.quoteAsset.endsWith('USDT')) {
-            if (!obj.quoteAsset.includes('DOWNUSDT')) {
+            if (obj.quoteAsset.indexOf('DOWNUSDT') !== -1) {
 
                 let filters = {status: obj.status};
                 for (let filter of obj.filters) {
@@ -34,8 +34,7 @@ binance.exchangeInfo(function (error, data) {
             }
         }
     }
-    fs.writeFile("symbols.json", JSON.stringify(symbolData, null, 4), function (err) {
-    });
+    fs.writeFile("symbols.json", JSON.stringify(symbolData, null, 4), function (err) {});
 
 });
 
