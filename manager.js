@@ -10,7 +10,7 @@ binance.exchangeInfo(function (error, data) {
 
     for (let obj of data.symbols) {
 
-        if (obj.status === 'TRADING' && obj.quoteAsset === 'USDT') {
+        if (obj.status === 'TRADING' && obj.symbol.endsWith('USDT')) {
             if (obj.symbol.indexOf("DOWNUSDT") === -1) {
 
                 let filters = {status: obj.status};
