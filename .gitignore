@@ -10,7 +10,7 @@
 
 # production
 /build
-
+.ieea
 # misc
 .DS_Store
 .env.local
