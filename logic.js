@@ -114,7 +114,7 @@ function LowerLow(storeData, indexMin, highMin, min) {
 
         let tick = storeData[index];
         if (highMin < tick['high']) {
-            console.log("Confermato LL")
+
             return {
                 'tickIndex': tick['index'],
                 'indexMin': indexMin,
@@ -139,8 +139,6 @@ function LowerLow(storeData, indexMin, highMin, min) {
                 if (storeData[index + 1] !== undefined) {
                     let nextTick = storeData[index + 1]
                     if (tick['high'] < nextTick['high']) {
-
-                        console.log("Seconda condizione confermata LL")
 
                         return {
                             'tickIndex': nextTick['index'],
@@ -168,7 +166,6 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
 
         let tick = storeData[index];
         if (lowMax > tick['low']) {
-            console.log("Confermato HH")
             return {
                 'tickIndex': tick['index'],
                 'indexMax': indexMax,
@@ -195,7 +192,6 @@ function HigherHigh(storeData, indexMax, lowMax, max) {
                     let nextTick = storeData[index + 1]
                     if (tick['low'] > nextTick['low']) {
 
-                        console.log("Seconda condizione confermata HH")
                         return {
                             'tickIndex': nextTick['index'],
                             'indexMax': indexMax,
@@ -225,26 +221,32 @@ function patternMatching(storeData) {
 
     if (HH !== -1) {
 
-        let fibonacciPointMax =     maxTickAbsolute;
-        let minTickLowVariable =    MinTickLow(storeData, HH['indexHH']);
-        let HH_MIN =                minTickLowVariable['min']
-        let minTickAbsolute =       minTickLowVariable['tick']['low']
-        let highMin =               minTickLowVariable['tick']['high']
-        let indexMin =              minTickLowVariable['index']
+        console.log("Confermato HH")
+
+        let fibonacciPointMax = maxTickAbsolute;
+        let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
+        let HH_MIN = minTickLowVariable['min']
+        let minTickAbsolute = minTickLowVariable['tick']['low']
+        let highMin = minTickLowVariable['tick']['high']
+        let indexMin = minTickLowVariable['index']
 
         let LL = LowerLow(storeData, indexMin, highMin, HH_MIN)
 
         if (LL !== -1) {
 
-            let fibonacciPointMin =     LL['tick']['low']
-            let maxTickHighVariable =   MaxTickHigh(storeData, LL['indexLL']);
-            let maxTick_LH =            maxTickHighVariable['tick']['high']
-            let lowMax =                maxTickHighVariable['tick']['low']
+            console.log("Confermato LL")
+
+            let fibonacciPointMin = LL['tick']['low']
+            let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
+            let maxTick_LH = maxTickHighVariable['tick']['high']
+            let lowMax = maxTickHighVariable['tick']['low']
 
             let LH = HigherHigh(storeData, LL['indexLL'], lowMax, HH_MAX)
             let fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
 
             if (LH !== -1) {
+
+                console.log("Confermato LH")
 
                 let entryPrice = LH['tick']['high'];
                 let takeProfit = LH['tick']['close'] + (maxTickAbsolute - minTickAbsolute)
@@ -255,6 +257,8 @@ function patternMatching(storeData) {
                 let HL = LowerLow(storeData, LH['indexHH'], highMin, LH_MIN)
 
                 if (HL !== -1) {
+
+                    console.log("Confermato HL")
 
                     let stopLoss = HL['tick']['low']
 

@@ -44,37 +44,6 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
         x: isFinal,
     } = ticks;
 
-    for (const user of users) {
-        let buy = false;
-        let binanceUserTrade = new Binance().options({
-            APIKEY: user.key,
-            APISECRET: user.secret
-        });
-        // Con api compro o vendo
-        for (const position of tradePosition[symbol]) {
-            // Controllo STOP_LOSS
-            // Controllo TAKE_PROFIT
-            if (close >= position.MAX_LH) {
-                // Compro a prezzo di mercato
-                //binance.marketBuy("BNBBTC", quantity);
-                buy = true;
-            }
-
-            if (buy) {
-                // Stop Loss
-                if (close < position.STOP_LOSS) {
-                    // binance.marketSell("ETHBTC", quantity);
-                    tradePosition[symbol] = {}
-                } else {
-                    // TAKE PROFIT
-                    if (close >= position.TAKE_PROFIT) {
-                        //binance.marketSell("ETHBTC", quantity);
-                        tradePosition[symbol] = {}
-                    }
-                }
-            }
-        }
-    }
 
     if (isFinal) {
 
@@ -109,7 +78,7 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
                 "MIN_HL": pattern['HL']
             }
 
-            tradePosition[symbol].push(tradeData)
+            //tradePosition[symbol].push(tradeData)
 
             let message = 'SYMBOL: ' + symbol + "\n" +
                 'INTERVAL: ' + interval + "\n" +
@@ -128,6 +97,39 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
             console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol)
         }
     }
+
+    // for (const user of users) {
+    //     let buy = false;
+    //     let binanceUserTrade = new Binance().options({
+    //         APIKEY: user.key,
+    //         APISECRET: user.secret
+    //     });
+    //     // Con api compro o vendo
+    //     for (const position of tradePosition[symbol]) {
+    //         // Controllo STOP_LOSS
+    //         // Controllo TAKE_PROFIT
+    //         if (close >= position.MAX_LH) {
+    //             // Compro a prezzo di mercato
+    //             //binance.marketBuy("BNBBTC", quantity);
+    //             buy = true;
+    //         }
+    //
+    //         if (buy) {
+    //             // Stop Loss
+    //             if (close < position.STOP_LOSS) {
+    //                 // binance.marketSell("ETHBTC", quantity);
+    //                 tradePosition[symbol] = {}
+    //             } else {
+    //                 // TAKE PROFIT
+    //                 if (close >= position.TAKE_PROFIT) {
+    //                     //binance.marketSell("ETHBTC", quantity);
+    //                     tradePosition[symbol] = {}
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
 });
 
 
