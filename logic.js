@@ -259,19 +259,17 @@ function patternMatching(storeData) {
 
                 if (HL !== -1) {
 
-                    console.log("Confermato HL")
-
-                    let stopLoss = HL['tick']['low']
+                    console.log("Confermato HL");
 
                     return {
                         'patternFoundTime': new Date().toISOString(),
                         'FIBONACCI': fib,
                         'TAKE_PROFIT': takeProfit,
                         'ENTRY_PRICE': entryPrice,
-                        'STOP_LOSS': stopLoss,
+                        'STOP_LOSS': LH_MIN,
                         'HH': maxTickAbsolute,
                         'LL': minTickAbsolute,
-                        'LH': maxTick_LH,
+                        'LH': entryPrice,
                         'HL': LH_MIN
                     }
                 }

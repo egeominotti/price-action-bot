@@ -99,7 +99,7 @@ binance.websockets.candlesticks(coins.getCoins(), timeFrame, (candlesticks) => {
             logic.sendMessageTelegram(message)
 
         } else {
-            console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol)
+            console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol + " interval: " + interval)
         }
     }
 
