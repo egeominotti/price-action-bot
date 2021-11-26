@@ -51,7 +51,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
         if (!_.isEmpty(recordPattern[symbol])) {
             const recordPatternValue = _.head(recordPattern[symbol]);
-            if (recordPatternValue['confirmed']) {
+            if (recordPatternValue['confirmed'] === true) {
 
                 console.log("POROVO A COMPRARE")
                 let takeprofit = recordPatternValue['takeprofit']
@@ -75,8 +75,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         .catch(function (error) {
                             console.log(error);
                         });
-
-
                 }
 
                 // TAKE PROFIT
@@ -97,6 +95,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                             console.log(error);
                         });
                 }
+
             }
         }
 
@@ -158,12 +157,11 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 console.log("LH: " + recordPatternValue['lh'])
                 console.log("HL: " + recordPatternValue['hl'])
 
-                if (recordPatternValue['confirmed']) {
+                if (recordPatternValue['confirmed'] === false) {
 
                     if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
 
                         console.log("low < recordPatternValue['ll'] || high > recordPatternValue['hh']")
-                        // Cancello il pattern e ricominco
                         recordPattern[symbol] = []
 
                     } else {
