@@ -141,8 +141,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     logic.sendMessageTelegram(message)
 
-                    fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
-                    });
+
                     recordPattern[symbol] = []
                     console.log(recordPattern[symbol])
                 }
@@ -188,6 +187,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     console.log("Finito salvataggio pattern, procedo al controllo")
                     console.log(recordPattern[symbol])
+                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    });
                 }
             }
         }
