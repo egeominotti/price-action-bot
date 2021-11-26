@@ -228,12 +228,12 @@ function patternMatching(storeData) {
         let fibonacciPointMax = maxTickAbsolute;
 
         // ---- Calcolo Lower Low -------
-        let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
-        let HH_MIN = minTickLowVariable['min']
-        let minTickAbsolute = minTickLowVariable['tick']['low']
-        let highMin = minTickLowVariable['tick']['high']
-        let closeMin = minTickLowVariable['tick']['close']
-        let indexMin = minTickLowVariable['index']
+        let minTickLowVariable =    MinTickLow(storeData, HH['indexHH']);
+        let HH_MIN =                minTickLowVariable['min']
+        let minTickAbsolute =       minTickLowVariable['tick']['low']
+        let highMin =               minTickLowVariable['tick']['high']
+        let closeMin =              minTickLowVariable['tick']['close']
+        let indexMin =              minTickLowVariable['index']
 
         let LL = LowerLow(storeData, indexMin, highMin, closeMin, HH_MIN)
 
@@ -241,15 +241,15 @@ function patternMatching(storeData) {
 
             console.log("Confermato LL")
             // ---- Calcolo Lower High -------
-            let fibonacciPointMin = LL['tick']['low']
-            let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
-            let highMaxLowerHigh = maxTickHighVariable['max']
-            let closeMax = maxTickHighVariable['tick']['close']
-            let lowMax = maxTickHighVariable['tick']['low']
+            let fibonacciPointMin =         LL['tick']['low']
+            let maxTickHighVariable =       MaxTickHigh(storeData, LL['indexLL']);
+            let highMaxLowerHigh =          maxTickHighVariable['max']
+            let closeMax =                  maxTickHighVariable['tick']['close']
+            let lowMax =                    maxTickHighVariable['tick']['low']
 
             // Ritorna il tick della conferma
-            let LH = HigherHigh(storeData, LL['indexLL'], lowMax, closeMax, HH_MAX)
-            let fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
+            let LH =        HigherHigh(storeData, LL['indexLL'], lowMax, closeMax, HH_MAX)
+            let fib =       getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
 
             if (LH !== -1) {
 
@@ -260,11 +260,11 @@ function patternMatching(storeData) {
 
                 // ---- Calcolo Higher Low -------
 
-                let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
-                let LH_MIN = minTickLowVariable['min']
-                let closeMin = minTickLowVariable['tick']['close']
-                let highMin = minTickLowVariable['tick']['high']
-                let HL = LowerLow(storeData, HH['indexHH'], highMin, closeMin, LH_MIN)
+                let minTickLowVariable =    MinTickLow(storeData, HH['indexHH']);
+                let LH_MIN =                minTickLowVariable['min']
+                let closeMin =              minTickLowVariable['tick']['close']
+                let highMin =               minTickLowVariable['tick']['high']
+                let HL =                    LowerLow(storeData, HH['indexHH'], highMin, closeMin, LH_MIN)
 
                 if (HL !== -1) {
 
