@@ -168,7 +168,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 console.log("Pattern found")
                 // Azzera le candele per quel simbolo
 
-
+                console.log(recordPattern)
+                console.log(typeof  recordPattern[symbol])
                 // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
                 // Devo controllare che recordPattern sia vuoto l'array per quel simbolo
                 if (recordPattern[symbol] === undefined) {
