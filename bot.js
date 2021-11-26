@@ -106,19 +106,19 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             x: isFinal,
         } = ticks;
 
-        if (recordPattern[symbol].length > 0 && recordPattern[symbol]['confirm'] === true && recordPattern[symbol]['traded'] === false) {
-            // Faccio trading in realtime
-
-            let takeprofit = recordPattern[symbol]['takeprofit']
-            let stoploss = recordPattern[symbol]['stoploss']
-            let entryprice = recordPattern[symbol]['entryprice']
-            recordPattern[symbol] = []
-        }
+        // if (recordPattern[symbol] !== undefined && recordPattern[symbol]['confirm'] === true) {
+        //     // Faccio trading in realtime
+        //
+        //     let takeprofit = recordPattern[symbol]['takeprofit']
+        //     let stoploss = recordPattern[symbol]['stoploss']
+        //     let entryprice = recordPattern[symbol]['entryprice']
+        //     recordPattern[symbol] = []
+        // }
 
         if (isFinal) {
 
             // Controlla che ci siano dei pattern da verificare e invia una notifica su telegram
-            if (recordPattern[symbol].length > 0 && recordPattern[symbol]['confirm'] === false) {
+            if (recordPattern[symbol] !== undefined && recordPattern[symbol]['confirm'] === false) {
 
                 console.log(recordPattern[symbol])
                 if (close > recordPattern[symbol]['LH']) {
@@ -179,12 +179,11 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     'lh': pattern['LH'],
                     'hl': pattern['HL'],
                     'confirmed': false,
-                    'traded': false
                 }
 
                 // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
                 // Devo controllare che recordPattern sia vuoto l'array per quel simbolo
-                if (recordPatternData[symbol].length === 0) {
+                if (recordPatternData[symbol] === undefined) {
                     recordPattern[symbol].push(recordPatternData)
                 }
 
