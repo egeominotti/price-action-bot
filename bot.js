@@ -157,11 +157,23 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
             } else {
 
-                console.log(close)
+                console.log("CLOSE: " + close)
+                console.log("LOW: " + low)
+                console.log("HIGH:" + high)
+                console.log("OPEN: " + open)
                 console.log(recordPattern[symbol])
+                console.log("LL: " + recordPattern[symbol]['ll'])
+                console.log("HH: " + recordPattern[symbol]['hh'])
+                console.log("LH: " + recordPattern[symbol]['lh'])
+                console.log("HL: " + recordPattern[symbol]['hl'])
+
                 console.log("STO CERCANDO ENTRATA")
 
-                if (low < recordPattern[symbol]['ll'] || high > recordPattern[symbol]['hh']) {
+                const recordPatternValue = _.head(recordPattern[symbol]);
+                console.log(recordPatternValue)
+                console.log(recordPatternValue)
+
+                if (low < recordPatternValue['ll'] || high > recordPatternValue['hh']) {
 
                     console.log("DEVO FERMARMI")
                     // Cancello il pattern e ricominco
@@ -169,18 +181,18 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 } else {
 
-                    if (close > recordPattern[symbol]['lh']) {
+                    if (close > recordPatternValue['lh']) {
 
                         let message = "Symbol: " + symbol + "\n" +
                             "Interval: " + interval + "\n" +
                             "Entry found at: " + new Date().toISOString() + "\n" +
-                            "entryprice: " + recordPattern[symbol]['entryprice'] + "\n" +
-                            "takeprofit: " + recordPattern[symbol]['takeprofit'] + "\n" +
-                            "stoploss:  " + recordPattern[symbol]['stoploss'] + "\n" +
-                            "hh: " + recordPattern[symbol]['hh'] + "\n" +
-                            "ll: " + recordPattern[symbol]['ll'] + "\n" +
-                            "lh: " + recordPattern[symbol]['lh'] + "\n" +
-                            "hl: " + recordPattern[symbol]['hl']
+                            "entryprice: " + recordPatternValue['entryprice'] + "\n" +
+                            "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                            "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                            "hh: " + recordPatternValue['hh'] + "\n" +
+                            "ll: " + recordPatternValue['ll'] + "\n" +
+                            "lh: " + recordPatternValue['lh'] + "\n" +
+                            "hl: " + recordPatternValue['hl']
 
                         recordPattern[symbol]['confirmed'] = true
                         logic.sendMessageTelegram(message)
