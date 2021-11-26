@@ -105,27 +105,23 @@ function MinTickLow(storeData, indexMax) {
 
 function HigherHigh(storeData) {
 
-    let maxTickHighVariable = MaxTickHigh(storeData);
-    let maxTickAbsolute = maxTickHighVariable['tick']['high']
-    let HH_MAX = maxTickHighVariable['max']
-    let lowMax = maxTickHighVariable['tick']['low']
-    let closeMax = maxTickHighVariable['tick']['close']
-    let indexMax = maxTickHighVariable['index']
-
-
     let fail = false
     let failIndex;
 
+    let max = MaxTickHigh(storeData);
+    let low = max['tick']['low']
+    let close = max['tick']['close']
+    let index = max['index']
+
+
     // Pattern recognition matcher ( 1 )
-    for (let index = indexMax + 1; index < storeData.length; ++index) {
+    for (let index = index + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (tick['low'] < lowMax && tick['close'] < closeMax) {
+        if (tick['low'] < low && tick['close'] < close) {
             return {
-                'tickIndex': tick['index'],
-                'index': indexMax,
-                'indexHH': tick['index'],
-                'tick': tick
+                'index': index,
+                'value': max['max']
             };
 
         } else {
@@ -135,7 +131,6 @@ function HigherHigh(storeData) {
         }
     }
 
-    // Pattern recognition matcher ( 2 )
     if (fail) {
 
         for (let index = failIndex; index <= storeData.length; ++index) {
@@ -147,11 +142,8 @@ function HigherHigh(storeData) {
                     if (nextTick['low'] < tick['low'] && nextTick['close'] < tick['close']) {
 
                         return {
-                            'tickIndex': storeData[index]['index'],
-                            'indexMax': indexMax,
                             'index': index,
-                            'tick': tick,
-                            'indexHH': storeData[index]['index'],
+                            'value': max['max']
                         };
 
                     }
@@ -165,56 +157,51 @@ function HigherHigh(storeData) {
 
 function LowerLow(storeData, indexHigherHigh) {
 
-    // ---- Calcolo Lower Low -------
-    let minTickLowVariable = MinTickLow(storeData, indexHigherHigh);
-    let HH_MIN = minTickLowVariable['min']
-    let minTickAbsolute = minTickLowVariable['tick']['low']
-    let highMin = minTickLowVariable['tick']['high']
-    let closeMin = minTickLowVariable['tick']['close']
-    let indexMin = minTickLowVariable['index']
+    if (indexHigherHigh !== -1) {
+
+        // ---- Calcolo Lower Low -------
+        let min = MinTickLow(storeData, indexHigherHigh);
+        let high = min['tick']['high']
+        let close = min['tick']['close']
 
 
-    let fail = false
-    let failIndex;
+        let fail = false
+        let failIndex;
 
-    // Pattern recognition matcher ( 1 )
-    for (let index = indexMin + 1; index < storeData.length; ++index) {
+        // Pattern recognition matcher ( 1 )
+        for (let index = indexHigherHigh + 1; index < storeData.length; ++index) {
 
-        let tick = storeData[index];
-        if (tick['high'] > highMin && tick['close'] > closeMin) {
+            let tick = storeData[index];
+            if (tick['high'] > high && tick['close'] > close) {
 
-            return {
-                'tickIndex': tick['index'],
-                'indexMin': indexMin,
-                'indexLL': tick['index'],
-                'tick': tick,
-            };
+                return {
+                    'index': index,
+                    'value': min['min']
+                };
 
-        } else {
-            fail = true
-            failIndex = index;
-            break;
+            } else {
+                fail = true
+                failIndex = index;
+                break;
+            }
         }
-    }
 
-    // Pattern recognition matcher ( 2 )
-    if (fail) {
+        if (fail) {
 
-        for (let index = failIndex; index <= storeData.length; ++index) {
+            for (let index = failIndex; index <= storeData.length; ++index) {
 
-            if (storeData[index] !== undefined) {
-                let tick = storeData[index];
-                if (storeData[index + 1] !== undefined) {
-                    let nextTick = storeData[index + 1]
-                    if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
+                if (storeData[index] !== undefined) {
+                    let tick = storeData[index];
+                    if (storeData[index + 1] !== undefined) {
+                        let nextTick = storeData[index + 1]
+                        if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
 
-                        return {
-                            'tickIndex': storeData[index]['index'],
-                            'indexMin': indexMin,
-                            'indexLL': nextTick['index'],
-                            'tick': tick
-                        };
+                            return {
+                                'index': index,
+                                'value': min['min']
+                            };
 
+                        }
                     }
                 }
             }
@@ -226,19 +213,19 @@ function LowerLow(storeData, indexHigherHigh) {
 
 function LowerHigh(storeData, indexLowerLow) {
 
-    let max = MaxTickHigh(storeData, indexLowerLow);
-    let highMaxLowerHigh = max['max']
-    let closeMax = max['tick']['close']
-    let lowMax = max['tick']['low']
+    if (indexLowerLow !== -1) {
 
+        let max = MaxTickHigh(storeData, indexLowerLow);
+        let close = max['tick']['close']
+        let low = max['tick']['low']
 
-    for (let index = indexLowerLow + 1; index < storeData.length; index++) {
+        for (let index = indexLowerLow + 1; index < storeData.length; index++) {
 
-        let currentTick = storeData[index];
-        if (currentTick['low'] < lowMax && currentTick['close'] < closeMax) {
-            return {'index': currentTick['index']};
+            let currentTick = storeData[index];
+            if (currentTick['low'] < low && currentTick['close'] < close) {
+                return {'index': index, 'value': max['max']};
+            }
         }
-
     }
 
     return -1;
@@ -246,17 +233,18 @@ function LowerHigh(storeData, indexLowerLow) {
 
 function HigherLow(storeData, indexLowerHigh) {
 
+    if (indexLowerHigh !== -1) {
 
-    let min =       MinTickLow(storeData, indexLowerHigh);
-    let closeMin =  min['tick']['close']
-    let highMin =   min['tick']['high']
+        let min = MinTickLow(storeData, indexLowerHigh);
+        let close = min['tick']['close']
+        let high = min['tick']['high']
 
-    for (let index = indexLowerHigh + 1; index < storeData.length; ++index) {
+        for (let index = indexLowerHigh + 1; index < storeData.length; ++index) {
 
-        let tick = storeData[index];
-        if (tick['high'] > highMin && tick['close'] > closeMin) {
-
-            return {'index': index, 'value': min['min']};
+            let tick = storeData[index];
+            if (tick['high'] > high && tick['close'] > close) {
+                return {'index': index, 'value': min['min']};
+            }
         }
     }
 
@@ -265,30 +253,35 @@ function HigherLow(storeData, indexLowerHigh) {
 
 function patternMatching(storeData) {
 
+    if (storeData.length > 2) {
 
-    let HH = HigherHigh(storeData)
-    let LL = LowerLow(storeData, HH['index'])
-    let LH = LowerHigh(storeData, LL['index'])
-    let HL = HigherLow(storeData, LH['index'])
+        let HH = HigherHigh(storeData)
+        let LL = LowerLow(storeData, HH['index'])
+        let LH = LowerHigh(storeData, LL['index'])
+        let HL = HigherLow(storeData, LH['index'])
 
-    if (HH !== -1 && LL !== -1 && LH !== -1 && HL !== 1) {
+        if (HH !== -1 && LL !== -1 && LH !== -1 && HL !== 1) {
 
-        let lastTicker;
-        for (let currentTicker of storeData) {
-            lastTicker = currentTicker;
-        }
+            let lastTicker;
+            for (let currentTicker of storeData) {
+                lastTicker = currentTicker;
+            }
 
-        if (lastTicker['close'] > LH['tick']['high']) {
+            if (lastTicker['close'] > LH['tick']['high']) {
 
-            return {
-                'patternFoundTime': new Date().toISOString(),
-                'TAKE_PROFIT': takeProfit,
-                'ENTRY_PRICE': entryPrice,
-                'STOP_LOSS': LH_MIN,
-                'HH': maxTickAbsolute,
-                'LL': minTickAbsolute,
-                'LH': highMaxLowerHigh,
-                'HL': LH_MIN
+                let entryPrice = LH['value'];
+                let takeProfit = LH['value'] + (HH['value'] - LL['value'])
+
+                return {
+                    'patternFoundTime': new Date().toISOString(),
+                    'TAKE_PROFIT': takeProfit,
+                    'ENTRY_PRICE': entryPrice,
+                    'STOP_LOSS': LL['value'],
+                    'HH': HH['value'],
+                    'LL': LL['value'],
+                    'LH': LH['value'],
+                    'HL': HL['value']
+                }
             }
         }
     }
