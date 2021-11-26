@@ -12,6 +12,7 @@ let tokenArray = {}
 let indexArray = {};
 let recordPattern = {}
 
+
 let users = [
     {
         'nome': 'egeo',
@@ -106,7 +107,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         } = ticks;
 
 
-
         if (isFinal) {
 
             // Controlla che ci siano dei pattern da verificare e invia una notifica su telegram
@@ -125,6 +125,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                             "LL: " + pattern['LL'] + "\n" +
                             "LH: " + pattern['LH'] + "\n" +
                             "HL: " + pattern['HL']
+
+                        pattern['confirm'] = true
 
                         logic.sendMessageTelegram(message)
                         fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
@@ -166,7 +168,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     'hh': pattern['HH'],
                     'll': pattern['LL'],
                     'lh': pattern['LH'],
-                    'hl': pattern['HL']
+                    'hl': pattern['HL'],
+                    'confirmed': false
                 }
 
                 // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
