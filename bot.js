@@ -121,7 +121,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
         if (isFinal) {
 
-            if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === false) {
+            if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirmed'] === false) {
 
                 console.log(recordPattern[symbol])
                 if (close > recordPattern[symbol]['LH']) {
@@ -139,7 +139,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         "LH: " + recordPattern[symbol]['LH'] + "\n" +
                         "HL: " + recordPattern[symbol]['HL']
 
-                    recordPattern[symbol]['confirm'] = true
+                    recordPattern[symbol]['confirmed'] = true
 
                     logic.sendMessageTelegram(message)
 
