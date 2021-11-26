@@ -84,7 +84,6 @@ function MinTickLow(storeData, indexMax) {
         lowArray.push(tick['low'])
     }
 
-    // Trovo il minimo tra tutte le candele low partendo dall'indice trovato dall' HH
     let min = Math.min(...lowArray)
 
     for (let index = indexMax; index < storeData.length; ++index) {
@@ -109,7 +108,6 @@ function LowerLow(storeData, indexMin, highMin, closeMin, min) {
     let failIndex;
 
     // Pattern recognition matcher ( 1 )
-
     for (let index = indexMin + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
