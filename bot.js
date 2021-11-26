@@ -10,7 +10,7 @@ let coins = []
 let timeFrame = args[2]
 let tokenArray = {}
 let indexArray = {};
-let tradePosition = {}
+let recordPattern = {}
 
 let users = [
     {
@@ -90,7 +90,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
     for (const token of coins) {
         indexArray[token] = -1;
         tokenArray[token] = [];
-        tradePosition[token] = [];
+        recordPattern[token] = [];
     }
 
     binance.websockets.candlesticks(coins, timeFrame, (candlesticks) => {
@@ -106,6 +106,29 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         } = ticks;
 
         if (isFinal) {
+
+            if (recordPattern[symbol] !== undefined) {
+                for (let pattern of recordPattern) {
+                    console.log(pattern)
+                    if (close > pattern['LH']) {
+
+                        let message = "SYMBOL: " + symbol + "\n" +
+                            "INTERVAL: " + interval + "\n" +
+                            "PATTERN FOUND AT: " + pattern['patternFoundTime'] + "\n" +
+                            "ENTRYPRICE: " + pattern['ENTRY_PRICE'] + "\n" +
+                            "TAKEPROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
+                            "STOPLOSS:  " + pattern['STOP_LOSS'] + "\n" +
+                            "HH: " + pattern['HH'] + "\n" +
+                            "LL: " + pattern['LL'] + "\n" +
+                            "LH: " + pattern['LH'] + "\n" +
+                            "HL: " + pattern['HL']
+
+                        logic.sendMessageTelegram(message)
+                        fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {});
+                         recordPattern[symbol] = []
+                    }
+                }
+            }
 
             indexArray[symbol] += 1
 
@@ -125,52 +148,29 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             let pattern = logic.patternMatching(tokenArray[symbol])
             if (!_.isEmpty(pattern)) {
 
-                if (close > pattern['LH']) {
-                    console.log("Pattern found")
+                console.log("Pattern found")
+                // Azzera le candele per quel simbolo
+                tokenArray[symbol] = [];
+                indexArray[symbol] = -1
 
-                    tokenArray[symbol] = [];
-                    indexArray[symbol] = -1
-
-                    let tradeData = {
-                        'symbol': symbol,
-                        'STOP_LOSS': pattern['STOP_LOSS'],
-                        'TAKE_PROFIT': pattern['TAKE_PROFIT'],
-                        "MAX_HH": pattern['MAX'],
-                        "MIN_LL:": pattern['MIN'],
-                        "MAX_LH": pattern['LH'],
-                        "MIN_HL": pattern['HL']
-                    }
-
-                    //tradePosition[symbol].push(tradeData)
-
-                    let message = "SYMBOL: " + symbol + "\n" +
-                        "INTERVAL: " + interval + "\n" +
-                        "PATTERN FOUND AT: " + pattern['patternFoundTime'] + "\n" +
-                        "ENTRYPRICE: " + pattern['ENTRY_PRICE'] + "\n" +
-                        "TAKEPROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
-                        "STOPLOSS:  " + pattern['STOP_LOSS'] + "\n" +
-                        "HH: " + pattern['HH'] + "\n" +
-                        "LL: " + pattern['LL'] + "\n" +
-                        "LH: " + pattern['LH'] + "\n" +
-                        "HL: " + pattern['HL']
-
-                    let recordPattern = {
-                        'symbol': symbol,
-                        'time': pattern['patternFoundTime'],
-                        'entryprice': pattern['ENTRY_PRICE'],
-                        'takeprofit': pattern['TAKE_PROFIT'],
-                        'stoploss': pattern['STOP_LOSS'],
-                        'hh': pattern['HH'],
-                        'll': pattern['LL'],
-                        'lh': pattern['LH'],
-                        'hl': pattern['HL']
-                    }
-
-                    fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
-                    });
-
-                    logic.sendMessageTelegram(message)
+                let recordPatternData = {
+                    'symbol': symbol,
+                    'time': pattern['patternFoundTime'],
+                    'entryprice': pattern['ENTRY_PRICE'],
+                    'takeprofit': pattern['TAKE_PROFIT'],
+                    'stoploss': pattern['STOP_LOSS'],
+                    'hh': pattern['HH'],
+                    'll': pattern['LL'],
+                    'lh': pattern['LH'],
+                    'hl': pattern['HL']
                 }
+
+                // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
+                // Devo controllare che recordPattern sia vuoto l'array per quel simbolo
+                if(recordPatternData[symbol].length === 0) {
+                    recordPattern[symbol].push(recordPatternData)
+                }
+
 
             } else {
                 console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol + " interval: " + interval)
