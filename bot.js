@@ -148,7 +148,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     tokenArray[symbol] = [];
                     indexArray[symbol] = -1
 
-                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    let nameFile = 'recordPatten_' + interval;
+                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
                     });
                 }
 
@@ -156,6 +157,13 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 console.log(close)
                 console.log(recordPattern[symbol])
+
+                if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
+                    recordPattern[symbol] = []
+                    let nameFile = 'recordPatten_' + interval;
+                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
+                    });
+                }
 
                 if (close > recordPattern[symbol]['LH']) {
 
@@ -173,18 +181,13 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     recordPattern[symbol]['confirmed'] = true
                     recordPattern[symbol] = []
 
-                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    let nameFile = 'recordPatten_' + interval;
+                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
                     });
 
                     logic.sendMessageTelegram(message)
                 }
 
-                if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
-                    recordPattern[symbol] = []
-
-                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
-                    });
-                }
             }
         }
 
