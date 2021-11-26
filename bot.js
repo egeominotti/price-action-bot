@@ -50,7 +50,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         let nameFile = 'data/pattern_' + interval + ".json";
 
         if (!_.isEmpty(recordPattern[symbol])) {
-
             const recordPatternValue = _.head(recordPattern[symbol]);
             if (recordPatternValue['confirmed']) {
 
