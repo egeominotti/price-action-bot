@@ -103,7 +103,15 @@ function MinTickLow(storeData, indexMax) {
 }
 
 
-function HigherHigh(storeData, indexMax, lowMax, closeMax, max) {
+function HigherHigh(storeData) {
+
+    let maxTickHighVariable = MaxTickHigh(storeData);
+    let maxTickAbsolute = maxTickHighVariable['tick']['high']
+    let HH_MAX = maxTickHighVariable['max']
+    let lowMax = maxTickHighVariable['tick']['low']
+    let closeMax = maxTickHighVariable['tick']['close']
+    let indexMax = maxTickHighVariable['index']
+
 
     let fail = false
     let failIndex;
@@ -115,7 +123,7 @@ function HigherHigh(storeData, indexMax, lowMax, closeMax, max) {
         if (tick['low'] < lowMax && tick['close'] < closeMax) {
             return {
                 'tickIndex': tick['index'],
-                'indexMax': indexMax,
+                'index': indexMax,
                 'indexHH': tick['index'],
                 'tick': tick
             };
@@ -141,8 +149,9 @@ function HigherHigh(storeData, indexMax, lowMax, closeMax, max) {
                         return {
                             'tickIndex': storeData[index]['index'],
                             'indexMax': indexMax,
-                            'indexHH': index,
-                            'tick': tick
+                            'index': index,
+                            'tick': tick,
+                            'indexHH': storeData[index]['index'],
                         };
 
                     }
@@ -154,7 +163,16 @@ function HigherHigh(storeData, indexMax, lowMax, closeMax, max) {
     return -1;
 }
 
-function LowerLow(storeData, indexMin, highMin, closeMin, min) {
+function LowerLow(storeData, indexHigherHigh) {
+
+    // ---- Calcolo Lower Low -------
+    let minTickLowVariable = MinTickLow(storeData, indexHigherHigh);
+    let HH_MIN = minTickLowVariable['min']
+    let minTickAbsolute = minTickLowVariable['tick']['low']
+    let highMin = minTickLowVariable['tick']['high']
+    let closeMin = minTickLowVariable['tick']['close']
+    let indexMin = minTickLowVariable['index']
+
 
     let fail = false
     let failIndex;
@@ -206,45 +224,39 @@ function LowerLow(storeData, indexMin, highMin, closeMin, min) {
     return -1;
 }
 
-function LowerHigh(storeData, indexMax, lowMax, closeMax) {
+function LowerHigh(storeData, indexLowerLow) {
 
-    for (let index = indexMax + 1; index < storeData.length; ++index) {
+    let max = MaxTickHigh(storeData, indexLowerLow);
+    let highMaxLowerHigh = max['max']
+    let closeMax = max['tick']['close']
+    let lowMax = max['tick']['low']
 
-        let tick = storeData[index];
-        if (tick['low'] < lowMax && tick['close'] < closeMax) {
 
-            return {
-                'tickIndex': tick['index'],
-                'indexMax': indexMax,
-                'indexHH': tick['index'],
-                'tick': tick
-            };
+    for (let index = indexLowerLow + 1; index < storeData.length; index++) {
 
-        } else {
-            return -1
+        let currentTick = storeData[index];
+        if (currentTick['low'] < lowMax && currentTick['close'] < closeMax) {
+            return {'index': currentTick['index']};
         }
+
     }
 
     return -1;
 }
 
-function HigherLow(storeData, indexMin, highMin, closeMin) {
+function HigherLow(storeData, indexLowerHigh) {
 
-    // Pattern recognition matcher ( 1 )
-    for (let index = indexMin + 1; index < storeData.length; ++index) {
+
+    let min =       MinTickLow(storeData, indexLowerHigh);
+    let closeMin =  min['tick']['close']
+    let highMin =   min['tick']['high']
+
+    for (let index = indexLowerHigh + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
         if (tick['high'] > highMin && tick['close'] > closeMin) {
 
-            return {
-                'tickIndex': tick['index'],
-                'indexMin': indexMin,
-                'indexLL': tick['index'],
-                'tick': tick,
-            };
-
-        } else {
-            return -1;
+            return {'index': index, 'value': min['min']};
         }
     }
 
@@ -253,95 +265,34 @@ function HigherLow(storeData, indexMin, highMin, closeMin) {
 
 function patternMatching(storeData) {
 
-    // ---- Calcolo Higher High -------
-    let maxTickHighVariable = MaxTickHigh(storeData);
-    let maxTickAbsolute = maxTickHighVariable['tick']['high']
-    let HH_MAX = maxTickHighVariable['max']
-    let lowMax = maxTickHighVariable['tick']['low']
-    let closeMax = maxTickHighVariable['tick']['close']
-    let indexMax = maxTickHighVariable['index']
 
-    // Algoritmo che cerca una candela per confermare che il massimo è un HH
-    let HH = HigherHigh(storeData, indexMax, lowMax, closeMax, HH_MAX)
+    let HH = HigherHigh(storeData)
+    let LL = LowerLow(storeData, HH['index'])
+    let LH = LowerHigh(storeData, LL['index'])
+    let HL = HigherLow(storeData, LH['index'])
 
-    if (HH !== -1) {
+    if (HH !== -1 && LL !== -1 && LH !== -1 && HL !== 1) {
 
-        console.log("Confermato HH")
+        let lastTicker;
+        for (let currentTicker of storeData) {
+            lastTicker = currentTicker;
+        }
 
-        let fibonacciPointMax = maxTickAbsolute;
+        if (lastTicker['close'] > LH['tick']['high']) {
 
-        // ---- Calcolo Lower Low -------
-        let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
-        let HH_MIN = minTickLowVariable['min']
-        let minTickAbsolute = minTickLowVariable['tick']['low']
-        let highMin = minTickLowVariable['tick']['high']
-        let closeMin = minTickLowVariable['tick']['close']
-        let indexMin = minTickLowVariable['index']
-
-        let LL = LowerLow(storeData, indexMin, highMin, closeMin, HH_MIN)
-
-        if (LL !== -1) {
-
-            console.log("Confermato LL")
-            // ---- Calcolo Lower High -------
-            let fibonacciPointMin = LL['tick']['low']
-            let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
-            let highMaxLowerHigh = maxTickHighVariable['max']
-            let closeMax = maxTickHighVariable['tick']['close']
-            let lowMax = maxTickHighVariable['tick']['low']
-
-            // Ritorna il tick della conferma
-            let LH = LowerHigh(storeData, LL['indexLL'], lowMax, closeMax, HH_MAX)
-            let fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
-
-            if (LH !== -1) {
-
-                console.log("Confermato LH")
-
-                let entryPrice = highMaxLowerHigh;
-                let takeProfit = closeMax + (maxTickAbsolute - minTickAbsolute)
-
-                // ---- Calcolo Higher Low -------
-
-                let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
-                let LH_MIN = minTickLowVariable['min']
-                let closeMin = minTickLowVariable['tick']['close']
-                let highMin = minTickLowVariable['tick']['high']
-                let HL = HigherLow(storeData, LH['indexHH'], highMin, closeMin)
-
-                if (HL !== -1) {
-
-                    console.log("Confermato HL");
-
-                    console.log(maxTickAbsolute)
-                    console.log(minTickAbsolute)
-                    console.log(entryPrice)
-                    console.log(LH_MIN)
-
-                    let lastTicker;
-                    for (let currentTicker of storeData) {
-                        lastTicker = currentTicker;
-                    }
-
-                    if (lastTicker['close'] > LH['tick']['high']) {
-
-                        return {
-                            'patternFoundTime': new Date().toISOString(),
-                            'FIBONACCI': fib,
-                            'TAKE_PROFIT': takeProfit,
-                            'ENTRY_PRICE': entryPrice,
-                            'STOP_LOSS': LH_MIN,
-                            'HH': maxTickAbsolute,
-                            'LL': minTickAbsolute,
-                            'LH': highMaxLowerHigh,
-                            'HL': LH_MIN
-                        }
-                    }
-
-                }
+            return {
+                'patternFoundTime': new Date().toISOString(),
+                'TAKE_PROFIT': takeProfit,
+                'ENTRY_PRICE': entryPrice,
+                'STOP_LOSS': LH_MIN,
+                'HH': maxTickAbsolute,
+                'LL': minTickAbsolute,
+                'LH': highMaxLowerHigh,
+                'HL': LH_MIN
             }
         }
     }
+
     return false;
 }
 
