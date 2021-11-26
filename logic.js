@@ -260,11 +260,11 @@ function patternMatching(storeData) {
 
                 // ---- Calcolo Higher Low -------
 
-                let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
+                let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
                 let LH_MIN = minTickLowVariable['min']
                 let closeMin = minTickLowVariable['tick']['close']
                 let highMin = minTickLowVariable['tick']['high']
-                let HL = LowerLow(storeData, LH['indexHH'], highMin, closeMin, LH_MIN)
+                let HL = LowerLow(storeData, HH['indexHH'], highMin, closeMin, LH_MIN)
 
                 if (HL !== -1) {
 
