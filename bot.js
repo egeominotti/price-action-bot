@@ -162,7 +162,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
             tokenArray[symbol].push(ticker)
 
-            let pattern = logic.patternMatching(tokenArray[symbol])
+            let pattern = logic.patternMatching(tokenArray[symbol], symbol)
             if (!_.isEmpty(pattern)) {
 
                 if (_.isEmpty(recordPattern[symbol])) {
@@ -190,7 +190,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 }
 
             } else {
-                console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol + " interval: " + interval)
+                //console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol + " interval: " + interval)
             }
         }
     });

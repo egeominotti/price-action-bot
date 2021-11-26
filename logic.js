@@ -253,29 +253,29 @@ function HigherLow(storeData, indexLowerHigh) {
     return -1;
 }
 
-function patternMatching(storeData) {
+function patternMatching(storeData, symbol) {
 
 
     let HH = HigherHigh(storeData)
 
     if (HH !== -1) {
 
-        console.log("Confermato HH")
+        console.log("Confermato HH: " + symbol)
         let LL = LowerLow(storeData, HH['index'])
 
         if (LL !== -1) {
 
-            console.log("Confermato LL")
+            console.log("Confermato LL: " + symbol)
             let LH = LowerHigh(storeData, LL['index'])
 
             if (LH !== -1) {
 
-                console.log("Confermato LH")
+                console.log("Confermato LH: " + symbol)
                 let HL = HigherLow(storeData, LH['index'])
 
                 if (HL !== -1) {
 
-                    console.log("Confermato HL")
+                    console.log("Confermato HL: " + symbol)
 
                     let lastTicker;
                     for (let currentTicker of storeData) lastTicker = currentTicker;
