@@ -141,7 +141,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
                     });
 
-                    //recordPattern[symbol] = []
+                    console.log(recordPattern[symbol])
                 }
             }
 
