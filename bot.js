@@ -109,16 +109,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         //     }
         // }
 
-        // if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === true) {
-        //     // Faccio trading in realtime
-        //     console.log("Controllo le posizioni da gestire")
-        //     let takeprofit = recordPattern[symbol]['takeprofit']
-        //     let stoploss = recordPattern[symbol]['stoploss']
-        //     let entryprice = recordPattern[symbol]['entryprice']
-        //     console.log("Sblocco la ricerca del pattern")
-        //     recordPattern[symbol] = []
-        // }
-
         if (isFinal) {
 
             if (_.isEmpty(recordPattern[symbol])) {
@@ -158,10 +148,14 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     tokenArray[symbol] = [];
                     indexArray[symbol] = -1
 
-                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {});
+                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    });
                 }
 
             } else {
+
+                console.log(close)
+                console.log(recordPattern[symbol])
 
                 if (close > recordPattern[symbol]['LH']) {
 
@@ -185,10 +179,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
                     recordPattern[symbol] = []
                 }
-
             }
-
         }
-    });
 
+    });
 });
