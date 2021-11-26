@@ -154,7 +154,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         "LH: " + pattern['LH'] + "\n" +
                         "HL: " + pattern['HL']
 
-
                     let recordPattern = {
                         'symbol': symbol,
                         'time': pattern['patternFoundTime'],

@@ -1438,4 +1438,44 @@
     "ll": 0.721,
     "lh": 0.7219,
     "hl": 0.7214
+}{
+    "symbol": "FIROUSDT",
+    "time": "2021-11-26T05:35:07.628Z",
+    "entryprice": 7.787,
+    "takeprofit": 7.88,
+    "stoploss": 7.703,
+    "hh": 7.796,
+    "ll": 7.703,
+    "lh": 7.787,
+    "hl": 7.772
+}{
+    "symbol": "ENJUSDT",
+    "time": "2021-11-26T05:36:03.435Z",
+    "entryprice": 4.076,
+    "takeprofit": 4.101999999999999,
+    "stoploss": 4.051,
+    "hh": 4.077,
+    "ll": 4.051,
+    "lh": 4.076,
+    "hl": 4.053
+}{
+    "symbol": "ZECUSDT",
+    "time": "2021-11-26T05:38:02.108Z",
+    "entryprice": 282.9,
+    "takeprofit": 284.79999999999995,
+    "stoploss": 281.3,
+    "hh": 283.2,
+    "ll": 281.3,
+    "lh": 282.9,
+    "hl": 281.6
+}{
+    "symbol": "QIUSDT",
+    "time": "2021-11-26T05:38:05.659Z",
+    "entryprice": 0.2397,
+    "takeprofit": 0.245,
+    "stoploss": 0.2367,
+    "hh": 0.242,
+    "ll": 0.2367,
+    "lh": 0.2397,
+    "hl": 0.2372
 }
