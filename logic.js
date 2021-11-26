@@ -102,57 +102,6 @@ function MinTickLow(storeData, indexMax) {
 
 }
 
-function LowerLow(storeData, indexMin, highMin, closeMin, min) {
-
-    let fail = false
-    let failIndex;
-
-    // Pattern recognition matcher ( 1 )
-    for (let index = indexMin + 1; index < storeData.length; ++index) {
-
-        let tick = storeData[index];
-        if (tick['high'] > highMin && tick['close'] > closeMin) {
-
-            return {
-                'tickIndex': tick['index'],
-                'indexMin': indexMin,
-                'indexLL': tick['index'],
-                'tick': tick,
-            };
-
-        } else {
-            fail = true
-            failIndex = index;
-            break;
-        }
-    }
-
-    // Pattern recognition matcher ( 2 )
-    if (fail) {
-
-        for (let index = failIndex; index <= storeData.length; ++index) {
-
-            if (storeData[index] !== undefined) {
-                let tick = storeData[index];
-                if (storeData[index + 1] !== undefined) {
-                    let nextTick = storeData[index + 1]
-                    if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
-
-                        return {
-                            'tickIndex': storeData[index]['index'],
-                            'indexMin': indexMin,
-                            'indexLL': nextTick['index'],
-                            'tick': tick
-                        };
-
-                    }
-                }
-            }
-        }
-    }
-
-    return -1;
-}
 
 function HigherHigh(storeData, indexMax, lowMax, closeMax, max) {
 
@@ -205,6 +154,102 @@ function HigherHigh(storeData, indexMax, lowMax, closeMax, max) {
     return -1;
 }
 
+function LowerLow(storeData, indexMin, highMin, closeMin, min) {
+
+    let fail = false
+    let failIndex;
+
+    // Pattern recognition matcher ( 1 )
+    for (let index = indexMin + 1; index < storeData.length; ++index) {
+
+        let tick = storeData[index];
+        if (tick['high'] > highMin && tick['close'] > closeMin) {
+
+            return {
+                'tickIndex': tick['index'],
+                'indexMin': indexMin,
+                'indexLL': tick['index'],
+                'tick': tick,
+            };
+
+        } else {
+            fail = true
+            failIndex = index;
+            break;
+        }
+    }
+
+    // Pattern recognition matcher ( 2 )
+    if (fail) {
+
+        for (let index = failIndex; index <= storeData.length; ++index) {
+
+            if (storeData[index] !== undefined) {
+                let tick = storeData[index];
+                if (storeData[index + 1] !== undefined) {
+                    let nextTick = storeData[index + 1]
+                    if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
+
+                        return {
+                            'tickIndex': storeData[index]['index'],
+                            'indexMin': indexMin,
+                            'indexLL': nextTick['index'],
+                            'tick': tick
+                        };
+
+                    }
+                }
+            }
+        }
+    }
+
+    return -1;
+}
+
+function LowerHigh(storeData, indexMax, lowMax, closeMax) {
+
+    for (let index = indexMax + 1; index < storeData.length; ++index) {
+
+        let tick = storeData[index];
+        if (tick['low'] < lowMax && tick['close'] < closeMax) {
+            return {
+                'tickIndex': tick['index'],
+                'indexMax': indexMax,
+                'indexHH': tick['index'],
+                'tick': tick
+            };
+
+        } else {
+            return -1
+        }
+    }
+
+    return -1;
+}
+
+function HigherLow(storeData, indexMin, highMin, closeMin) {
+
+    // Pattern recognition matcher ( 1 )
+    for (let index = indexMin + 1; index < storeData.length; ++index) {
+
+        let tick = storeData[index];
+        if (tick['high'] > highMin && tick['close'] > closeMin) {
+
+            return {
+                'tickIndex': tick['index'],
+                'indexMin': indexMin,
+                'indexLL': tick['index'],
+                'tick': tick,
+            };
+
+        } else {
+            return -1;
+        }
+    }
+
+    return -1;
+}
+
 function patternMatching(storeData) {
 
     // ---- Calcolo Higher High -------
@@ -225,12 +270,12 @@ function patternMatching(storeData) {
         let fibonacciPointMax = maxTickAbsolute;
 
         // ---- Calcolo Lower Low -------
-        let minTickLowVariable =    MinTickLow(storeData, HH['indexHH']);
-        let HH_MIN =                minTickLowVariable['min']
-        let minTickAbsolute =       minTickLowVariable['tick']['low']
-        let highMin =               minTickLowVariable['tick']['high']
-        let closeMin =              minTickLowVariable['tick']['close']
-        let indexMin =              minTickLowVariable['index']
+        let minTickLowVariable = MinTickLow(storeData, HH['indexHH']);
+        let HH_MIN = minTickLowVariable['min']
+        let minTickAbsolute = minTickLowVariable['tick']['low']
+        let highMin = minTickLowVariable['tick']['high']
+        let closeMin = minTickLowVariable['tick']['close']
+        let indexMin = minTickLowVariable['index']
 
         let LL = LowerLow(storeData, indexMin, highMin, closeMin, HH_MIN)
 
@@ -238,15 +283,15 @@ function patternMatching(storeData) {
 
             console.log("Confermato LL")
             // ---- Calcolo Lower High -------
-            let fibonacciPointMin =         LL['tick']['low']
-            let maxTickHighVariable =       MaxTickHigh(storeData, LL['indexLL']);
-            let highMaxLowerHigh =          maxTickHighVariable['max']
-            let closeMax =                  maxTickHighVariable['tick']['close']
-            let lowMax =                    maxTickHighVariable['tick']['low']
+            let fibonacciPointMin = LL['tick']['low']
+            let maxTickHighVariable = MaxTickHigh(storeData, LL['indexLL']);
+            let highMaxLowerHigh = maxTickHighVariable['max']
+            let closeMax = maxTickHighVariable['tick']['close']
+            let lowMax = maxTickHighVariable['tick']['low']
 
             // Ritorna il tick della conferma
-            let LH =        HigherHigh(storeData, LL['indexLL'], lowMax, closeMax, HH_MAX)
-            let fib =       getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
+            let LH = LowerHigh(storeData, LL['indexLL'], lowMax, closeMax, HH_MAX)
+            let fib = getFibRetracement({levels: {0: fibonacciPointMax, 1: fibonacciPointMin}});
 
             if (LH !== -1) {
 
@@ -257,11 +302,11 @@ function patternMatching(storeData) {
 
                 // ---- Calcolo Higher Low -------
 
-                let minTickLowVariable =    MinTickLow(storeData, LH['indexHH']);
-                let LH_MIN =                minTickLowVariable['min']
-                let closeMin =              minTickLowVariable['tick']['close']
-                let highMin =               minTickLowVariable['tick']['high']
-                let HL =                    LowerLow(storeData, LH['indexHH'], highMin, closeMin, LH_MIN)
+                let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
+                let LH_MIN = minTickLowVariable['min']
+                let closeMin = minTickLowVariable['tick']['close']
+                let highMin = minTickLowVariable['tick']['high']
+                let HL = HigherLow(storeData, LH['indexHH'], highMin, closeMin)
 
                 if (HL !== -1) {
 
