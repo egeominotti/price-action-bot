@@ -167,13 +167,12 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 console.log("Pattern found")
                 // Azzera le candele per quel simbolo
-                tokenArray[symbol] = [];
-                indexArray[symbol] = -1
+
 
                 // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
                 // Devo controllare che recordPattern sia vuoto l'array per quel simbolo
                 if (recordPattern[symbol] === undefined) {
-
+                    console.log("salvo pattern")
                     let recordPatternData = {
                         'symbol': symbol,
                         'time': pattern['patternFoundTime'],
@@ -189,6 +188,10 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     recordPattern[symbol].push(recordPatternData)
                     console.log(recordPattern['symbol'])
+
+                    tokenArray[symbol] = [];
+                    indexArray[symbol] = -1
+
                 }
 
             } else {

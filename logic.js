@@ -280,19 +280,6 @@ function patternMatching(storeData) {
                     let lastTicker;
                     for (let currentTicker of storeData) lastTicker = currentTicker;
 
-                    let msg = {
-                        'patternFoundTime': new Date().toISOString(),
-                        'STOP_LOSS': LL['value'],
-                        'HH': HH['value'],
-                        'LL': LL['value'],
-                        'LH': LH['value'],
-                        'HL': HL['value'],
-                        'lastTicker': lastTicker['close']
-                    }
-                    console.log(msg)
-
-                    //if (lastTicker['close'] > LH['value']) {
-
                     let entryPrice = LH['value'];
                     let takeProfit = LH['value'] + (HH['value'] - LL['value'])
 
@@ -306,7 +293,6 @@ function patternMatching(storeData) {
                         'LH': LH['value'],
                         'HL': HL['value']
                     }
-                    //}
 
                 }
             }
