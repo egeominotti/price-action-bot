@@ -258,17 +258,22 @@ function patternMatching(storeData) {
 
         if (HH !== -1) {
 
+            console.log("Confermato HH")
             let LL = LowerLow(storeData, HH['index'])
 
             if (LL !== -1) {
 
+                console.log("Confermato LL")
                 let LH = LowerHigh(storeData, LL['index'])
 
                 if (LH !== -1) {
 
+                    console.log("Confermato LH")
                     let HL = HigherLow(storeData, LH['index'])
 
                     if (HL !== -1) {
+
+                        console.log("Confermato HL")
 
                         let lastTicker;
                         for (let currentTicker of storeData) lastTicker = currentTicker;
