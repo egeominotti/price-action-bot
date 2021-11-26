@@ -135,7 +135,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     let recordPatternData = {
                         'symbol': symbol,
-                        'time': pattern['patternFoundTime'],
                         'entryprice': pattern['entryprice'],
                         'takeprofit': pattern['takeprofit'],
                         'stoploss': pattern['stoploss'],
@@ -174,7 +173,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                         let message = "Symbol: " + symbol + "\n" +
                             "Interval: " + interval + "\n" +
-                            "Entry found at: " + recordPattern[symbol]['patternFoundTime'] + "\n" +
+                            "Entry found at: " + new Date().toISOString() + "\n" +
                             "entryprice: " + recordPattern[symbol]['entryprice'] + "\n" +
                             "takeprofit: " + recordPattern[symbol]['takeprofit'] + "\n" +
                             "stoploss:  " + recordPattern[symbol]['stoploss'] + "\n" +

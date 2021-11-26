@@ -284,7 +284,6 @@ function patternMatching(storeData, symbol) {
                     let takeProfit = LH['value'] + (HH['value'] - LL['value'])
 
                     return {
-                        'patternFoundTime': new Date().toISOString(),
                         'takeprofit': takeProfit,
                         'entryprice': entryPrice,
                         'stoploss': LL['value'],
