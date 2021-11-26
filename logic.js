@@ -30,15 +30,14 @@ function MaxTickHigh(storeData, startIndex) {
 
         for (let index = startIndex; index < storeData.length; ++index) {
             let tick = storeData[index];
-            highArray.push(tick['low'])
+            highArray.push(tick['high'])
         }
 
-        // Trovo il minimo tra tutte le candele low partendo dall'indice trovato dall' HH
         let max = Math.min(...highArray)
 
         for (let index = startIndex; index < storeData.length; ++index) {
             let tick = storeData[index];
-            if (tick['low'] === max) {
+            if (tick['high'] === max) {
                 idMaxTickHigh = tick['index']
                 tickerFounded = tick;
             }
@@ -278,9 +277,7 @@ function patternMatching(storeData) {
                     let lastTicker;
                     for (let currentTicker of storeData) {
                         lastTicker = currentTicker;
-                        console.log(lastTicker)
                     }
-                    console.log(lastTicker)
 
                     if (lastTicker['close'] > LH['tick']['high']) {
 
