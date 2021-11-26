@@ -141,7 +141,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     logic.sendMessageTelegram(message)
 
-
                     recordPattern[symbol] = []
                     console.log(recordPattern[symbol])
                 }
