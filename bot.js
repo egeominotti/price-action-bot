@@ -106,33 +106,42 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             x: isFinal,
         } = ticks;
 
+        if (recordPattern[symbol].length > 0 && recordPattern[symbol]['confirm'] === true && recordPattern[symbol]['traded'] === false) {
+            // Faccio trading in realtime
+
+            let takeprofit = recordPattern[symbol]['takeprofit']
+            let stoploss = recordPattern[symbol]['stoploss']
+            let entryprice = recordPattern[symbol]['entryprice']
+            recordPattern[symbol] = []
+        }
 
         if (isFinal) {
 
             // Controlla che ci siano dei pattern da verificare e invia una notifica su telegram
-            if (recordPattern[symbol].length > 0) {
-                for (let pattern of recordPattern) {
-                    console.log(pattern)
-                    if (close > pattern['LH']) {
+            if (recordPattern[symbol].length > 0 && recordPattern[symbol]['confirm'] === false) {
 
-                        let message = "SYMBOL: " + symbol + "\n" +
-                            "INTERVAL: " + interval + "\n" +
-                            "PATTERN FOUND AT: " + pattern['patternFoundTime'] + "\n" +
-                            "ENTRYPRICE: " + pattern['ENTRY_PRICE'] + "\n" +
-                            "TAKEPROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
-                            "STOPLOSS:  " + pattern['STOP_LOSS'] + "\n" +
-                            "HH: " + pattern['HH'] + "\n" +
-                            "LL: " + pattern['LL'] + "\n" +
-                            "LH: " + pattern['LH'] + "\n" +
-                            "HL: " + pattern['HL']
+                console.log(recordPattern[symbol])
+                if (close > recordPattern[symbol]['LH']) {
 
-                        pattern['confirm'] = true
+                    let message = "SYMBOL: " + symbol + "\n" +
+                        "INTERVAL: " + interval + "\n" +
+                        "PATTERN FOUND AT: " + recordPattern[symbol]['patternFoundTime'] + "\n" +
+                        "ENTRYPRICE: " + recordPattern[symbol]['ENTRY_PRICE'] + "\n" +
+                        "TAKEPROFIT: " + recordPattern[symbol]['TAKE_PROFIT'] + "\n" +
+                        "STOPLOSS:  " + recordPattern[symbol]['STOP_LOSS'] + "\n" +
+                        "HH: " + recordPattern[symbol]['HH'] + "\n" +
+                        "LL: " + recordPattern[symbol]['LL'] + "\n" +
+                        "LH: " + recordPattern[symbol]['LH'] + "\n" +
+                        "HL: " + recordPattern[symbol]['HL']
 
-                        logic.sendMessageTelegram(message)
-                        fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
-                        });
-                        //recordPattern[symbol] = []
-                    }
+                    recordPattern[symbol]['confirm'] = true
+
+                    logic.sendMessageTelegram(message)
+
+                    fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    });
+
+                    //recordPattern[symbol] = []
                 }
             }
 
@@ -169,7 +178,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     'll': pattern['LL'],
                     'lh': pattern['LH'],
                     'hl': pattern['HL'],
-                    'confirmed': false
+                    'confirmed': false,
+                    'traded': false
                 }
 
                 // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
