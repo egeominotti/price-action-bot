@@ -173,11 +173,17 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     recordPattern[symbol]['confirmed'] = true
                     recordPattern[symbol] = []
 
+                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    });
+
                     logic.sendMessageTelegram(message)
                 }
 
                 if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
                     recordPattern[symbol] = []
+
+                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    });
                 }
             }
         }
