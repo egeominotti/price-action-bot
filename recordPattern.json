@@ -1478,4 +1478,34 @@
     "ll": 0.2367,
     "lh": 0.2397,
     "hl": 0.2372
+}{
+    "symbol": "PLAUSDT",
+    "time": "2021-11-26T05:41:06.115Z",
+    "entryprice": 2.669,
+    "takeprofit": 2.691,
+    "stoploss": 2.649,
+    "hh": 2.671,
+    "ll": 2.649,
+    "lh": 2.669,
+    "hl": 2.65
+}{
+    "symbol": "FIOUSDT",
+    "time": "2021-11-26T05:41:07.583Z",
+    "entryprice": 0.2088,
+    "takeprofit": 0.21050000000000002,
+    "stoploss": 0.2072,
+    "hh": 0.2089,
+    "ll": 0.2072,
+    "lh": 0.2088,
+    "hl": 0.208
+}{
+    "symbol": "POWRUSDT",
+    "time": "2021-11-26T05:41:07.613Z",
+    "entryprice": 0.6577,
+    "takeprofit": 0.6594,
+    "stoploss": 0.6564,
+    "hh": 0.6581,
+    "ll": 0.6564,
+    "lh": 0.6577,
+    "hl": 0.6565
 }
