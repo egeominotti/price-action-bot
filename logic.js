@@ -267,9 +267,14 @@ function patternMatching(storeData) {
                     console.log(minTickAbsolute)
                     console.log(entryPrice)
                     console.log(LH_MIN)
-                    console.log(storeData['close'])
 
-                    if (storeData['close'] > LH['tick']['high']) {
+                    let lastTicker;
+                    for(let currentTicker of storeData){
+                        lastTicker = currentTicker;
+                    }
+                     console.log(lastTicker)
+
+                    if (lastTicker['close'] > LH['tick']['high']) {
 
                         return {
                             'patternFoundTime': new Date().toISOString(),
@@ -287,7 +292,6 @@ function patternMatching(storeData) {
             }
         }
     }
-
     return false;
 }
 
