@@ -277,7 +277,7 @@ function patternMatching(storeData) {
                     let lastTicker;
                     for (let currentTicker of storeData) lastTicker = currentTicker;
 
-                    if (lastTicker['close'] > LH['tick']['high']) {
+                    if (lastTicker['close'] > LH['value']) {
 
                         let entryPrice = LH['value'];
                         let takeProfit = LH['value'] + (HH['value'] - LL['value'])
