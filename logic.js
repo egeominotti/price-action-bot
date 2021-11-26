@@ -271,6 +271,7 @@ function patternMatching(storeData) {
                     let lastTicker;
                     for(let currentTicker of storeData){
                         lastTicker = currentTicker;
+                        console.log(lastTicker)
                     }
                      console.log(lastTicker)
 
