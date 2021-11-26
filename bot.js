@@ -1,5 +1,6 @@
 const Binance = require('node-binance-api');
 const logic = require('./logic');
+const axios = require('axios').default;
 //const coins = require('./coins');
 const fs = require('fs');
 const _ = require("lodash");
@@ -11,41 +12,6 @@ let timeFrame = args[2]
 let tokenArray = {}
 let indexArray = {};
 let recordPattern = {}
-
-
-let users = [
-    {
-        'nome': 'egeo',
-        'key': 'g4m5LHCwMI1evVuaf6zgKXtszDnSboQla5O5c7uWVtBmdbaiTLNQWPnO9ImbYB9U',
-        'secret': 'b2kxHirJLXDrXuFGvLWUtXvRyUXQu4NvsY8lSy94bJjnJFn0SmESuBq60DJi9b0B',
-        'binance': null,
-    },
-    {
-        'nome': 'carlo',
-        'key': 'qElsCKJ7X6Dk8W7WmC5ww3z5nYl3mrAGHGhq1TtG3pOlje6cE0tX2bjSpwrWbJwC',
-        'secret': 'Vyx1jqaKWHv4SWr7aoRoalVIkaDQXh8pg5E9bi3lPDLh9p7tieHfCDvQaFKcsKJj',
-        'binance': null,
-    }
-]
-
-
-// for (const user of users) {
-//     let buy = false;
-//     let binanceUserTrade = new Binance().options({
-//         APIKEY: user.key,
-//         APISECRET: user.secret
-//     });
-//     user.binance = binanceUserTrade
-//     binanceUserTrade.balance(function (error, balances) {
-//         console.log("balances()", balances);
-//         if (typeof balances.USDT !== "undefined") {
-//             console.log("USDT balance: ", balances.USDT.available);
-//         }
-//     });
-// }
-// console.log(users)
-
-// Con api compro o vendo
 
 
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
@@ -80,37 +46,59 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             x: isFinal,
         } = ticks;
 
-
-        // if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === true) {
-        //
-        //     let takeprofit = recordPattern[symbol]['takeprofit']
-        //     let stoploss = recordPattern[symbol]['stoploss']
-        //     let entryprice = recordPattern[symbol]['entryprice']
-        //
-        //     // Controllo STOP_LOSS
-        //     // Controllo TAKE_PROFIT
-        //     if (close >= position.MAX_LH) {
-        //         // Compro a prezzo di mercato
-        //         //binance.marketBuy("BNBBTC", quantity);
-        //         buy = true;
-        //     }
-        //
-        //     if (buy) {
-        //         // Stop Loss
-        //         if (close < stoploss) {
-        //             // binance.marketSell("ETHBTC", quantity);
-        //             tradePosition[symbol] = []
-        //         } else {
-        //             // TAKE PROFIT
-        //             if (close >= takeprofit) {
-        //                 //binance.marketSell("ETHBTC", quantity);
-        //                 tradePosition[symbol] = []
-        //             }
-        //         }
-        //     }
-        // }
-
         let nameFile = 'data/pattern_' + interval + ".json";
+
+        if (!_.isEmpty(recordPattern[symbol])) {
+            const recordPatternValue = _.head(recordPattern[symbol]);
+            if (recordPatternValue['confirmed']) {
+
+                console.log("POROVO A COMPRARE")
+                let takeprofit = recordPatternValue['takeprofit']
+                let stoploss = recordPatternValue['stoploss']
+
+                // Stop Loss
+                if (close < stoploss) {
+
+                    let body = {
+                        action: 'SELL',
+                        exchange: 'BINANCE',
+                        ticker: symbol,
+                        asset: 'USDT',
+                    }
+
+                    axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                        .then(function (response) {
+                            console.log(response);
+                            recordPattern[symbol] = []
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
+
+                } else {
+                    // TAKE PROFIT
+                    if (close >= takeprofit) {
+                        let body = {
+                            action: 'SELL',
+                            exchange: 'BINANCE',
+                            ticker: symbol,
+                            asset: 'USDT',
+                        }
+
+                        axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                            .then(function (response) {
+                                console.log(response);
+                                recordPattern[symbol] = []
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
+                }
+            }
+        }
+
 
         if (isFinal) {
 
@@ -157,44 +145,62 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
             } else {
 
+                const recordPatternValue = _.head(recordPattern[symbol]);
+
                 console.log("CLOSE: " + close)
                 console.log("LOW: " + low)
                 console.log("HIGH:" + high)
                 console.log("OPEN: " + open)
-
-                const recordPatternValue = _.head(recordPattern[symbol]);
 
                 console.log("LL: " + recordPatternValue['ll'])
                 console.log("HH: " + recordPatternValue['hh'])
                 console.log("LH: " + recordPatternValue['lh'])
                 console.log("HL: " + recordPatternValue['hl'])
 
+                if (recordPatternValue['confirmed']) {
 
-                if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
+                    if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
 
-                    console.log("low < recordPatternValue['ll'] || high > recordPatternValue['hh']")
-                    // Cancello il pattern e ricominco
-                    recordPattern[symbol] = []
+                        console.log("low < recordPatternValue['ll'] || high > recordPatternValue['hh']")
+                        // Cancello il pattern e ricominco
+                        recordPattern[symbol] = []
 
-                } else {
+                    } else {
 
-                    if (close > recordPatternValue['lh']) {
+                        if (close > recordPatternValue['lh']) {
 
-                        console.log("close > recordPatternValue['lh']")
+                            console.log("close > recordPatternValue['lh']")
 
-                        let message = "Symbol: " + symbol + "\n" +
-                            "Interval: " + interval + "\n" +
-                            "Entry found at: " + new Date().toISOString() + "\n" +
-                            "entryprice: " + recordPatternValue['entryprice'] + "\n" +
-                            "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                            "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                            "hh: " + recordPatternValue['hh'] + "\n" +
-                            "ll: " + recordPatternValue['ll'] + "\n" +
-                            "lh: " + recordPatternValue['lh'] + "\n" +
-                            "hl: " + recordPatternValue['hl']
+                            let message = "Symbol: " + symbol + "\n" +
+                                "Interval: " + interval + "\n" +
+                                "Entry found at: " + new Date().toISOString() + "\n" +
+                                "entryprice: " + recordPatternValue['entryprice'] + "\n" +
+                                "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                "hh: " + recordPatternValue['hh'] + "\n" +
+                                "ll: " + recordPatternValue['ll'] + "\n" +
+                                "lh: " + recordPatternValue['lh'] + "\n" +
+                                "hl: " + recordPatternValue['hl']
 
-                        recordPattern[symbol]['confirmed'] = true
-                        logic.sendMessageTelegram(message)
+                            let body = {
+                                action: 'BUY',
+                                exchange: 'BINANCE',
+                                ticker: symbol,
+                                asset: 'USDT',
+                            }
+
+                            axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                                .then(function (response) {
+                                    console.log(response);
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+
+                            logic.sendMessageTelegram(message)
+                            recordPatternValue['confirmed'] = true
+
+                        }
                     }
                 }
 
