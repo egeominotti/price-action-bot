@@ -212,6 +212,7 @@ function LowerHigh(storeData, indexMax, lowMax, closeMax) {
 
         let tick = storeData[index];
         if (tick['low'] < lowMax && tick['close'] < closeMax) {
+
             return {
                 'tickIndex': tick['index'],
                 'indexMax': indexMax,

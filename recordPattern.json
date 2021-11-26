@@ -1038,4 +1038,94 @@
     "ll": 0.535,
     "lh": 0.536,
     "hl": 0.5352
+}{
+    "symbol": "SHIBUSDT",
+    "time": "2021-11-26T03:19:00.152Z",
+    "entryprice": 0.00004063,
+    "takeprofit": 0.00004118,
+    "stoploss": 0.00004045,
+    "hh": 0.0000409,
+    "ll": 0.0000403,
+    "lh": 0.00004063,
+    "hl": 0.00004045
+}{
+    "symbol": "ETCUSDT",
+    "time": "2021-11-26T03:19:02.772Z",
+    "entryprice": 49.48,
+    "takeprofit": 49.89,
+    "stoploss": 49.39,
+    "hh": 49.58,
+    "ll": 49.16,
+    "lh": 49.48,
+    "hl": 49.39
+}{
+    "symbol": "TVKUSDT",
+    "time": "2021-11-26T03:20:00.995Z",
+    "entryprice": 0.4647,
+    "takeprofit": 0.4765,
+    "stoploss": 0.4619,
+    "hh": 0.4695,
+    "ll": 0.4573,
+    "lh": 0.4647,
+    "hl": 0.4619
+}{
+    "symbol": "CLVUSDT",
+    "time": "2021-11-26T03:20:07.676Z",
+    "entryprice": 1.225,
+    "takeprofit": 1.2320000000000002,
+    "stoploss": 1.223,
+    "hh": 1.229,
+    "ll": 1.222,
+    "lh": 1.225,
+    "hl": 1.223
+}{
+    "symbol": "BNBUSDT",
+    "time": "2021-11-26T03:21:00.231Z",
+    "entryprice": 644,
+    "takeprofit": 647,
+    "stoploss": 642.6,
+    "hh": 644.4,
+    "ll": 641,
+    "lh": 644,
+    "hl": 642.6
+}{
+    "symbol": "POWRUSDT",
+    "time": "2021-11-26T03:22:07.647Z",
+    "entryprice": 0.6688,
+    "takeprofit": 0.6738,
+    "stoploss": 0.6673,
+    "hh": 0.6706,
+    "ll": 0.6655,
+    "lh": 0.6688,
+    "hl": 0.6673
+}{
+    "symbol": "MDTUSDT",
+    "time": "2021-11-26T03:23:07.634Z",
+    "entryprice": 0.05928,
+    "takeprofit": 0.05945,
+    "stoploss": 0.05925,
+    "hh": 0.05931,
+    "ll": 0.05914,
+    "lh": 0.05928,
+    "hl": 0.05925
+}{
+    "symbol": "BURGERUSDT",
+    "time": "2021-11-26T03:24:07.681Z",
+    "entryprice": 3.766,
+    "takeprofit": 3.789,
+    "stoploss": 3.754,
+    "hh": 3.77,
+    "ll": 3.747,
+    "lh": 3.766,
+    "hl": 3.754
+}{
+    "symbol": "COCOSUSDT",
+    "time": "2021-11-26T03:25:00.438Z",
+    "entryprice": 4.025,
+    "takeprofit": 4.1469000000000005,
+    "stoploss": 3.9882,
+    "hh": 4.0632,
+    "ll": 3.9411,
+    "lh": 4.025,
+    "hl": 3.9882
 }
