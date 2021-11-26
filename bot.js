@@ -182,7 +182,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     recordPattern[symbol]['confirmed'] = true
                     recordPattern[symbol] = []
 
-
                     fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
                     });
 
