@@ -277,7 +277,6 @@ function patternMatching(storeData) {
 
                     console.log("Confermato HL")
 
-
                     let lastTicker;
                     for (let currentTicker of storeData) lastTicker = currentTicker;
 
