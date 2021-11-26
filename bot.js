@@ -153,12 +153,14 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
                     });
+
                 }
 
             } else {
 
                 console.log(close)
                 console.log(recordPattern[symbol])
+                console.log("STO CERCANDO ENTRATA")
 
                 if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
                     console.log("DEVO FERMARMI")
