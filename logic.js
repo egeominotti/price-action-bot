@@ -263,6 +263,11 @@ function patternMatching(storeData) {
 
                     console.log("Confermato HL");
 
+                    console.log(maxTickAbsolute)
+                    console.log(minTickAbsolute)
+                    console.log(entryPrice)
+                    console.log(LH_MIN)
+
                     if (storeData['close'] > LH['tick']['high']) {
 
                         return {
