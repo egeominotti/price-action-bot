@@ -123,6 +123,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 console.log(recordPattern[symbol])
                 if (close > recordPattern[symbol]['LH']) {
 
+                    console.log("Candela confermata");
+
                     let message = "SYMBOL: " + symbol + "\n" +
                         "INTERVAL: " + interval + "\n" +
                         "PATTERN FOUND AT: " + recordPattern[symbol]['patternFoundTime'] + "\n" +
@@ -168,23 +170,25 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 tokenArray[symbol] = [];
                 indexArray[symbol] = -1
 
-                let recordPatternData = {
-                    'symbol': symbol,
-                    'time': pattern['patternFoundTime'],
-                    'entryprice': pattern['ENTRY_PRICE'],
-                    'takeprofit': pattern['TAKE_PROFIT'],
-                    'stoploss': pattern['STOP_LOSS'],
-                    'hh': pattern['HH'],
-                    'll': pattern['LL'],
-                    'lh': pattern['LH'],
-                    'hl': pattern['HL'],
-                    'confirmed': false,
-                }
-
                 // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
                 // Devo controllare che recordPattern sia vuoto l'array per quel simbolo
-                if (recordPatternData[symbol] === undefined) {
+                if (recordPattern[symbol] === undefined) {
+
+                    let recordPatternData = {
+                        'symbol': symbol,
+                        'time': pattern['patternFoundTime'],
+                        'entryprice': pattern['ENTRY_PRICE'],
+                        'takeprofit': pattern['TAKE_PROFIT'],
+                        'stoploss': pattern['STOP_LOSS'],
+                        'hh': pattern['HH'],
+                        'll': pattern['LL'],
+                        'lh': pattern['LH'],
+                        'hl': pattern['HL'],
+                        'confirmed': false,
+                    }
+
                     recordPattern[symbol].push(recordPatternData)
+                    console.log(recordPattern['symbol'])
                 }
 
             } else {
