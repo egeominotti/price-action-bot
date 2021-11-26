@@ -118,7 +118,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         if (isFinal) {
 
             // Controlla che ci siano dei pattern da verificare e invia una notifica su telegram
-            if (recordPattern[symbol] !== undefined && recordPattern[symbol]['confirm'] === false) {
+            if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === false) {
 
                 console.log(recordPattern[symbol])
                 if (close > recordPattern[symbol]['LH']) {
@@ -142,7 +142,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
                     });
-
+                    recordPattern[symbol] = []
                     console.log(recordPattern[symbol])
                 }
             }
@@ -170,9 +170,12 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 console.log(recordPattern)
                 console.log(typeof  recordPattern[symbol])
+                console.log(recordPattern[symbol])
+
                 // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
                 // Devo controllare che recordPattern sia vuoto l'array per quel simbolo
-                if (recordPattern[symbol] === undefined) {
+                console.log(_.isEmpty(recordPattern[symbol]))
+                if (_.isEmpty(recordPattern[symbol])) {
                     console.log("salvo pattern")
                     let recordPatternData = {
                         'symbol': symbol,
@@ -192,7 +195,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     tokenArray[symbol] = [];
                     indexArray[symbol] = -1
-
                 }
 
             } else {
