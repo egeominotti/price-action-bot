@@ -1,1511 +1,1088 @@
 {
-    "symbol": "FIDAUSDT",
-    "time": "2021-11-26T01:45:07.769Z",
-    "entryprice": 8.194,
-    "takeprofit": 8.261000000000001,
-    "stoploss": 8.194,
-    "hh": 8.253,
-    "ll": 8.19,
-    "lh": 8.194,
-    "hl": 8.194
-}{
-    "symbol": "DOCKUSDT",
-    "time": "2021-11-26T01:57:07.601Z",
-    "entryprice": 0.09192,
-    "takeprofit": 0.09320999999999999,
-    "stoploss": 0.0918,
-    "hh": 0.09275,
-    "ll": 0.0918,
-    "lh": 0.09192,
-    "hl": 0.0918
-}{
-    "symbol": "ENJUSDT",
-    "time": "2021-11-26T01:58:00.266Z",
-    "entryprice": 4.202,
-    "takeprofit": 4.251,
-    "stoploss": 4.2,
-    "hh": 4.235,
-    "ll": 4.2,
-    "lh": 4.202,
-    "hl": 4.2
-}{
-    "symbol": "SNXUSDT",
-    "time": "2021-11-26T01:58:07.581Z",
-    "entryprice": 8.151,
-    "takeprofit": 8.171999999999999,
-    "stoploss": 8.146,
-    "hh": 8.163,
-    "ll": 8.146,
-    "lh": 8.151,
-    "hl": 8.146
-}{
-    "symbol": "OCEANUSDT",
-    "time": "2021-11-26T01:59:00.308Z",
-    "entryprice": 1.0166,
-    "takeprofit": 1.0231,
-    "stoploss": 1.016,
-    "hh": 1.022,
-    "ll": 1.016,
-    "lh": 1.0166,
-    "hl": 1.016
-}{
-    "symbol": "PUNDIXUSDT",
-    "time": "2021-11-26T01:59:07.590Z",
-    "entryprice": 1.483,
-    "takeprofit": 1.4969999999999999,
-    "stoploss": 1.481,
-    "hh": 1.494,
-    "ll": 1.481,
-    "lh": 1.483,
-    "hl": 1.481
-}{
-    "symbol": "ELFUSDT",
-    "time": "2021-11-26T01:59:07.616Z",
-    "entryprice": 0.5556,
-    "takeprofit": 0.5606,
-    "stoploss": 0.5531,
-    "hh": 0.5581,
-    "ll": 0.5531,
-    "lh": 0.5556,
-    "hl": 0.5531
-}{
-    "symbol": "TVKUSDT",
-    "time": "2021-11-26T02:00:00.055Z",
-    "entryprice": 0.4826,
-    "takeprofit": 0.4894,
-    "stoploss": 0.482,
-    "hh": 0.4888,
-    "ll": 0.482,
-    "lh": 0.4826,
-    "hl": 0.482
-}{
-    "symbol": "SHIBUSDT",
-    "time": "2021-11-26T02:00:00.126Z",
-    "entryprice": 0.00004103,
-    "takeprofit": 0.00004158,
-    "stoploss": 0.000041,
-    "hh": 0.00004146,
-    "ll": 0.000041,
-    "lh": 0.00004103,
-    "hl": 0.000041
-}{
-    "symbol": "OGNUSDT",
-    "time": "2021-11-26T02:00:02.079Z",
-    "entryprice": 1.1152,
-    "takeprofit": 1.1211,
-    "stoploss": 1.1147,
-    "hh": 1.1191,
-    "ll": 1.1147,
-    "lh": 1.1152,
-    "hl": 1.1147
-}{
-    "symbol": "THETAUSDT",
-    "time": "2021-11-26T02:01:01.100Z",
-    "entryprice": 7.247,
-    "takeprofit": 7.286,
-    "stoploss": 7.246,
-    "hh": 7.281,
-    "ll": 7.246,
-    "lh": 7.247,
-    "hl": 7.246
-}{
-    "symbol": "XRPUSDT",
-    "time": "2021-11-26T02:01:01.944Z",
-    "entryprice": 1.037,
-    "takeprofit": 1.0410000000000001,
-    "stoploss": 1.0368,
-    "hh": 1.0401,
-    "ll": 1.0368,
-    "lh": 1.037,
-    "hl": 1.0368
-}{
-    "symbol": "DODOUSDT",
-    "time": "2021-11-26T02:01:02.081Z",
-    "entryprice": 1.405,
-    "takeprofit": 1.4160000000000001,
-    "stoploss": 1.404,
-    "hh": 1.411,
-    "ll": 1.404,
-    "lh": 1.405,
-    "hl": 1.404
-}{
-    "symbol": "VTHOUSDT",
-    "time": "2021-11-26T02:01:02.285Z",
-    "entryprice": 0.008946,
-    "takeprofit": 0.009047000000000001,
-    "stoploss": 0.008945,
-    "hh": 0.009046,
-    "ll": 0.008945,
-    "lh": 0.008946,
-    "hl": 0.008945
-}{
-    "symbol": "DATAUSDT",
-    "time": "2021-11-26T02:01:04.472Z",
-    "entryprice": 0.1495,
-    "takeprofit": 0.15130000000000002,
-    "stoploss": 0.14925,
-    "hh": 0.15065,
-    "ll": 0.14925,
-    "lh": 0.1495,
-    "hl": 0.14925
-}{
-    "symbol": "MOVRUSDT",
-    "time": "2021-11-26T02:06:00.821Z",
-    "entryprice": 339,
-    "takeprofit": 345.6,
-    "stoploss": 338,
-    "hh": 344.1,
-    "ll": 338,
-    "lh": 339,
-    "hl": 338
-}{
-    "symbol": "ONGUSDT",
-    "time": "2021-11-26T02:18:07.643Z",
-    "entryprice": 1.1437,
-    "takeprofit": 1.1498,
-    "stoploss": 1.1415,
-    "hh": 1.1476,
-    "ll": 1.1415,
-    "lh": 1.1437,
-    "hl": 1.1415
-}{
-    "symbol": "COCOSUSDT",
-    "time": "2021-11-26T02:20:00.455Z",
-    "entryprice": 4.1878,
-    "takeprofit": 4.3456,
-    "stoploss": 4.15,
-    "hh": 4.3116,
-    "ll": 4.15,
-    "lh": 4.1878,
-    "hl": 4.15
-}{
-    "symbol": "STXUSDT",
-    "time": "2021-11-26T02:20:05.636Z",
-    "entryprice": 1.991,
-    "takeprofit": 2.0060000000000002,
-    "stoploss": 1.984,
-    "hh": 1.999,
-    "ll": 1.984,
-    "lh": 1.991,
-    "hl": 1.984
-}{
-    "symbol": "RAREUSDT",
-    "time": "2021-11-26T02:21:07.431Z",
-    "entryprice": 1.811,
-    "takeprofit": 1.835,
-    "stoploss": 1.8,
-    "hh": 1.825,
-    "ll": 1.8,
-    "lh": 1.811,
-    "hl": 1.8
-}{
-    "symbol": "FIDAUSDT",
-    "time": "2021-11-26T02:21:07.728Z",
-    "entryprice": 8.148,
-    "takeprofit": 8.161,
-    "stoploss": 8.147,
-    "hh": 8.16,
-    "ll": 8.147,
-    "lh": 8.148,
-    "hl": 8.147
-}{
-    "symbol": "RUNEUSDT",
-    "time": "2021-11-26T02:22:00.339Z",
-    "entryprice": 13.016,
-    "takeprofit": 13.097,
-    "stoploss": 12.957,
-    "hh": 13.078,
-    "ll": 12.957,
-    "lh": 13.016,
-    "hl": 12.957
-}{
-    "symbol": "GTOUSDT",
-    "time": "2021-11-26T02:22:02.667Z",
-    "entryprice": 0.06162,
-    "takeprofit": 0.062090000000000006,
-    "stoploss": 0.06152,
-    "hh": 0.06199,
-    "ll": 0.06152,
-    "lh": 0.06162,
-    "hl": 0.06152
-}{
-    "symbol": "ANKRUSDT",
-    "time": "2021-11-26T02:37:00.395Z",
-    "entryprice": 0.14127,
-    "takeprofit": 0.14447,
-    "stoploss": 0.1396,
-    "hh": 0.142,
-    "ll": 0.13822,
-    "lh": 0.14127,
-    "hl": 0.1396
-}{
-    "symbol": "PORTOUSDT",
-    "time": "2021-11-26T02:37:07.652Z",
-    "entryprice": 5.0318,
-    "takeprofit": 5.0485,
-    "stoploss": 5.0248,
-    "hh": 5.0368,
-    "ll": 5.0201,
-    "lh": 5.0318,
-    "hl": 5.0248
-}{
-    "symbol": "NBSUSDT",
-    "time": "2021-11-26T02:38:07.637Z",
-    "entryprice": 0.02669,
-    "takeprofit": 0.027079999999999996,
-    "stoploss": 0.02658,
-    "hh": 0.02683,
-    "ll": 0.02644,
-    "lh": 0.02669,
-    "hl": 0.02658
-}{
-    "symbol": "BADGERUSDT",
-    "time": "2021-11-26T02:38:07.641Z",
-    "entryprice": 28.8,
-    "takeprofit": 29.009999999999998,
-    "stoploss": 28.73,
-    "hh": 28.86,
-    "ll": 28.64,
-    "lh": 28.8,
-    "hl": 28.73
-}{
-    "symbol": "OMUSDT",
-    "time": "2021-11-26T02:38:07.642Z",
-    "entryprice": 0.2399,
-    "takeprofit": 0.24200000000000002,
-    "stoploss": 0.2398,
-    "hh": 0.2406,
-    "ll": 0.2385,
-    "lh": 0.2399,
-    "hl": 0.2398
-}{
-    "symbol": "SCUSDT",
-    "time": "2021-11-26T02:39:00.116Z",
-    "entryprice": 0.02419,
-    "takeprofit": 0.024730000000000002,
-    "stoploss": 0.02382,
-    "hh": 0.02421,
-    "ll": 0.02362,
-    "lh": 0.02419,
-    "hl": 0.02382
-}{
-    "symbol": "RAREUSDT",
-    "time": "2021-11-26T02:40:03.406Z",
-    "entryprice": 1.794,
-    "takeprofit": 1.84,
-    "stoploss": 1.783,
-    "hh": 1.814,
-    "ll": 1.766,
-    "lh": 1.794,
-    "hl": 1.783
-}{
-    "symbol": "STMXUSDT",
-    "time": "2021-11-26T02:40:07.656Z",
-    "entryprice": 0.03371,
-    "takeprofit": 0.03388,
-    "stoploss": 0.0336,
-    "hh": 0.03373,
-    "ll": 0.03356,
-    "lh": 0.03371,
-    "hl": 0.0336
-}{
-    "symbol": "AIONUSDT",
-    "time": "2021-11-26T02:41:00.120Z",
-    "entryprice": 0.2618,
-    "takeprofit": 0.2702,
-    "stoploss": 0.2577,
-    "hh": 0.2639,
-    "ll": 0.2543,
-    "lh": 0.2618,
-    "hl": 0.2577
-}{
-    "symbol": "MTLUSDT",
-    "time": "2021-11-26T02:41:00.234Z",
-    "entryprice": 3.232,
-    "takeprofit": 3.2780000000000005,
-    "stoploss": 3.21,
-    "hh": 3.241,
-    "ll": 3.195,
-    "lh": 3.232,
-    "hl": 3.21
-}{
-    "symbol": "NUUSDT",
-    "time": "2021-11-26T02:41:07.006Z",
-    "entryprice": 0.8498,
-    "takeprofit": 0.864,
-    "stoploss": 0.8433,
-    "hh": 0.8546,
-    "ll": 0.8404,
-    "lh": 0.8498,
-    "hl": 0.8433
-}{
-    "symbol": "BURGERUSDT",
-    "time": "2021-11-26T02:41:07.648Z",
-    "entryprice": 3.787,
-    "takeprofit": 3.802,
-    "stoploss": 3.785,
-    "hh": 3.794,
-    "ll": 3.779,
-    "lh": 3.787,
-    "hl": 3.785
-}{
-    "symbol": "HIVEUSDT",
-    "time": "2021-11-26T02:42:00.374Z",
-    "entryprice": 2.8818,
-    "takeprofit": 3.0481,
-    "stoploss": 2.8029,
-    "hh": 2.953,
-    "ll": 2.7829,
-    "lh": 2.8818,
-    "hl": 2.8029
-}{
-    "symbol": "INJUSDT",
-    "time": "2021-11-26T02:42:03.260Z",
-    "entryprice": 13.929,
-    "takeprofit": 14.013000000000002,
-    "stoploss": 13.901,
-    "hh": 13.954,
-    "ll": 13.87,
-    "lh": 13.929,
-    "hl": 13.901
-}{
-    "symbol": "NULSUSDT",
-    "time": "2021-11-26T02:42:07.650Z",
-    "entryprice": 0.5742,
-    "takeprofit": 0.5772,
-    "stoploss": 0.5726,
-    "hh": 0.5746,
-    "ll": 0.5716,
-    "lh": 0.5742,
-    "hl": 0.5726
-}{
-    "symbol": "AMPUSDT",
-    "time": "2021-11-26T02:42:07.769Z",
-    "entryprice": 0.06085,
-    "takeprofit": 0.06108,
-    "stoploss": 0.06064,
-    "hh": 0.0609,
-    "ll": 0.06062,
-    "lh": 0.06085,
-    "hl": 0.06064
-}{
-    "symbol": "STXUSDT",
-    "time": "2021-11-26T02:43:00.584Z",
-    "entryprice": 1.998,
-    "takeprofit": 2.014,
-    "stoploss": 1.992,
-    "hh": 2.002,
-    "ll": 1.983,
-    "lh": 1.998,
-    "hl": 1.992
-}{
-    "symbol": "YGGUSDT",
-    "time": "2021-11-26T02:43:00.637Z",
-    "entryprice": 8.115,
-    "takeprofit": 8.159999999999998,
-    "stoploss": 8.079,
-    "hh": 8.125,
-    "ll": 8.069,
-    "lh": 8.115,
-    "hl": 8.079
-}{
-    "symbol": "ENSUSDT",
-    "time": "2021-11-26T02:43:01.438Z",
-    "entryprice": 72.65,
-    "takeprofit": 75.35999999999999,
-    "stoploss": 71.34,
-    "hh": 73.88,
-    "ll": 70.73,
-    "lh": 72.65,
-    "hl": 71.34
-}{
-    "symbol": "NANOUSDT",
-    "time": "2021-11-26T02:43:04.273Z",
-    "entryprice": 5.192,
-    "takeprofit": 5.206,
-    "stoploss": 5.181,
-    "hh": 5.195,
-    "ll": 5.179,
-    "lh": 5.192,
-    "hl": 5.181
-}{
-    "symbol": "DENTUSDT",
-    "time": "2021-11-26T02:43:04.567Z",
-    "entryprice": 0.005545,
-    "takeprofit": 0.005566,
-    "stoploss": 0.005531,
-    "hh": 0.005547,
-    "ll": 0.005524,
-    "lh": 0.005545,
-    "hl": 0.005531
-}{
-    "symbol": "HARDUSDT",
-    "time": "2021-11-26T02:43:04.620Z",
-    "entryprice": 1.0404,
-    "takeprofit": 1.0433999999999999,
-    "stoploss": 1.0384,
-    "hh": 1.0406,
-    "ll": 1.0376,
-    "lh": 1.0404,
-    "hl": 1.0384
-}{
-    "symbol": "RVNUSDT",
-    "time": "2021-11-26T02:43:04.747Z",
-    "entryprice": 0.11265,
-    "takeprofit": 0.1133,
-    "stoploss": 0.11236,
-    "hh": 0.11272,
-    "ll": 0.112,
-    "lh": 0.11265,
-    "hl": 0.11236
-}{
-    "symbol": "DARUSDT",
-    "time": "2021-11-26T02:44:01.233Z",
-    "entryprice": 3.93334,
-    "takeprofit": 3.97333,
-    "stoploss": 3.865,
-    "hh": 3.93377,
-    "ll": 3.85459,
-    "lh": 3.93334,
-    "hl": 3.865
-}{
-    "symbol": "POLYUSDT",
-    "time": "2021-11-26T02:44:01.462Z",
-    "entryprice": 0.8716,
-    "takeprofit": 0.9136,
-    "stoploss": 0.8611,
-    "hh": 0.9021,
-    "ll": 0.8577,
-    "lh": 0.8716,
-    "hl": 0.8611
-}{
-    "symbol": "PSGUSDT",
-    "time": "2021-11-26T02:44:04.929Z",
-    "entryprice": 19.05,
-    "takeprofit": 19.16,
-    "stoploss": 19.04,
-    "hh": 19.09,
-    "ll": 18.98,
-    "lh": 19.05,
-    "hl": 19.04
-}{
-    "symbol": "TWTUSDT",
-    "time": "2021-11-26T02:44:07.642Z",
-    "entryprice": 1.163,
-    "takeprofit": 1.1756,
-    "stoploss": 1.16,
-    "hh": 1.1694,
-    "ll": 1.1568,
-    "lh": 1.163,
-    "hl": 1.16
-}{
-    "symbol": "RAMPUSDT",
-    "time": "2021-11-26T02:44:07.643Z",
-    "entryprice": 0.3632,
-    "takeprofit": 0.36660000000000004,
-    "stoploss": 0.3619,
-    "hh": 0.3652,
-    "ll": 0.3618,
-    "lh": 0.3632,
-    "hl": 0.3619
-}{
-    "symbol": "AUTOUSDT",
-    "time": "2021-11-26T02:44:07.644Z",
-    "entryprice": 1004,
-    "takeprofit": 1006.3000000000001,
-    "stoploss": 1002.1,
-    "hh": 1004.1,
-    "ll": 1001.8,
-    "lh": 1004,
-    "hl": 1002.1
-}{
-    "symbol": "PERLUSDT",
-    "time": "2021-11-26T02:45:07.663Z",
-    "entryprice": 0.0995,
-    "takeprofit": 0.10037000000000001,
-    "stoploss": 0.0993,
-    "hh": 0.10015,
-    "ll": 0.09928,
-    "lh": 0.0995,
-    "hl": 0.0993
-}{
-    "symbol": "PNTUSDT",
-    "time": "2021-11-26T02:45:07.673Z",
-    "entryprice": 1.191,
-    "takeprofit": 1.1979,
-    "stoploss": 1.186,
-    "hh": 1.192,
-    "ll": 1.1851,
-    "lh": 1.191,
-    "hl": 1.186
-}{
-    "symbol": "VTHOUSDT",
-    "time": "2021-11-26T02:45:07.677Z",
-    "entryprice": 0.008955,
-    "takeprofit": 0.00899,
-    "stoploss": 0.008941,
-    "hh": 0.008969,
-    "ll": 0.008933,
-    "lh": 0.008955,
-    "hl": 0.008941
-}{
-    "symbol": "DNTUSDT",
-    "time": "2021-11-26T02:45:07.697Z",
-    "entryprice": 0.1947,
-    "takeprofit": 0.20220000000000002,
-    "stoploss": 0.1927,
-    "hh": 0.2,
-    "ll": 0.192,
-    "lh": 0.1947,
-    "hl": 0.1927
-}{
-    "symbol": "ICPUSDT",
-    "time": "2021-11-26T02:46:00.074Z",
-    "entryprice": 44.6,
-    "takeprofit": 45.16,
-    "stoploss": 44.19,
-    "hh": 44.68,
-    "ll": 44.1,
-    "lh": 44.6,
-    "hl": 44.19
-}{
-    "symbol": "CVCUSDT",
-    "time": "2021-11-26T02:46:00.349Z",
-    "entryprice": 0.5597,
-    "takeprofit": 0.5786,
-    "stoploss": 0.5535,
-    "hh": 0.5681,
-    "ll": 0.5491,
-    "lh": 0.5597,
-    "hl": 0.5535
-}{
-    "symbol": "SFPUSDT",
-    "time": "2021-11-26T02:46:02.202Z",
-    "entryprice": 2.3264,
-    "takeprofit": 2.3722,
-    "stoploss": 2.3175,
-    "hh": 2.3562,
-    "ll": 2.3095,
-    "lh": 2.3264,
-    "hl": 2.3175
-}{
-    "symbol": "POWRUSDT",
-    "time": "2021-11-26T02:46:06.835Z",
-    "entryprice": 0.6792,
-    "takeprofit": 0.6868,
-    "stoploss": 0.6765,
-    "hh": 0.6826,
-    "ll": 0.675,
-    "lh": 0.6792,
-    "hl": 0.6765
-}{
-    "symbol": "STPTUSDT",
-    "time": "2021-11-26T02:46:07.599Z",
-    "entryprice": 0.14833,
-    "takeprofit": 0.14973999999999998,
-    "stoploss": 0.14768,
-    "hh": 0.14865,
-    "ll": 0.14724,
-    "lh": 0.14833,
-    "hl": 0.14768
-}{
-    "symbol": "DFUSDT",
-    "time": "2021-11-26T02:46:07.615Z",
-    "entryprice": 0.1889,
-    "takeprofit": 0.1915,
-    "stoploss": 0.1884,
-    "hh": 0.19,
-    "ll": 0.1871,
-    "lh": 0.1889,
-    "hl": 0.1884
-}{
-    "symbol": "LTOUSDT",
-    "time": "2021-11-26T02:47:01.723Z",
-    "entryprice": 0.5898,
-    "takeprofit": 0.5941,
-    "stoploss": 0.5882,
-    "hh": 0.5915,
-    "ll": 0.5872,
-    "lh": 0.5898,
-    "hl": 0.5882
-}{
-    "symbol": "FTMUSDT",
-    "time": "2021-11-26T02:47:02.500Z",
-    "entryprice": 2.49,
-    "takeprofit": 2.4975000000000005,
-    "stoploss": 2.4797,
-    "hh": 2.4902,
-    "ll": 2.4795,
-    "lh": 2.49,
-    "hl": 2.4797
-}{
-    "symbol": "STRAXUSDT",
-    "time": "2021-11-26T02:47:07.606Z",
-    "entryprice": 2.076,
-    "takeprofit": 2.094,
-    "stoploss": 2.073,
-    "hh": 2.085,
-    "ll": 2.067,
-    "lh": 2.076,
-    "hl": 2.073
-}{
-    "symbol": "AGLDUSDT",
-    "time": "2021-11-26T02:47:07.618Z",
-    "entryprice": 2.725,
-    "takeprofit": 2.7560000000000002,
-    "stoploss": 2.719,
-    "hh": 2.742,
-    "ll": 2.711,
-    "lh": 2.725,
-    "hl": 2.719
-}{
-    "symbol": "AUCTIONUSDT",
-    "time": "2021-11-26T02:47:07.619Z",
-    "entryprice": 31.18,
-    "takeprofit": 31.29,
-    "stoploss": 31.14,
-    "hh": 31.23,
-    "ll": 31.12,
-    "lh": 31.18,
-    "hl": 31.14
-}{
-    "symbol": "BNXUSDT",
-    "time": "2021-11-26T02:48:06.563Z",
-    "entryprice": 180.9,
-    "takeprofit": 182.9,
-    "stoploss": 180.1,
-    "hh": 182,
-    "ll": 180,
-    "lh": 180.9,
-    "hl": 180.1
-}{
-    "symbol": "MFTUSDT",
-    "time": "2021-11-26T02:48:07.620Z",
-    "entryprice": 0.015483,
-    "takeprofit": 0.015586,
-    "stoploss": 0.015419,
-    "hh": 0.015521,
-    "ll": 0.015412,
-    "lh": 0.015483,
-    "hl": 0.015419
-}{
-    "symbol": "ROSEUSDT",
-    "time": "2021-11-26T02:49:00.317Z",
-    "entryprice": 0.34842,
-    "takeprofit": 0.35358999999999996,
-    "stoploss": 0.34433,
-    "hh": 0.34958,
-    "ll": 0.34377,
-    "lh": 0.34842,
-    "hl": 0.34433
-}{
-    "symbol": "CFXUSDT",
-    "time": "2021-11-26T02:50:00.078Z",
-    "entryprice": 0.2988,
-    "takeprofit": 0.3023,
-    "stoploss": 0.2976,
-    "hh": 0.301,
-    "ll": 0.2975,
-    "lh": 0.2988,
-    "hl": 0.2976
-}{
-    "symbol": "CELOUSDT",
-    "time": "2021-11-26T02:50:00.387Z",
-    "entryprice": 5.495,
-    "takeprofit": 5.8,
-    "stoploss": 5.413,
-    "hh": 5.7,
-    "ll": 5.389,
-    "lh": 5.495,
-    "hl": 5.413
-}{
-    "symbol": "KAVAUSDT",
-    "time": "2021-11-26T02:50:01.605Z",
-    "entryprice": 5.498,
-    "takeprofit": 5.553000000000001,
-    "stoploss": 5.475,
-    "hh": 5.53,
-    "ll": 5.465,
-    "lh": 5.498,
-    "hl": 5.475
-}{
-    "symbol": "RIFUSDT",
-    "time": "2021-11-26T02:50:07.644Z",
-    "entryprice": 0.2525,
-    "takeprofit": 0.2535,
-    "stoploss": 0.252,
-    "hh": 0.2527,
-    "ll": 0.2517,
-    "lh": 0.2525,
-    "hl": 0.252
-}{
-    "symbol": "WINGUSDT",
-    "time": "2021-11-26T02:52:00.562Z",
-    "entryprice": 20.87,
-    "takeprofit": 20.99,
-    "stoploss": 20.8,
-    "hh": 20.88,
-    "ll": 20.76,
-    "lh": 20.87,
-    "hl": 20.8
-}{
-    "symbol": "POLYUSDT",
-    "time": "2021-11-26T02:52:00.742Z",
-    "entryprice": 0.8812,
-    "takeprofit": 0.8885,
-    "stoploss": 0.8745,
-    "hh": 0.8814,
-    "ll": 0.8729,
-    "lh": 0.8812,
-    "hl": 0.8745
-}{
-    "symbol": "STORJUSDT",
-    "time": "2021-11-26T02:53:00.193Z",
-    "entryprice": 2.7266,
-    "takeprofit": 2.8442000000000003,
-    "stoploss": 2.6593,
-    "hh": 2.7578,
-    "ll": 2.635,
-    "lh": 2.7266,
-    "hl": 2.6593
-}{
-    "symbol": "HARDUSDT",
-    "time": "2021-11-26T02:53:07.609Z",
-    "entryprice": 1.0395,
-    "takeprofit": 1.0457,
-    "stoploss": 1.0384,
-    "hh": 1.0437,
-    "ll": 1.0375,
-    "lh": 1.0395,
-    "hl": 1.0384
-}{
-    "symbol": "TLMUSDT",
-    "time": "2021-11-26T02:54:00.755Z",
-    "entryprice": 0.5048,
-    "takeprofit": 0.5205,
-    "stoploss": 0.5009,
-    "hh": 0.5162,
-    "ll": 0.4984,
-    "lh": 0.5048,
-    "hl": 0.5009
-}{
-    "symbol": "MBLUSDT",
-    "time": "2021-11-26T02:54:00.871Z",
-    "entryprice": 0.013934,
-    "takeprofit": 0.014235999999999999,
-    "stoploss": 0.013832,
-    "hh": 0.014114,
-    "ll": 0.013782,
-    "lh": 0.013934,
-    "hl": 0.013832
-}{
-    "symbol": "FLMUSDT",
-    "time": "2021-11-26T02:54:04.833Z",
-    "entryprice": 0.626,
-    "takeprofit": 0.6293,
-    "stoploss": 0.6242,
-    "hh": 0.6279,
-    "ll": 0.6239,
-    "lh": 0.626,
-    "hl": 0.6242
-}{
-    "symbol": "KP3RUSDT",
-    "time": "2021-11-26T02:54:07.670Z",
-    "entryprice": 1215.09,
-    "takeprofit": 1231.3899999999999,
-    "stoploss": 1209.26,
-    "hh": 1220.68,
-    "ll": 1204.38,
-    "lh": 1215.09,
-    "hl": 1209.26
-}{
-    "symbol": "ENSUSDT",
-    "time": "2021-11-26T02:55:01.125Z",
-    "entryprice": 72.92,
-    "takeprofit": 74.84,
-    "stoploss": 72.1,
-    "hh": 73.33,
-    "ll": 71.28,
-    "lh": 72.92,
-    "hl": 72.1
-}{
-    "symbol": "MKRUSDT",
-    "time": "2021-11-26T02:55:06.550Z",
-    "entryprice": 3399,
-    "takeprofit": 3431,
-    "stoploss": 3390,
-    "hh": 3414,
-    "ll": 3382,
-    "lh": 3399,
-    "hl": 3390
-}{
-    "symbol": "SCUSDT",
-    "time": "2021-11-26T02:56:00.211Z",
-    "entryprice": 0.02435,
-    "takeprofit": 0.024880000000000003,
-    "stoploss": 0.024,
-    "hh": 0.0244,
-    "ll": 0.02384,
-    "lh": 0.02435,
-    "hl": 0.024
-}{
-    "symbol": "PSGUSDT",
-    "time": "2021-11-26T02:56:07.604Z",
-    "entryprice": 19.05,
-    "takeprofit": 19.11,
-    "stoploss": 19.01,
-    "hh": 19.06,
-    "ll": 19,
-    "lh": 19.05,
-    "hl": 19.01
-}{
-    "symbol": "DEGOUSDT",
-    "time": "2021-11-26T02:56:07.606Z",
-    "entryprice": 11.89,
-    "takeprofit": 12.05,
-    "stoploss": 11.83,
-    "hh": 11.94,
-    "ll": 11.78,
-    "lh": 11.89,
-    "hl": 11.83
-}{
-    "symbol": "MASKUSDT",
-    "time": "2021-11-26T02:58:00.456Z",
-    "entryprice": 16.422,
-    "takeprofit": 17.130000000000003,
-    "stoploss": 16.001,
-    "hh": 16.467,
-    "ll": 15.751,
-    "lh": 16.422,
-    "hl": 16.001
-}{
-    "symbol": "MFTUSDT",
-    "time": "2021-11-26T02:58:07.598Z",
-    "entryprice": 0.015434,
-    "takeprofit": 0.015557,
-    "stoploss": 0.015364,
-    "hh": 0.015477,
-    "ll": 0.015354,
-    "lh": 0.015434,
-    "hl": 0.015364
-}{
-    "symbol": "STXUSDT",
-    "time": "2021-11-26T02:58:07.599Z",
-    "entryprice": 1.997,
-    "takeprofit": 2.011,
-    "stoploss": 1.995,
-    "hh": 2.004,
-    "ll": 1.99,
-    "lh": 1.997,
-    "hl": 1.995
-}{
-    "symbol": "NUUSDT",
-    "time": "2021-11-26T02:58:07.611Z",
-    "entryprice": 0.8471,
-    "takeprofit": 0.8573999999999999,
-    "stoploss": 0.8413,
-    "hh": 0.8497,
-    "ll": 0.8394,
-    "lh": 0.8471,
-    "hl": 0.8413
-}{
-    "symbol": "EGLDUSDT",
-    "time": "2021-11-26T03:00:00.545Z",
-    "entryprice": 432.65,
-    "takeprofit": 438.43,
-    "stoploss": 431.53,
-    "hh": 437.43,
-    "ll": 431.32,
-    "lh": 432.65,
-    "hl": 431.53
-}{
-    "symbol": "WINGUSDT",
-    "time": "2021-11-26T03:00:03.834Z",
-    "entryprice": 21.06,
-    "takeprofit": 21.229999999999997,
-    "stoploss": 21.04,
-    "hh": 21.18,
-    "ll": 21.01,
-    "lh": 21.06,
-    "hl": 21.04
-}{
-    "symbol": "WNXMUSDT",
-    "time": "2021-11-26T03:00:07.748Z",
-    "entryprice": 81.95,
-    "takeprofit": 82.25,
-    "stoploss": 81.89,
-    "hh": 82.16,
-    "ll": 81.86,
-    "lh": 81.95,
-    "hl": 81.89
-}{
-    "symbol": "OMUSDT",
-    "time": "2021-11-26T03:00:07.801Z",
-    "entryprice": 0.2397,
-    "takeprofit": 0.241,
-    "stoploss": 0.2393,
-    "hh": 0.2407,
-    "ll": 0.2392,
-    "lh": 0.2397,
-    "hl": 0.2393
-}{
-    "symbol": "ZRXUSDT",
-    "time": "2021-11-26T03:01:03.445Z",
-    "entryprice": 1.2371,
-    "takeprofit": 1.2479,
-    "stoploss": 1.2302,
-    "hh": 1.2382,
-    "ll": 1.2273,
-    "lh": 1.2371,
-    "hl": 1.2302
-}{
-    "symbol": "GXSUSDT",
-    "time": "2021-11-26T03:01:06.259Z",
-    "entryprice": 0.6348,
-    "takeprofit": 0.6674,
-    "stoploss": 0.6333,
-    "hh": 0.6649,
-    "ll": 0.632,
-    "lh": 0.6348,
-    "hl": 0.6333
-}{
-    "symbol": "FORTHUSDT",
-    "time": "2021-11-26T03:02:00.614Z",
-    "entryprice": 14.19,
-    "takeprofit": 14.24,
-    "stoploss": 14.18,
-    "hh": 14.22,
-    "ll": 14.17,
-    "lh": 14.19,
-    "hl": 14.18
-}{
-    "symbol": "BTTUSDT",
-    "time": "2021-11-26T03:02:01.312Z",
-    "entryprice": 0.003336,
-    "takeprofit": 0.003391,
-    "stoploss": 0.003319,
-    "hh": 0.003365,
-    "ll": 0.003307,
-    "lh": 0.003336,
-    "hl": 0.003319
-}{
-    "symbol": "RAREUSDT",
-    "time": "2021-11-26T03:02:07.627Z",
-    "entryprice": 1.786,
-    "takeprofit": 1.803,
-    "stoploss": 1.778,
-    "hh": 1.795,
-    "ll": 1.775,
-    "lh": 1.786,
-    "hl": 1.778
-}{
-    "symbol": "ZENUSDT",
-    "time": "2021-11-26T03:03:01.451Z",
-    "entryprice": 131.43,
-    "takeprofit": 134.39000000000001,
-    "stoploss": 129.71,
-    "hh": 132.09,
-    "ll": 129.04,
-    "lh": 131.43,
-    "hl": 129.71
-}{
-    "symbol": "FIOUSDT",
-    "time": "2021-11-26T03:03:06.505Z",
-    "entryprice": 0.2112,
-    "takeprofit": 0.21839999999999998,
-    "stoploss": 0.209,
-    "hh": 0.216,
-    "ll": 0.2076,
-    "lh": 0.2112,
-    "hl": 0.209
-}{
-    "symbol": "TROYUSDT",
-    "time": "2021-11-26T03:03:07.620Z",
-    "entryprice": 0.013792,
-    "takeprofit": 0.013886,
-    "stoploss": 0.013773,
-    "hh": 0.013861,
-    "ll": 0.013767,
-    "lh": 0.013792,
-    "hl": 0.013773
-}{
-    "symbol": "ELFUSDT",
-    "time": "2021-11-26T03:03:07.649Z",
-    "entryprice": 0.536,
-    "takeprofit": 0.5457,
-    "stoploss": 0.5352,
-    "hh": 0.5454,
-    "ll": 0.535,
-    "lh": 0.536,
-    "hl": 0.5352
-}{
-    "symbol": "SHIBUSDT",
-    "time": "2021-11-26T03:19:00.152Z",
-    "entryprice": 0.00004063,
-    "takeprofit": 0.00004118,
-    "stoploss": 0.00004045,
-    "hh": 0.0000409,
-    "ll": 0.0000403,
-    "lh": 0.00004063,
-    "hl": 0.00004045
-}{
-    "symbol": "ETCUSDT",
-    "time": "2021-11-26T03:19:02.772Z",
-    "entryprice": 49.48,
-    "takeprofit": 49.89,
-    "stoploss": 49.39,
-    "hh": 49.58,
-    "ll": 49.16,
-    "lh": 49.48,
-    "hl": 49.39
-}{
-    "symbol": "TVKUSDT",
-    "time": "2021-11-26T03:20:00.995Z",
-    "entryprice": 0.4647,
-    "takeprofit": 0.4765,
-    "stoploss": 0.4619,
-    "hh": 0.4695,
-    "ll": 0.4573,
-    "lh": 0.4647,
-    "hl": 0.4619
-}{
-    "symbol": "CLVUSDT",
-    "time": "2021-11-26T03:20:07.676Z",
-    "entryprice": 1.225,
-    "takeprofit": 1.2320000000000002,
-    "stoploss": 1.223,
-    "hh": 1.229,
-    "ll": 1.222,
-    "lh": 1.225,
-    "hl": 1.223
-}{
-    "symbol": "BNBUSDT",
-    "time": "2021-11-26T03:21:00.231Z",
-    "entryprice": 644,
-    "takeprofit": 647,
-    "stoploss": 642.6,
-    "hh": 644.4,
-    "ll": 641,
-    "lh": 644,
-    "hl": 642.6
-}{
-    "symbol": "POWRUSDT",
-    "time": "2021-11-26T03:22:07.647Z",
-    "entryprice": 0.6688,
-    "takeprofit": 0.6738,
-    "stoploss": 0.6673,
-    "hh": 0.6706,
-    "ll": 0.6655,
-    "lh": 0.6688,
-    "hl": 0.6673
-}{
-    "symbol": "MDTUSDT",
-    "time": "2021-11-26T03:23:07.634Z",
-    "entryprice": 0.05928,
-    "takeprofit": 0.05945,
-    "stoploss": 0.05925,
-    "hh": 0.05931,
-    "ll": 0.05914,
-    "lh": 0.05928,
-    "hl": 0.05925
-}{
-    "symbol": "BURGERUSDT",
-    "time": "2021-11-26T03:24:07.681Z",
-    "entryprice": 3.766,
-    "takeprofit": 3.789,
-    "stoploss": 3.754,
-    "hh": 3.77,
-    "ll": 3.747,
-    "lh": 3.766,
-    "hl": 3.754
-}{
-    "symbol": "COCOSUSDT",
-    "time": "2021-11-26T03:25:00.438Z",
-    "entryprice": 4.025,
-    "takeprofit": 4.1469000000000005,
-    "stoploss": 3.9882,
-    "hh": 4.0632,
-    "ll": 3.9411,
-    "lh": 4.025,
-    "hl": 3.9882
-}{
-    "symbol": "ENSUSDT",
-    "time": "2021-11-26T03:26:00.554Z",
-    "entryprice": 72.18,
-    "takeprofit": 74.85,
-    "stoploss": 70,
-    "hh": 72.49,
-    "ll": 69.8,
-    "lh": 72.18,
-    "hl": 70
-}{
-    "symbol": "RAREUSDT",
-    "time": "2021-11-26T03:26:07.650Z",
-    "entryprice": 1.803,
-    "takeprofit": 1.818,
-    "stoploss": 1.793,
-    "hh": 1.804,
-    "ll": 1.785,
-    "lh": 1.803,
-    "hl": 1.793
-}{
-    "symbol": "BZRXUSDT",
-    "time": "2021-11-26T03:27:00.467Z",
-    "entryprice": 0.2984,
-    "takeprofit": 0.3002,
-    "stoploss": 0.2976,
-    "hh": 0.2987,
-    "ll": 0.2969,
-    "lh": 0.2984,
-    "hl": 0.2976
-}{
-    "symbol": "KNCUSDT",
-    "time": "2021-11-26T03:27:00.814Z",
-    "entryprice": 1.87,
-    "takeprofit": 1.885,
-    "stoploss": 1.862,
-    "hh": 1.874,
-    "ll": 1.858,
-    "lh": 1.87,
-    "hl": 1.862
-}{
-    "symbol": "RVNUSDT",
-    "time": "2021-11-26T03:27:01.553Z",
-    "entryprice": 0.11259,
-    "takeprofit": 0.11308,
-    "stoploss": 0.11241,
-    "hh": 0.11261,
-    "ll": 0.11211,
-    "lh": 0.11259,
-    "hl": 0.11241
-}{
-    "symbol": "KAVAUSDT",
-    "time": "2021-11-26T03:27:07.655Z",
-    "entryprice": 5.465,
-    "takeprofit": 5.488999999999999,
-    "stoploss": 5.456,
-    "hh": 5.467,
-    "ll": 5.44,
-    "lh": 5.465,
-    "hl": 5.456
-}{
-    "symbol": "BATUSDT",
-    "time": "2021-11-26T03:28:00.196Z",
-    "entryprice": 1.7232,
-    "takeprofit": 1.7860999999999998,
-    "stoploss": 1.698,
-    "hh": 1.744,
-    "ll": 1.6786,
-    "lh": 1.7232,
-    "hl": 1.698
-}{
-    "symbol": "MASKUSDT",
-    "time": "2021-11-26T03:28:00.335Z",
-    "entryprice": 16.848,
-    "takeprofit": 17.490000000000002,
-    "stoploss": 16.249,
-    "hh": 16.954,
-    "ll": 16.2,
-    "lh": 16.848,
-    "hl": 16.249
-}{
-    "symbol": "KEYUSDT",
-    "time": "2021-11-26T03:28:03.045Z",
-    "entryprice": 0.016091,
-    "takeprofit": 0.016249000000000003,
-    "stoploss": 0.016035,
-    "hh": 0.016164,
-    "ll": 0.016003,
-    "lh": 0.016091,
-    "hl": 0.016035
-}{
-    "symbol": "AUTOUSDT",
-    "time": "2021-11-26T03:31:06.888Z",
-    "entryprice": 997.8,
-    "takeprofit": 1001.9,
-    "stoploss": 995,
-    "hh": 998.1,
-    "ll": 994,
-    "lh": 997.8,
-    "hl": 995
-}{
-    "symbol": "PUNDIXUSDT",
-    "time": "2021-11-26T03:31:07.642Z",
-    "entryprice": 1.492,
-    "takeprofit": 1.497,
-    "stoploss": 1.489,
-    "hh": 1.493,
-    "ll": 1.487,
-    "lh": 1.492,
-    "hl": 1.489
-}{
-    "symbol": "ETHUSDT",
-    "time": "2021-11-26T03:33:00.113Z",
-    "entryprice": 4459.96,
-    "takeprofit": 4478.06,
-    "stoploss": 4453.17,
-    "hh": 4470.43,
-    "ll": 4452.33,
-    "lh": 4459.96,
-    "hl": 4453.17
-}{
-    "symbol": "SANDUSDT",
-    "time": "2021-11-26T03:33:00.114Z",
-    "entryprice": 7.1683,
-    "takeprofit": 7.2659,
-    "stoploss": 7.098,
-    "hh": 7.1707,
-    "ll": 7.0503,
-    "lh": 7.1683,
-    "hl": 7.098
-}{
-    "symbol": "GRTUSDT",
-    "time": "2021-11-26T03:33:00.116Z",
-    "entryprice": 0.9671,
-    "takeprofit": 0.9856,
-    "stoploss": 0.9581,
-    "hh": 0.9706,
-    "ll": 0.9513,
-    "lh": 0.9671,
-    "hl": 0.9581
-}{
-    "symbol": "SOLUSDT",
-    "time": "2021-11-26T03:33:00.117Z",
-    "entryprice": 206.61,
-    "takeprofit": 207.52,
-    "stoploss": 206.22,
-    "hh": 206.99,
-    "ll": 206.08,
-    "lh": 206.61,
-    "hl": 206.22
-}{
-    "symbol": "ALGOUSDT",
-    "time": "2021-11-26T03:33:00.119Z",
-    "entryprice": 1.8086,
-    "takeprofit": 1.8198,
-    "stoploss": 1.8043,
-    "hh": 1.8122,
-    "ll": 1.801,
-    "lh": 1.8086,
-    "hl": 1.8043
-}{
-    "symbol": "LUNAUSDT",
-    "time": "2021-11-26T03:33:00.144Z",
-    "entryprice": 44.51,
-    "takeprofit": 44.949999999999996,
-    "stoploss": 44.35,
-    "hh": 44.66,
-    "ll": 44.21,
-    "lh": 44.51,
-    "hl": 44.35
-}{
-    "symbol": "AKROUSDT",
-    "time": "2021-11-26T03:33:00.164Z",
-    "entryprice": 0.03316,
-    "takeprofit": 0.033280000000000004,
-    "stoploss": 0.03306,
-    "hh": 0.03317,
-    "ll": 0.03303,
-    "lh": 0.03316,
-    "hl": 0.03306
-}{
-    "symbol": "OGNUSDT",
-    "time": "2021-11-26T03:33:00.197Z",
-    "entryprice": 1.1316,
-    "takeprofit": 1.1392,
-    "stoploss": 1.1283,
-    "hh": 1.1344,
-    "ll": 1.1268,
-    "lh": 1.1316,
-    "hl": 1.1283
-}{
-    "symbol": "AXSUSDT",
-    "time": "2021-11-26T03:33:00.376Z",
-    "entryprice": 135.48,
-    "takeprofit": 136.35999999999999,
-    "stoploss": 135.28,
-    "hh": 135.96,
-    "ll": 135.08,
-    "lh": 135.48,
-    "hl": 135.28
-}{
-    "symbol": "AVAXUSDT",
-    "time": "2021-11-26T03:33:00.386Z",
-    "entryprice": 116,
-    "takeprofit": 116.58,
-    "stoploss": 115.76,
-    "hh": 116.21,
-    "ll": 115.58,
-    "lh": 116,
-    "hl": 115.76
-}{
-    "symbol": "BALUSDT",
-    "time": "2021-11-26T03:33:00.788Z",
-    "entryprice": 22.47,
-    "takeprofit": 22.63,
-    "stoploss": 22.43,
-    "hh": 22.54,
-    "ll": 22.38,
-    "lh": 22.47,
-    "hl": 22.43
-}{
-    "symbol": "LITUSDT",
-    "time": "2021-11-26T03:33:01.057Z",
-    "entryprice": 4.552,
-    "takeprofit": 4.577999999999999,
-    "stoploss": 4.535,
-    "hh": 4.558,
-    "ll": 4.532,
-    "lh": 4.552,
-    "hl": 4.535
-}{
-    "symbol": "RSRUSDT",
-    "time": "2021-11-26T03:33:01.134Z",
-    "entryprice": 0.03779,
-    "takeprofit": 0.037950000000000005,
-    "stoploss": 0.03773,
-    "hh": 0.03787,
-    "ll": 0.0377,
-    "lh": 0.03779,
-    "hl": 0.03773
-}{
-    "symbol": "WINUSDT",
-    "time": "2021-11-26T03:33:05.992Z",
-    "entryprice": 0.0007633,
-    "takeprofit": 0.0007685999999999999,
-    "stoploss": 0.0007605,
-    "hh": 0.000765,
-    "ll": 0.0007597,
-    "lh": 0.0007633,
-    "hl": 0.0007605
-}{
-    "symbol": "FLMUSDT",
-    "time": "2021-11-26T03:33:06.238Z",
-    "entryprice": 0.6261,
-    "takeprofit": 0.6285999999999999,
-    "stoploss": 0.6247,
-    "hh": 0.6262,
-    "ll": 0.6235,
-    "lh": 0.6261,
-    "hl": 0.6247
-}{
-    "symbol": "COTIUSDT",
-    "time": "2021-11-26T03:33:06.935Z",
-    "entryprice": 0.4501,
-    "takeprofit": 0.4535,
-    "stoploss": 0.4485,
-    "hh": 0.452,
-    "ll": 0.448,
-    "lh": 0.4501,
-    "hl": 0.4485
-}{
-    "symbol": "BEAMUSDT",
-    "time": "2021-11-26T03:33:07.655Z",
-    "entryprice": 0.6535,
-    "takeprofit": 0.6557,
-    "stoploss": 0.6532,
-    "hh": 0.6551,
-    "ll": 0.6529,
-    "lh": 0.6535,
-    "hl": 0.6532
-}{
-    "symbol": "BTSUSDT",
-    "time": "2021-11-26T03:33:07.656Z",
-    "entryprice": 0.05321,
-    "takeprofit": 0.05339,
-    "stoploss": 0.05319,
-    "hh": 0.05334,
-    "ll": 0.05316,
-    "lh": 0.05321,
-    "hl": 0.05319
-}{
-    "symbol": "VTHOUSDT",
-    "time": "2021-11-26T03:33:07.659Z",
-    "entryprice": 0.00883,
-    "takeprofit": 0.008904,
-    "stoploss": 0.008814,
-    "hh": 0.008879,
-    "ll": 0.008801,
-    "lh": 0.00883,
-    "hl": 0.008814
-}{
-    "symbol": "ALPACAUSDT",
-    "time": "2021-11-26T03:33:07.692Z",
-    "entryprice": 0.7219,
-    "takeprofit": 0.7233,
-    "stoploss": 0.7214,
-    "hh": 0.7224,
-    "ll": 0.721,
-    "lh": 0.7219,
-    "hl": 0.7214
-}{
-    "symbol": "FIROUSDT",
-    "time": "2021-11-26T05:35:07.628Z",
-    "entryprice": 7.787,
-    "takeprofit": 7.88,
-    "stoploss": 7.703,
-    "hh": 7.796,
-    "ll": 7.703,
-    "lh": 7.787,
-    "hl": 7.772
-}{
-    "symbol": "ENJUSDT",
-    "time": "2021-11-26T05:36:03.435Z",
-    "entryprice": 4.076,
-    "takeprofit": 4.101999999999999,
-    "stoploss": 4.051,
-    "hh": 4.077,
-    "ll": 4.051,
-    "lh": 4.076,
-    "hl": 4.053
-}{
-    "symbol": "ZECUSDT",
-    "time": "2021-11-26T05:38:02.108Z",
-    "entryprice": 282.9,
-    "takeprofit": 284.79999999999995,
-    "stoploss": 281.3,
-    "hh": 283.2,
-    "ll": 281.3,
-    "lh": 282.9,
-    "hl": 281.6
-}{
-    "symbol": "QIUSDT",
-    "time": "2021-11-26T05:38:05.659Z",
-    "entryprice": 0.2397,
-    "takeprofit": 0.245,
-    "stoploss": 0.2367,
-    "hh": 0.242,
-    "ll": 0.2367,
-    "lh": 0.2397,
-    "hl": 0.2372
-}{
-    "symbol": "PLAUSDT",
-    "time": "2021-11-26T05:41:06.115Z",
-    "entryprice": 2.669,
-    "takeprofit": 2.691,
-    "stoploss": 2.649,
-    "hh": 2.671,
-    "ll": 2.649,
-    "lh": 2.669,
-    "hl": 2.65
-}{
-    "symbol": "FIOUSDT",
-    "time": "2021-11-26T05:41:07.583Z",
-    "entryprice": 0.2088,
-    "takeprofit": 0.21050000000000002,
-    "stoploss": 0.2072,
-    "hh": 0.2089,
-    "ll": 0.2072,
-    "lh": 0.2088,
-    "hl": 0.208
-}{
-    "symbol": "POWRUSDT",
-    "time": "2021-11-26T05:41:07.613Z",
-    "entryprice": 0.6577,
-    "takeprofit": 0.6594,
-    "stoploss": 0.6564,
-    "hh": 0.6581,
-    "ll": 0.6564,
-    "lh": 0.6577,
-    "hl": 0.6565
+    "BTCUSDT": [
+        {
+            "symbol": "BTCUSDT",
+            "time": "2021-11-26T17:59:59.720Z",
+            "entryprice": 54310.58,
+            "takeprofit": 54560.05,
+            "stoploss": 54200.64,
+            "hh": 54450.11,
+            "ll": 54200.64,
+            "lh": 54310.58,
+            "hl": 54210,
+            "confirmed": false
+        }
+    ],
+    "ETHUSDT": [],
+    "BNBUSDT": [],
+    "NEOUSDT": [],
+    "LTCUSDT": [],
+    "QTUMUSDT": [],
+    "ADAUSDT": [
+        {
+            "symbol": "ADAUSDT",
+            "time": "2021-11-26T18:01:00.404Z",
+            "entryprice": 1.562,
+            "takeprofit": 1.577,
+            "stoploss": 1.556,
+            "hh": 1.571,
+            "ll": 1.556,
+            "lh": 1.562,
+            "hl": 1.557,
+            "confirmed": false
+        }
+    ],
+    "XRPUSDT": [],
+    "EOSUSDT": [],
+    "TUSDUSDT": [],
+    "IOTAUSDT": [],
+    "XLMUSDT": [],
+    "ONTUSDT": [],
+    "TRXUSDT": [],
+    "ETCUSDT": [
+        {
+            "symbol": "ETCUSDT",
+            "time": "2021-11-26T18:00:01.285Z",
+            "entryprice": 46.86,
+            "takeprofit": 47.11,
+            "stoploss": 46.76,
+            "hh": 47.01,
+            "ll": 46.76,
+            "lh": 46.86,
+            "hl": 46.77,
+            "confirmed": false
+        }
+    ],
+    "ICXUSDT": [
+        {
+            "symbol": "ICXUSDT",
+            "time": "2021-11-26T18:00:01.908Z",
+            "entryprice": 1.725,
+            "takeprofit": 1.7400000000000002,
+            "stoploss": 1.718,
+            "hh": 1.733,
+            "ll": 1.718,
+            "lh": 1.725,
+            "hl": 1.72,
+            "confirmed": false
+        }
+    ],
+    "NULSUSDT": [
+        {
+            "symbol": "NULSUSDT",
+            "time": "2021-11-26T17:58:07.251Z",
+            "entryprice": 0.5336,
+            "takeprofit": 0.5357,
+            "stoploss": 0.5318,
+            "hh": 0.5339,
+            "ll": 0.5318,
+            "lh": 0.5336,
+            "hl": 0.5319,
+            "confirmed": false
+        }
+    ],
+    "VETUSDT": [],
+    "USDCUSDT": [],
+    "LINKUSDT": [],
+    "WAVESUSDT": [
+        {
+            "symbol": "WAVESUSDT",
+            "time": "2021-11-26T17:54:07.263Z",
+            "entryprice": 19.99,
+            "takeprofit": 20.08,
+            "stoploss": 19.91,
+            "hh": 20,
+            "ll": 19.91,
+            "lh": 19.99,
+            "hl": 19.94,
+            "confirmed": false
+        }
+    ],
+    "BTTUSDT": [
+        {
+            "symbol": "BTTUSDT",
+            "time": "2021-11-26T18:01:00.585Z",
+            "entryprice": 0.003128,
+            "takeprofit": 0.0031490000000000003,
+            "stoploss": 0.003116,
+            "hh": 0.003137,
+            "ll": 0.003116,
+            "lh": 0.003128,
+            "hl": 0.003117,
+            "confirmed": false
+        }
+    ],
+    "ONGUSDT": [],
+    "HOTUSDT": [],
+    "ZILUSDT": [],
+    "ZRXUSDT": [],
+    "FETUSDT": [
+        {
+            "symbol": "FETUSDT",
+            "time": "2021-11-26T18:00:01.826Z",
+            "entryprice": 0.7334,
+            "takeprofit": 0.7431000000000001,
+            "stoploss": 0.7289,
+            "hh": 0.7386,
+            "ll": 0.7289,
+            "lh": 0.7334,
+            "hl": 0.7306,
+            "confirmed": false
+        }
+    ],
+    "BATUSDT": [],
+    "XMRUSDT": [],
+    "ZECUSDT": [
+        {
+            "symbol": "ZECUSDT",
+            "time": "2021-11-26T18:03:02.578Z",
+            "entryprice": 259.4,
+            "takeprofit": 263.99999999999994,
+            "stoploss": 257.6,
+            "hh": 262.2,
+            "ll": 257.6,
+            "lh": 259.4,
+            "hl": 257.9,
+            "confirmed": false
+        }
+    ],
+    "IOSTUSDT": [],
+    "CELRUSDT": [],
+    "DASHUSDT": [],
+    "NANOUSDT": [],
+    "OMGUSDT": [],
+    "THETAUSDT": [],
+    "ENJUSDT": [],
+    "MITHUSDT": [],
+    "MATICUSDT": [],
+    "ATOMUSDT": [],
+    "TFUELUSDT": [],
+    "ONEUSDT": [],
+    "FTMUSDT": [
+        {
+            "symbol": "FTMUSDT",
+            "time": "2021-11-26T18:03:00.499Z",
+            "entryprice": 2.1737,
+            "takeprofit": 2.2056000000000004,
+            "stoploss": 2.1607,
+            "hh": 2.1926,
+            "ll": 2.1607,
+            "lh": 2.1737,
+            "hl": 2.1609,
+            "confirmed": false
+        }
+    ],
+    "ALGOUSDT": [],
+    "GTOUSDT": [],
+    "DOGEUSDT": [],
+    "DUSKUSDT": [],
+    "ANKRUSDT": [],
+    "WINUSDT": [
+        {
+            "symbol": "WINUSDT",
+            "time": "2021-11-26T18:00:01.913Z",
+            "entryprice": 0.000701,
+            "takeprofit": 0.0007065,
+            "stoploss": 0.000698,
+            "hh": 0.0007035,
+            "ll": 0.000698,
+            "lh": 0.000701,
+            "hl": 0.0006983,
+            "confirmed": false
+        }
+    ],
+    "COSUSDT": [],
+    "COCOSUSDT": [],
+    "MTLUSDT": [
+        {
+            "symbol": "MTLUSDT",
+            "time": "2021-11-26T17:54:05.339Z",
+            "entryprice": 2.909,
+            "takeprofit": 2.927,
+            "stoploss": 2.901,
+            "hh": 2.919,
+            "ll": 2.901,
+            "lh": 2.909,
+            "hl": 2.903,
+            "confirmed": false
+        }
+    ],
+    "TOMOUSDT": [],
+    "PERLUSDT": [
+        {
+            "symbol": "PERLUSDT",
+            "time": "2021-11-26T18:00:01.847Z",
+            "entryprice": 0.0968,
+            "takeprofit": 0.09845000000000001,
+            "stoploss": 0.09638,
+            "hh": 0.09803,
+            "ll": 0.09638,
+            "lh": 0.0968,
+            "hl": 0.09654,
+            "confirmed": false
+        }
+    ],
+    "DENTUSDT": [],
+    "MFTUSDT": [],
+    "KEYUSDT": [],
+    "DOCKUSDT": [
+        {
+            "symbol": "DOCKUSDT",
+            "time": "2021-11-26T18:00:07.759Z",
+            "entryprice": 0.086,
+            "takeprofit": 0.08647999999999999,
+            "stoploss": 0.08554,
+            "hh": 0.08602,
+            "ll": 0.08554,
+            "lh": 0.086,
+            "hl": 0.08555,
+            "confirmed": false
+        }
+    ],
+    "WANUSDT": [],
+    "FUNUSDT": [],
+    "CVCUSDT": [],
+    "CHZUSDT": [],
+    "BANDUSDT": [],
+    "BUSDUSDT": [],
+    "BEAMUSDT": [],
+    "XTZUSDT": [],
+    "RENUSDT": [],
+    "RVNUSDT": [
+        {
+            "symbol": "RVNUSDT",
+            "time": "2021-11-26T18:00:07.760Z",
+            "entryprice": 0.10388,
+            "takeprofit": 0.10447999999999999,
+            "stoploss": 0.10351,
+            "hh": 0.10411,
+            "ll": 0.10351,
+            "lh": 0.10388,
+            "hl": 0.10364,
+            "confirmed": false
+        }
+    ],
+    "HBARUSDT": [],
+    "NKNUSDT": [],
+    "STXUSDT": [],
+    "KAVAUSDT": [
+        {
+            "symbol": "KAVAUSDT",
+            "time": "2021-11-26T17:54:00.726Z",
+            "entryprice": 4.961,
+            "takeprofit": 4.98,
+            "stoploss": 4.946,
+            "hh": 4.965,
+            "ll": 4.946,
+            "lh": 4.961,
+            "hl": 4.947,
+            "confirmed": false
+        }
+    ],
+    "ARPAUSDT": [
+        {
+            "symbol": "ARPAUSDT",
+            "time": "2021-11-26T18:02:06.052Z",
+            "entryprice": 0.14423,
+            "takeprofit": 0.14518999999999999,
+            "stoploss": 0.14366,
+            "hh": 0.14462,
+            "ll": 0.14366,
+            "lh": 0.14423,
+            "hl": 0.14395,
+            "confirmed": false
+        }
+    ],
+    "IOTXUSDT": [],
+    "RLCUSDT": [],
+    "CTXCUSDT": [],
+    "BCHUSDT": [],
+    "TROYUSDT": [],
+    "VITEUSDT": [],
+    "FTTUSDT": [
+        {
+            "symbol": "FTTUSDT",
+            "time": "2021-11-26T18:00:01.105Z",
+            "entryprice": 48.09,
+            "takeprofit": 48.370000000000005,
+            "stoploss": 47.97,
+            "hh": 48.25,
+            "ll": 47.97,
+            "lh": 48.09,
+            "hl": 48.01,
+            "confirmed": false
+        }
+    ],
+    "EURUSDT": [],
+    "OGNUSDT": [
+        {
+            "symbol": "OGNUSDT",
+            "time": "2021-11-26T17:54:00.830Z",
+            "entryprice": 1.0255,
+            "takeprofit": 1.0318,
+            "stoploss": 1.0205,
+            "hh": 1.0268,
+            "ll": 1.0205,
+            "lh": 1.0255,
+            "hl": 1.0212,
+            "confirmed": false
+        }
+    ],
+    "DREPUSDT": [],
+    "TCTUSDT": [
+        {
+            "symbol": "TCTUSDT",
+            "time": "2021-11-26T17:56:07.283Z",
+            "entryprice": 0.03781,
+            "takeprofit": 0.03816,
+            "stoploss": 0.03758,
+            "hh": 0.03793,
+            "ll": 0.03758,
+            "lh": 0.03781,
+            "hl": 0.03759,
+            "confirmed": false
+        }
+    ],
+    "WRXUSDT": [],
+    "BTSUSDT": [
+        {
+            "symbol": "BTSUSDT",
+            "time": "2021-11-26T18:01:07.278Z",
+            "entryprice": 0.04831,
+            "takeprofit": 0.04872,
+            "stoploss": 0.04809,
+            "hh": 0.0485,
+            "ll": 0.04809,
+            "lh": 0.04831,
+            "hl": 0.04812,
+            "confirmed": false
+        }
+    ],
+    "LSKUSDT": [],
+    "BNTUSDT": [],
+    "LTOUSDT": [
+        {
+            "symbol": "LTOUSDT",
+            "time": "2021-11-26T18:02:03.776Z",
+            "entryprice": 0.505,
+            "takeprofit": 0.5149,
+            "stoploss": 0.5014,
+            "hh": 0.5113,
+            "ll": 0.5014,
+            "lh": 0.505,
+            "hl": 0.502,
+            "confirmed": false
+        }
+    ],
+    "AIONUSDT": [],
+    "MBLUSDT": [
+        {
+            "symbol": "MBLUSDT",
+            "time": "2021-11-26T17:55:05.287Z",
+            "entryprice": 0.012176,
+            "takeprofit": 0.012257,
+            "stoploss": 0.012098,
+            "hh": 0.012179,
+            "ll": 0.012098,
+            "lh": 0.012176,
+            "hl": 0.012118,
+            "confirmed": false
+        }
+    ],
+    "COTIUSDT": [],
+    "STPTUSDT": [],
+    "WTCUSDT": [
+        {
+            "symbol": "WTCUSDT",
+            "time": "2021-11-26T18:02:04.499Z",
+            "entryprice": 0.9353,
+            "takeprofit": 0.9448,
+            "stoploss": 0.93,
+            "hh": 0.9395,
+            "ll": 0.93,
+            "lh": 0.9353,
+            "hl": 0.9315,
+            "confirmed": false
+        }
+    ],
+    "DATAUSDT": [],
+    "SOLUSDT": [],
+    "CTSIUSDT": [
+        {
+            "symbol": "CTSIUSDT",
+            "time": "2021-11-26T18:00:07.765Z",
+            "entryprice": 0.9562,
+            "takeprofit": 0.9660000000000001,
+            "stoploss": 0.9518,
+            "hh": 0.9616,
+            "ll": 0.9518,
+            "lh": 0.9562,
+            "hl": 0.9536,
+            "confirmed": false
+        }
+    ],
+    "HIVEUSDT": [
+        {
+            "symbol": "HIVEUSDT",
+            "time": "2021-11-26T18:02:00.922Z",
+            "entryprice": 2.2581,
+            "takeprofit": 2.2990000000000004,
+            "stoploss": 2.2336,
+            "hh": 2.2745,
+            "ll": 2.2336,
+            "lh": 2.2581,
+            "hl": 2.2411,
+            "confirmed": false
+        }
+    ],
+    "CHRUSDT": [],
+    "GXSUSDT": [],
+    "ARDRUSDT": [],
+    "MDTUSDT": [],
+    "STMXUSDT": [
+        {
+            "symbol": "STMXUSDT",
+            "time": "2021-11-26T18:00:07.766Z",
+            "entryprice": 0.03078,
+            "takeprofit": 0.031039999999999998,
+            "stoploss": 0.03071,
+            "hh": 0.03097,
+            "ll": 0.03071,
+            "lh": 0.03078,
+            "hl": 0.03072,
+            "confirmed": false
+        }
+    ],
+    "KNCUSDT": [],
+    "REPUSDT": [],
+    "LRCUSDT": [
+        {
+            "symbol": "LRCUSDT",
+            "time": "2021-11-26T18:01:00.039Z",
+            "entryprice": 2.8977,
+            "takeprofit": 2.9434,
+            "stoploss": 2.8767,
+            "hh": 2.9224,
+            "ll": 2.8767,
+            "lh": 2.8977,
+            "hl": 2.8781,
+            "confirmed": false
+        }
+    ],
+    "PNTUSDT": [],
+    "COMPUSDT": [],
+    "SCUSDT": [],
+    "ZENUSDT": [],
+    "SNXUSDT": [],
+    "VTHOUSDT": [
+        {
+            "symbol": "VTHOUSDT",
+            "time": "2021-11-26T17:56:02.747Z",
+            "entryprice": 0.008461,
+            "takeprofit": 0.008509,
+            "stoploss": 0.00842,
+            "hh": 0.008468,
+            "ll": 0.00842,
+            "lh": 0.008461,
+            "hl": 0.008424,
+            "confirmed": false
+        }
+    ],
+    "DGBUSDT": [],
+    "GBPUSDT": [],
+    "SXPUSDT": [
+        {
+            "symbol": "SXPUSDT",
+            "time": "2021-11-26T18:00:07.785Z",
+            "entryprice": 2.372,
+            "takeprofit": 2.384,
+            "stoploss": 2.363,
+            "hh": 2.375,
+            "ll": 2.363,
+            "lh": 2.372,
+            "hl": 2.365,
+            "confirmed": false
+        }
+    ],
+    "MKRUSDT": [],
+    "DCRUSDT": [],
+    "STORJUSDT": [],
+    "MANAUSDT": [],
+    "AUDUSDT": [],
+    "YFIUSDT": [
+        {
+            "symbol": "YFIUSDT",
+            "time": "2021-11-26T18:01:07.285Z",
+            "entryprice": 29153.5,
+            "takeprofit": 29346.600000000002,
+            "stoploss": 29069.28,
+            "hh": 29262.38,
+            "ll": 29069.28,
+            "lh": 29153.5,
+            "hl": 29096.68,
+            "confirmed": false
+        }
+    ],
+    "BALUSDT": [],
+    "BLZUSDT": [
+        {
+            "symbol": "BLZUSDT",
+            "time": "2021-11-26T18:01:07.286Z",
+            "entryprice": 0.3401,
+            "takeprofit": 0.3441,
+            "stoploss": 0.3382,
+            "hh": 0.3422,
+            "ll": 0.3382,
+            "lh": 0.3401,
+            "hl": 0.3384,
+            "confirmed": false
+        }
+    ],
+    "IRISUSDT": [
+        {
+            "symbol": "IRISUSDT",
+            "time": "2021-11-26T18:00:07.786Z",
+            "entryprice": 0.11797,
+            "takeprofit": 0.11884,
+            "stoploss": 0.11766,
+            "hh": 0.11853,
+            "ll": 0.11766,
+            "lh": 0.11797,
+            "hl": 0.11772,
+            "confirmed": false
+        }
+    ],
+    "KMDUSDT": [
+        {
+            "symbol": "KMDUSDT",
+            "time": "2021-11-26T17:55:00.913Z",
+            "entryprice": 1.12,
+            "takeprofit": 1.1409000000000002,
+            "stoploss": 1.1075,
+            "hh": 1.1284,
+            "ll": 1.1075,
+            "lh": 1.12,
+            "hl": 1.1093,
+            "confirmed": false
+        }
+    ],
+    "JSTUSDT": [],
+    "SRMUSDT": [],
+    "ANTUSDT": [
+        {
+            "symbol": "ANTUSDT",
+            "time": "2021-11-26T18:03:07.606Z",
+            "entryprice": 4.923,
+            "takeprofit": 4.962,
+            "stoploss": 4.889,
+            "hh": 4.928,
+            "ll": 4.889,
+            "lh": 4.923,
+            "hl": 4.904,
+            "confirmed": false
+        }
+    ],
+    "CRVUSDT": [
+        {
+            "symbol": "CRVUSDT",
+            "time": "2021-11-26T18:01:02.503Z",
+            "entryprice": 5.311,
+            "takeprofit": 5.416,
+            "stoploss": 5.265,
+            "hh": 5.37,
+            "ll": 5.265,
+            "lh": 5.311,
+            "hl": 5.268,
+            "confirmed": false
+        }
+    ],
+    "SANDUSDT": [],
+    "OCEANUSDT": [],
+    "NMRUSDT": [],
+    "DOTUSDT": [
+        {
+            "symbol": "DOTUSDT",
+            "time": "2021-11-26T17:59:59.842Z",
+            "entryprice": 35.57,
+            "takeprofit": 35.89,
+            "stoploss": 35.44,
+            "hh": 35.76,
+            "ll": 35.44,
+            "lh": 35.57,
+            "hl": 35.45,
+            "confirmed": false
+        }
+    ],
+    "LUNAUSDT": [
+        {
+            "symbol": "LUNAUSDT",
+            "time": "2021-11-26T17:54:07.276Z",
+            "entryprice": 42.01,
+            "takeprofit": 42.24999999999999,
+            "stoploss": 41.81,
+            "hh": 42.05,
+            "ll": 41.81,
+            "lh": 42.01,
+            "hl": 41.83,
+            "confirmed": false
+        }
+    ],
+    "RSRUSDT": [],
+    "PAXGUSDT": [],
+    "WNXMUSDT": [],
+    "TRBUSDT": [],
+    "BZRXUSDT": [],
+    "SUSHIUSDT": [],
+    "YFIIUSDT": [
+        {
+            "symbol": "YFIIUSDT",
+            "time": "2021-11-26T18:03:05.021Z",
+            "entryprice": 3468,
+            "takeprofit": 3490,
+            "stoploss": 3459,
+            "hh": 3481,
+            "ll": 3459,
+            "lh": 3468,
+            "hl": 3460,
+            "confirmed": false
+        }
+    ],
+    "KSMUSDT": [],
+    "EGLDUSDT": [
+        {
+            "symbol": "EGLDUSDT",
+            "time": "2021-11-26T18:03:00.312Z",
+            "entryprice": 402.86,
+            "takeprofit": 405.14000000000004,
+            "stoploss": 401.09,
+            "hh": 403.37,
+            "ll": 401.09,
+            "lh": 402.86,
+            "hl": 401.11,
+            "confirmed": false
+        }
+    ],
+    "DIAUSDT": [],
+    "RUNEUSDT": [],
+    "FIOUSDT": [],
+    "UMAUSDT": [
+        {
+            "symbol": "UMAUSDT",
+            "time": "2021-11-26T17:55:07.268Z",
+            "entryprice": 13.235,
+            "takeprofit": 13.354,
+            "stoploss": 13.129,
+            "hh": 13.248,
+            "ll": 13.129,
+            "lh": 13.235,
+            "hl": 13.201,
+            "confirmed": false
+        }
+    ],
+    "BELUSDT": [
+        {
+            "symbol": "BELUSDT",
+            "time": "2021-11-26T18:03:02.940Z",
+            "entryprice": 2.17,
+            "takeprofit": 2.19,
+            "stoploss": 2.161,
+            "hh": 2.181,
+            "ll": 2.161,
+            "lh": 2.17,
+            "hl": 2.162,
+            "confirmed": false
+        }
+    ],
+    "WINGUSDT": [],
+    "UNIUSDT": [],
+    "NBSUSDT": [],
+    "OXTUSDT": [],
+    "SUNUSDT": [],
+    "AVAXUSDT": [
+        {
+            "symbol": "AVAXUSDT",
+            "time": "2021-11-26T17:59:59.864Z",
+            "entryprice": 109.82,
+            "takeprofit": 111.30999999999999,
+            "stoploss": 108.79,
+            "hh": 110.28,
+            "ll": 108.79,
+            "lh": 109.82,
+            "hl": 109.2,
+            "confirmed": false
+        }
+    ],
+    "HNTUSDT": [],
+    "FLMUSDT": [
+        {
+            "symbol": "FLMUSDT",
+            "time": "2021-11-26T18:01:06.876Z",
+            "entryprice": 0.547,
+            "takeprofit": 0.5514,
+            "stoploss": 0.5452,
+            "hh": 0.5496,
+            "ll": 0.5452,
+            "lh": 0.547,
+            "hl": 0.5454,
+            "confirmed": false
+        }
+    ],
+    "ORNUSDT": [],
+    "UTKUSDT": [],
+    "XVSUSDT": [],
+    "ALPHAUSDT": [],
+    "AAVEUSDT": [],
+    "NEARUSDT": [
+        {
+            "symbol": "NEARUSDT",
+            "time": "2021-11-26T17:59:59.979Z",
+            "entryprice": 8.324,
+            "takeprofit": 8.389,
+            "stoploss": 8.294,
+            "hh": 8.359,
+            "ll": 8.294,
+            "lh": 8.324,
+            "hl": 8.307,
+            "confirmed": false
+        }
+    ],
+    "FILUSDT": [],
+    "INJUSDT": [],
+    "AUDIOUSDT": [],
+    "CTKUSDT": [],
+    "AKROUSDT": [],
+    "AXSUSDT": [],
+    "HARDUSDT": [],
+    "DNTUSDT": [],
+    "STRAXUSDT": [],
+    "UNFIUSDT": [],
+    "ROSEUSDT": [],
+    "AVAUSDT": [],
+    "XEMUSDT": [
+        {
+            "symbol": "XEMUSDT",
+            "time": "2021-11-26T18:00:59.972Z",
+            "entryprice": 0.1645,
+            "takeprofit": 0.1655,
+            "stoploss": 0.164,
+            "hh": 0.165,
+            "ll": 0.164,
+            "lh": 0.1645,
+            "hl": 0.1641,
+            "confirmed": false
+        }
+    ],
+    "SKLUSDT": [],
+    "SUSDUSDT": [],
+    "GRTUSDT": [],
+    "JUVUSDT": [],
+    "PSGUSDT": [],
+    "1INCHUSDT": [
+        {
+            "symbol": "1INCHUSDT",
+            "time": "2021-11-26T17:59:59.953Z",
+            "entryprice": 3.73,
+            "takeprofit": 3.76,
+            "stoploss": 3.716,
+            "hh": 3.746,
+            "ll": 3.716,
+            "lh": 3.73,
+            "hl": 3.717,
+            "confirmed": false
+        }
+    ],
+    "REEFUSDT": [],
+    "OGUSDT": [],
+    "ATMUSDT": [],
+    "ASRUSDT": [],
+    "CELOUSDT": [],
+    "RIFUSDT": [],
+    "BTCSTUSDT": [],
+    "TRUUSDT": [],
+    "CKBUSDT": [],
+    "TWTUSDT": [],
+    "FIROUSDT": [],
+    "LITUSDT": [],
+    "SFPUSDT": [],
+    "DODOUSDT": [],
+    "CAKEUSDT": [],
+    "ACMUSDT": [],
+    "BADGERUSDT": [],
+    "FISUSDT": [],
+    "OMUSDT": [],
+    "PONDUSDT": [],
+    "DEGOUSDT": [],
+    "ALICEUSDT": [],
+    "LINAUSDT": [],
+    "PERPUSDT": [],
+    "RAMPUSDT": [],
+    "CFXUSDT": [],
+    "EPSUSDT": [
+        {
+            "symbol": "EPSUSDT",
+            "time": "2021-11-26T18:01:00.278Z",
+            "entryprice": 0.4474,
+            "takeprofit": 0.451,
+            "stoploss": 0.4455,
+            "hh": 0.4491,
+            "ll": 0.4455,
+            "lh": 0.4474,
+            "hl": 0.446,
+            "confirmed": false
+        }
+    ],
+    "AUTOUSDT": [],
+    "TKOUSDT": [
+        {
+            "symbol": "TKOUSDT",
+            "time": "2021-11-26T18:01:07.563Z",
+            "entryprice": 1.586,
+            "takeprofit": 1.6,
+            "stoploss": 1.577,
+            "hh": 1.591,
+            "ll": 1.577,
+            "lh": 1.586,
+            "hl": 1.58,
+            "confirmed": false
+        }
+    ],
+    "PUNDIXUSDT": [],
+    "TLMUSDT": [],
+    "BTGUSDT": [],
+    "MIRUSDT": [],
+    "BARUSDT": [],
+    "FORTHUSDT": [],
+    "BAKEUSDT": [],
+    "BURGERUSDT": [],
+    "SLPUSDT": [],
+    "SHIBUSDT": [],
+    "ICPUSDT": [],
+    "ARUSDT": [],
+    "POLSUSDT": [],
+    "MDXUSDT": [],
+    "MASKUSDT": [],
+    "LPTUSDT": [
+        {
+            "symbol": "LPTUSDT",
+            "time": "2021-11-26T18:01:05.044Z",
+            "entryprice": 56,
+            "takeprofit": 56.75,
+            "stoploss": 55.62,
+            "hh": 56.37,
+            "ll": 55.62,
+            "lh": 56,
+            "hl": 55.64,
+            "confirmed": false
+        }
+    ],
+    "NUUSDT": [],
+    "XVGUSDT": [],
+    "ATAUSDT": [
+        {
+            "symbol": "ATAUSDT",
+            "time": "2021-11-26T18:02:04.252Z",
+            "entryprice": 1.0925,
+            "takeprofit": 1.1189,
+            "stoploss": 1.0844,
+            "hh": 1.1108,
+            "ll": 1.0844,
+            "lh": 1.0925,
+            "hl": 1.0854,
+            "confirmed": false
+        }
+    ],
+    "GTCUSDT": [],
+    "TORNUSDT": [],
+    "KEEPUSDT": [],
+    "ERNUSDT": [],
+    "KLAYUSDT": [],
+    "PHAUSDT": [],
+    "BONDUSDT": [],
+    "MLNUSDT": [],
+    "DEXEUSDT": [],
+    "C98USDT": [],
+    "CLVUSDT": [],
+    "QNTUSDT": [],
+    "FLOWUSDT": [],
+    "TVKUSDT": [],
+    "MINAUSDT": [],
+    "RAYUSDT": [],
+    "FARMUSDT": [],
+    "ALPACAUSDT": [],
+    "QUICKUSDT": [],
+    "MBOXUSDT": [
+        {
+            "symbol": "MBOXUSDT",
+            "time": "2021-11-26T18:03:00.065Z",
+            "entryprice": 6.352,
+            "takeprofit": 6.44,
+            "stoploss": 6.329,
+            "hh": 6.417,
+            "ll": 6.329,
+            "lh": 6.352,
+            "hl": 6.332,
+            "confirmed": false
+        }
+    ],
+    "FORUSDT": [
+        {
+            "symbol": "FORUSDT",
+            "time": "2021-11-26T17:55:04.910Z",
+            "entryprice": 0.07396,
+            "takeprofit": 0.07438,
+            "stoploss": 0.07379,
+            "hh": 0.07421,
+            "ll": 0.07379,
+            "lh": 0.07396,
+            "hl": 0.07388,
+            "confirmed": false
+        }
+    ],
+    "REQUSDT": [],
+    "GHSTUSDT": [],
+    "WAXPUSDT": [],
+    "TRIBEUSDT": [],
+    "GNOUSDT": [],
+    "XECUSDT": [],
+    "ELFUSDT": [
+        {
+            "symbol": "ELFUSDT",
+            "time": "2021-11-26T18:03:07.632Z",
+            "entryprice": 0.5433,
+            "takeprofit": 0.5542,
+            "stoploss": 0.5402,
+            "hh": 0.5511,
+            "ll": 0.5402,
+            "lh": 0.5433,
+            "hl": 0.5406,
+            "confirmed": false
+        }
+    ],
+    "DYDXUSDT": [
+        {
+            "symbol": "DYDXUSDT",
+            "time": "2021-11-26T18:00:01.072Z",
+            "entryprice": 13.264,
+            "takeprofit": 13.421999999999999,
+            "stoploss": 13.202,
+            "hh": 13.36,
+            "ll": 13.202,
+            "lh": 13.264,
+            "hl": 13.213,
+            "confirmed": false
+        }
+    ],
+    "POLYUSDT": [
+        {
+            "symbol": "POLYUSDT",
+            "time": "2021-11-26T18:03:03.098Z",
+            "entryprice": 0.8517,
+            "takeprofit": 0.8815,
+            "stoploss": 0.8253,
+            "hh": 0.8551,
+            "ll": 0.8253,
+            "lh": 0.8517,
+            "hl": 0.8269,
+            "confirmed": false
+        }
+    ],
+    "IDEXUSDT": [],
+    "VIDTUSDT": [
+        {
+            "symbol": "VIDTUSDT",
+            "time": "2021-11-26T17:59:07.261Z",
+            "entryprice": 0.8452,
+            "takeprofit": 0.852,
+            "stoploss": 0.8428,
+            "hh": 0.8496,
+            "ll": 0.8428,
+            "lh": 0.8452,
+            "hl": 0.8435,
+            "confirmed": false
+        }
+    ],
+    "USDPUSDT": [],
+    "GALAUSDT": [],
+    "ILVUSDT": [],
+    "YGGUSDT": [],
+    "SYSUSDT": [],
+    "DFUSDT": [],
+    "FIDAUSDT": [],
+    "FRONTUSDT": [],
+    "CVPUSDT": [],
+    "AGLDUSDT": [],
+    "RADUSDT": [],
+    "BETAUSDT": [],
+    "RAREUSDT": [],
+    "LAZIOUSDT": [],
+    "CHESSUSDT": [],
+    "ADXUSDT": [],
+    "AUCTIONUSDT": [],
+    "DARUSDT": [],
+    "BNXUSDT": [],
+    "RGTUSDT": [],
+    "MOVRUSDT": [],
+    "CITYUSDT": [
+        {
+            "symbol": "CITYUSDT",
+            "time": "2021-11-26T18:03:06.567Z",
+            "entryprice": 11.36,
+            "takeprofit": 11.409999999999998,
+            "stoploss": 11.32,
+            "hh": 11.37,
+            "ll": 11.32,
+            "lh": 11.36,
+            "hl": 11.34,
+            "confirmed": false
+        }
+    ],
+    "ENSUSDT": [
+        {
+            "symbol": "ENSUSDT",
+            "time": "2021-11-26T17:54:59.801Z",
+            "entryprice": 64.64,
+            "takeprofit": 65.32000000000001,
+            "stoploss": 64,
+            "hh": 64.68,
+            "ll": 64,
+            "lh": 64.64,
+            "hl": 64.02,
+            "confirmed": false
+        }
+    ],
+    "KP3RUSDT": [
+        {
+            "symbol": "KP3RUSDT",
+            "time": "2021-11-26T18:00:07.888Z",
+            "entryprice": 1040,
+            "takeprofit": 1047.28,
+            "stoploss": 1035.52,
+            "hh": 1042.8,
+            "ll": 1035.52,
+            "lh": 1040,
+            "hl": 1035.68,
+            "confirmed": false
+        }
+    ],
+    "QIUSDT": [],
+    "PORTOUSDT": [],
+    "POWRUSDT": [],
+    "VGXUSDT": [],
+    "JASMYUSDT": [],
+    "AMPUSDT": [],
+    "PLAUSDT": [
+        {
+            "symbol": "PLAUSDT",
+            "time": "2021-11-26T18:03:07.640Z",
+            "entryprice": 2.526,
+            "takeprofit": 2.542,
+            "stoploss": 2.511,
+            "hh": 2.527,
+            "ll": 2.511,
+            "lh": 2.526,
+            "hl": 2.515,
+            "confirmed": false
+        }
+    ],
+    "PYRUSDT": []
 }

@@ -46,32 +46,6 @@ let users = [
 // console.log(users)
 
 // Con api compro o vendo
-// if (tradePosition[symbol] !== undefined) {
-//     for (const position of tradePosition) {
-//         console.log(position)
-//         // Controllo STOP_LOSS
-//         // Controllo TAKE_PROFIT
-//         if (close >= position.MAX_LH) {
-//             // Compro a prezzo di mercato
-//             //binance.marketBuy("BNBBTC", quantity);
-//             buy = true;
-//         }
-//
-//         if (buy) {
-//             // Stop Loss
-//             if (close < position.STOP_LOSS) {
-//                 // binance.marketSell("ETHBTC", quantity);
-//                 tradePosition[symbol] = {}
-//             } else {
-//                 // TAKE PROFIT
-//                 if (close >= position.TAKE_PROFIT) {
-//                     //binance.marketSell("ETHBTC", quantity);
-//                     tradePosition[symbol] = {}
-//                 }
-//             }
-//         }
-//     }
-// }
 
 
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
@@ -106,19 +80,47 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             x: isFinal,
         } = ticks;
 
-        if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === true) {
-            // Faccio trading in realtime
-            console.log("Controllo le posizioni da gestire")
-            let takeprofit = recordPattern[symbol]['takeprofit']
-            let stoploss = recordPattern[symbol]['stoploss']
-            let entryprice = recordPattern[symbol]['entryprice']
-            console.log("Sblocco la ricerca del pattern")
-            recordPattern[symbol] = []
-        }
+        // if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === true) {
+        //
+        //     let takeprofit = recordPattern[symbol]['takeprofit']
+        //     let stoploss = recordPattern[symbol]['stoploss']
+        //     let entryprice = recordPattern[symbol]['entryprice']
+        //
+        //     // Controllo STOP_LOSS
+        //     // Controllo TAKE_PROFIT
+        //     if (close >= position.MAX_LH) {
+        //         // Compro a prezzo di mercato
+        //         //binance.marketBuy("BNBBTC", quantity);
+        //         buy = true;
+        //     }
+        //
+        //     if (buy) {
+        //         // Stop Loss
+        //         if (close < stoploss) {
+        //             // binance.marketSell("ETHBTC", quantity);
+        //             tradePosition[symbol] = {}
+        //         } else {
+        //             // TAKE PROFIT
+        //             if (close >= takeprofit) {
+        //                 //binance.marketSell("ETHBTC", quantity);
+        //                 tradePosition[symbol] = {}
+        //             }
+        //         }
+        //     }
+        // }
+
+        // if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === true) {
+        //     // Faccio trading in realtime
+        //     console.log("Controllo le posizioni da gestire")
+        //     let takeprofit = recordPattern[symbol]['takeprofit']
+        //     let stoploss = recordPattern[symbol]['stoploss']
+        //     let entryprice = recordPattern[symbol]['entryprice']
+        //     console.log("Sblocco la ricerca del pattern")
+        //     recordPattern[symbol] = []
+        // }
 
         if (isFinal) {
 
-            // Controlla che ci siano dei pattern da verificare e invia una notifica su telegram
             if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === false) {
 
                 console.log(recordPattern[symbol])
@@ -143,6 +145,10 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     recordPattern[symbol] = []
                     console.log(recordPattern[symbol])
+                }
+
+                if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
+                    recordPattern[symbol] = []
                 }
             }
 
