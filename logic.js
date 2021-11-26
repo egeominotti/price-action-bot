@@ -108,10 +108,10 @@ function HigherHigh(storeData) {
     let fail = false
     let failIndex;
 
-    let max = MaxTickHigh(storeData);
-    let low = max['tick']['low']
-    let close = max['tick']['close']
-    let maxIndex = max['index']
+    let max =           MaxTickHigh(storeData);
+    let low =           max['tick']['low']
+    let close =         max['tick']['close']
+    let maxIndex =      max['index']
 
 
     // Pattern recognition matcher ( 1 )
@@ -159,9 +159,9 @@ function HigherHigh(storeData) {
 
 function LowerLow(storeData, indexHigherHigh) {
 
-    let min = MinTickLow(storeData, indexHigherHigh);
-    let high = min['tick']['high']
-    let close = min['tick']['close']
+    let min =       MinTickLow(storeData, indexHigherHigh);
+    let high =      min['tick']['high']
+    let close =     min['tick']['close']
 
     let fail = false
     let failIndex;
@@ -210,9 +210,9 @@ function LowerLow(storeData, indexHigherHigh) {
 
 function LowerHigh(storeData, indexLowerLow) {
 
-    let max = MaxTickHigh(storeData, indexLowerLow);
-    let close = max['tick']['close']
-    let low = max['tick']['low']
+    let max =       MaxTickHigh(storeData, indexLowerLow);
+    let close =     max['tick']['close']
+    let low =       max['tick']['low']
 
     for (let index = indexLowerLow + 1; index < storeData.length; index++) {
 
@@ -231,9 +231,9 @@ function LowerHigh(storeData, indexLowerLow) {
 
 function HigherLow(storeData, indexLowerHigh) {
 
-    let min = MinTickLow(storeData, indexLowerHigh);
-    let close = min['tick']['close']
-    let high = min['tick']['high']
+    let min =       MinTickLow(storeData, indexLowerHigh);
+    let close =     min['tick']['close']
+    let high =      min['tick']['high']
 
     for (let index = indexLowerHigh + 1; index < storeData.length; ++index) {
 
@@ -252,62 +252,60 @@ function HigherLow(storeData, indexLowerHigh) {
 
 function patternMatching(storeData) {
 
-    if (storeData.length > 2) {
 
-        let HH = HigherHigh(storeData)
+    let HH = HigherHigh(storeData)
 
-        if (HH !== -1) {
+    if (HH !== -1) {
 
-            console.log("Confermato HH")
-            let LL = LowerLow(storeData, HH['index'])
+        console.log("Confermato HH")
+        let LL = LowerLow(storeData, HH['index'])
 
-            if (LL !== -1) {
+        if (LL !== -1) {
 
-                console.log("Confermato LL")
-                let LH = LowerHigh(storeData, LL['index'])
+            console.log("Confermato LL")
+            let LH = LowerHigh(storeData, LL['index'])
 
-                if (LH !== -1) {
+            if (LH !== -1) {
 
-                    console.log("Confermato LH")
-                    let HL = HigherLow(storeData, LH['index'])
+                console.log("Confermato LH")
+                let HL = HigherLow(storeData, LH['index'])
 
-                    if (HL !== -1) {
+                if (HL !== -1) {
 
-                        console.log("Confermato HL")
+                    console.log("Confermato HL")
 
-                        let lastTicker;
-                        for (let currentTicker of storeData) lastTicker = currentTicker;
+                    let lastTicker;
+                    for (let currentTicker of storeData) lastTicker = currentTicker;
 
-                        if (lastTicker['close'] > LH['tick']['high']) {
+                    if (lastTicker['close'] > LH['tick']['high']) {
 
-                            let entryPrice = LH['value'];
-                            let takeProfit = LH['value'] + (HH['value'] - LL['value'])
+                        let entryPrice = LH['value'];
+                        let takeProfit = LH['value'] + (HH['value'] - LL['value'])
 
-                            let msg = {
-                                'patternFoundTime': new Date().toISOString(),
-                                'TAKE_PROFIT': takeProfit,
-                                'ENTRY_PRICE': entryPrice,
-                                'STOP_LOSS': LL['value'],
-                                'HH': HH['value'],
-                                'LL': LL['value'],
-                                'LH': LH['value'],
-                                'HL': HL['value']
-                            }
-                            console.log(msg)
-
-                            return {
-                                'patternFoundTime': new Date().toISOString(),
-                                'TAKE_PROFIT': takeProfit,
-                                'ENTRY_PRICE': entryPrice,
-                                'STOP_LOSS': LL['value'],
-                                'HH': HH['value'],
-                                'LL': LL['value'],
-                                'LH': LH['value'],
-                                'HL': HL['value']
-                            }
+                        let msg = {
+                            'patternFoundTime': new Date().toISOString(),
+                            'TAKE_PROFIT': takeProfit,
+                            'ENTRY_PRICE': entryPrice,
+                            'STOP_LOSS': LL['value'],
+                            'HH': HH['value'],
+                            'LL': LL['value'],
+                            'LH': LH['value'],
+                            'HL': HL['value']
                         }
+                        console.log(msg)
 
+                        return {
+                            'patternFoundTime': new Date().toISOString(),
+                            'TAKE_PROFIT': takeProfit,
+                            'ENTRY_PRICE': entryPrice,
+                            'STOP_LOSS': LL['value'],
+                            'HH': HH['value'],
+                            'LL': LL['value'],
+                            'LH': LH['value'],
+                            'HL': HL['value']
+                        }
                     }
+
                 }
             }
         }
