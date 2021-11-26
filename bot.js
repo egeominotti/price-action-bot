@@ -4,6 +4,7 @@ const axios = require('axios').default;
 //const coins = require('./coins');
 const fs = require('fs');
 const _ = require("lodash");
+const foreach = require("foreach");
 const binance = new Binance();
 const args = process.argv;
 
@@ -49,6 +50,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         let nameFile = 'data/pattern_' + interval + ".json";
 
         if (!_.isEmpty(recordPattern[symbol])) {
+
             const recordPatternValue = _.head(recordPattern[symbol]);
             if (recordPatternValue['confirmed']) {
 
@@ -57,7 +59,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 let stoploss = recordPatternValue['stoploss']
 
                 // Stop Loss
-                if (close < stoploss) {
+                if (close <= stoploss) {
 
                     let body = {
                         action: 'SELL',
@@ -76,25 +78,25 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         });
 
 
-                } else {
-                    // TAKE PROFIT
-                    if (close >= takeprofit) {
-                        let body = {
-                            action: 'SELL',
-                            exchange: 'BINANCE',
-                            ticker: symbol,
-                            asset: 'USDT',
-                        }
+                }
 
-                        axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
-                            .then(function (response) {
-                                console.log(response);
-                                recordPattern[symbol] = []
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                // TAKE PROFIT
+                if (close >= takeprofit) {
+                    let body = {
+                        action: 'SELL',
+                        exchange: 'BINANCE',
+                        ticker: symbol,
+                        asset: 'USDT',
                     }
+
+                    axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                        .then(function (response) {
+                            console.log(response);
+                            recordPattern[symbol] = []
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 }
             }
         }
