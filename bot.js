@@ -187,7 +187,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     logic.sendMessageTelegram(message)
                 }
-
             }
         }
 
