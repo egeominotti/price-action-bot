@@ -269,11 +269,11 @@ function patternMatching(storeData) {
                     console.log(LH_MIN)
 
                     let lastTicker;
-                    for(let currentTicker of storeData){
+                    for (let currentTicker of storeData) {
                         lastTicker = currentTicker;
                         console.log(lastTicker)
                     }
-                     console.log(lastTicker)
+                    console.log(lastTicker)
 
                     if (lastTicker['close'] > LH['tick']['high']) {
 
