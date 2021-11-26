@@ -121,33 +121,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
         if (isFinal) {
 
-            if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirmed'] === false) {
-                if (close > recordPattern[symbol]['LH']) {
-
-                    let message = "SYMBOL: " + symbol + "\n" +
-                        "INTERVAL: " + interval + "\n" +
-                        "PATTERN FOUND AT: " + recordPattern[symbol]['patternFoundTime'] + "\n" +
-                        "ENTRYPRICE: " + recordPattern[symbol]['ENTRY_PRICE'] + "\n" +
-                        "TAKEPROFIT: " + recordPattern[symbol]['TAKE_PROFIT'] + "\n" +
-                        "STOPLOSS:  " + recordPattern[symbol]['STOP_LOSS'] + "\n" +
-                        "HH: " + recordPattern[symbol]['HH'] + "\n" +
-                        "LL: " + recordPattern[symbol]['LL'] + "\n" +
-                        "LH: " + recordPattern[symbol]['LH'] + "\n" +
-                        "HL: " + recordPattern[symbol]['HL']
-
-                    recordPattern[symbol]['confirmed'] = true
-                    recordPattern[symbol] = []
-
-                    logic.sendMessageTelegram(message)
-
-                }
-
-                if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
-                    recordPattern[symbol] = []
-                }
-            }
-
-
             if (_.isEmpty(recordPattern[symbol])) {
 
                 indexArray[symbol] += 1
@@ -180,18 +153,41 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         'confirmed': false,
                     }
 
-                    console.log("SALVO PATTERN")
                     recordPattern[symbol].push(recordPatternData)
+
                     tokenArray[symbol] = [];
                     indexArray[symbol] = -1
 
-                    console.log("Finito salvataggio pattern, procedo al controllo")
-                    console.log(recordPattern[symbol])
-
-                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
-                    });
+                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {});
                 }
+
+            } else {
+
+                if (close > recordPattern[symbol]['LH']) {
+
+                    let message = "SYMBOL: " + symbol + "\n" +
+                        "INTERVAL: " + interval + "\n" +
+                        "PATTERN FOUND AT: " + recordPattern[symbol]['patternFoundTime'] + "\n" +
+                        "ENTRYPRICE: " + recordPattern[symbol]['ENTRY_PRICE'] + "\n" +
+                        "TAKEPROFIT: " + recordPattern[symbol]['TAKE_PROFIT'] + "\n" +
+                        "STOPLOSS:  " + recordPattern[symbol]['STOP_LOSS'] + "\n" +
+                        "HH: " + recordPattern[symbol]['HH'] + "\n" +
+                        "LL: " + recordPattern[symbol]['LL'] + "\n" +
+                        "LH: " + recordPattern[symbol]['LH'] + "\n" +
+                        "HL: " + recordPattern[symbol]['HL']
+
+                    recordPattern[symbol]['confirmed'] = true
+                    recordPattern[symbol] = []
+
+                    logic.sendMessageTelegram(message)
+                }
+
+                if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
+                    recordPattern[symbol] = []
+                }
+
             }
+
         }
     });
 
