@@ -161,10 +161,11 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 console.log(recordPattern[symbol])
 
                 if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
+                    console.log("DEVO FERMARMI")
+                    console.log("DEVO FERMARMI")
+                    console.log("DEVO FERMARMI")
                     recordPattern[symbol] = []
-
-                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
-                    });
+                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {});
                 }
 
                 if (close > recordPattern[symbol]['LH']) {
@@ -183,8 +184,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     recordPattern[symbol]['confirmed'] = true
                     recordPattern[symbol] = []
 
-                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
-                    });
+                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {});
 
                     logic.sendMessageTelegram(message)
                 }
