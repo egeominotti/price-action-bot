@@ -158,4 +158,74 @@
     "ll": 338,
     "lh": 339,
     "hl": 338
+}{
+    "symbol": "ONGUSDT",
+    "time": "2021-11-26T02:18:07.643Z",
+    "entryprice": 1.1437,
+    "takeprofit": 1.1498,
+    "stoploss": 1.1415,
+    "hh": 1.1476,
+    "ll": 1.1415,
+    "lh": 1.1437,
+    "hl": 1.1415
+}{
+    "symbol": "COCOSUSDT",
+    "time": "2021-11-26T02:20:00.455Z",
+    "entryprice": 4.1878,
+    "takeprofit": 4.3456,
+    "stoploss": 4.15,
+    "hh": 4.3116,
+    "ll": 4.15,
+    "lh": 4.1878,
+    "hl": 4.15
+}{
+    "symbol": "STXUSDT",
+    "time": "2021-11-26T02:20:05.636Z",
+    "entryprice": 1.991,
+    "takeprofit": 2.0060000000000002,
+    "stoploss": 1.984,
+    "hh": 1.999,
+    "ll": 1.984,
+    "lh": 1.991,
+    "hl": 1.984
+}{
+    "symbol": "RAREUSDT",
+    "time": "2021-11-26T02:21:07.431Z",
+    "entryprice": 1.811,
+    "takeprofit": 1.835,
+    "stoploss": 1.8,
+    "hh": 1.825,
+    "ll": 1.8,
+    "lh": 1.811,
+    "hl": 1.8
+}{
+    "symbol": "FIDAUSDT",
+    "time": "2021-11-26T02:21:07.728Z",
+    "entryprice": 8.148,
+    "takeprofit": 8.161,
+    "stoploss": 8.147,
+    "hh": 8.16,
+    "ll": 8.147,
+    "lh": 8.148,
+    "hl": 8.147
+}{
+    "symbol": "RUNEUSDT",
+    "time": "2021-11-26T02:22:00.339Z",
+    "entryprice": 13.016,
+    "takeprofit": 13.097,
+    "stoploss": 12.957,
+    "hh": 13.078,
+    "ll": 12.957,
+    "lh": 13.016,
+    "hl": 12.957
+}{
+    "symbol": "GTOUSDT",
+    "time": "2021-11-26T02:22:02.667Z",
+    "entryprice": 0.06162,
+    "takeprofit": 0.062090000000000006,
+    "stoploss": 0.06152,
+    "hh": 0.06199,
+    "ll": 0.06152,
+    "lh": 0.06162,
+    "hl": 0.06152
 }
