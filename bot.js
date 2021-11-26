@@ -125,51 +125,53 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             let pattern = logic.patternMatching(tokenArray[symbol])
             if (!_.isEmpty(pattern)) {
 
-                console.log("Pattern found")
+                if (close > pattern['LH']) {
+                    console.log("Pattern found")
 
-                tokenArray[symbol] = [];
-                indexArray[symbol] = -1
+                    tokenArray[symbol] = [];
+                    indexArray[symbol] = -1
 
-                let tradeData = {
-                    'symbol': symbol,
-                    'STOP_LOSS': pattern['STOP_LOSS'],
-                    'TAKE_PROFIT': pattern['TAKE_PROFIT'],
-                    "MAX_HH": pattern['MAX'],
-                    "MIN_LL:": pattern['MIN'],
-                    "MAX_LH": pattern['LH'],
-                    "MIN_HL": pattern['HL']
+                    let tradeData = {
+                        'symbol': symbol,
+                        'STOP_LOSS': pattern['STOP_LOSS'],
+                        'TAKE_PROFIT': pattern['TAKE_PROFIT'],
+                        "MAX_HH": pattern['MAX'],
+                        "MIN_LL:": pattern['MIN'],
+                        "MAX_LH": pattern['LH'],
+                        "MIN_HL": pattern['HL']
+                    }
+
+                    //tradePosition[symbol].push(tradeData)
+
+                    let message = "SYMBOL: " + symbol + "\n" +
+                        "INTERVAL: " + interval + "\n" +
+                        "PATTERN FOUND AT: " + pattern['patternFoundTime'] + "\n" +
+                        "ENTRYPRICE: " + pattern['ENTRY_PRICE'] + "\n" +
+                        "TAKEPROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
+                        "STOPLOSS:  " + pattern['STOP_LOSS'] + "\n" +
+                        "HH: " + pattern['HH'] + "\n" +
+                        "LL: " + pattern['LL'] + "\n" +
+                        "LH: " + pattern['LH'] + "\n" +
+                        "HL: " + pattern['HL']
+
+
+                    let recordPattern = {
+                        'symbol': symbol,
+                        'time': pattern['patternFoundTime'],
+                        'entryprice': pattern['ENTRY_PRICE'],
+                        'takeprofit': pattern['TAKE_PROFIT'],
+                        'stoploss': pattern['STOP_LOSS'],
+                        'hh': pattern['HH'],
+                        'll': pattern['LL'],
+                        'lh': pattern['LH'],
+                        'hl': pattern['HL']
+                    }
+
+                    fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    });
+
+                    logic.sendMessageTelegram(message)
                 }
-
-                //tradePosition[symbol].push(tradeData)
-
-                let message = "SYMBOL: " + symbol + "\n" +
-                    "INTERVAL: " + interval + "\n" +
-                    "PATTERN FOUND AT: " + pattern['patternFoundTime'] + "\n" +
-                    "ENTRYPRICE: " + pattern['ENTRY_PRICE'] + "\n" +
-                    "TAKEPROFIT: " + pattern['TAKE_PROFIT'] + "\n" +
-                    "STOPLOSS:  " + pattern['STOP_LOSS'] + "\n" +
-                    "HH: " + pattern['HH'] + "\n" +
-                    "LL: " + pattern['LL'] + "\n" +
-                    "LH: " + pattern['LH'] + "\n" +
-                    "HL: " + pattern['HL']
-
-
-                let recordPattern = {
-                    'symbol': symbol,
-                    'time': pattern['patternFoundTime'],
-                    'entryprice': pattern['ENTRY_PRICE'],
-                    'takeprofit': pattern['TAKE_PROFIT'],
-                    'stoploss': pattern['STOP_LOSS'],
-                    'hh': pattern['HH'],
-                    'll': pattern['LL'],
-                    'lh': pattern['LH'],
-                    'hl': pattern['HL']
-                }
-
-                fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
-                });
-
-                logic.sendMessageTelegram(message)
 
             } else {
                 console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol + " interval: " + interval)
