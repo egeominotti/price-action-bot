@@ -151,7 +151,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     tokenArray[symbol] = [];
                     indexArray[symbol] = -1
 
-                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
+                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), function (err) {
                     });
 
                 }
@@ -162,7 +162,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 console.log(recordPattern[symbol])
                 console.log("STO CERCANDO ENTRATA")
 
-                if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
+                if (low < recordPattern[symbol]['ll'] || high > recordPattern[symbol]['hh']) {
 
                     console.log("DEVO FERMARMI")
                     // Cancello il pattern e ricominco
@@ -170,7 +170,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 } else {
 
-                    if (close > recordPattern[symbol]['LH']) {
+                    if (close > recordPattern[symbol]['lh']) {
 
                         let message = "SYMBOL: " + symbol + "\n" +
                             "INTERVAL: " + interval + "\n" +
