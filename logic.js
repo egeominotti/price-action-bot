@@ -285,13 +285,13 @@ function patternMatching(storeData, symbol) {
 
                     return {
                         'patternFoundTime': new Date().toISOString(),
-                        'TAKE_PROFIT': takeProfit,
-                        'ENTRY_PRICE': entryPrice,
-                        'STOP_LOSS': LL['value'],
-                        'HH': HH['value'],
-                        'LL': LL['value'],
-                        'LH': LH['value'],
-                        'HL': HL['value']
+                        'takeprofit': takeProfit,
+                        'entryprice': entryPrice,
+                        'stoploss': LL['value'],
+                        'hh': HH['value'],
+                        'll': LL['value'],
+                        'lh': LH['value'],
+                        'hl': HL['value']
                     }
 
                 }

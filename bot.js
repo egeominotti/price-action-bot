@@ -136,13 +136,13 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     let recordPatternData = {
                         'symbol': symbol,
                         'time': pattern['patternFoundTime'],
-                        'entryprice': pattern['ENTRY_PRICE'],
-                        'takeprofit': pattern['TAKE_PROFIT'],
-                        'stoploss': pattern['STOP_LOSS'],
-                        'hh': pattern['HH'],
-                        'll': pattern['LL'],
-                        'lh': pattern['LH'],
-                        'hl': pattern['HL'],
+                        'entryprice': pattern['entryprice'],
+                        'takeprofit': pattern['takeprofit'],
+                        'stoploss': pattern['stoploss'],
+                        'hh': pattern['hh'],
+                        'll': pattern['ll'],
+                        'lh': pattern['lh'],
+                        'hl': pattern['hl'],
                         'confirmed': false,
                     }
 
@@ -172,16 +172,16 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     if (close > recordPattern[symbol]['lh']) {
 
-                        let message = "SYMBOL: " + symbol + "\n" +
-                            "INTERVAL: " + interval + "\n" +
-                            "ENTRY FOUND AT: " + recordPattern[symbol]['patternFoundTime'] + "\n" +
-                            "ENTRYPRICE: " + recordPattern[symbol]['ENTRY_PRICE'] + "\n" +
-                            "TAKEPROFIT: " + recordPattern[symbol]['TAKE_PROFIT'] + "\n" +
-                            "STOPLOSS:  " + recordPattern[symbol]['STOP_LOSS'] + "\n" +
-                            "HH: " + recordPattern[symbol]['HH'] + "\n" +
-                            "LL: " + recordPattern[symbol]['LL'] + "\n" +
-                            "LH: " + recordPattern[symbol]['LH'] + "\n" +
-                            "HL: " + recordPattern[symbol]['HL']
+                        let message = "Symbol: " + symbol + "\n" +
+                            "Interval: " + interval + "\n" +
+                            "Entry found at: " + recordPattern[symbol]['patternFoundTime'] + "\n" +
+                            "entryprice: " + recordPattern[symbol]['entryprice'] + "\n" +
+                            "takeprofit: " + recordPattern[symbol]['takeprofit'] + "\n" +
+                            "stoploss:  " + recordPattern[symbol]['stoploss'] + "\n" +
+                            "hh: " + recordPattern[symbol]['hh'] + "\n" +
+                            "ll: " + recordPattern[symbol]['ll'] + "\n" +
+                            "lh: " + recordPattern[symbol]['lh'] + "\n" +
+                            "hl: " + recordPattern[symbol]['hl']
 
                         recordPattern[symbol]['confirmed'] = true
                         logic.sendMessageTelegram(message)
