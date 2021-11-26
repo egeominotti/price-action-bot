@@ -123,7 +123,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 console.log(recordPattern[symbol])
                 if (close > recordPattern[symbol]['LH']) {
 
-                    console.log("Candela confermata");
+                    console.log("Pattern confermato");
 
                     let message = "SYMBOL: " + symbol + "\n" +
                         "INTERVAL: " + interval + "\n" +
@@ -140,8 +140,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     logic.sendMessageTelegram(message)
 
-                    fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
-                    });
+                    fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {});
                     recordPattern[symbol] = []
                     console.log(recordPattern[symbol])
                 }
@@ -165,18 +164,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             let pattern = logic.patternMatching(tokenArray[symbol])
             if (!_.isEmpty(pattern)) {
 
-                console.log("Pattern found")
-                // Azzera le candele per quel simbolo
-
-                console.log(recordPattern)
-                console.log(typeof  recordPattern[symbol])
-                console.log(recordPattern[symbol])
-
-                // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
-                // Devo controllare che recordPattern sia vuoto l'array per quel simbolo
-                console.log(_.isEmpty(recordPattern[symbol]))
                 if (_.isEmpty(recordPattern[symbol])) {
-                    console.log("salvo pattern")
+
                     let recordPatternData = {
                         'symbol': symbol,
                         'time': pattern['patternFoundTime'],
@@ -190,11 +179,13 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         'confirmed': false,
                     }
 
+                    console.log("SALVO PATTERN")
                     recordPattern[symbol].push(recordPatternData)
-                    console.log(recordPattern['symbol'])
-
                     tokenArray[symbol] = [];
                     indexArray[symbol] = -1
+
+                    console.log("Finito salvataggio pattern, procedo al controllo")
+                    console.log(recordPattern[symbol])
                 }
 
             } else {
