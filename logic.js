@@ -253,11 +253,11 @@ function patternMatching(storeData) {
                 let entryPrice = LH['tick']['high'];
                 let takeProfit = LH['tick']['close'] + (maxTickAbsolute - minTickAbsolute)
 
-                let minTickLowVariable = MinTickLow(storeData, LH['indexHH']);
+                let minTickLowVariable = MinTickLow(storeData, LL['indexLL']);
                 let LH_MIN = minTickLowVariable['min']
                 let closeMin = minTickLowVariable['tick']['close']
                 let highMin = minTickLowVariable['tick']['high']
-                let HL = LowerLow(storeData, LH['indexHH'], highMin, closeMin, LH_MIN)
+                let HL = LowerLow(storeData, LL['indexLL'], highMin, closeMin, LH_MIN)
 
                 if (HL !== -1) {
 
@@ -267,6 +267,7 @@ function patternMatching(storeData) {
                     console.log(minTickAbsolute)
                     console.log(entryPrice)
                     console.log(LH_MIN)
+                    console.log(storeData['close'])
 
                     if (storeData['close'] > LH['tick']['high']) {
 
