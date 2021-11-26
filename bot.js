@@ -193,8 +193,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     console.log("Finito salvataggio pattern, procedo al controllo")
                     console.log(recordPattern[symbol])
 
-                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
-                    });
+                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {});
                 }
             }
         }
