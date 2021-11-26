@@ -80,6 +80,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             x: isFinal,
         } = ticks;
 
+
         // if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === true) {
         //
         //     let takeprofit = recordPattern[symbol]['takeprofit']
@@ -108,6 +109,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         //         }
         //     }
         // }
+        let nameFile = 'data/recordPattern_' + interval + ".json";
 
         if (isFinal) {
 
@@ -148,7 +150,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     tokenArray[symbol] = [];
                     indexArray[symbol] = -1
 
-                    let nameFile = 'recordPatten_' + interval;
                     fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
                     });
                 }
@@ -160,7 +161,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
                     recordPattern[symbol] = []
-                    let nameFile = 'recordPatten_' + interval;
+
                     fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
                     });
                 }
@@ -181,7 +182,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     recordPattern[symbol]['confirmed'] = true
                     recordPattern[symbol] = []
 
-                    let nameFile = 'recordPatten_' + interval;
+
                     fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
                     });
 

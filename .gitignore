@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-
+/data
 # production
 /build
 .ieea
