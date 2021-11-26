@@ -4,7 +4,6 @@ const axios = require('axios').default;
 //const coins = require('./coins');
 const fs = require('fs');
 const _ = require("lodash");
-const foreach = require("foreach");
 const binance = new Binance();
 const args = process.argv;
 
@@ -13,7 +12,7 @@ let timeFrame = args[2]
 let tokenArray = {}
 let indexArray = {};
 let recordPattern = {}
-
+let tradeEnabled = false;
 
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
 logic.sendMessageTelegram(startMessage)
@@ -53,48 +52,50 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             const recordPatternValue = _.head(recordPattern[symbol]);
             if (recordPatternValue['confirmed'] === true) {
 
-                console.log("POROVO A COMPRARE")
                 let takeprofit = recordPatternValue['takeprofit']
                 let stoploss = recordPatternValue['stoploss']
 
-                // Stop Loss
-                if (close <= stoploss) {
+                if (tradeEnabled) {
+                    // Stop Loss
+                    if (close <= stoploss) {
 
-                    let body = {
-                        action: 'SELL',
-                        exchange: 'BINANCE',
-                        ticker: symbol,
-                        asset: 'USDT',
+                        let body = {
+                            action: 'SELL',
+                            exchange: 'BINANCE',
+                            ticker: symbol,
+                            asset: 'USDT',
+                        }
+
+                        axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                            .then(function (response) {
+                                console.log(response);
+                                recordPattern[symbol] = []
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                     }
 
-                    axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
-                        .then(function (response) {
-                            console.log(response);
-                            recordPattern[symbol] = []
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                }
+                    // TAKE PROFIT
+                    if (close >= takeprofit) {
+                        let body = {
+                            action: 'SELL',
+                            exchange: 'BINANCE',
+                            ticker: symbol,
+                            asset: 'USDT',
+                        }
 
-                // TAKE PROFIT
-                if (close >= takeprofit) {
-                    let body = {
-                        action: 'SELL',
-                        exchange: 'BINANCE',
-                        ticker: symbol,
-                        asset: 'USDT',
+                        axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                            .then(function (response) {
+                                console.log(response);
+                                recordPattern[symbol] = []
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                     }
-
-                    axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
-                        .then(function (response) {
-                            console.log(response);
-                            recordPattern[symbol] = []
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
                 }
+
 
             }
         }
@@ -181,20 +182,23 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                                 "lh: " + recordPatternValue['lh'] + "\n" +
                                 "hl: " + recordPatternValue['hl']
 
-                            let body = {
-                                action: 'BUY',
-                                exchange: 'BINANCE',
-                                ticker: symbol,
-                                asset: 'USDT',
-                            }
+                            if (tradeEnabled) {
 
-                            axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
-                                .then(function (response) {
-                                    console.log(response);
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
+                                let body = {
+                                    action: 'BUY',
+                                    exchange: 'BINANCE',
+                                    ticker: symbol,
+                                    asset: 'USDT',
+                                }
+
+                                axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                                    .then(function (response) {
+                                        console.log(response);
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                    });
+                            }
 
                             logic.sendMessageTelegram(message)
                             recordPatternValue['confirmed'] = true
