@@ -166,8 +166,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 tokenArray[symbol].push(ticker)
                 let pattern = logic.patternMatching(tokenArray[symbol], symbol)
-
-                if (_.isEmpty(recordPattern[symbol])) {
+                if (!_.isEmpty(pattern)) {
 
                     let recordPatternData = {
                         'symbol': symbol,
