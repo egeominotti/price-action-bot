@@ -99,12 +99,12 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         //         // Stop Loss
         //         if (close < stoploss) {
         //             // binance.marketSell("ETHBTC", quantity);
-        //             tradePosition[symbol] = {}
+        //             tradePosition[symbol] = []
         //         } else {
         //             // TAKE PROFIT
         //             if (close >= takeprofit) {
         //                 //binance.marketSell("ETHBTC", quantity);
-        //                 tradePosition[symbol] = {}
+        //                 tradePosition[symbol] = []
         //             }
         //         }
         //     }
@@ -163,33 +163,31 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                 console.log("STO CERCANDO ENTRATA")
 
                 if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
-                    console.log("DEVO FERMARMI")
-                    console.log("DEVO FERMARMI")
-                    console.log("DEVO FERMARMI")
-                    recordPattern[symbol] = []
-                    //fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {});
-                }
 
-                if (close > recordPattern[symbol]['LH']) {
-
-                    let message = "SYMBOL: " + symbol + "\n" +
-                        "INTERVAL: " + interval + "\n" +
-                        "PATTERN FOUND AT: " + recordPattern[symbol]['patternFoundTime'] + "\n" +
-                        "ENTRYPRICE: " + recordPattern[symbol]['ENTRY_PRICE'] + "\n" +
-                        "TAKEPROFIT: " + recordPattern[symbol]['TAKE_PROFIT'] + "\n" +
-                        "STOPLOSS:  " + recordPattern[symbol]['STOP_LOSS'] + "\n" +
-                        "HH: " + recordPattern[symbol]['HH'] + "\n" +
-                        "LL: " + recordPattern[symbol]['LL'] + "\n" +
-                        "LH: " + recordPattern[symbol]['LH'] + "\n" +
-                        "HL: " + recordPattern[symbol]['HL']
-
-                    recordPattern[symbol]['confirmed'] = true
+                    console.log("DEVO FERMARMI")
+                    // Cancello il pattern e ricominco
                     recordPattern[symbol] = []
 
-                    //fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {});
+                } else {
 
-                    logic.sendMessageTelegram(message)
+                    if (close > recordPattern[symbol]['LH']) {
+
+                        let message = "SYMBOL: " + symbol + "\n" +
+                            "INTERVAL: " + interval + "\n" +
+                            "ENTRY FOUND AT: " + recordPattern[symbol]['patternFoundTime'] + "\n" +
+                            "ENTRYPRICE: " + recordPattern[symbol]['ENTRY_PRICE'] + "\n" +
+                            "TAKEPROFIT: " + recordPattern[symbol]['TAKE_PROFIT'] + "\n" +
+                            "STOPLOSS:  " + recordPattern[symbol]['STOP_LOSS'] + "\n" +
+                            "HH: " + recordPattern[symbol]['HH'] + "\n" +
+                            "LL: " + recordPattern[symbol]['LL'] + "\n" +
+                            "LH: " + recordPattern[symbol]['LH'] + "\n" +
+                            "HL: " + recordPattern[symbol]['HL']
+
+                        recordPattern[symbol]['confirmed'] = true
+                        logic.sendMessageTelegram(message)
+                    }
                 }
+
             }
         }
 
