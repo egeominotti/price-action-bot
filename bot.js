@@ -109,7 +109,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         //         }
         //     }
         // }
-        let nameFile = 'data/recordPattern_' + interval + ".json";
+
+        let nameFile = 'data/pattern_' + interval + ".json";
 
         if (isFinal) {
 
