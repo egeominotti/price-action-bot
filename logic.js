@@ -33,7 +33,7 @@ function MaxTickHigh(storeData, startIndex) {
             highArray.push(tick['high'])
         }
 
-        let max = Math.min(...highArray)
+        let max = Math.max(...highArray)
 
         for (let index = startIndex; index < storeData.length; ++index) {
             let tick = storeData[index];
