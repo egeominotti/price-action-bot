@@ -211,10 +211,10 @@ function LowerLow(storeData, indexHigherHigh) {
 
 function LowerHigh(storeData, indexLowerLow) {
 
-    let max =       MaxTickHigh(storeData, indexLowerLow);
-    let close =     max['tick']['close']
-    let low =       max['tick']['low']
-    let indexMax =  max['tick']['index']
+    let max = MaxTickHigh(storeData, indexLowerLow);
+    let close = max['tick']['close']
+    let low = max['tick']['low']
+    let indexMax = max['tick']['index']
 
     for (let index = indexLowerLow + 1; index < storeData.length; index++) {
 
