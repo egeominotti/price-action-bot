@@ -105,9 +105,12 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             x: isFinal,
         } = ticks;
 
+
+
         if (isFinal) {
 
-            if (recordPattern[symbol] !== undefined) {
+            // Controlla che ci siano dei pattern da verificare e invia una notifica su telegram
+            if (recordPattern[symbol].length > 0) {
                 for (let pattern of recordPattern) {
                     console.log(pattern)
                     if (close > pattern['LH']) {
@@ -124,8 +127,9 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                             "HL: " + pattern['HL']
 
                         logic.sendMessageTelegram(message)
-                        fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {});
-                         recordPattern[symbol] = []
+                        fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                        });
+                        //recordPattern[symbol] = []
                     }
                 }
             }
@@ -167,10 +171,9 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 // Salvo il pattern trovato, e lo confermo successivamente se e solo se non ne esiste un'altro da confermare
                 // Devo controllare che recordPattern sia vuoto l'array per quel simbolo
-                if(recordPatternData[symbol].length === 0) {
+                if (recordPatternData[symbol].length === 0) {
                     recordPattern[symbol].push(recordPatternData)
                 }
-
 
             } else {
                 console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol + " interval: " + interval)
