@@ -106,14 +106,15 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             x: isFinal,
         } = ticks;
 
-        // if (recordPattern[symbol] !== undefined && recordPattern[symbol]['confirm'] === true) {
-        //     // Faccio trading in realtime
-        //
-        //     let takeprofit = recordPattern[symbol]['takeprofit']
-        //     let stoploss = recordPattern[symbol]['stoploss']
-        //     let entryprice = recordPattern[symbol]['entryprice']
-        //     recordPattern[symbol] = []
-        // }
+        if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirm'] === true) {
+            // Faccio trading in realtime
+            console.log("Controllo le posizioni da gestire")
+            let takeprofit = recordPattern[symbol]['takeprofit']
+            let stoploss = recordPattern[symbol]['stoploss']
+            let entryprice = recordPattern[symbol]['entryprice']
+            console.log("Sblocco la ricerca del pattern")
+            recordPattern[symbol] = []
+        }
 
         if (isFinal) {
 
