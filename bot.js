@@ -122,11 +122,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         if (isFinal) {
 
             if (!_.isEmpty(recordPattern[symbol]) && recordPattern[symbol]['confirmed'] === false) {
-
-                console.log(recordPattern[symbol])
                 if (close > recordPattern[symbol]['LH']) {
-
-                    console.log("Pattern confermato");
 
                     let message = "SYMBOL: " + symbol + "\n" +
                         "INTERVAL: " + interval + "\n" +
@@ -140,11 +136,10 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         "HL: " + recordPattern[symbol]['HL']
 
                     recordPattern[symbol]['confirmed'] = true
+                    recordPattern[symbol] = []
 
                     logic.sendMessageTelegram(message)
 
-                    recordPattern[symbol] = []
-                    console.log(recordPattern[symbol])
                 }
 
                 if (close < recordPattern[symbol]['LL'] || close > recordPattern[symbol]['HH']) {
@@ -193,7 +188,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     console.log("Finito salvataggio pattern, procedo al controllo")
                     console.log(recordPattern[symbol])
 
-                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {});
+                    fs.writeFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    });
                 }
             }
         }
