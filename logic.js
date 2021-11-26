@@ -121,7 +121,7 @@ function HigherHigh(storeData) {
         if (tick['low'] < low && tick['close'] < close) {
 
             return {
-                'index': index,
+                'index': maxIndex,
                 'value': max['max']
             };
 
@@ -144,7 +144,7 @@ function HigherHigh(storeData) {
                     if (nextTick['low'] < tick['low'] && nextTick['close'] < tick['close']) {
 
                         return {
-                            'index': index,
+                            'index': maxIndex,
                             'value': max['max']
                         };
 
@@ -162,6 +162,7 @@ function LowerLow(storeData, indexHigherHigh) {
     let min = MinTickLow(storeData, indexHigherHigh);
     let high = min['tick']['high']
     let close = min['tick']['close']
+    let minIndex = min['tick']['index']
 
     let fail = false
     let failIndex;
@@ -173,7 +174,7 @@ function LowerLow(storeData, indexHigherHigh) {
         if (tick['high'] > high && tick['close'] > close) {
 
             return {
-                'index': index,
+                'index': minIndex,
                 'value': min['min']
             };
 
@@ -195,7 +196,7 @@ function LowerLow(storeData, indexHigherHigh) {
                     if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
 
                         return {
-                            'index': index,
+                            'index': minIndex,
                             'value': min['min']
                         };
 
@@ -210,9 +211,10 @@ function LowerLow(storeData, indexHigherHigh) {
 
 function LowerHigh(storeData, indexLowerLow) {
 
-    let max = MaxTickHigh(storeData, indexLowerLow);
-    let close = max['tick']['close']
-    let low = max['tick']['low']
+    let max =       MaxTickHigh(storeData, indexLowerLow);
+    let close =     max['tick']['close']
+    let low =       max['tick']['low']
+    let indexMax =  max['tick']['index']
 
     for (let index = indexLowerLow + 1; index < storeData.length; index++) {
 
@@ -220,7 +222,7 @@ function LowerHigh(storeData, indexLowerLow) {
         if (currentTick['low'] < low && currentTick['close'] < close) {
 
             return {
-                'index': index,
+                'index': indexMax,
                 'value': max['max']
             };
         }
@@ -234,6 +236,7 @@ function HigherLow(storeData, indexLowerHigh) {
     let min = MinTickLow(storeData, indexLowerHigh);
     let close = min['tick']['close']
     let high = min['tick']['high']
+    let minIndex = min['tick']['index']
 
     for (let index = indexLowerHigh + 1; index < storeData.length; ++index) {
 
@@ -241,7 +244,7 @@ function HigherLow(storeData, indexLowerHigh) {
         if (tick['high'] > high && tick['close'] > close) {
 
             return {
-                'index': index,
+                'index': minIndex,
                 'value': min['min']
             };
         }
