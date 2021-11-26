@@ -119,12 +119,14 @@ function HigherHigh(storeData) {
 
         let tick = storeData[index];
         if (tick['low'] < low && tick['close'] < close) {
+
             return {
                 'index': index,
                 'value': max['max']
             };
 
         } else {
+
             fail = true
             failIndex = index;
             break;
@@ -208,7 +210,6 @@ function LowerLow(storeData, indexHigherHigh) {
 
 function LowerHigh(storeData, indexLowerLow) {
 
-
     let max = MaxTickHigh(storeData, indexLowerLow);
     let close = max['tick']['close']
     let low = max['tick']['low']
@@ -217,7 +218,11 @@ function LowerHigh(storeData, indexLowerLow) {
 
         let currentTick = storeData[index];
         if (currentTick['low'] < low && currentTick['close'] < close) {
-            return {'index': index, 'value': max['max']};
+
+            return {
+                'index': index,
+                'value': max['max']
+            };
         }
     }
 
@@ -225,7 +230,6 @@ function LowerHigh(storeData, indexLowerLow) {
 }
 
 function HigherLow(storeData, indexLowerHigh) {
-
 
     let min = MinTickLow(storeData, indexLowerHigh);
     let close = min['tick']['close']
@@ -235,7 +239,11 @@ function HigherLow(storeData, indexLowerHigh) {
 
         let tick = storeData[index];
         if (tick['high'] > high && tick['close'] > close) {
-            return {'index': index, 'value': min['min']};
+
+            return {
+                'index': index,
+                'value': min['min']
+            };
         }
     }
 
@@ -260,37 +268,38 @@ function patternMatching(storeData) {
 
                     let HL = HigherLow(storeData, LH['index'])
 
-                    let lastTicker;
-                    for (let currentTicker of storeData) {
-                        lastTicker = currentTicker;
-                    }
+                    if (HL !== -1) {
 
-                    if (lastTicker['close'] > LH['tick']['high']) {
+                        let lastTicker;
+                        for (let currentTicker of storeData) lastTicker = currentTicker;
 
-                        let entryPrice = LH['value'];
-                        let takeProfit = LH['value'] + (HH['value'] - LL['value'])
+                        if (lastTicker['close'] > LH['tick']['high']) {
 
-                        let msg = {
-                            'patternFoundTime': new Date().toISOString(),
-                            'TAKE_PROFIT': takeProfit,
-                            'ENTRY_PRICE': entryPrice,
-                            'STOP_LOSS': LL['value'],
-                            'HH': HH['value'],
-                            'LL': LL['value'],
-                            'LH': LH['value'],
-                            'HL': HL['value']
-                        }
-                        console.log(msg)
+                            let entryPrice = LH['value'];
+                            let takeProfit = LH['value'] + (HH['value'] - LL['value'])
 
-                        return {
-                            'patternFoundTime': new Date().toISOString(),
-                            'TAKE_PROFIT': takeProfit,
-                            'ENTRY_PRICE': entryPrice,
-                            'STOP_LOSS': LL['value'],
-                            'HH': HH['value'],
-                            'LL': LL['value'],
-                            'LH': LH['value'],
-                            'HL': HL['value']
+                            let msg = {
+                                'patternFoundTime': new Date().toISOString(),
+                                'TAKE_PROFIT': takeProfit,
+                                'ENTRY_PRICE': entryPrice,
+                                'STOP_LOSS': LL['value'],
+                                'HH': HH['value'],
+                                'LL': LL['value'],
+                                'LH': LH['value'],
+                                'HL': HL['value']
+                            }
+                            console.log(msg)
+
+                            return {
+                                'patternFoundTime': new Date().toISOString(),
+                                'TAKE_PROFIT': takeProfit,
+                                'ENTRY_PRICE': entryPrice,
+                                'STOP_LOSS': LL['value'],
+                                'HH': HH['value'],
+                                'LL': LL['value'],
+                                'LH': LH['value'],
+                                'HL': HL['value']
+                            }
                         }
                     }
                 }
