@@ -141,29 +141,31 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     logic.sendMessageTelegram(message)
 
-                    fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {});
+                    fs.appendFile("recordPattern.json", JSON.stringify(recordPattern, null, 4), function (err) {
+                    });
                     recordPattern[symbol] = []
                     console.log(recordPattern[symbol])
                 }
             }
 
-            indexArray[symbol] += 1
 
-            let ticker = {
-                'index': parseInt(indexArray[symbol]),
-                'symbol': symbol.toString(),
-                'open': parseFloat(open),
-                'close': parseFloat(close),
-                'low': parseFloat(low),
-                'high': parseFloat(high),
-                'interval': interval.toString(),
-                'time': new Date()
-            }
+            if (_.isEmpty(recordPattern[symbol])) {
 
-            tokenArray[symbol].push(ticker)
+                indexArray[symbol] += 1
 
-            let pattern = logic.patternMatching(tokenArray[symbol], symbol)
-            if (!_.isEmpty(pattern)) {
+                let ticker = {
+                    'index': parseInt(indexArray[symbol]),
+                    'symbol': symbol.toString(),
+                    'open': parseFloat(open),
+                    'close': parseFloat(close),
+                    'low': parseFloat(low),
+                    'high': parseFloat(high),
+                    'interval': interval.toString(),
+                    'time': new Date()
+                }
+
+                tokenArray[symbol].push(ticker)
+                let pattern = logic.patternMatching(tokenArray[symbol], symbol)
 
                 if (_.isEmpty(recordPattern[symbol])) {
 
@@ -188,9 +190,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     console.log("Finito salvataggio pattern, procedo al controllo")
                     console.log(recordPattern[symbol])
                 }
-
-            } else {
-                //console.log("Running for found pattern | HH | LL | LH | HL .... " + symbol + " interval: " + interval)
             }
         }
     });
