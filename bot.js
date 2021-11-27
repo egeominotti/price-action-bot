@@ -52,8 +52,8 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             const recordPatternValue = _.head(recordPattern[symbol]);
             if (recordPatternValue['confirmed'] === true) {
 
-                let takeprofit = recordPatternValue['takeprofit']
-                let stoploss = recordPatternValue['stoploss']
+                let takeprofit =    recordPatternValue['takeprofit']
+                let stoploss =      recordPatternValue['stoploss']
 
                 if (tradeEnabled) {
                     // Stop Loss
@@ -147,28 +147,15 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 const recordPatternValue = _.head(recordPattern[symbol]);
 
-                console.log("CLOSE: " + close)
-                console.log("LOW: " + low)
-                console.log("HIGH:" + high)
-                console.log("OPEN: " + open)
-
-                console.log("LL: " + recordPatternValue['ll'])
-                console.log("HH: " + recordPatternValue['hh'])
-                console.log("LH: " + recordPatternValue['lh'])
-                console.log("HL: " + recordPatternValue['hl'])
+                console.log(recordPatternValue);
 
                 if (recordPatternValue['confirmed'] === false) {
 
                     if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
-
-                        console.log("low < recordPatternValue['ll'] || high > recordPatternValue['hh']")
                         recordPattern[symbol] = []
-
                     } else {
 
                         if (close > recordPatternValue['lh']) {
-
-                            console.log("close > recordPatternValue['lh']")
 
                             let message = "Symbol: " + symbol + "\n" +
                                 "Interval: " + interval + "\n" +
