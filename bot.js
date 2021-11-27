@@ -13,6 +13,7 @@ let tokenArray = {}
 let indexArray = {};
 let recordPattern = {}
 let tradeEnabled = false;
+let apiUrlTrade = 'https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction';
 
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
 logic.sendMessageTelegram(startMessage)
@@ -70,7 +71,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                             asset: 'USDT',
                         }
 
-                        axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                        axios.post(apiUrlTrade, body)
                             .then(function (response) {
                                 console.log(response);
                             })
@@ -101,7 +102,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                             asset: 'USDT',
                         }
 
-                        axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                        axios.post(apiUrlTrade, body)
                             .then(function (response) {
                                 console.log(response);
 
@@ -198,7 +199,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                                     asset: 'USDT',
                                 }
 
-                                axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                                axios.post(apiUrlTrade, body)
                                     .then(function (response) {
                                         console.log(response);
                                     })
