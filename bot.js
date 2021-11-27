@@ -93,6 +93,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     let takeProfitPercentage = (takeprofit - entryprice) / entryprice
 
                     if (tradeEnabled) {
+
                         let body = {
                             action: 'SELL',
                             exchange: 'BINANCE',
