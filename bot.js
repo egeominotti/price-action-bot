@@ -81,7 +81,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     let message = "Symbol: " + symbol + "\n" +
                         "Interval: " + interval + "\n" +
-                        "Stop loss percentage: " + _.round(stopLossPercentage, 2)
+                        "Stop loss percentage: " + _.round(stopLossPercentage * 100, 3)
                     logic.sendMessageTelegram(message)
                     recordPattern[symbol] = []
 
@@ -112,7 +112,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     let message = "Symbol: " + symbol + "\n" +
                         "Interval: " + interval + "\n" +
-                        "Takeprofit percentage: " + _.round(takeProfitPercentage, 2)
+                        "Takeprofit percentage: " + _.round(takeProfitPercentage * 100, 3)
 
                     logic.sendMessageTelegram(message)
                     recordPattern[symbol] = []
@@ -168,8 +168,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             } else {
 
                 const recordPatternValue = _.head(recordPattern[symbol]);
-
-                //console.log(recordPatternValue);
+                console.log(recordPatternValue);
 
                 if (recordPatternValue['confirmed'] === false) {
 
