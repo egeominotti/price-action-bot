@@ -81,7 +81,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     let message = "Symbol: " + symbol + "\n" +
                         "Interval: " + interval + "\n" +
-                        "Stop loss percentage: " + _.round(stopLossPercentage * 100, 2)
+                        "Stop loss percentage: " + _.round(stopLossPercentage * 100, 2) + "%"
                     logic.sendMessageTelegram(message)
                     recordPattern[symbol] = []
 
@@ -113,7 +113,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     let message = "Symbol: " + symbol + "\n" +
                         "Interval: " + interval + "\n" +
-                        "Takeprofit percentage: " + _.round(takeProfitPercentage * 100, 2)
+                        "Takeprofit percentage: " + _.round(takeProfitPercentage * 100, 2) + "%"
 
                     logic.sendMessageTelegram(message)
                     recordPattern[symbol] = []
