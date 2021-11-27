@@ -1,14 +1,15 @@
 const Binance = require('node-binance-api');
 const logic = require('./logic');
 const axios = require('axios').default;
-//const coins = require('./coins');
+const coins = require('./coins');
 const fs = require('fs');
 const _ = require("lodash");
 const binance = new Binance();
 const args = process.argv;
 
-let coins = []
+//let coins = []
 let timeFrame = args[2]
+let coinsArray = coins.getCoins()
 let tokenArray = {}
 let indexArray = {};
 let recordPattern = {}
@@ -24,18 +25,18 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
         return console.log(err);
     }
 
-    let parsedData = JSON.parse(data)
-    for (const [key, value] of Object.entries(parsedData)) {
-        coins.push(key)
-    }
+    // let parsedData = JSON.parse(data)
+    // for (const [key, value] of Object.entries(parsedData)) {
+    //     coins.push(key)
+    // }
 
-    for (const token of coins) {
+    for (const token of coinsArray) {
         indexArray[token] = -1;
         tokenArray[token] = [];
         recordPattern[token] = [];
     }
 
-    binance.websockets.candlesticks(coins, timeFrame, (candlesticks) => {
+    binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
         let {
@@ -69,6 +70,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                             exchange: 'BINANCE',
                             ticker: symbol,
                             asset: 'USDT',
+                            coins: coinsArray.length
                         }
 
                         axios.post(apiUrlTrade, body)
@@ -100,6 +102,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                             exchange: 'BINANCE',
                             ticker: symbol,
                             asset: 'USDT',
+                            coins: coinsArray.length
                         }
 
                         axios.post(apiUrlTrade, body)
@@ -197,6 +200,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                                     exchange: 'BINANCE',
                                     ticker: symbol,
                                     asset: 'USDT',
+                                    coins: coinsArray.length
                                 }
 
                                 axios.post(apiUrlTrade, body)

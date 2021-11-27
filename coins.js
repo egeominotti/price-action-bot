@@ -1,16 +1,14 @@
 function getCoins() {
 
     return [
-        'ENJUSDT',
         'SANDUSDT',
+        'ENJUSDT',
         'MANAUSDT',
-        'AXSUSDT',
-        'ALICEUSDT',
         'DARUSDT',
+        'ALICEUSDT',
+        'AXSUSDT',
         'MBOXUSDT',
         'TLMUSDT',
-        'CROUSDT',
-        'KDAUSDT',
         'DOTUSDT',
         'ETHUSDT',
         'BTCUSDT',
@@ -28,9 +26,6 @@ function getCoins() {
         'BNBUSDT',
         'VETUSDT',
         'FTTUSDT',
-        'GALAXUSDT',
-        'CHRUSDT',
-        'TVKUSDT',
     ];
 }
 
