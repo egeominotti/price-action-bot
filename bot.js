@@ -73,7 +73,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
                             .then(function (response) {
                                 console.log(response);
-                                recordPattern[symbol] = []
                             })
                             .catch(function (error) {
                                 console.log(error);
@@ -84,6 +83,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         "Interval: " + interval + "\n" +
                         "Stop loss percentage: " + _.round(stopLossPercentage, 2)
                     logic.sendMessageTelegram(message)
+                    recordPattern[symbol] = []
 
                 }
 
@@ -103,7 +103,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
                             .then(function (response) {
                                 console.log(response);
-                                recordPattern[symbol] = []
+
                             })
                             .catch(function (error) {
                                 console.log(error);
@@ -115,6 +115,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                         "Takeprofit percentage: " + _.round(takeProfitPercentage, 2)
 
                     logic.sendMessageTelegram(message)
+                    recordPattern[symbol] = []
 
                 }
             }
@@ -168,7 +169,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                 const recordPatternValue = _.head(recordPattern[symbol]);
 
-                console.log(recordPatternValue);
+                //console.log(recordPatternValue);
 
                 if (recordPatternValue['confirmed'] === false) {
 
