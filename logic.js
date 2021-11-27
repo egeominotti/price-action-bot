@@ -231,7 +231,7 @@ function LowerHigh(storeData, indexLowerLow) {
     return -1;
 }
 
-function HigherLow(storeData, indexLowerHigh) {
+function HigherLow(storeData, indexLowerHigh, maxLowerHigh) {
 
     let min = MinTickLow(storeData, indexLowerHigh);
     let close = min['tick']['close']
@@ -241,7 +241,7 @@ function HigherLow(storeData, indexLowerHigh) {
     for (let index = indexLowerHigh + 1; index < storeData.length; ++index) {
 
         let tick = storeData[index];
-        if (tick['high'] > high && tick['close'] > close) {
+        if (tick['high'] > high && tick['close'] > close && high < maxLowerHigh) {
 
             return {
                 'index': minIndex,
@@ -271,7 +271,7 @@ function patternMatching(storeData, symbol) {
             if (LH !== -1) {
 
                 //console.log("Confermato LH: " + symbol)
-                let HL = HigherLow(storeData, LH['index'])
+                let HL = HigherLow(storeData, LH['index'], LH['value'])
 
                 if (HL !== -1) {
 
