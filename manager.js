@@ -40,17 +40,16 @@ binance.exchangeInfo(function (error, data) {
 });
 
 let timeFrame = [
-    '1m',
     '5m',
     '15m',
-    // '1h',
-    // '4h',
-    // '8h',
-    // '1D',
-    // '3D',
-    // '1W',
+    '30m',
+    '1h',
+    '4h',
+    '1D',
+    '3D',
+    '1W',
+    '1M',
 ]
-
 
 
 for (let time of timeFrame) {
