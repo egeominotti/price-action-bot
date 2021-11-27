@@ -15,6 +15,7 @@ let indexArray = {};
 let recordPattern = {}
 let tradeEnabled = false;
 let apiUrlTrade = 'https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction';
+let balance = 10000
 
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
 logic.sendMessageTelegram(startMessage)
