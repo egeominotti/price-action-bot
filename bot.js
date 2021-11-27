@@ -138,7 +138,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                     tokenArray[symbol] = [];
                     indexArray[symbol] = -1
 
-                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), function (err) {
+                    fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
                     });
 
                 }
