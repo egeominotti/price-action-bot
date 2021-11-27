@@ -52,12 +52,16 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
             const recordPatternValue = _.head(recordPattern[symbol]);
             if (recordPatternValue['confirmed'] === true) {
 
-                let takeprofit =    recordPatternValue['takeprofit']
-                let stoploss =      recordPatternValue['stoploss']
+                let entryprice = recordPatternValue['entryprice']
+                let takeprofit = recordPatternValue['takeprofit']
+                let stoploss = recordPatternValue['stoploss']
 
-                if (tradeEnabled) {
-                    // Stop Loss
-                    if (close <= stoploss) {
+                // Stop Loss
+                if (close <= stoploss) {
+
+                    let stopLossPercentage = (stoploss - entryprice) / entryprice
+
+                    if (tradeEnabled) {
 
                         let body = {
                             action: 'SELL',
@@ -76,30 +80,47 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                             });
                     }
 
-                    // TAKE PROFIT
-                    if (close >= takeprofit) {
-                        let body = {
-                            action: 'SELL',
-                            exchange: 'BINANCE',
-                            ticker: symbol,
-                            asset: 'USDT',
-                        }
+                    let message = "Symbol: " + symbol + "\n" +
+                        "Interval: " + interval + "\n" +
+                        "Stop loss percentage: " + _.round(stopLossPercentage, 2)
+                    logic.sendMessageTelegram(message)
 
-                        axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
-                            .then(function (response) {
-                                console.log(response);
-                                recordPattern[symbol] = []
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
-                    }
                 }
 
+                // TAKE PROFIT
+                if (close >= takeprofit) {
 
+                    let takeProfitPercentage = (takeprofit - entryprice) / entryprice
+
+                    if (tradeEnabled) {
+                        let body = {
+                            action: 'SELL',
+                            exchange: 'BINANCE',
+                            ticker: symbol,
+                            asset: 'USDT',
+                        }
+
+                        axios.post('https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction', body)
+                            .then(function (response) {
+                                console.log(response);
+                                recordPattern[symbol] = []
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
+
+                    let message = "Symbol: " + symbol + "\n" +
+                        "Interval: " + interval + "\n" +
+                        "Takeprofit percentage: " + _.round(takeProfitPercentage, 2)
+
+                    logic.sendMessageTelegram(message)
+
+                }
             }
         }
 
+        // Controllo alla chiusura della candela
         if (isFinal) {
 
             if (_.isEmpty(recordPattern[symbol])) {
@@ -123,7 +144,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                     let recordPatternData = {
                         'symbol': symbol,
-                        'entryprice': pattern['entryprice'],
+                        'entryprice': 0,
                         'takeprofit': pattern['takeprofit'],
                         'stoploss': pattern['stoploss'],
                         'hh': pattern['hh'],
@@ -160,7 +181,6 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
                             let message = "Symbol: " + symbol + "\n" +
                                 "Interval: " + interval + "\n" +
                                 "Entry found at: " + new Date().toISOString() + "\n" +
-                                "entryprice: " + recordPatternValue['entryprice'] + "\n" +
                                 "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
                                 "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
                                 "hh: " + recordPatternValue['hh'] + "\n" +
@@ -188,6 +208,7 @@ fs.readFile('symbols.json', 'utf8', function (err, data) {
 
                             logic.sendMessageTelegram(message)
                             recordPatternValue['confirmed'] = true
+                            recordPatternValue['entryprice'] = close
 
                         }
                     }
