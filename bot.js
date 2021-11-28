@@ -207,6 +207,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                         let symbolReplaced = symbol.replace('USDT', '/USDT')
                         console.log(symbolReplaced)
+
+                        // Filter with ema = 200
                         client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
 
                             console.log("Result: ", result);
