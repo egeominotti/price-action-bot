@@ -1,8 +1,4 @@
 const {spawn} = require("child_process");
-const Binance = require("node-binance-api");
-const binance = new Binance();
-const fs = require("fs");
-
 
 // binance.exchangeInfo(function (error, data) {
 //
@@ -40,7 +36,7 @@ const fs = require("fs");
 // });
 
 let timeFrame = [
-    '1m',
+    //'1m',
     // '5m',
     // '15m',
     // //'30m',
