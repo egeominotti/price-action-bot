@@ -18,7 +18,6 @@ function getCoins() {
         'AVAXUSDT',
         'UNIUSDT',
         'MATICUSDT',
-        'ADAUSDT',
         'EGLDUSDT',
         'ATOMUSDT',
         'FTMUSDT',
@@ -39,7 +38,6 @@ function getCoins() {
         'MINAUSDT',
         'COMPUSDT',
         'SRMUSDT',
-        'FTMUSDT',
         'KEEPUSDT',
         'BATUSDT',
         'HIVEUSDT',
@@ -50,7 +48,7 @@ function getCoins() {
         'RUNEUSDT',
         'ONEUSDT',
         'ZENUSDT',
-        'OGNUSDT'
+        'OGNUSDT',
     ];
 }
 

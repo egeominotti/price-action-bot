@@ -21,8 +21,9 @@ let balance = 5000
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
 logic.sendMessageTelegram(startMessage)
 
-
+console.log(coinsArray)
 for (const token of coinsArray) {
+    console.log(token)
     indexArray[token] = -1;
     tokenArray[token] = [];
     recordPattern[token] = [];
@@ -36,8 +37,13 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
         h: high,
         l: low,
         c: close,
+        v: volume,
+        n: trades,
         i: interval,
         x: isFinal,
+        q: quoteVolume,
+        V: buyVolume,
+        Q: quoteBuyVolume
     } = ticks;
 
     let nameFile = 'data/pattern_' + interval + ".json";
