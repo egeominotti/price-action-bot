@@ -19,8 +19,6 @@ const timestampEnd = Date.parse(new Date())
 let ticksArray = []
 
 binance.candlesticks("ETHUSDT", "4h", (error, ticks, symbol) => {
-    let last_tick = ticks[ticks.length - 1];
-    let [time, open, high, low, close, volume, closeTime, assetVolume, trades, buyBaseVolume, buyAssetVolume, ignored] = last_tick;
 
     let index = 0;
     for (let t of ticks) {
@@ -33,14 +31,15 @@ binance.candlesticks("ETHUSDT", "4h", (error, ticks, symbol) => {
             'close': parseFloat(close),
             'low': parseFloat(low),
             'high': parseFloat(high),
-            'time': time
+            'time': time,
         }
 
         index++;
-
         ticksArray.push(ticker)
         let pattern = logic.patternMatching(ticksArray, symbol)
-        console.log(pattern)
+        if (!_.isEmpty(pattern)) {
+            console.log(pattern)
+        }
 
     }
 
