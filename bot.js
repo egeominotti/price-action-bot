@@ -25,7 +25,6 @@ let balance = 5000
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
 logic.sendMessageTelegram(startMessage)
 
-console.log(coinsArray)
 for (const token of coinsArray) {
     console.log(token)
     indexArray[token] = -1;
