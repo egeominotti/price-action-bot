@@ -26,7 +26,6 @@ let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFr
 logic.sendMessageTelegram(startMessage)
 
 for (const token of coinsArray) {
-    console.log(token)
     indexArray[token] = -1;
     tokenArray[token] = [];
     recordPattern[token] = [];
