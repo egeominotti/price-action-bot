@@ -15,6 +15,7 @@ let indexArray = {};
 let recordPattern = {}
 let tradeEnabled = false;
 let apiUrlTrade = 'https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction';
+
 // Balace start of 5000 dollars
 let balance = 5000
 
@@ -52,9 +53,9 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
         const recordPatternValue = _.head(recordPattern[symbol]);
         if (recordPatternValue['confirmed'] === true) {
 
-            let entryprice =    recordPatternValue['entryprice']
-            let takeprofit =    recordPatternValue['takeprofit']
-            let stoploss =      recordPatternValue['stoploss']
+            let entryprice = recordPatternValue['entryprice']
+            let takeprofit = recordPatternValue['takeprofit']
+            let stoploss = recordPatternValue['stoploss']
 
             // Stop Loss
             if (close <= stoploss) {
@@ -63,7 +64,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 let stopLossValue = stoploss - entryprice
                 stopLossPercentage = _.round(stopLossPercentage * 100, 2)
 
-                balance = balance - stopLossValue
+                balance = balance + stopLossValue
 
                 if (tradeEnabled) {
 
@@ -87,6 +88,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 let message = "Symbol: " + symbol + "\n" +
                     "Interval: " + interval + "\n" +
                     "Balance: " + balance + "\n" +
+                    "Entry data: " + recordPatternValue['entryData'] + "\n" +
                     "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
                     "hh: " + recordPatternValue['hh'] + "\n" +
                     "ll: " + recordPatternValue['ll'] + "\n" +
@@ -130,6 +132,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 let message = "Symbol: " + symbol + "\n" +
                     "Interval: " + interval + "\n" +
                     "Balance: " + balance + "\n" +
+                    "Entry data: " + recordPatternValue['entryData'] + "\n" +
                     "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
                     "hh: " + recordPatternValue['hh'] + "\n" +
                     "ll: " + recordPatternValue['ll'] + "\n" +
@@ -175,6 +178,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     'lh': pattern['lh'],
                     'hl': pattern['hl'],
                     'confirmed': false,
+                    'entryData': null
                 }
 
                 recordPattern[symbol].push(recordPatternData)
@@ -232,6 +236,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         logic.sendMessageTelegram(message)
                         recordPatternValue['confirmed'] = true
                         recordPatternValue['entryprice'] = close
+                        recordPatternValue['entryData'] = new Date().toString()
 
                     }
                 }
