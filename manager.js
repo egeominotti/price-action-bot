@@ -36,16 +36,13 @@ const {spawn} = require("child_process");
 // });
 
 let timeFrame = [
-    //'1m',
     '5m',
     '15m',
-    '30m',
     '1h',
     '4h',
-    // '1D',
-    // '3D',
-    // '1W',
-    //'1M',
+    '1D',
+    '3D',
+    '1W',
 ]
 
 
