@@ -14,6 +14,11 @@ let timeFrame = [
     '30m',
     '1h',
     '4h',
+    '8h',
+    '1D',
+    '3D',
+    '1W',
+    '1M',
 ]
 
 let ticksArray = []
@@ -26,48 +31,50 @@ for (let symbol of coinsArray) {
 
         binance.candlesticks(symbol, tt, (error, ticks, symbol) => {
 
+            if (!_.isEmpty(ticks)) {
+                console.log(ticks)
+                let index = 0;
+                for (let t of ticks) {
+                    let [time, open, high, low, close, ignored] = t;
 
-            let index = 0;
-            for (let t of ticks) {
-                let [time, open, high, low, close, ignored] = t;
+                    let ticker = {
+                        'index': index,
+                        'symbol': symbol.toString(),
+                        'open': parseFloat(open),
+                        'close': parseFloat(close),
+                        'low': parseFloat(low),
+                        'high': parseFloat(high),
+                        'time': time,
+                    }
 
-                let ticker = {
-                    'index': index,
-                    'symbol': symbol.toString(),
-                    'open': parseFloat(open),
-                    'close': parseFloat(close),
-                    'low': parseFloat(low),
-                    'high': parseFloat(high),
-                    'time': time,
-                }
+                    index++;
+                    ticksArray.push(ticker)
+                    let pattern = logic.patternMatching(ticksArray, symbol)
+                    if (!_.isEmpty(pattern)) {
+                        console.log(pattern)
+                        patternData = pattern
+                        ticksArray = []
+                        index = 0;
+                    }
 
-                index++;
-                ticksArray.push(ticker)
-                let pattern = logic.patternMatching(ticksArray, symbol)
-                if (!_.isEmpty(pattern)) {
-                    console.log(pattern)
-                    patternData = pattern
-                    ticksArray = []
-                    index = 0;
-                }
-
-                if (patternData !== undefined) {
-                    if (low < patternData['ll'] || close > patternData['hh']) {
-                        patternData = undefined;
-
-                    } else {
-
-                        if (close > patternData['lh']) {
-
-                            patternData['symbol'] = symbol;
-                            patternData['timeframe'] = tt
-                            patternData['date'] = new Date(time).toLocaleString();
-                            patternDataArray.push(patternData)
-
-                            fs.writeFileSync("backtest.json", JSON.stringify(patternDataArray, null, 4), function (err) {
-                            });
-
+                    if (patternData !== undefined) {
+                        if (low < patternData['ll'] || close > patternData['hh']) {
                             patternData = undefined;
+
+                        } else {
+
+                            if (close > patternData['lh']) {
+
+                                patternData['symbol'] = symbol;
+                                patternData['timeframe'] = tt
+                                patternData['date'] = new Date(time).toLocaleString();
+                                patternDataArray.push(patternData)
+
+                                fs.writeFileSync("backtest.json", JSON.stringify(patternDataArray, null, 4), function (err) {
+                                });
+
+                                patternData = undefined;
+                            }
                         }
                     }
                 }
