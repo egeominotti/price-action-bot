@@ -3,11 +3,14 @@ const logic = require('./logic');
 const axios = require('axios').default;
 const coins = require('./coins');
 const fs = require('fs');
+const taapi = require("taapi");
 const _ = require("lodash");
 const binance = new Binance();
 const args = process.argv;
 
-//let coins = []
+const client = taapi.client("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVnZW9taW5vdHRpQGdtYWlsLmNvbSIsImlhdCI6MTYzODEyNTY3MSwiZXhwIjo3OTQ1MzI1NjcxfQ.x_Fqp-QoIpR5trS4e9BVT7dISqN4t0DceggobbcThWc");
+
+
 let timeFrame = args[2]
 let coinsArray = coins.getCoins()
 let tokenArray = {}
@@ -204,39 +207,51 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                     if (close > recordPatternValue['lh']) {
 
-                        let message = "Symbol: " + symbol + "\n" +
-                            "Interval: " + interval + "\n" +
-                            "Entry found at: " + new Date().toISOString() + "\n" +
-                            "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                            "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                            "hh: " + recordPatternValue['hh'] + "\n" +
-                            "ll: " + recordPatternValue['ll'] + "\n" +
-                            "lh: " + recordPatternValue['lh'] + "\n" +
-                            "hl: " + recordPatternValue['hl']
+                        let symbolReplaced = symbol.replace('USDT','/USDT')
 
-                        if (tradeEnabled) {
+                        client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
 
-                            let body = {
-                                action: 'BUY',
-                                exchange: 'BINANCE',
-                                ticker: symbol,
-                                asset: 'USDT',
-                                coins: coinsArray.length
+                            console.log("Result: ", result);
+                            console.log(result)
+
+                            if (result['value'] < close) {
+
+                                let message = "Symbol: " + symbol + "\n" +
+                                    "Interval: " + interval + "\n" +
+                                    "Entry found at: " + new Date().toISOString() + "\n" +
+                                    "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                    "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                    "hh: " + recordPatternValue['hh'] + "\n" +
+                                    "ll: " + recordPatternValue['ll'] + "\n" +
+                                    "lh: " + recordPatternValue['lh'] + "\n" +
+                                    "hl: " + recordPatternValue['hl']
+
+                                if (tradeEnabled) {
+
+                                    let body = {
+                                        action: 'BUY',
+                                        exchange: 'BINANCE',
+                                        ticker: symbol,
+                                        asset: 'USDT',
+                                        coins: coinsArray.length
+                                    }
+
+                                    axios.post(apiUrlTrade, body)
+                                        .then(function (response) {
+                                            console.log(response);
+                                        })
+                                        .catch(function (error) {
+                                            console.log(error);
+                                        });
+                                }
+
+                                logic.sendMessageTelegram(message)
+                                recordPatternValue['confirmed'] = true
+                                recordPatternValue['entryprice'] = close
+                                recordPatternValue['entryData'] = new Date().toString()
                             }
+                        });
 
-                            axios.post(apiUrlTrade, body)
-                                .then(function (response) {
-                                    console.log(response);
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
-                        }
-
-                        logic.sendMessageTelegram(message)
-                        recordPatternValue['confirmed'] = true
-                        recordPatternValue['entryprice'] = close
-                        recordPatternValue['entryData'] = new Date().toString()
 
                     }
                 }

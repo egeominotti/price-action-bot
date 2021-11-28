@@ -36,6 +36,7 @@ const {spawn} = require("child_process");
 // });
 
 let timeFrame = [
+    '1m',
     '5m',
     '15m',
     '1h',
