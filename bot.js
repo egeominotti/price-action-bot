@@ -208,7 +208,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     if (close > recordPatternValue['lh']) {
 
                         let symbolReplaced = symbol.replace('USDT','/USDT')
-
+                        console.log(symbolReplaced)
                         client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
 
                             console.log("Result: ", result);
