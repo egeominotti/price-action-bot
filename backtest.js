@@ -32,7 +32,7 @@ for (let symbol of coinsArray) {
         binance.candlesticks(symbol, tt, (error, ticks, symbol) => {
 
             if (!_.isEmpty(ticks)) {
-                console.log(ticks)
+
                 let index = 0;
                 for (let t of ticks) {
                     let [time, open, high, low, close, ignored] = t;
@@ -51,7 +51,6 @@ for (let symbol of coinsArray) {
                     ticksArray.push(ticker)
                     let pattern = logic.patternMatching(ticksArray, symbol)
                     if (!_.isEmpty(pattern)) {
-                        console.log(pattern)
                         patternData = pattern
                         ticksArray = []
                         index = 0;
