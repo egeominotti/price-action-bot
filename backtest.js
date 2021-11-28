@@ -38,6 +38,7 @@ binance.candlesticks("ETHUSDT", "4h", (error, ticks, symbol) => {
         ticksArray.push(ticker)
         let pattern = logic.patternMatching(ticksArray, symbol)
         if (!_.isEmpty(pattern)) {
+            console.log(time)
             console.log(pattern)
         }
 
