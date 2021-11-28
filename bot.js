@@ -52,9 +52,9 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
         const recordPatternValue = _.head(recordPattern[symbol]);
         if (recordPatternValue['confirmed'] === true) {
 
-            let entryprice = recordPatternValue['entryprice']
-            let takeprofit = recordPatternValue['takeprofit']
-            let stoploss = recordPatternValue['stoploss']
+            let entryprice =    recordPatternValue['entryprice']
+            let takeprofit =    recordPatternValue['takeprofit']
+            let stoploss =      recordPatternValue['stoploss']
 
             // Stop Loss
             if (close <= stoploss) {
