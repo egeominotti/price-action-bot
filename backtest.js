@@ -5,46 +5,75 @@ const coins = require('./coins');
 const fs = require('fs');
 const _ = require("lodash");
 const binance = new Binance();
-const args = process.argv;
-const moment = require('moment');
 
-//let coins = []
 let coinsArray = coins.getCoins()
-let balance = 5000
 
-
-const timestampStart = Date.parse("26-02-2016".split('-').reverse().join('-'));
-const timestampEnd = Date.parse(new Date())
+let timeFrame = [
+    '5m',
+    '15m',
+    '30m',
+    '1h',
+    '4h',
+]
 
 let ticksArray = []
+let patternData = undefined
 
-binance.candlesticks("ETHUSDT", "4h", (error, ticks, symbol) => {
+for (let symbol of coinsArray) {
+    for (let tt of timeFrame) {
 
-    let index = 0;
-    for (let t of ticks) {
-        let [time, open, high, low, close, volume, closeTime, assetVolume, trades, buyBaseVolume, buyAssetVolume, ignored] = t;
+        binance.candlesticks(symbol, tt, (error, ticks, symbol) => {
 
-        let ticker = {
-            'index': index,
-            'symbol': symbol.toString(),
-            'open': parseFloat(open),
-            'close': parseFloat(close),
-            'low': parseFloat(low),
-            'high': parseFloat(high),
-            'time': time,
-        }
+            let index = 0;
+            for (let t of ticks) {
+                let [time, open, high, low, close, ignored] = t;
 
-        index++;
-        ticksArray.push(ticker)
-        let pattern = logic.patternMatching(ticksArray, symbol)
-        if (!_.isEmpty(pattern)) {
-            console.log(time)
-            console.log(pattern)
-        }
+                let ticker = {
+                    'index': index,
+                    'symbol': symbol.toString(),
+                    'open': parseFloat(open),
+                    'close': parseFloat(close),
+                    'low': parseFloat(low),
+                    'high': parseFloat(high),
+                    'time': time,
+                }
 
+                index++;
+                ticksArray.push(ticker)
+                let pattern = logic.patternMatching(ticksArray, symbol)
+                if (!_.isEmpty(pattern)) {
+                    console.log(pattern)
+                    patternData = pattern
+                    ticksArray = []
+                    index = 0;
+                }
+
+                if (patternData !== undefined) {
+                    if (low < patternData['ll'] || close > patternData['hh']) {
+                        patternData = undefined;
+
+                    } else {
+
+                        if (close > patternData['lh']) {
+                            console.log("TROVATO:" + symbol + " " + tt + " ")
+
+                            patternData['symbol'] = symbol;
+                            patternData['timeframe'] = tt
+                            patternData['date'] = time;
+
+
+                            fs.appendFileSync("backtest.json", JSON.stringify(patternData, null, 4), function (err) {
+                            });
+                            patternData = undefined;
+
+
+                        }
+                    }
+                }
+            }
+
+        }, {limit: 1000, endTime: Date.parse(new Date())});
     }
-
-}, {limit: 1000, endTime: timestampEnd});
-
+}
 
 
