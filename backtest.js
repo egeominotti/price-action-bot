@@ -18,11 +18,14 @@ let timeFrame = [
 
 let ticksArray = []
 let patternData = undefined
+let patternDataArray = []
 
 for (let symbol of coinsArray) {
+
     for (let tt of timeFrame) {
 
         binance.candlesticks(symbol, tt, (error, ticks, symbol) => {
+
 
             let index = 0;
             for (let t of ticks) {
@@ -55,24 +58,22 @@ for (let symbol of coinsArray) {
                     } else {
 
                         if (close > patternData['lh']) {
-                            console.log("TROVATO:" + symbol + " " + tt + " ")
 
                             patternData['symbol'] = symbol;
                             patternData['timeframe'] = tt
-                            patternData['date'] = time;
+                            patternData['date'] = new Date(time).toLocaleString();
+                            patternDataArray.push(patternData)
 
-
-                            fs.appendFileSync("backtest.json", JSON.stringify(patternData, null, 4), function (err) {
+                            fs.writeFileSync("backtest.json", JSON.stringify(patternDataArray, null, 4), function (err) {
                             });
+
                             patternData = undefined;
-
-
                         }
                     }
                 }
             }
 
-        }, {limit: 1000, endTime: Date.parse(new Date())});
+        }, {limit: 1000});
     }
 }
 
