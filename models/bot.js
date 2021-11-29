@@ -8,12 +8,12 @@ database = admin
 protocol = mongodb+srv
  */
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/test');
+const Schema = mongoose.Schema
 
-const Cat = mongoose.model('Cat', {name: String});
 
-const kitty = new Cat({name: 'Zildjian'});
-kitty.save().then(() => console.log('meow'));
+const uri = 'mongodb+srv://egeominotti:cevfag12@cluster0.64cwx.mongodb.net/myFirstDatabase?retryWrites=true&w=majorit';
+
+mongoose.connect(uri);
 
 const botSchema = new Schema({
     nome: {
@@ -21,3 +21,18 @@ const botSchema = new Schema({
         required: false
     },
 });
+
+
+const test = mongoose.model('Bot', botSchema)
+
+const t = new test({
+    nome: 'egeo'
+})
+
+t.save().then((result) => {
+    console.log(result)
+}).catch((err) => {
+    console.log(err)
+});
+
+//module.exports = mongoose.model('Bot', botSchema)
