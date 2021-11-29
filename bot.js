@@ -16,7 +16,6 @@ mongoose.connect(uri);
 
 const client = taapi.client("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVnZW9taW5vdHRpQGdtYWlsLmNvbSIsImlhdCI6MTYzODEyNTY3MSwiZXhwIjo3OTQ1MzI1NjcxfQ.x_Fqp-QoIpR5trS4e9BVT7dISqN4t0DceggobbcThWc");
 
-
 let timeFrame = args[2]
 let coinsArray = coins.getCoins()
 let tokenArray = {}
@@ -286,17 +285,17 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                                         });
                                 }
 
-                                // let message = "Symbol: " + symbol + "\n" +
-                                //     "Interval: " + interval + "\n" +
-                                //     "Entry found at: " + new Date().toISOString() + "\n" +
-                                //     "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                //     "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                //     "hh: " + recordPatternValue['hh'] + "\n" +
-                                //     "ll: " + recordPatternValue['ll'] + "\n" +
-                                //     "lh: " + recordPatternValue['lh'] + "\n" +
-                                //     "hl: " + recordPatternValue['hl']
-                                //
-                                // logic.sendMessageTelegram(message)
+                                let message = "Symbol: " + symbol + "\n" +
+                                    "Interval: " + interval + "\n" +
+                                    "Entry found at: " + new Date().toISOString() + "\n" +
+                                    "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                    "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                    "hh: " + recordPatternValue['hh'] + "\n" +
+                                    "ll: " + recordPatternValue['ll'] + "\n" +
+                                    "lh: " + recordPatternValue['lh'] + "\n" +
+                                    "hl: " + recordPatternValue['hl']
+
+                                logic.sendMessageTelegram(message)
 
                                 recordPatternValue['confirmed'] = true
                                 recordPatternValue['entryprice'] = close
