@@ -279,8 +279,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                         //if (result['value'] < close) {
 
-                        const fib = fibonacci.fibonacciRetrecement({levels: {0: 57878.62, 1: 58060.18}})
-
+                        const fib = fibonacci.fibonacciRetrecement({levels: {0: recordPatternValue['hh'], 1: recordPatternValue['ll']}})
+                        console.log(fib)
 
                         if (tradeEnabled) {
 
