@@ -5,40 +5,43 @@ require('dotenv').config();
 
 mongoose.connect(process.env.URI_MONGODB);
 
+const sizeOnceTrade = 200
 let balance = 5000 // dollar
+let sumSizeTrade = 0;
 
 Logger.find({}, function (err, result) {
     if (err) {
         console.log(err);
     } else {
+        if (result.length > 0) {
+            for (let record of result) {
 
-        for (let record of result) {
+                let finaleTradeValue;
+                let sizeTrade = sizeOnceTrade
+                let entryprice = record.entryprice
+                let stopLossPercentage = record.stoplosspercentage
+                let stopLossValue = record.stoplossvalue;
+                let takeprofitpercentage = record.takeprofitpercentage
+                let takeprofitvalue = record.takeprofitvalue
 
-            let sizeTrade = 200
-            let entryprice = record.entryprice
-            let stopLossPercentage = record.stoplosspercentage
-            let takeprofitpercentage = record.takeprofitpercentage
 
-            console.log(entryprice)
-            console.log(stopLossPercentage)
-            console.log(takeprofitpercentage)
+                if (record.type === 'STOPLOSS') {
+                    let finaleSizeTrade = (sizeTrade / entryprice) * stopLossValue;
+                    finaleTradeValue = finaleSizeTrade - sizeTrade
+                }
 
-            if (record.type === 'STOPLOSS') {
+                if (record.type === 'TAKEPROFIT') {
+                    let finaleSizeTrade = (sizeTrade / entryprice) * takeprofitvalue;
+                    finaleTradeValue = finaleSizeTrade - sizeTrade
+                }
 
-                let fineSizeTrade = (sizeTrade / entryprice) *
-
-                balance = _.round((balance / entryprice) * stopLossPercentage, 2)
+                sumSizeTrade += finaleTradeValue;
+                console.log(sumSizeTrade)
             }
 
-            if (record.type === 'TAKEPROFIT') {
-
-                sizeTrade *= stopLossPercentage
-
-                balance = _.round((balance / entryprice) * takeprofitpercentage, 2)
-            }
-            console.log(balance)
+            let endBalance = _.round(balance + sumSizeTrade, 2)
+            console.log("Finale Balance: " + endBalance)
 
         }
-
     }
 });

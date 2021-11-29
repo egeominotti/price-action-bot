@@ -138,9 +138,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                     logic.sendMessageTelegram(message)
                 }
-
                 recordPattern[symbol] = []
-
             }
 
             // TAKE PROFIT
