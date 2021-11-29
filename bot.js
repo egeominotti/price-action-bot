@@ -262,64 +262,65 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     recordPattern[symbol] = []
                 } else {
 
+                    // 1) Strategy - Breakout
                     if (close > recordPatternValue['lh']) {
 
                         let symbolReplaced = symbol.replace('USDT', '/USDT')
                         console.log(symbolReplaced)
 
                         // Filter with ema = 200
-                        client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
+                        //client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
 
-                            console.log("Result: ", result);
-                            console.log(result)
+                        //console.log("Result: ", result);
+                        //console.log(result)
 
-                            if (result['value'] < close) {
+                        //if (result['value'] < close) {
 
-                                if (tradeEnabled) {
+                        if (tradeEnabled) {
 
-                                    let body = {
-                                        action: 'BUY',
-                                        exchange: 'BINANCE',
-                                        ticker: symbol,
-                                        asset: 'USDT',
-                                        coins: coinsArray.length
-                                    }
-
-                                    axios.post(apiUrlTrade, body)
-                                        .then(function (response) {
-                                            console.log(response);
-                                        })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                        });
-                                }
-
-                                if (isTelegramEnabled) {
-
-                                    let message = "Symbol: " + symbol + "\n" +
-                                        "Interval: " + interval + "\n" +
-                                        "Entry found at: " + new Date().toISOString() + "\n" +
-                                        "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                        "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                        "hh: " + recordPatternValue['hh'] + "\n" +
-                                        "ll: " + recordPatternValue['ll'] + "\n" +
-                                        "lh: " + recordPatternValue['lh'] + "\n" +
-                                        "hl: " + recordPatternValue['hl']
-
-                                    logic.sendMessageTelegram(message)
-                                }
-
-                                recordPatternValue['confirmed'] = true
-                                recordPatternValue['entryprice'] = close
-                                recordPatternValue['entryData'] = new Date().toString()
-                            } else {
-                                // Open short position
-                                recordPattern[symbol] = []
+                            let body = {
+                                action: 'BUY',
+                                exchange: 'BINANCE',
+                                ticker: symbol,
+                                asset: 'USDT',
+                                coins: coinsArray.length
                             }
-                        });
 
+                            axios.post(apiUrlTrade, body)
+                                .then(function (response) {
+                                    console.log(response);
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+                        }
 
+                        if (isTelegramEnabled) {
+
+                            let message = "Symbol: " + symbol + "\n" +
+                                "Interval: " + interval + "\n" +
+                                "Entry found at: " + new Date().toISOString() + "\n" +
+                                "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                "hh: " + recordPatternValue['hh'] + "\n" +
+                                "ll: " + recordPatternValue['ll'] + "\n" +
+                                "lh: " + recordPatternValue['lh'] + "\n" +
+                                "hl: " + recordPatternValue['hl']
+
+                            logic.sendMessageTelegram(message)
+                        }
+
+                        recordPatternValue['confirmed'] = true
+                        recordPatternValue['entryprice'] = close
+                        recordPatternValue['entryData'] = new Date().toString()
+
+                        //} else {
+                        // Open short position
+                        //    recordPattern[symbol] = []
+                        //}
+                        //});
                     }
+
                 }
             }
 
