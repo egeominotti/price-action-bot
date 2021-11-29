@@ -4,6 +4,7 @@ const logic = require('./logic');
 const axios = require('axios').default;
 const coins = require('./coins');
 const Logger = require('./models/logger');
+const fibonacci = require('./indicators/fibonacci');
 const fs = require('fs');
 const taapi = require("taapi");
 const _ = require("lodash");
@@ -11,6 +12,8 @@ const binance = new Binance();
 const args = process.argv;
 const uri = process.env.URI_MONGODB;
 require('dotenv').config();
+
+
 
 mongoose.connect(uri);
 
@@ -275,6 +278,9 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         //console.log(result)
 
                         //if (result['value'] < close) {
+
+                        const fib = fibonacci.fibonacciRetrecement({levels: {0: 57878.62, 1: 58060.18}})
+
 
                         if (tradeEnabled) {
 
