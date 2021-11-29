@@ -286,19 +286,18 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                                         });
                                 }
 
-                                tradeOpen++;
+                                // let message = "Symbol: " + symbol + "\n" +
+                                //     "Interval: " + interval + "\n" +
+                                //     "Entry found at: " + new Date().toISOString() + "\n" +
+                                //     "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                //     "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                //     "hh: " + recordPatternValue['hh'] + "\n" +
+                                //     "ll: " + recordPatternValue['ll'] + "\n" +
+                                //     "lh: " + recordPatternValue['lh'] + "\n" +
+                                //     "hl: " + recordPatternValue['hl']
+                                //
+                                // logic.sendMessageTelegram(message)
 
-                                let message = "Symbol: " + symbol + "\n" +
-                                    "Interval: " + interval + "\n" +
-                                    "Entry found at: " + new Date().toISOString() + "\n" +
-                                    "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                    "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                    "hh: " + recordPatternValue['hh'] + "\n" +
-                                    "ll: " + recordPatternValue['ll'] + "\n" +
-                                    "lh: " + recordPatternValue['lh'] + "\n" +
-                                    "hl: " + recordPatternValue['hl']
-
-                                logic.sendMessageTelegram(message)
                                 recordPatternValue['confirmed'] = true
                                 recordPatternValue['entryprice'] = close
                                 recordPatternValue['entryData'] = new Date().toString()
