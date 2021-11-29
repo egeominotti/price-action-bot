@@ -10,12 +10,9 @@ const taapi = require("taapi");
 const _ = require("lodash");
 const binance = new Binance();
 const args = process.argv;
-const uri = process.env.URI_MONGODB;
 require('dotenv').config();
 
-
-
-mongoose.connect(uri);
+mongoose.connect(process.env.URI_MONGODB);
 
 const client = taapi.client(process.env.API_KEY_TAAPI);
 
@@ -71,6 +68,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
         if (recordPatternValue['confirmed'] === true) {
 
             let entryprice = recordPatternValue['entryprice']
+            let entrydate = recordPatternValue['entrydate']
             let takeprofit = recordPatternValue['takeprofit']
             let stoploss = recordPatternValue['stoploss']
 
@@ -108,7 +106,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     symbol: symbol,
                     interval: interval,
                     balance: balance,
-                    entrydata: recordPatternValue['entryData'],
+                    entryprice: entryprice,
+                    entrydate: entrydate,
                     stoplosspercentage: stopLossPercentage,
                     stoplossdate: new Date(),
                     hh: recordPatternValue['hh'],
@@ -129,7 +128,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     let message = "Symbol: " + symbol + "\n" +
                         "Interval: " + interval + "\n" +
                         "Balance: " + balance + "\n" +
-                        "Entry data: " + recordPatternValue['entryData'] + "\n" +
+                        "Entry date: " + entrydate.toString() + "\n" +
                         "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
                         "hh: " + recordPatternValue['hh'] + "\n" +
                         "ll: " + recordPatternValue['ll'] + "\n" +
@@ -179,7 +178,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     symbol: symbol,
                     interval: interval,
                     balance: balance,
-                    entrydata: recordPatternValue['entryData'],
+                    entryprice: entryprice,
+                    entrydate: entrydate,
                     takeprofitpercentage: takeProfitPercentage,
                     takeprofitdate: new Date(),
                     hh: recordPatternValue['hh'],
@@ -198,7 +198,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     let message = "Symbol: " + symbol + "\n" +
                         "Interval: " + interval + "\n" +
                         "Balance: " + balance + "\n" +
-                        "Entry data: " + recordPatternValue['entryData'] + "\n" +
+                        "Entry data: " + entrydate.toString() + "\n" +
                         "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
                         "hh: " + recordPatternValue['hh'] + "\n" +
                         "ll: " + recordPatternValue['ll'] + "\n" +
@@ -245,11 +245,10 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     'lh': pattern['lh'],
                     'hl': pattern['hl'],
                     'confirmed': false,
-                    'entryData': null
+                    'entrydate': null
                 }
 
                 recordPattern[symbol].push(recordPatternData)
-
                 tokenArray[symbol] = [];
                 indexArray[symbol] = -1
             }
@@ -318,7 +317,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                         recordPatternValue['confirmed'] = true
                         recordPatternValue['entryprice'] = close
-                        recordPatternValue['entryData'] = new Date().toString()
+                        recordPatternValue['entrydate'] = new Date()
 
                         //} else {
                         // Open short position
