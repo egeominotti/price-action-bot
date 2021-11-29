@@ -14,13 +14,14 @@ const client = taapi.client("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im
 let timeFrame = args[2]
 let coinsArray = coins.getCoins()
 let tokenArray = {}
-let indexArray = {};
+let indexArray = {}
 let recordPattern = {}
 let tradeEnabled = false;
 let apiUrlTrade = 'https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction';
 
 // Balace start of 5000 dollars
 let balance = 5000
+let tradeOpen = 0
 
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
 logic.sendMessageTelegram(startMessage)
@@ -62,10 +63,9 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
             if (close <= stoploss) {
 
                 let stopLossPercentage = (stoploss - entryprice) / entryprice
-                let stopLossValue = stoploss - entryprice
                 stopLossPercentage = _.round(stopLossPercentage * 100, 2)
 
-                balance = balance + stopLossValue
+                balance = _.round((balance / entryprice) * stoploss, 2)
 
                 if (tradeEnabled) {
 
@@ -105,10 +105,9 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
             if (close >= takeprofit) {
 
                 let takeProfitPercentage = (takeprofit - entryprice) / entryprice
-                let takeProfitValue = takeprofit - entryprice
 
                 takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
-                balance = balance + takeProfitValue
+                balance = _.round((balance / entryprice) * takeprofit, 2)
 
                 if (tradeEnabled) {
 
@@ -144,6 +143,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 recordPattern[symbol] = []
 
             }
+
         }
     }
 
@@ -216,16 +216,6 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                             if (result['value'] < close) {
 
-                                let message = "Symbol: " + symbol + "\n" +
-                                    "Interval: " + interval + "\n" +
-                                    "Entry found at: " + new Date().toISOString() + "\n" +
-                                    "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                    "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                    "hh: " + recordPatternValue['hh'] + "\n" +
-                                    "ll: " + recordPatternValue['ll'] + "\n" +
-                                    "lh: " + recordPatternValue['lh'] + "\n" +
-                                    "hl: " + recordPatternValue['hl']
-
                                 if (tradeEnabled) {
 
                                     let body = {
@@ -244,6 +234,18 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                                             console.log(error);
                                         });
                                 }
+
+                                tradeOpen++;
+
+                                let message = "Symbol: " + symbol + "\n" +
+                                    "Interval: " + interval + "\n" +
+                                    "Entry found at: " + new Date().toISOString() + "\n" +
+                                    "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                    "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                    "hh: " + recordPatternValue['hh'] + "\n" +
+                                    "ll: " + recordPatternValue['ll'] + "\n" +
+                                    "lh: " + recordPatternValue['lh'] + "\n" +
+                                    "hl: " + recordPatternValue['hl']
 
                                 logic.sendMessageTelegram(message)
                                 recordPatternValue['confirmed'] = true

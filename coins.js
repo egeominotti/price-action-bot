@@ -49,6 +49,7 @@ function getCoins() {
         'ONEUSDT',
         'ZENUSDT',
         'OGNUSDT',
+        'GALAUSDT',
     ];
 }
 
