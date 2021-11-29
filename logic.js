@@ -210,10 +210,14 @@ function LowerLow(storeData, indexHigherHigh) {
 
 function LowerHigh(storeData, indexLowerLow) {
 
+    let fail = false
+    let failIndex;
+
     let max = MaxTickHigh(storeData, indexLowerLow);
     let close = max['tick']['close']
     let low = max['tick']['low']
-    let indexMax = max['tick']['index']
+    let maxIndex = max['tick']['index']
+
 
     for (let index = indexLowerLow + 1; index < storeData.length; index++) {
 
@@ -221,16 +225,44 @@ function LowerHigh(storeData, indexLowerLow) {
         if (currentTick['low'] < low && currentTick['close'] < close) {
 
             return {
-                'index': indexMax,
+                'index': maxIndex,
                 'value': max['max']
             };
+        } else {
+            fail = true
+            failIndex = index;
+            break;
         }
     }
+
+    // if (fail) {
+    //
+    //     for (let index = failIndex; index <= storeData.length; ++index) {
+    //
+    //         if (storeData[index] !== undefined) {
+    //             let tick = storeData[index];
+    //             if (storeData[index + 1] !== undefined) {
+    //                 let nextTick = storeData[index + 1]
+    //                 if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
+    //
+    //                     return {
+    //                         'index': maxIndex,
+    //                         'value': max['max']
+    //                     };
+    //
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     return -1;
 }
 
 function HigherLow(storeData, indexLowerHigh, maxLowerHigh) {
+
+    let fail = false
+    let failIndex;
 
     let min = MinTickLow(storeData, indexLowerHigh);
     let close = min['tick']['close']
@@ -246,8 +278,33 @@ function HigherLow(storeData, indexLowerHigh, maxLowerHigh) {
                 'index': minIndex,
                 'value': min['min']
             };
+        } else {
+            fail = true
+            failIndex = index;
+            break;
         }
     }
+
+    // if (fail) {
+    //
+    //     for (let index = failIndex; index <= storeData.length; ++index) {
+    //
+    //         if (storeData[index] !== undefined) {
+    //             let tick = storeData[index];
+    //             if (storeData[index + 1] !== undefined) {
+    //                 let nextTick = storeData[index + 1]
+    //                 if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
+    //
+    //                     return {
+    //                         'index': minIndex,
+    //                         'value': min['min']
+    //                     };
+    //
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     return -1;
 }
