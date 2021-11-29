@@ -21,7 +21,7 @@ let apiUrlTrade = 'https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/t
 
 // Balace start of 5000 dollars
 let balance = 5000
-let tradeOpen = 0
+let totalPercentage = 0
 
 let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
 logic.sendMessageTelegram(startMessage)
@@ -68,6 +68,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 let stopLossPercentage = (stoploss - entryprice) / entryprice
                 stopLossPercentage = _.round(stopLossPercentage * 100, 2)
 
+                totalPercentage += stopLossPercentage
+
                 balance = _.round((balance / entryprice) * stoploss, 2)
 
                 if (tradeEnabled) {
@@ -110,6 +112,9 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 let takeProfitPercentage = (takeprofit - entryprice) / entryprice
 
                 takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
+
+                totalPercentage += takeProfitPercentage
+
                 balance = _.round((balance / entryprice) * takeprofit, 2)
 
                 if (tradeEnabled) {
