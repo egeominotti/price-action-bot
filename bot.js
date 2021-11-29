@@ -57,7 +57,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
     // let dataValue = new Date();
     // let hour = dataValue.getHours();
     // if (hour < 1 && hour > 6) {}
-    let nameFile = 'data/pattern_' + interval + ".json";
+    //let nameFile = 'data/pattern_' + interval + ".json";
 
     if (!_.isEmpty(recordPattern[symbol])) {
         const recordPatternValue = _.head(recordPattern[symbol]);
@@ -237,8 +237,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 tokenArray[symbol] = [];
                 indexArray[symbol] = -1
 
-                fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {
-                });
+                //fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {});
 
             }
 
