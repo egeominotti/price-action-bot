@@ -37,7 +37,7 @@ require('dotenv').config();
 // });
 
 let timeFrame;
-if (process.env.ENV === 'production') {
+if (process.env.DEBUG === 'false') {
     timeFrame = [
         '1m',
         '5m',

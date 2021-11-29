@@ -29,7 +29,7 @@ let balance = 5000
 let totalPercentage = 0
 
 let isTelegramEnabled;
-if (process.env.ENV === 'production') {
+if (process.env.ENV === 'false') {
     isTelegramEnabled = true
 } else {
     isTelegramEnabled = false
