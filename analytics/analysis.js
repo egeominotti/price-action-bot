@@ -5,7 +5,6 @@ require('dotenv').config();
 
 mongoose.connect(process.env.URI_MONGODB);
 
-const sizeTradeValue = 200
 let balance = 5000 // dollar
 
 Logger.find({}, function (err, result) {
@@ -15,7 +14,7 @@ Logger.find({}, function (err, result) {
 
         for (let record of result) {
 
-            let sizeTrade = sizeTradeValue
+            let sizeTrade = 200
             let entryprice = record.entryprice
             let stopLossPercentage = record.stoplosspercentage
             let takeprofitpercentage = record.takeprofitpercentage
@@ -25,10 +24,16 @@ Logger.find({}, function (err, result) {
             console.log(takeprofitpercentage)
 
             if (record.type === 'STOPLOSS') {
+
+                let fineSizeTrade = (sizeTrade / entryprice) *
+
                 balance = _.round((balance / entryprice) * stopLossPercentage, 2)
             }
 
             if (record.type === 'TAKEPROFIT') {
+
+                sizeTrade *= stopLossPercentage
+
                 balance = _.round((balance / entryprice) * takeprofitpercentage, 2)
             }
             console.log(balance)

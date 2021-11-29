@@ -68,7 +68,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
         if (recordPatternValue['confirmed'] === true) {
 
             let entryprice = recordPatternValue['entryprice']
-            let entrydate = recordPatternValue['entrydate']
+            let entrypricedate = recordPatternValue['entrypricedate']
             let takeprofit = recordPatternValue['takeprofit']
             let stoploss = recordPatternValue['stoploss']
 
@@ -107,7 +107,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     interval: interval,
                     balance: balance,
                     entryprice: entryprice,
-                    entrydate: entrydate,
+                    entrypricedate: entrypricedate,
+                    stoplossvalue: stoploss,
                     stoplosspercentage: stopLossPercentage,
                     stoplossdate: new Date(),
                     hh: recordPatternValue['hh'],
@@ -179,7 +180,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     interval: interval,
                     balance: balance,
                     entryprice: entryprice,
-                    entrydate: entrydate,
+                    entrypricedate: entrypricedate,
+                    takeprofitvalue: takeprofit,
                     takeprofitpercentage: takeProfitPercentage,
                     takeprofitdate: new Date(),
                     hh: recordPatternValue['hh'],
@@ -245,7 +247,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     'lh': pattern['lh'],
                     'hl': pattern['hl'],
                     'confirmed': false,
-                    'entrydate': null
+                    'entrypricedate': null
                 }
 
                 recordPattern[symbol].push(recordPatternData)
@@ -267,8 +269,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     // 1) Strategy - Breakout
                     if (close > recordPatternValue['lh']) {
 
-                        let symbolReplaced = symbol.replace('USDT', '/USDT')
-                        console.log(symbolReplaced)
+                        //let symbolReplaced = symbol.replace('USDT', '/USDT')
+                        //console.log(symbolReplaced)
 
                         // Filter with ema = 200
                         //client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
@@ -278,7 +280,12 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                         //if (result['value'] < close) {
 
-                        const fib = fibonacci.fibonacciRetrecement({levels: {0: recordPatternValue['hh'], 1: recordPatternValue['ll']}})
+                        const fib = fibonacci.fibonacciRetrecement({
+                            levels: {
+                                0: recordPatternValue['hh'],
+                                1: recordPatternValue['ll']
+                            }
+                        })
                         console.log(fib)
 
                         if (tradeEnabled) {
@@ -317,7 +324,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                         recordPatternValue['confirmed'] = true
                         recordPatternValue['entryprice'] = close
-                        recordPatternValue['entrydate'] = new Date()
+                        recordPatternValue['entrypricedate'] = new Date()
 
                         //} else {
                         // Open short position
