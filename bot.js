@@ -14,7 +14,6 @@ require('dotenv').config();
 
 mongoose.connect(uri);
 
-
 const client = taapi.client(process.env.API_KEY_TAAPI);
 
 let timeFrame = args[2]
