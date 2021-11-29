@@ -49,6 +49,9 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
         Q: quoteBuyVolume
     } = ticks;
 
+    // let dataValue = new Date();
+    // let hour = dataValue.getHours();
+    // if (hour < 1 && hour > 6) {}
     let nameFile = 'data/pattern_' + interval + ".json";
 
     if (!_.isEmpty(recordPattern[symbol])) {
