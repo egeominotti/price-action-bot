@@ -19,11 +19,10 @@ Logger.find({}, function (err, result) {
                 let finaleTradeValue;
                 let sizeTrade = sizeOnceTrade
                 let entryprice = record.entryprice
-                let stopLossPercentage = record.stoplosspercentage
                 let stopLossValue = record.stoplossvalue;
-                let takeprofitpercentage = record.takeprofitpercentage
                 let takeprofitvalue = record.takeprofitvalue
-
+                let stopLossPercentage = record.stoplosspercentage
+                let takeprofitpercentage = record.takeprofitpercentage
 
                 if (record.type === 'STOPLOSS') {
                     let finaleSizeTrade = (sizeTrade / entryprice) * stopLossValue;
@@ -36,11 +35,10 @@ Logger.find({}, function (err, result) {
                 }
 
                 sumSizeTrade += finaleTradeValue;
-                console.log(sumSizeTrade)
             }
 
             let endBalance = _.round(balance + sumSizeTrade, 2)
-            console.log("Finale Balance: " + endBalance)
+            console.log("Final Balance: " + endBalance)
 
         }
     }
