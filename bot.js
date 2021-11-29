@@ -1,12 +1,18 @@
+const mongoose = require('mongoose');
 const Binance = require('node-binance-api');
 const logic = require('./logic');
 const axios = require('axios').default;
 const coins = require('./coins');
+const Logger = require('./models/logger');
 const fs = require('fs');
 const taapi = require("taapi");
 const _ = require("lodash");
 const binance = new Binance();
 const args = process.argv;
+const uri = 'mongodb+srv://egeominotti:cevfag12@cluster0.64cwx.mongodb.net/myFirstDatabase?retryWrites=true';
+
+mongoose.connect(uri);
+
 
 const client = taapi.client("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVnZW9taW5vdHRpQGdtYWlsLmNvbSIsImlhdCI6MTYzODEyNTY3MSwiZXhwIjo3OTQ1MzI1NjcxfQ.x_Fqp-QoIpR5trS4e9BVT7dISqN4t0DceggobbcThWc");
 
@@ -91,6 +97,24 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         });
                 }
 
+                const logger = new Logger({
+                    symbol: symbol,
+                    interval: interval,
+                    balance: balance,
+                    entrydata: recordPatternValue['entryData'],
+                    stoplosspercentage: stopLossPercentage,
+                    hh: recordPatternValue['hh'],
+                    ll: recordPatternValue['ll'],
+                    lh: recordPatternValue['lh'],
+                    hl: recordPatternValue['hl']
+                })
+
+                logger.save().then((result) => {
+                    console.log(result)
+                }).catch((err) => {
+                    console.log(err)
+                });
+
                 let message = "Symbol: " + symbol + "\n" +
                     "Interval: " + interval + "\n" +
                     "Balance: " + balance + "\n" +
@@ -136,6 +160,25 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                             console.log(error);
                         });
                 }
+
+                const logger = new Logger({
+                    symbol: symbol,
+                    interval: interval,
+                    balance: balance,
+                    entrydata: recordPatternValue['entryData'],
+                    takeprofitpercentage: takeProfitPercentage,
+                    hh: recordPatternValue['hh'],
+                    ll: recordPatternValue['ll'],
+                    lh: recordPatternValue['lh'],
+                    hl: recordPatternValue['hl']
+                })
+
+                logger.save().then((result) => {
+                    console.log(result)
+                }).catch((err) => {
+                    console.log(err)
+                });
+
 
                 let message = "Symbol: " + symbol + "\n" +
                     "Interval: " + interval + "\n" +
