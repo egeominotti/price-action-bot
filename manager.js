@@ -1,4 +1,5 @@
 const {spawn} = require("child_process");
+require('dotenv').config();
 
 // binance.exchangeInfo(function (error, data) {
 //
@@ -35,16 +36,23 @@ const {spawn} = require("child_process");
 //
 // });
 
-let timeFrame = [
-    //'1m',
-    '5m',
-    '15m',
-    '1h',
-    '4h',
-    '1D',
-    '3D',
-    '1W',
-]
+let timeFrame;
+if (process.env.ENV === 'production') {
+    timeFrame = [
+        '1m',
+        '5m',
+        '15m',
+        '1h',
+        '4h',
+        '1D',
+        '3D',
+        '1W',
+    ]
+} else {
+    timeFrame = [
+        '1m',
+    ]
+}
 
 
 for (let time of timeFrame) {

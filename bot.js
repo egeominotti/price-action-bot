@@ -9,12 +9,13 @@ const taapi = require("taapi");
 const _ = require("lodash");
 const binance = new Binance();
 const args = process.argv;
-const uri = 'mongodb+srv://egeominotti:cevfag12@cluster0.64cwx.mongodb.net/myFirstDatabase?retryWrites=true';
+const uri = process.env.URI_MONGODB;
+require('dotenv').config();
 
 mongoose.connect(uri);
 
 
-const client = taapi.client("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVnZW9taW5vdHRpQGdtYWlsLmNvbSIsImlhdCI6MTYzODEyNTY3MSwiZXhwIjo3OTQ1MzI1NjcxfQ.x_Fqp-QoIpR5trS4e9BVT7dISqN4t0DceggobbcThWc");
+const client = taapi.client(process.env.API_KEY_TAAPI);
 
 let timeFrame = args[2]
 let coinsArray = coins.getCoins()
@@ -22,14 +23,24 @@ let tokenArray = {}
 let indexArray = {}
 let recordPattern = {}
 let tradeEnabled = false;
-let apiUrlTrade = 'https://r2h3kkfk3a.execute-api.eu-south-1.amazonaws.com/api/tradingbotpriceaction';
+let apiUrlTrade = process.env.URI_API_TRADE;
 
-// Balace start of 5000 dollars
+
 let balance = 5000
 let totalPercentage = 0
 
-let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
-logic.sendMessageTelegram(startMessage)
+let isTelegramEnabled;
+if (process.env.ENV === 'production') {
+    isTelegramEnabled = true
+} else {
+    isTelegramEnabled = false
+}
+
+
+if (isTelegramEnabled) {
+    let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
+    logic.sendMessageTelegram(startMessage)
+}
 
 for (const token of coinsArray) {
     indexArray[token] = -1;
@@ -114,17 +125,22 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     console.log(err)
                 });
 
-                let message = "Symbol: " + symbol + "\n" +
-                    "Interval: " + interval + "\n" +
-                    "Balance: " + balance + "\n" +
-                    "Entry data: " + recordPatternValue['entryData'] + "\n" +
-                    "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
-                    "hh: " + recordPatternValue['hh'] + "\n" +
-                    "ll: " + recordPatternValue['ll'] + "\n" +
-                    "lh: " + recordPatternValue['lh'] + "\n" +
-                    "hl: " + recordPatternValue['hl']
 
-                logic.sendMessageTelegram(message)
+                if (isTelegramEnabled) {
+
+                    let message = "Symbol: " + symbol + "\n" +
+                        "Interval: " + interval + "\n" +
+                        "Balance: " + balance + "\n" +
+                        "Entry data: " + recordPatternValue['entryData'] + "\n" +
+                        "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
+                        "hh: " + recordPatternValue['hh'] + "\n" +
+                        "ll: " + recordPatternValue['ll'] + "\n" +
+                        "lh: " + recordPatternValue['lh'] + "\n" +
+                        "hl: " + recordPatternValue['hl']
+
+                    logic.sendMessageTelegram(message)
+                }
+
                 recordPattern[symbol] = []
 
             }
@@ -178,18 +194,20 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     console.log(err)
                 });
 
+                if (isTelegramEnabled) {
+                    let message = "Symbol: " + symbol + "\n" +
+                        "Interval: " + interval + "\n" +
+                        "Balance: " + balance + "\n" +
+                        "Entry data: " + recordPatternValue['entryData'] + "\n" +
+                        "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
+                        "hh: " + recordPatternValue['hh'] + "\n" +
+                        "ll: " + recordPatternValue['ll'] + "\n" +
+                        "lh: " + recordPatternValue['lh'] + "\n" +
+                        "hl: " + recordPatternValue['hl']
 
-                let message = "Symbol: " + symbol + "\n" +
-                    "Interval: " + interval + "\n" +
-                    "Balance: " + balance + "\n" +
-                    "Entry data: " + recordPatternValue['entryData'] + "\n" +
-                    "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
-                    "hh: " + recordPatternValue['hh'] + "\n" +
-                    "ll: " + recordPatternValue['ll'] + "\n" +
-                    "lh: " + recordPatternValue['lh'] + "\n" +
-                    "hl: " + recordPatternValue['hl']
+                    logic.sendMessageTelegram(message)
+                }
 
-                logic.sendMessageTelegram(message)
                 recordPattern[symbol] = []
 
             }
@@ -236,9 +254,6 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                 tokenArray[symbol] = [];
                 indexArray[symbol] = -1
-
-                //fs.writeFile(nameFile, JSON.stringify(recordPattern, null, 4), {flag: 'wx'}, function (err) {});
-
             }
 
         } else {
@@ -284,17 +299,20 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                                         });
                                 }
 
-                                let message = "Symbol: " + symbol + "\n" +
-                                    "Interval: " + interval + "\n" +
-                                    "Entry found at: " + new Date().toISOString() + "\n" +
-                                    "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                    "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                    "hh: " + recordPatternValue['hh'] + "\n" +
-                                    "ll: " + recordPatternValue['ll'] + "\n" +
-                                    "lh: " + recordPatternValue['lh'] + "\n" +
-                                    "hl: " + recordPatternValue['hl']
+                                if (isTelegramEnabled) {
 
-                                logic.sendMessageTelegram(message)
+                                    let message = "Symbol: " + symbol + "\n" +
+                                        "Interval: " + interval + "\n" +
+                                        "Entry found at: " + new Date().toISOString() + "\n" +
+                                        "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                        "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                        "hh: " + recordPatternValue['hh'] + "\n" +
+                                        "ll: " + recordPatternValue['ll'] + "\n" +
+                                        "lh: " + recordPatternValue['lh'] + "\n" +
+                                        "hl: " + recordPatternValue['hl']
+
+                                    logic.sendMessageTelegram(message)
+                                }
 
                                 recordPatternValue['confirmed'] = true
                                 recordPatternValue['entryprice'] = close
