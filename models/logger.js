@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 const loggerSchema = new Schema({
+    type: {
+        type: String,
+        required: false
+    },
     symbol: {
         type: String,
         required: false
@@ -26,8 +30,16 @@ const loggerSchema = new Schema({
         type: String,
         required: false
     },
+    takeprofitdate: {
+        type: Date,
+        required: false
+    },
     stoplosspercentage: {
         type: String,
+        required: false
+    },
+    stoplossdate: {
+        type: Date,
         required: false
     },
     hh: {

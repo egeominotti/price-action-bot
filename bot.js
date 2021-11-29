@@ -101,11 +101,13 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 }
 
                 const logger = new Logger({
+                    type: 'STOPLOSS',
                     symbol: symbol,
                     interval: interval,
                     balance: balance,
                     entrydata: recordPatternValue['entryData'],
                     stoplosspercentage: stopLossPercentage,
+                    stoplossdate: new Date(),
                     hh: recordPatternValue['hh'],
                     ll: recordPatternValue['ll'],
                     lh: recordPatternValue['lh'],
@@ -170,11 +172,13 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 }
 
                 const logger = new Logger({
+                    type: 'TAKEPROFIT',
                     symbol: symbol,
                     interval: interval,
                     balance: balance,
                     entrydata: recordPatternValue['entryData'],
                     takeprofitpercentage: takeProfitPercentage,
+                    takeprofitdate: new Date(),
                     hh: recordPatternValue['hh'],
                     ll: recordPatternValue['ll'],
                     lh: recordPatternValue['lh'],
@@ -200,9 +204,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                     logic.sendMessageTelegram(message)
                 }
-
                 recordPattern[symbol] = []
-
             }
 
         }
