@@ -1,4 +1,3 @@
-const {getFibRetracement, levels} = require('fib-retracement');
 const axios = require('axios');
 const _ = require('lodash');
 const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
