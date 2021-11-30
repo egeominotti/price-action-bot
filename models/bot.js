@@ -7,4 +7,6 @@ const botSchema = new Schema({
     takeProfitVariations:   {type: Number, required: false},
 });
 
+// https://www.npmjs.com/package/node-mongoose-fixtures
+
 module.exports = mongoose.model('Bot', botSchema)
