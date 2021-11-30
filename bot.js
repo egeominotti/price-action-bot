@@ -59,282 +59,294 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
         x: isFinal,
     } = ticks;
 
-    // let dataValue = new Date();
-    // let hour = dataValue.getHours();
-    // if (hour < 1 && hour > 6) {}
 
-    if (!_.isEmpty(recordPattern[symbol])) {
-        const recordPatternValue = _.head(recordPattern[symbol]);
-        if (recordPatternValue['confirmed'] === true) {
+    let dataValue = new Date();
+    let hour = dataValue.getUTCHours();
 
-            let entryprice = recordPatternValue['entryprice']
-            let entrypricedate = recordPatternValue['entrypricedate']
-            let takeprofit = recordPatternValue['takeprofit']
-            let stoploss = recordPatternValue['stoploss']
+    if (hour >= 0 || hour < 6) {
 
-            // Stop Loss
-            if (close <= stoploss) {
-
-                let stopLossPercentage = (stoploss - entryprice) / entryprice
-                stopLossPercentage = _.round(stopLossPercentage * 100, 2)
-
-                totalPercentage += stopLossPercentage
-
-                balance = _.round((balance / entryprice) * stoploss, 2)
-
-                if (tradeEnabled) {
-
-                    let body = {
-                        action: 'SELL',
-                        exchange: 'BINANCE',
-                        ticker: symbol,
-                        asset: 'USDT',
-                        coins: coinsArray.length
-                    }
-
-                    axios.post(apiUrlTrade, body)
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                }
-
-                const logger = new Logger({
-                    type: 'STOPLOSS',
-                    symbol: symbol,
-                    interval: interval,
-                    balance: balance,
-                    entryprice: entryprice,
-                    entrypricedate: entrypricedate,
-                    stoplossvalue: stoploss,
-                    stoplosspercentage: stopLossPercentage,
-                    stoplossdate: new Date(),
-                    hh: recordPatternValue['hh'],
-                    ll: recordPatternValue['ll'],
-                    lh: recordPatternValue['lh'],
-                    hl: recordPatternValue['hl']
-                })
-
-                logger.save().then((result) => {
-                    console.log(result)
-                }).catch((err) => {
-                    console.log(err)
-                });
-
-
-                if (isTelegramEnabled) {
-
-                    let message = "Symbol: " + symbol + "\n" +
-                        "Interval: " + interval + "\n" +
-                        "Balance: " + balance + "\n" +
-                        "Entry date: " + entrydate.toString() + "\n" +
-                        "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
-                        "hh: " + recordPatternValue['hh'] + "\n" +
-                        "ll: " + recordPatternValue['ll'] + "\n" +
-                        "lh: " + recordPatternValue['lh'] + "\n" +
-                        "hl: " + recordPatternValue['hl']
-
-                    logic.sendMessageTelegram(message)
-                }
-                recordPattern[symbol] = []
-            }
-
-            // TAKE PROFIT
-            if (close >= takeprofit) {
-
-                let takeProfitPercentage = (takeprofit - entryprice) / entryprice
-
-                takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
-
-                totalPercentage += takeProfitPercentage
-
-                balance = _.round((balance / entryprice) * takeprofit, 2)
-
-                if (tradeEnabled) {
-
-                    let body = {
-                        action: 'SELL',
-                        exchange: 'BINANCE',
-                        ticker: symbol,
-                        asset: 'USDT',
-                        coins: coinsArray.length
-                    }
-
-                    axios.post(apiUrlTrade, body)
-                        .then(function (response) {
-                            console.log(response);
-
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                }
-
-                const logger = new Logger({
-                    type: 'TAKEPROFIT',
-                    symbol: symbol,
-                    interval: interval,
-                    balance: balance,
-                    entryprice: entryprice,
-                    entrypricedate: entrypricedate,
-                    takeprofitvalue: takeprofit,
-                    takeprofitpercentage: takeProfitPercentage,
-                    takeprofitdate: new Date(),
-                    hh: recordPatternValue['hh'],
-                    ll: recordPatternValue['ll'],
-                    lh: recordPatternValue['lh'],
-                    hl: recordPatternValue['hl']
-                })
-
-                logger.save().then((result) => {
-                    console.log(result)
-                }).catch((err) => {
-                    console.log(err)
-                });
-
-                if (isTelegramEnabled) {
-                    let message = "Symbol: " + symbol + "\n" +
-                        "Interval: " + interval + "\n" +
-                        "Balance: " + balance + "\n" +
-                        "Entry data: " + entrydate.toString() + "\n" +
-                        "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
-                        "hh: " + recordPatternValue['hh'] + "\n" +
-                        "ll: " + recordPatternValue['ll'] + "\n" +
-                        "lh: " + recordPatternValue['lh'] + "\n" +
-                        "hl: " + recordPatternValue['hl']
-
-                    logic.sendMessageTelegram(message)
-                }
-                recordPattern[symbol] = []
-            }
-
+        if (!_.isEmpty(recordPattern[symbol])) {
+            console.log("Non opero");
+            recordPattern[symbol] = []
         }
-    }
 
-    // Controllo alla chiusura della candela
-    if (isFinal) {
+    } else {
 
-        if (_.isEmpty(recordPattern[symbol])) {
+        console.log("OPERO")
 
-            indexArray[symbol] += 1
-
-            let ticker = {
-                'index': parseInt(indexArray[symbol]),
-                'symbol': symbol.toString(),
-                'open': parseFloat(open),
-                'close': parseFloat(close),
-                'low': parseFloat(low),
-                'high': parseFloat(high),
-                'interval': interval.toString(),
-                'time': new Date()
-            }
-
-            tokenArray[symbol].push(ticker)
-            let pattern = logic.patternMatching(tokenArray[symbol], symbol)
-            if (!_.isEmpty(pattern)) {
-
-                let recordPatternData = {
-                    'symbol': symbol,
-                    'entryprice': 0,
-                    'takeprofit': pattern['takeprofit'],
-                    'stoploss': pattern['stoploss'],
-                    'hh': pattern['hh'],
-                    'll': pattern['ll'],
-                    'lh': pattern['lh'],
-                    'hl': pattern['hl'],
-                    'confirmed': false,
-                    'entrypricedate': null
-                }
-
-                recordPattern[symbol].push(recordPatternData)
-                tokenArray[symbol] = [];
-                indexArray[symbol] = -1
-            }
-
-        } else {
-
+        if (!_.isEmpty(recordPattern[symbol])) {
             const recordPatternValue = _.head(recordPattern[symbol]);
-            console.log(recordPatternValue);
+            if (recordPatternValue['confirmed'] === true) {
 
-            if (recordPatternValue['confirmed'] === false) {
+                let entryprice = recordPatternValue['entryprice']
+                let entrypricedate = recordPatternValue['entrypricedate']
+                let takeprofit = recordPatternValue['takeprofit']
+                let stoploss = recordPatternValue['stoploss']
 
-                if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
-                    recordPattern[symbol] = []
-                } else {
+                // Stop Loss
+                if (close <= stoploss) {
 
-                    let closeIncreased = close * 1.0025
-                    // 1) Strategy - Breakout
-                    if (closeIncreased > recordPatternValue['lh']) {
+                    let stopLossPercentage = (stoploss - entryprice) / entryprice
+                    stopLossPercentage = _.round(stopLossPercentage * 100, 2)
 
-                        //let symbolReplaced = symbol.replace('USDT', '/USDT')
-                        //console.log(symbolReplaced)
+                    totalPercentage += stopLossPercentage
 
-                        // Filter with ema = 200
-                        //client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
+                    balance = _.round((balance / entryprice) * stoploss, 2)
 
-                        //console.log("Result: ", result);
-                        //console.log(result)
+                    if (tradeEnabled) {
 
-                        //if (result['value'] < close) {
-
-                        const fib = fibonacci.fibonacciRetrecement({
-                            levels: {
-                                0: recordPatternValue['hh'],
-                                1: recordPatternValue['ll']
-                            }
-                        })
-                        console.log(fib)
-
-                        if (tradeEnabled) {
-
-                            let body = {
-                                action: 'BUY',
-                                exchange: 'BINANCE',
-                                ticker: symbol,
-                                asset: 'USDT',
-                                coins: coinsArray.length
-                            }
-
-                            axios.post(apiUrlTrade, body)
-                                .then(function (response) {
-                                    console.log(response);
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
+                        let body = {
+                            action: 'SELL',
+                            exchange: 'BINANCE',
+                            ticker: symbol,
+                            asset: 'USDT',
+                            coins: coinsArray.length
                         }
 
-                        if (isTelegramEnabled) {
-
-                            let message = "Symbol: " + symbol + "\n" +
-                                "Interval: " + interval + "\n" +
-                                "Entry found at: " + new Date().toISOString() + "\n" +
-                                "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                "hh: " + recordPatternValue['hh'] + "\n" +
-                                "ll: " + recordPatternValue['ll'] + "\n" +
-                                "lh: " + recordPatternValue['lh'] + "\n" +
-                                "hl: " + recordPatternValue['hl']
-
-                            logic.sendMessageTelegram(message)
-                        }
-
-                        recordPatternValue['confirmed'] = true
-                        recordPatternValue['entryprice'] = closeIncreased
-                        recordPatternValue['entrypricedate'] = new Date()
-
-                        //} else {
-                        // Open short position
-                        //    recordPattern[symbol] = []
-                        //}
-                        //});
+                        axios.post(apiUrlTrade, body)
+                            .then(function (response) {
+                                console.log(response);
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                     }
 
-                }
-            }
+                    const logger = new Logger({
+                        type: 'STOPLOSS',
+                        symbol: symbol,
+                        interval: interval,
+                        balance: balance,
+                        entryprice: entryprice,
+                        entrypricedate: entrypricedate,
+                        stoplossvalue: stoploss,
+                        stoplosspercentage: stopLossPercentage,
+                        stoplossdate: new Date(),
+                        hh: recordPatternValue['hh'],
+                        ll: recordPatternValue['ll'],
+                        lh: recordPatternValue['lh'],
+                        hl: recordPatternValue['hl']
+                    })
 
+                    logger.save().then((result) => {
+                        console.log(result)
+                    }).catch((err) => {
+                        console.log(err)
+                    });
+
+
+                    if (isTelegramEnabled) {
+
+                        let message = "Symbol: " + symbol + "\n" +
+                            "Interval: " + interval + "\n" +
+                            "Balance: " + balance + "\n" +
+                            "Entry date: " + entrydate.toString() + "\n" +
+                            "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
+                            "hh: " + recordPatternValue['hh'] + "\n" +
+                            "ll: " + recordPatternValue['ll'] + "\n" +
+                            "lh: " + recordPatternValue['lh'] + "\n" +
+                            "hl: " + recordPatternValue['hl']
+
+                        logic.sendMessageTelegram(message)
+                    }
+                    recordPattern[symbol] = []
+                }
+
+                // TAKE PROFIT
+                if (close >= takeprofit) {
+
+                    let takeProfitPercentage = (takeprofit - entryprice) / entryprice
+
+                    takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
+
+                    totalPercentage += takeProfitPercentage
+
+                    balance = _.round((balance / entryprice) * takeprofit, 2)
+
+                    if (tradeEnabled) {
+
+                        let body = {
+                            action: 'SELL',
+                            exchange: 'BINANCE',
+                            ticker: symbol,
+                            asset: 'USDT',
+                            coins: coinsArray.length
+                        }
+
+                        axios.post(apiUrlTrade, body)
+                            .then(function (response) {
+                                console.log(response);
+
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
+
+                    const logger = new Logger({
+                        type: 'TAKEPROFIT',
+                        symbol: symbol,
+                        interval: interval,
+                        balance: balance,
+                        entryprice: entryprice,
+                        entrypricedate: entrypricedate,
+                        takeprofitvalue: takeprofit,
+                        takeprofitpercentage: takeProfitPercentage,
+                        takeprofitdate: new Date(),
+                        hh: recordPatternValue['hh'],
+                        ll: recordPatternValue['ll'],
+                        lh: recordPatternValue['lh'],
+                        hl: recordPatternValue['hl']
+                    })
+
+                    logger.save().then((result) => {
+                        console.log(result)
+                    }).catch((err) => {
+                        console.log(err)
+                    });
+
+                    if (isTelegramEnabled) {
+                        let message = "Symbol: " + symbol + "\n" +
+                            "Interval: " + interval + "\n" +
+                            "Balance: " + balance + "\n" +
+                            "Entry data: " + entrydate.toString() + "\n" +
+                            "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
+                            "hh: " + recordPatternValue['hh'] + "\n" +
+                            "ll: " + recordPatternValue['ll'] + "\n" +
+                            "lh: " + recordPatternValue['lh'] + "\n" +
+                            "hl: " + recordPatternValue['hl']
+
+                        logic.sendMessageTelegram(message)
+                    }
+                    recordPattern[symbol] = []
+                }
+
+            }
+        }
+
+        // Controllo alla chiusura della candela
+        if (isFinal) {
+
+            if (_.isEmpty(recordPattern[symbol])) {
+
+                indexArray[symbol] += 1
+
+                let ticker = {
+                    'index': parseInt(indexArray[symbol]),
+                    'symbol': symbol.toString(),
+                    'open': parseFloat(open),
+                    'close': parseFloat(close),
+                    'low': parseFloat(low),
+                    'high': parseFloat(high),
+                    'interval': interval.toString(),
+                    'time': new Date()
+                }
+
+                tokenArray[symbol].push(ticker)
+                let pattern = logic.patternMatching(tokenArray[symbol], symbol)
+                if (!_.isEmpty(pattern)) {
+
+                    let recordPatternData = {
+                        'symbol': symbol,
+                        'entryprice': 0,
+                        'takeprofit': pattern['takeprofit'],
+                        'stoploss': pattern['stoploss'],
+                        'hh': pattern['hh'],
+                        'll': pattern['ll'],
+                        'lh': pattern['lh'],
+                        'hl': pattern['hl'],
+                        'confirmed': false,
+                        'entrypricedate': null
+                    }
+
+                    recordPattern[symbol].push(recordPatternData)
+                    tokenArray[symbol] = [];
+                    indexArray[symbol] = -1
+                }
+
+            } else {
+
+                const recordPatternValue = _.head(recordPattern[symbol]);
+                console.log(recordPatternValue);
+
+                if (recordPatternValue['confirmed'] === false) {
+
+                    if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
+                        recordPattern[symbol] = []
+                    } else {
+
+                        let closeIncreased = close * 1.0025
+                        // 1) Strategy - Breakout
+                        if (closeIncreased > recordPatternValue['lh']) {
+
+                            //let symbolReplaced = symbol.replace('USDT', '/USDT')
+                            //console.log(symbolReplaced)
+
+                            // Filter with ema = 200
+                            //client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
+
+                            //console.log("Result: ", result);
+                            //console.log(result)
+
+                            //if (result['value'] < close) {
+
+                            const fib = fibonacci.fibonacciRetrecement({
+                                levels: {
+                                    0: recordPatternValue['hh'],
+                                    1: recordPatternValue['ll']
+                                }
+                            })
+                            console.log(fib)
+
+                            if (tradeEnabled) {
+
+                                let body = {
+                                    action: 'BUY',
+                                    exchange: 'BINANCE',
+                                    ticker: symbol,
+                                    asset: 'USDT',
+                                    coins: coinsArray.length
+                                }
+
+                                axios.post(apiUrlTrade, body)
+                                    .then(function (response) {
+                                        console.log(response);
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                    });
+                            }
+
+                            if (isTelegramEnabled) {
+
+                                let message = "Symbol: " + symbol + "\n" +
+                                    "Interval: " + interval + "\n" +
+                                    "Entry found at: " + new Date().toISOString() + "\n" +
+                                    "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                    "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                    "hh: " + recordPatternValue['hh'] + "\n" +
+                                    "ll: " + recordPatternValue['ll'] + "\n" +
+                                    "lh: " + recordPatternValue['lh'] + "\n" +
+                                    "hl: " + recordPatternValue['hl']
+
+                                logic.sendMessageTelegram(message)
+                            }
+
+                            recordPatternValue['confirmed'] = true
+                            recordPatternValue['entryprice'] = closeIncreased
+                            recordPatternValue['entrypricedate'] = new Date()
+
+                            //} else {
+                            // Open short position
+                            //    recordPattern[symbol] = []
+                            //}
+                            //});
+                        }
+
+                    }
+                }
+
+            }
         }
     }
 
