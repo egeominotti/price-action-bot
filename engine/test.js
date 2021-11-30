@@ -161,7 +161,7 @@ for (let time of timeFrame) {
 
                         if (isTelegramEnabled) {
 
-                            let message = "Symbol: " + symbol + "\n" +
+                            let message = "STOPLOSS: " + symbol + "\n" +
                                 "Interval: " + interval + "\n" +
                                 "Balance: " + balance + "\n" +
                                 "Entry date: " + entrypricedate.toUTCString() + "\n" +
@@ -230,10 +230,10 @@ for (let time of timeFrame) {
                         });
 
                         if (isTelegramEnabled) {
-                            let message = "Symbol: " + symbol + "\n" +
+                            let message = "TAKEPROFIT: " + symbol + "\n" +
                                 "Interval: " + interval + "\n" +
                                 "Balance: " + balance + "\n" +
-                                "Entry data: " + entrypricedate.toUTCString() + "\n" +
+                                "Entry date: " + entrypricedate.toUTCString() + "\n" +
                                 "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
                                 "hh: " + recordPatternValue['hh'] + "\n" +
                                 "ll: " + recordPatternValue['ll'] + "\n" +
