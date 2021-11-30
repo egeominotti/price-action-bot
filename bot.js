@@ -118,7 +118,6 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                             exchange: 'BINANCE',
                             ticker: symbol,
                             asset: 'USDT',
-                            coins: coinsArray.length
                         }
 
                         axios.post(apiUrlTrade, body)
@@ -188,7 +187,6 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                             exchange: 'BINANCE',
                             ticker: symbol,
                             asset: 'USDT',
-                            coins: coinsArray.length
                         }
 
                         axios.post(apiUrlTrade, body)

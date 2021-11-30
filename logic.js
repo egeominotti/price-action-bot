@@ -386,7 +386,6 @@ function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabl
                 exchange: 'BINANCE',
                 ticker: symbol,
                 asset: 'USDT',
-                coins: coinsArray.length
             }
 
             axios.post(apiUrlTrade, body)
