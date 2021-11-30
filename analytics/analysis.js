@@ -1,45 +1,63 @@
 const mongoose = require('mongoose');
 const Logger = require('../models/logger');
 const _ = require("lodash");
+const logic = require('../logic');
 require('dotenv').config();
+
 
 mongoose.connect(process.env.URI_MONGODB);
 
 const sizeOnceTrade = 200
 let balance = 3000 // dollar
 let sumSizeTrade = 0;
+let countStopLoss = 0;
+let countTakeProfit = 0;
 
-Logger.find({}, function (err, result) {
-    if (err) {
-        console.log(err);
-    } else {
-        if (result.length > 0) {
-            for (let record of result) {
+setInterval(() => {
+    Logger.find({}, function (err, result) {
+        if (err) {
+            console.log(err);
+        } else {
 
-                let finaleTradeValue;
-                let sizeTrade = sizeOnceTrade
-                let entryprice = record.entryprice
-                let stopLossValue = record.stoplossvalue;
-                let takeprofitvalue = record.takeprofitvalue
-                let stopLossPercentage = record.stoplosspercentage
-                let takeprofitpercentage = record.takeprofitpercentage
+            if (result.length > 0) {
 
-                if (record.type === 'STOPLOSS') {
-                    let finaleSizeTrade = (sizeTrade / entryprice) * stopLossValue;
-                    finaleTradeValue = finaleSizeTrade - sizeTrade
+                for (let record of result) {
+
+                    let finaleTradeValue;
+                    let sizeTrade = sizeOnceTrade
+                    let entryprice = record.entryprice
+                    let stopLossValue = record.stoplossvalue;
+                    let takeprofitvalue = record.takeprofitvalue
+                    let stopLossPercentage = record.stoplosspercentage
+                    let takeprofitpercentage = record.takeprofitpercentage
+
+                    if (record.type === 'STOPLOSS') {
+                        let finaleSizeTrade = (sizeTrade / entryprice) * stopLossValue;
+                        finaleTradeValue = finaleSizeTrade - sizeTrade
+                        countStopLoss++;
+                    }
+
+                    if (record.type === 'TAKEPROFIT') {
+                        let finaleSizeTrade = (sizeTrade / entryprice) * takeprofitvalue;
+                        finaleTradeValue = finaleSizeTrade - sizeTrade
+                        countTakeProfit++;
+                    }
+
+                    sumSizeTrade += finaleTradeValue;
                 }
 
-                if (record.type === 'TAKEPROFIT') {
-                    let finaleSizeTrade = (sizeTrade / entryprice) * takeprofitvalue;
-                    finaleTradeValue = finaleSizeTrade - sizeTrade
-                }
+                let endBalance = _.round(balance + sumSizeTrade, 2)
 
-                sumSizeTrade += finaleTradeValue;
+                let message = "Initial Balance: " + balance + "\n" +
+                    "Balance updated: " + endBalance + "\n" +
+                    "Take profit count: " + countTakeProfit + "\n" +
+                    "Stop loss count:" + countStopLoss
+
+                console.log("Final Balance: " + endBalance)
+                logic.sendMessageTelegram(message)
             }
-
-            let endBalance = _.round(balance + sumSizeTrade, 2)
-            console.log("Final Balance: " + endBalance)
-
         }
-    }
-});
+    });
+}, 14400000)
+// each 4 hours send balance updated
+
