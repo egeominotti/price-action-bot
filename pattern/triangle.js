@@ -1,27 +1,5 @@
-const axios = require('axios');
 const _ = require('lodash');
-const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
-const bot_chat_id = '-558016221'
 
-
-/**
- *
- * @param text
- */
-function sendMessageTelegram(text) {
-
-    const send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chat_id + '&parse_mode=Markdown&text=' + text
-
-    axios.get(send_text)
-        .then(function (response) {
-        })
-        .catch(function (error) {
-            console.log(error)
-        })
-        .then(function () {
-        });
-
-}
 
 /**
  *
@@ -347,78 +325,7 @@ function patternMatching(storeData, symbol) {
     return false;
 }
 
-/**
- *
- * @param symbol
- * @param interval
- * @param close
- * @param isTelegramEnabled
- * @param tradeEnabled
- * @param apiUrlTrade
- * @param recordPatternValue
- */
-function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabled, apiUrlTrade, recordPatternValue) {
-
-    let closeIncreased = close * 1.0023
-    let takeprofit = recordPatternValue['takeprofit']
-    let stoploss = recordPatternValue['stoploss']
-    let hh = recordPatternValue['hh']
-    let ll = recordPatternValue['ll']
-    let lh = recordPatternValue['lh']
-    let hl = recordPatternValue['hl']
-
-    // 1) Strategy - Breakout
-    if (closeIncreased > recordPatternValue['lh']) {
-
-        let entrypricedate = new Date()
-        // const fib = fibonacci.fibonacciRetrecement({
-        //     levels: {
-        //         0: recordPatternValue['hh'],
-        //         1: recordPatternValue['ll']
-        //     }
-        // })
-        // console.log(fib)
-
-        if (tradeEnabled) {
-
-            let body = {
-                action: 'BUY',
-                exchange: 'BINANCE',
-                ticker: symbol,
-                asset: 'USDT',
-            }
-
-            axios.post(apiUrlTrade, body)
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
-
-        if (isTelegramEnabled) {
-
-            let message = "Symbol: " + symbol + "\n" +
-                "Interval: " + interval + "\n" +
-                "Entry found at: " + entrypricedate.toUTCString() + "\n" +
-                "takeprofit: " + takeprofit + "\n" +
-                "stoploss:  " + stoploss + "\n" +
-                "hh: " + hh + "\n" +
-                "ll: " + ll + "\n" +
-                "lh: " + lh + "\n" +
-                "hl: " + hl
-
-            sendMessageTelegram(message)
-        }
-
-        recordPatternValue['confirmed'] = true
-        recordPatternValue['entryprice'] = closeIncreased
-        recordPatternValue['entrypricedate'] = entrypricedate
-        recordPatternValue['strategy'] = 'breakout'
-    }
-}
 
 module.exports = {
-    patternMatching, strategyBreakout, sendMessageTelegram
+    patternMatching
 }

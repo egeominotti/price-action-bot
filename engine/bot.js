@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 const Binance = require('node-binance-api');
-const logic = require('./logic');
 const axios = require('axios').default;
-const coins = require('./coins');
-const Logger = require('./models/logger');
-const analysis = require('./analytics/analysis');
-const Bot = require('./models/bot');
-const fibonacci = require('./indicators/fibonacci');
-const taapi = require("taapi");
+const coins = require('../utility/coins');
+const Logger = require('../models/logger');
+const Pattern = require('../pattern/triangle')
+const Telegram = require('../utility/telegram');
+const analysis = require('../analytics/analysis');
+const Bot = require('../models/bot');
+const Strategy = require('../strategy/strategy');
+const fibonacci = require('../indicators/fibonacci');
 const _ = require("lodash");
 const binance = new Binance();
 const args = process.argv;
@@ -16,7 +17,6 @@ require('dotenv').config();
 
 mongoose.connect(process.env.URI_MONGODB);
 
-const client = taapi.client(process.env.API_KEY_TAAPI);
 
 let timeFrame = args[2]
 let coinsArray = coins.getCoins()
@@ -39,7 +39,7 @@ if (process.env.DEBUG === 'false') {
 
 if (isTelegramEnabled) {
     let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
-    logic.sendMessageTelegram(startMessage)
+    Telegram.sendMessage(startMessage)
 }
 
 for (const token of coinsArray) {
@@ -149,7 +149,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                             "lh: " + recordPatternValue['lh'] + "\n" +
                             "hl: " + recordPatternValue['hl']
 
-                        logic.sendMessageTelegram(message)
+                        Telegram.sendMessage(message)
                     }
                     recordPattern[symbol] = []
                 }
@@ -218,7 +218,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                             "lh: " + recordPatternValue['lh'] + "\n" +
                             "hl: " + recordPatternValue['hl']
 
-                        logic.sendMessageTelegram(message)
+                        Telegram.sendMessage(message)
                     }
                     recordPattern[symbol] = []
                 }
@@ -245,7 +245,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 }
 
                 tokenArray[symbol].push(ticker)
-                let pattern = logic.patternMatching(tokenArray[symbol], symbol)
+                let pattern = Pattern.patternMatching(tokenArray[symbol], symbol)
 
                 if (!_.isEmpty(pattern)) {
 
@@ -280,7 +280,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         recordPattern[symbol] = []
                     } else {
                         // Strategy - Breakout
-                        logic.strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabled, apiUrlTrade, recordPatternValue)
+                        Strategy.strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabled, apiUrlTrade, recordPatternValue)
                     }
                 }
 

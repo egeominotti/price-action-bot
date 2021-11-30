@@ -57,7 +57,7 @@ if (process.env.DEBUG === 'false') {
 
 for (let time of timeFrame) {
 
-    const bot = spawn('node', ['bot.js', time]);
+    const bot = spawn('node', ['engine/bot.js', time]);
     bot.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
     });

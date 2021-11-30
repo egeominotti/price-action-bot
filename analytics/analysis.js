@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const Logger = require('../models/logger');
+const Telegram = require('../utility/telegram');
 const _ = require("lodash");
-const logic = require('../logic');
 require('dotenv').config();
-
 
 mongoose.connect(process.env.URI_MONGODB);
 
@@ -14,6 +13,7 @@ let countStopLoss = 0;
 let countTakeProfit = 0;
 
 function getBalance() {
+
     // each 4 hours send balance updated
     setInterval(() => {
         Logger.find({}, function (err, result) {
@@ -58,11 +58,12 @@ function getBalance() {
                         "Stop loss count:" + countStopLoss
 
                     console.log("Final Balance: " + endBalance)
-                    logic.sendMessageTelegram(message)
+                    Telegram.sendMessage(message)
                 }
             }
         });
     }, 14400000)
+
 }
 
 module.exports = {
