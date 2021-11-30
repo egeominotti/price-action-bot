@@ -23,13 +23,13 @@ let recordPattern = {}
 
 
 let tradeEnabled = false;
-let isTelegramEnabled;
+let isTelegramEnabled = true;
 
-if (process.env.DEBUG === 'false') {
-    isTelegramEnabled = true
-} else {
-    isTelegramEnabled = false
-}
+// if (process.env.DEBUG === 'false') {
+//     isTelegramEnabled = true
+// } else {
+//     isTelegramEnabled = false
+// }
 
 
 // if (isTelegramEnabled) {
@@ -58,10 +58,6 @@ for (let time of timeFrame) {
     }
 }
 
-
-console.log(indexArray)
-console.log(tokenArray)
-console.log(tokenArray)
 
 // Send updated balance on instagram each 4 hours
 analysis.getBalance();
@@ -161,7 +157,7 @@ for (let time of timeFrame) {
 
                         if (isTelegramEnabled) {
 
-                            let message = "STOPLOSS: " + symbol + "\n" +
+                            let message = "👉 STOPLOSS: " + symbol + " ⛔" + "\n" +
                                 "Interval: " + interval + "\n" +
                                 "Balance: " + balance + "\n" +
                                 "Entry date: " + entrypricedate.toUTCString() + "\n" +
@@ -230,7 +226,7 @@ for (let time of timeFrame) {
                         });
 
                         if (isTelegramEnabled) {
-                            let message = "TAKEPROFIT: " + symbol + "\n" +
+                            let message = "👉 TAKEPROFIT: " + symbol + " ✅" + "\n" +
                                 "Interval: " + interval + "\n" +
                                 "Balance: " + balance + "\n" +
                                 "Entry date: " + entrypricedate.toUTCString() + "\n" +

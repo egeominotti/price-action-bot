@@ -54,7 +54,7 @@ function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabl
 
         if (isTelegramEnabled) {
 
-            let message = "Symbol: " + symbol + "\n" +
+            let message = "👉 ENTRY: " + symbol + "\n" +
                 "Interval: " + interval + "\n" +
                 "Entry found at: " + entrypricedate.toUTCString() + "\n" +
                 "takeprofit: " + takeprofit + "\n" +
