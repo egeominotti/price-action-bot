@@ -4,6 +4,10 @@ const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
 const bot_chat_id = '-558016221'
 
 
+/**
+ *
+ * @param text
+ */
 function sendMessageTelegram(text) {
 
     const send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chat_id + '&parse_mode=Markdown&text=' + text
@@ -19,6 +23,13 @@ function sendMessageTelegram(text) {
 
 }
 
+/**
+ *
+ * @param storeData
+ * @param startIndex
+ * @returns {{max: number, index, tick}}
+ * @constructor
+ */
 function MaxTickHigh(storeData, startIndex) {
 
     let idMaxTickHigh;
@@ -72,6 +83,13 @@ function MaxTickHigh(storeData, startIndex) {
 
 }
 
+/**
+ *
+ * @param storeData
+ * @param indexMax
+ * @returns {{min: number, index, tick}}
+ * @constructor
+ */
 function MinTickLow(storeData, indexMax) {
 
     let lowArray = [];
@@ -101,7 +119,12 @@ function MinTickLow(storeData, indexMax) {
 
 }
 
-
+/**
+ *
+ * @param storeData
+ * @returns {{index: (*), value: number}|number}
+ * @constructor
+ */
 function HigherHigh(storeData) {
 
     let fail = false
@@ -156,6 +179,13 @@ function HigherHigh(storeData) {
     return -1;
 }
 
+/**
+ *
+ * @param storeData
+ * @param indexHigherHigh
+ * @returns {{index, value: number}|number}
+ * @constructor
+ */
 function LowerLow(storeData, indexHigherHigh) {
 
     let min = MinTickLow(storeData, indexHigherHigh);
@@ -208,10 +238,14 @@ function LowerLow(storeData, indexHigherHigh) {
     return -1;
 }
 
+/**
+ *
+ * @param storeData
+ * @param indexLowerLow
+ * @returns {{index, value: number}|number}
+ * @constructor
+ */
 function LowerHigh(storeData, indexLowerLow) {
-
-    let fail = false
-    let failIndex;
 
     let max = MaxTickHigh(storeData, indexLowerLow);
     let close = max['tick']['close']
@@ -229,41 +263,20 @@ function LowerHigh(storeData, indexLowerLow) {
                 'value': max['max']
             };
         }
-        // else {
-        //     fail = true
-        //     failIndex = index;
-        //     break;
-        // }
     }
-
-    // if (fail) {
-    //
-    //     for (let index = failIndex; index <= storeData.length; ++index) {
-    //
-    //         if (storeData[index] !== undefined) {
-    //             let tick = storeData[index];
-    //             if (storeData[index + 1] !== undefined) {
-    //                 let nextTick = storeData[index + 1]
-    //                 if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
-    //
-    //                     return {
-    //                         'index': maxIndex,
-    //                         'value': max['max']
-    //                     };
-    //
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     return -1;
 }
 
+/**
+ *
+ * @param storeData
+ * @param indexLowerHigh
+ * @param maxLowerHigh
+ * @returns {{index, value: number}|number}
+ * @constructor
+ */
 function HigherLow(storeData, indexLowerHigh, maxLowerHigh) {
-
-    let fail = false
-    let failIndex;
 
     let min = MinTickLow(storeData, indexLowerHigh);
     let close = min['tick']['close']
@@ -280,38 +293,17 @@ function HigherLow(storeData, indexLowerHigh, maxLowerHigh) {
                 'value': min['min']
             };
         }
-
-        // else {
-        //     fail = true
-        //     failIndex = index;
-        //     break;
-        // }
     }
-
-    // if (fail) {
-    //
-    //     for (let index = failIndex; index <= storeData.length; ++index) {
-    //
-    //         if (storeData[index] !== undefined) {
-    //             let tick = storeData[index];
-    //             if (storeData[index + 1] !== undefined) {
-    //                 let nextTick = storeData[index + 1]
-    //                 if (nextTick['high'] > tick['high'] && nextTick['close'] > tick['close']) {
-    //
-    //                     return {
-    //                         'index': minIndex,
-    //                         'value': min['min']
-    //                     };
-    //
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     return -1;
 }
 
+/**
+ *
+ * @param storeData
+ * @param symbol
+ * @returns {boolean|{hh, ll, hl, stoploss: number, takeprofit: *, lh, entryprice}}
+ */
 function patternMatching(storeData, symbol) {
 
 
