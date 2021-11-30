@@ -53,6 +53,22 @@ for (const token of coinsArray) {
 // Send updated balance on instagram each 4 hours
 analysis.getBalance();
 
+// setInterval(() => {
+//
+//     let message = "Ciao Amici, sono vivo e sto lavorando per voi!"
+//     let dataValue = new Date();
+//     let hour = dataValue.getUTCHours();
+//
+//     if (hour > 1 && hour < 5) {
+//         logic.sendMessageTelegram(message)
+//     } else {
+//         logic.sendMessageTelegram(message)
+//     }
+//
+//
+//
+// }, 14400000)
+
 binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
     let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
@@ -69,7 +85,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
     let dataValue = new Date();
     let hour = dataValue.getUTCHours();
 
-    if ( hour > 1 && hour < 5) {
+    if (hour > 0 && hour < 5) {
 
         if (!_.isEmpty(recordPattern[symbol])) {
             console.log("Non opero");
