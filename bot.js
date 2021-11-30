@@ -85,7 +85,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
     let dataValue = new Date();
     let hour = dataValue.getUTCHours();
 
-    if (hour > 0 && hour < 5) {
+    if (hour >= 0 && hour <= 5) {
 
         if (!_.isEmpty(recordPattern[symbol])) {
             console.log("Non opero");
