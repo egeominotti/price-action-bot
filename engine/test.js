@@ -24,6 +24,7 @@ let recordPattern = {}
 
 let tradeEnabled = false;
 let isTelegramEnabled;
+
 if (process.env.DEBUG === 'false') {
     isTelegramEnabled = true
 } else {
@@ -37,6 +38,7 @@ if (process.env.DEBUG === 'false') {
 // }
 
 let timeFrame = [
+    '1m',
     '5m',
     '15m',
     '1h',

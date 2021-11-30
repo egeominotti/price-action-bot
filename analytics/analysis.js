@@ -6,15 +6,16 @@ require('dotenv').config();
 
 mongoose.connect(process.env.URI_MONGODB);
 
-const sizeOnceTrade = 200
-let balance = 3000 // dollar
-let sumSizeTrade = 0;
-let countStopLoss = 0;
-let countTakeProfit = 0;
 
 function getBalance() {
 
-    // each 4 hours send balance updated
+    const sizeOnceTrade = 200
+    let balance = 3000 // dollars
+    let sumSizeTrade = 0;
+    let countStopLoss = 0;
+    let countTakeProfit = 0;
+
+    // each 2 hours send balance updated
     setInterval(() => {
         Logger.find({}, function (err, result) {
             if (err) {
@@ -53,7 +54,7 @@ function getBalance() {
 
                     let message = "Initial Balance: " + balance + "\n" +
                         "Balance updated: " + endBalance + "\n" +
-                        "Balance ratio: " + ratioBalance + "\n" +
+                        "Balance ratio: " + _.round(ratioBalance, 3) + "\n" +
                         "Take profit count: " + countTakeProfit + "\n" +
                         "Stop loss count:" + countStopLoss
 
@@ -62,7 +63,7 @@ function getBalance() {
                 }
             }
         });
-    }, 14400000)
+    }, 7200000)
 
 }
 
