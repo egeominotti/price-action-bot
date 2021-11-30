@@ -35,8 +35,8 @@ require('dotenv').config();
 //     });
 //
 // });
-
-console.log(process.env)
+console.log(typeof process.env.DEBUG)
+console.log(process.env.DEBUG)
 let timeFrame;
 if (process.env.DEBUG === 'false') {
     timeFrame = [
