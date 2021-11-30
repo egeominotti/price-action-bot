@@ -264,8 +264,9 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     recordPattern[symbol] = []
                 } else {
 
+                    let closeIncreased = close * 1.0025
                     // 1) Strategy - Breakout
-                    if (close > recordPatternValue['lh']) {
+                    if (closeIncreased > recordPatternValue['lh']) {
 
                         //let symbolReplaced = symbol.replace('USDT', '/USDT')
                         //console.log(symbolReplaced)
@@ -321,7 +322,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         }
 
                         recordPatternValue['confirmed'] = true
-                        recordPatternValue['entryprice'] = close
+                        recordPatternValue['entryprice'] = closeIncreased
                         recordPatternValue['entrypricedate'] = new Date()
 
                         //} else {
