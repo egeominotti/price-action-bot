@@ -56,7 +56,7 @@ function getBalance() {
                         "Balance updated: " + endBalance + "\n" +
                         "Balance ratio: " + _.round(ratioBalance, 3) + "\n" +
                         "Take profit count: " + countTakeProfit + "\n" +
-                        "Stop loss count:" + countStopLoss
+                        "Stop loss count: " + countStopLoss
 
                     console.log("Final Balance: " + endBalance)
                     Telegram.sendMessage(message)
