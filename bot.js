@@ -4,6 +4,7 @@ const logic = require('./logic');
 const axios = require('axios').default;
 const coins = require('./coins');
 const Logger = require('./models/logger');
+const Bot = require('./models/bot');
 const fibonacci = require('./indicators/fibonacci');
 const fs = require('fs');
 const taapi = require("taapi");
@@ -63,7 +64,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
     let dataValue = new Date();
     let hour = dataValue.getUTCHours();
 
-    if (hour >= 0 || hour < 6) {
+    if (hour >= 0 || hour < 5) {
 
         if (!_.isEmpty(recordPattern[symbol])) {
             console.log("Non opero");
@@ -71,8 +72,6 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
         }
 
     } else {
-
-        console.log("OPERO")
 
         if (!_.isEmpty(recordPattern[symbol])) {
             const recordPatternValue = _.head(recordPattern[symbol]);
@@ -276,6 +275,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     } else {
 
                         let closeIncreased = close * 1.0025
+
                         // 1) Strategy - Breakout
                         if (closeIncreased > recordPatternValue['lh']) {
 
