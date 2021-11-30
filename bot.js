@@ -4,6 +4,7 @@ const logic = require('./logic');
 const axios = require('axios').default;
 const coins = require('./coins');
 const Logger = require('./models/logger');
+const analysis = require('./analytics/analysis');
 const Bot = require('./models/bot');
 const fibonacci = require('./indicators/fibonacci');
 const fs = require('fs');
@@ -47,6 +48,9 @@ for (const token of coinsArray) {
     tokenArray[token] = [];
     recordPattern[token] = [];
 }
+
+// Send updated balance on instagram each 4 hours
+analysis.getBalance();
 
 binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
