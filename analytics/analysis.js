@@ -47,9 +47,11 @@ setInterval(() => {
                 }
 
                 let endBalance = _.round(balance + sumSizeTrade, 2)
+                let ratioBalance = ((endBalance - balance) / balance) * 100
 
                 let message = "Initial Balance: " + balance + "\n" +
                     "Balance updated: " + endBalance + "\n" +
+                    "Balance ratio: " + ratioBalance + "\n" +
                     "Take profit count: " + countTakeProfit + "\n" +
                     "Stop loss count:" + countStopLoss
 
