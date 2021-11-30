@@ -345,7 +345,7 @@ function patternMatching(storeData, symbol) {
                     return {
                         'takeprofit': takeProfit,
                         'entryprice': entryPrice,
-                        'stoploss': HL['value'],
+                        'stoploss': HL['value'] * 0.9980,
                         'hh': HH['value'],
                         'll': LL['value'],
                         'lh': LH['value'],
