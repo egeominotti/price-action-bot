@@ -415,6 +415,7 @@ function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabl
         recordPatternValue['confirmed'] = true
         recordPatternValue['entryprice'] = closeIncreased
         recordPatternValue['entrypricedate'] = entrypricedate
+        recordPatternValue['strategy'] = 'breakout'
     }
 }
 

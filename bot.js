@@ -83,6 +83,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                 let entrypricedate = recordPatternValue['entrypricedate']
                 let takeprofit = recordPatternValue['takeprofit']
                 let stoploss = recordPatternValue['stoploss']
+                let strategy = recordPatternValue['strategy']
 
                 // Stop Loss
                 if (close <= stoploss) {
@@ -125,7 +126,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         hh: recordPatternValue['hh'],
                         ll: recordPatternValue['ll'],
                         lh: recordPatternValue['lh'],
-                        hl: recordPatternValue['hl']
+                        hl: recordPatternValue['hl'],
+                        strategy: strategy
                     })
 
                     logger.save().then((result) => {
@@ -195,7 +197,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         hh: recordPatternValue['hh'],
                         ll: recordPatternValue['ll'],
                         lh: recordPatternValue['lh'],
-                        hl: recordPatternValue['hl']
+                        hl: recordPatternValue['hl'],
+                        strategy: strategy
                     })
 
                     logger.save().then((result) => {
@@ -257,7 +260,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         'lh': pattern['lh'],
                         'hl': pattern['hl'],
                         'confirmed': false,
-                        'entrypricedate': null
+                        'entrypricedate': null,
+                        'strategy': ''
                     }
 
                     recordPattern[symbol].push(recordPatternData)

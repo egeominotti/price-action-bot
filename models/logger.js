@@ -17,6 +17,7 @@ const loggerSchema = new Schema({
     ll: {type: String, required: false},
     lh: {type: String, required: false},
     hl: {type: String, required: false},
+    strategy: {type: String, required: false},
 });
 
 module.exports = mongoose.model('Logger', loggerSchema)
