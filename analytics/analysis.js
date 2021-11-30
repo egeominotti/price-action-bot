@@ -65,7 +65,6 @@ function getBalance() {
     }, 14400000)
 }
 
-
 module.exports = {
     getBalance
 }
