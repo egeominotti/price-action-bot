@@ -370,8 +370,7 @@ function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabl
     // 1) Strategy - Breakout
     if (closeIncreased > recordPatternValue['lh']) {
 
-        let entrypricedate = new Date().toUTCString()
-
+        let entrypricedate = new Date()
         // const fib = fibonacci.fibonacciRetrecement({
         //     levels: {
         //         0: recordPatternValue['hh'],
@@ -403,7 +402,7 @@ function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabl
 
             let message = "Symbol: " + symbol + "\n" +
                 "Interval: " + interval + "\n" +
-                "Entry found at: " + entrypricedate + "\n" +
+                "Entry found at: " + entrypricedate.toUTCString() + "\n" +
                 "takeprofit: " + takeprofit + "\n" +
                 "stoploss:  " + stoploss + "\n" +
                 "hh: " + hh + "\n" +
@@ -416,7 +415,7 @@ function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabl
 
         recordPatternValue['confirmed'] = true
         recordPatternValue['entryprice'] = closeIncreased
-        recordPatternValue['entrypricedate'] = new Date()
+        recordPatternValue['entrypricedate'] = entrypricedate
     }
 }
 
