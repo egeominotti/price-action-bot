@@ -6,7 +6,7 @@ require('dotenv').config();
 mongoose.connect(process.env.URI_MONGODB);
 
 const sizeOnceTrade = 200
-let balance = 2400 // dollar
+let balance = 3000 // dollar
 let sumSizeTrade = 0;
 
 Logger.find({}, function (err, result) {
