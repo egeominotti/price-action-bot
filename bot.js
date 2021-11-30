@@ -84,14 +84,13 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
     let hour = dataValue.getUTCHours();
 
     if (hour >= 0 && hour <= 5) {
-
+        console.log(" non entro")
         if (!_.isEmpty(recordPattern[symbol])) {
             console.log("Non opero");
             recordPattern[symbol] = []
         }
 
     } else {
-
         if (!_.isEmpty(recordPattern[symbol])) {
             const recordPatternValue = _.head(recordPattern[symbol]);
             if (recordPatternValue['confirmed'] === true) {
@@ -262,6 +261,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                 tokenArray[symbol].push(ticker)
                 let pattern = logic.patternMatching(tokenArray[symbol], symbol)
+
                 if (!_.isEmpty(pattern)) {
 
                     let recordPatternData = {
@@ -343,7 +343,6 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                             recordPatternValue['confirmed'] = true
                             recordPatternValue['entryprice'] = closeIncreased
                             recordPatternValue['entrypricedate'] = new Date()
-
                         }
 
                     }
