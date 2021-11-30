@@ -51,6 +51,7 @@ function getCoins() {
         'OGNUSDT',
         'GALAUSDT',
         'KDAUSDT',
+        'NUMUSDT',
     ];
 }
 
