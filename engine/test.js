@@ -38,7 +38,7 @@ let isTelegramEnabled = false;
 // }
 
 let timeFrame = [
-    //'1m',
+    '1m',
     '5m',
     '15m',
     '1h',
@@ -233,37 +233,28 @@ for (let time of timeFrame) {
 
         let key = symbol + "_" + interval
 
+        // Check real-time
         if (!_.isEmpty(recordPattern[key])) {
 
             const recordPatternValue = _.head(recordPattern[key]);
 
             if (recordPatternValue['confirmed'] === true) {
 
-                stopLoss(
-                    key,
-                    close,
-                    recordPatternValue,
-                    symbol,
-                    interval)
-
-                takeProfit(
-                    key,
-                    close,
-                    recordPatternValue,
-                    symbol,
-                    interval)
-            }
+                stopLoss(key, close, recordPatternValue, symbol, interval)
+                takeProfit(key, close, recordPatternValue, symbol, interval)}
         }
 
+        // Check at close tick
         if (isFinal) {
 
             let dataValue = new Date();
             let hour = dataValue.getUTCHours();
 
-            if (hour <= 0 && hour >= 5) {
+            if (hour <= 0 || hour >= 5) {
+
+                console.log(hour)
 
                 if (_.isEmpty(recordPattern[key])) {
-                    console.log(key)
 
                     indexArray[key] += 1
 
@@ -320,6 +311,7 @@ for (let time of timeFrame) {
 
                 }
             }
+
         }
 
     });
