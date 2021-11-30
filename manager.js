@@ -37,10 +37,10 @@ require('dotenv').config();
 // });
 console.log(typeof process.env.DEBUG)
 console.log(process.env.DEBUG)
+
 let timeFrame;
 if (process.env.DEBUG === 'false') {
     timeFrame = [
-        '1m',
         '5m',
         '15m',
         '1h',
