@@ -23,13 +23,14 @@ let coinsArray = coins.getCoins()
 let tokenArray = {}
 let indexArray = {}
 let recordPattern = {}
-let tradeEnabled = false;
+
 let apiUrlTrade = process.env.URI_API_TRADE;
 
 
 let balance = 5000
 let totalPercentage = 0
 
+let tradeEnabled = false;
 let isTelegramEnabled;
 if (process.env.DEBUG === 'false') {
     isTelegramEnabled = true
@@ -68,8 +69,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
     let dataValue = new Date();
     let hour = dataValue.getUTCHours();
 
-    if (1 > hour > 6) {
-        console.log("non entro")
+    if ( hour > 1 && hour < 5) {
+
         if (!_.isEmpty(recordPattern[symbol])) {
             console.log("Non opero");
             recordPattern[symbol] = []
