@@ -158,7 +158,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         let message = "Symbol: " + symbol + "\n" +
                             "Interval: " + interval + "\n" +
                             "Balance: " + balance + "\n" +
-                            "Entry date: " + entrypricedate.toString() + "\n" +
+                            "Entry date: " + entrypricedate.toUTCString() + "\n" +
                             "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
                             "hh: " + recordPatternValue['hh'] + "\n" +
                             "ll: " + recordPatternValue['ll'] + "\n" +
@@ -227,7 +227,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         let message = "Symbol: " + symbol + "\n" +
                             "Interval: " + interval + "\n" +
                             "Balance: " + balance + "\n" +
-                            "Entry data: " + entrypricedate.toString() + "\n" +
+                            "Entry data: " + entrypricedate.toUTCString() + "\n" +
                             "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
                             "hh: " + recordPatternValue['hh'] + "\n" +
                             "ll: " + recordPatternValue['ll'] + "\n" +
@@ -329,7 +329,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                                 let message = "Symbol: " + symbol + "\n" +
                                     "Interval: " + interval + "\n" +
-                                    "Entry found at: " + new Date().toISOString() + "\n" +
+                                    "Entry found at: " + new Date().toUTCString() + "\n" +
                                     "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
                                     "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
                                     "hh: " + recordPatternValue['hh'] + "\n" +
