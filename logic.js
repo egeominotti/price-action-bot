@@ -347,6 +347,79 @@ function patternMatching(storeData, symbol) {
     return false;
 }
 
+/**
+ *
+ * @param symbol
+ * @param interval
+ * @param close
+ * @param isTelegramEnabled
+ * @param tradeEnabled
+ * @param apiUrlTrade
+ * @param recordPatternValue
+ */
+function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabled, apiUrlTrade, recordPatternValue) {
+
+    let closeIncreased = close * 1.0023
+    let takeprofit = recordPatternValue['takeprofit']
+    let stoploss = recordPatternValue['stoploss']
+    let hh = recordPatternValue['hh']
+    let ll = recordPatternValue['ll']
+    let lh = recordPatternValue['lh']
+    let hl = recordPatternValue['hl']
+
+    // 1) Strategy - Breakout
+    if (closeIncreased > recordPatternValue['lh']) {
+
+        let entrypricedate = new Date().toUTCString()
+
+        // const fib = fibonacci.fibonacciRetrecement({
+        //     levels: {
+        //         0: recordPatternValue['hh'],
+        //         1: recordPatternValue['ll']
+        //     }
+        // })
+        // console.log(fib)
+
+        if (tradeEnabled) {
+
+            let body = {
+                action: 'BUY',
+                exchange: 'BINANCE',
+                ticker: symbol,
+                asset: 'USDT',
+                coins: coinsArray.length
+            }
+
+            axios.post(apiUrlTrade, body)
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        if (isTelegramEnabled) {
+
+            let message = "Symbol: " + symbol + "\n" +
+                "Interval: " + interval + "\n" +
+                "Entry found at: " + entrypricedate + "\n" +
+                "takeprofit: " + takeprofit + "\n" +
+                "stoploss:  " + stoploss + "\n" +
+                "hh: " + hh + "\n" +
+                "ll: " + ll + "\n" +
+                "lh: " + lh + "\n" +
+                "hl: " + hl
+
+            sendMessageTelegram(message)
+        }
+
+        recordPatternValue['confirmed'] = true
+        recordPatternValue['entryprice'] = closeIncreased
+        recordPatternValue['entrypricedate'] = new Date()
+    }
+}
+
 module.exports = {
-    patternMatching, sendMessageTelegram
+    patternMatching, strategyBreakout, sendMessageTelegram
 }

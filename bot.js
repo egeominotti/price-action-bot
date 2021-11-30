@@ -67,6 +67,7 @@ analysis.getBalance();
 //
 // }, 14400000)
 
+
 binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
     let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
@@ -95,10 +96,10 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
             const recordPatternValue = _.head(recordPattern[symbol]);
             if (recordPatternValue['confirmed'] === true) {
 
-                let entryprice =        recordPatternValue['entryprice']
-                let entrypricedate =    recordPatternValue['entrypricedate']
-                let takeprofit =        recordPatternValue['takeprofit']
-                let stoploss =          recordPatternValue['stoploss']
+                let entryprice = recordPatternValue['entryprice']
+                let entrypricedate = recordPatternValue['entrypricedate']
+                let takeprofit = recordPatternValue['takeprofit']
+                let stoploss = recordPatternValue['stoploss']
 
                 // Stop Loss
                 if (close <= stoploss) {
@@ -292,59 +293,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                     if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
                         recordPattern[symbol] = []
                     } else {
-
-                        let closeIncreased = close * 1.0023
-
-                        // 1) Strategy - Breakout
-                        if (closeIncreased > recordPatternValue['lh']) {
-
-                            const fib = fibonacci.fibonacciRetrecement({
-                                levels: {
-                                    0: recordPatternValue['hh'],
-                                    1: recordPatternValue['ll']
-                                }
-                            })
-                            console.log(fib)
-
-                            if (tradeEnabled) {
-
-                                let body = {
-                                    action: 'BUY',
-                                    exchange: 'BINANCE',
-                                    ticker: symbol,
-                                    asset: 'USDT',
-                                    coins: coinsArray.length
-                                }
-
-                                axios.post(apiUrlTrade, body)
-                                    .then(function (response) {
-                                        console.log(response);
-                                    })
-                                    .catch(function (error) {
-                                        console.log(error);
-                                    });
-                            }
-
-                            if (isTelegramEnabled) {
-
-                                let message = "Symbol: " + symbol + "\n" +
-                                    "Interval: " + interval + "\n" +
-                                    "Entry found at: " + new Date().toUTCString() + "\n" +
-                                    "takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                    "stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                    "hh: " + recordPatternValue['hh'] + "\n" +
-                                    "ll: " + recordPatternValue['ll'] + "\n" +
-                                    "lh: " + recordPatternValue['lh'] + "\n" +
-                                    "hl: " + recordPatternValue['hl']
-
-                                logic.sendMessageTelegram(message)
-                            }
-
-                            recordPatternValue['confirmed'] = true
-                            recordPatternValue['entryprice'] = closeIncreased
-                            recordPatternValue['entrypricedate'] = new Date()
-                        }
-
+                        logic.strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabled, apiUrlTrade, recordPatternValue)
                     }
                 }
 
