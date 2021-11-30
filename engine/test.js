@@ -211,7 +211,6 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 }
 
 
-
 // Send updated balance on instagram each 4 hours
 analysis.getBalance();
 
@@ -234,43 +233,34 @@ for (let time of timeFrame) {
 
         let key = symbol + "_" + interval
 
-        let dataValue = new Date();
-        let hour = dataValue.getUTCHours();
+        if (!_.isEmpty(recordPattern[key])) {
 
-        if (hour >= 0 && hour <= 5) {
+            const recordPatternValue = _.head(recordPattern[key]);
 
-            if (!_.isEmpty(recordPattern[key])) {
-                console.log("Non opero");
-                recordPattern[key] = []
+            if (recordPatternValue['confirmed'] === true) {
+
+                stopLoss(
+                    key,
+                    close,
+                    recordPatternValue,
+                    symbol,
+                    interval)
+
+                takeProfit(
+                    key,
+                    close,
+                    recordPatternValue,
+                    symbol,
+                    interval)
             }
+        }
 
-        } else {
+        if (isFinal) {
 
-            if (!_.isEmpty(recordPattern[key])) {
+            let dataValue = new Date();
+            let hour = dataValue.getUTCHours();
 
-                const recordPatternValue = _.head(recordPattern[key]);
-
-                if (recordPatternValue['confirmed'] === true) {
-
-                    stopLoss(
-                        key,
-                        close,
-                        recordPatternValue,
-                        symbol,
-                        interval)
-
-                    takeProfit(
-                        key,
-                        close,
-                        recordPatternValue,
-                        symbol,
-                        interval)
-
-                }
-            }
-
-            // Controllo alla chiusura della candela
-            if (isFinal) {
+            if (hour <= 0 && hour >= 5) {
 
                 if (_.isEmpty(recordPattern[key])) {
                     console.log(key)
