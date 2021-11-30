@@ -35,6 +35,7 @@ require('dotenv').config();
 //     });
 //
 // });
+
 console.log(typeof process.env.DEBUG)
 console.log(process.env.DEBUG)
 
