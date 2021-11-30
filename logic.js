@@ -228,11 +228,12 @@ function LowerHigh(storeData, indexLowerLow) {
                 'index': maxIndex,
                 'value': max['max']
             };
-        } else {
-            fail = true
-            failIndex = index;
-            break;
         }
+        // else {
+        //     fail = true
+        //     failIndex = index;
+        //     break;
+        // }
     }
 
     // if (fail) {
@@ -278,11 +279,13 @@ function HigherLow(storeData, indexLowerHigh, maxLowerHigh) {
                 'index': minIndex,
                 'value': min['min']
             };
-        } else {
-            fail = true
-            failIndex = index;
-            break;
         }
+
+        // else {
+        //     fail = true
+        //     failIndex = index;
+        //     break;
+        // }
     }
 
     // if (fail) {
