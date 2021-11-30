@@ -274,7 +274,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         recordPattern[symbol] = []
                     } else {
 
-                        let closeIncreased = close * 1.0025
+                        let closeIncreased = close * 1.0023
 
                         // 1) Strategy - Breakout
                         if (closeIncreased > recordPatternValue['lh']) {
