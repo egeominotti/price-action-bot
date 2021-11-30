@@ -7,11 +7,11 @@ const Logger = require('./models/logger');
 const analysis = require('./analytics/analysis');
 const Bot = require('./models/bot');
 const fibonacci = require('./indicators/fibonacci');
-const fs = require('fs');
 const taapi = require("taapi");
 const _ = require("lodash");
 const binance = new Binance();
 const args = process.argv;
+
 require('dotenv').config();
 
 mongoose.connect(process.env.URI_MONGODB);
@@ -68,8 +68,8 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
     let dataValue = new Date();
     let hour = dataValue.getUTCHours();
 
-    if (hour >= 0 || hour < 5) {
-
+    if (1 > hour > 6) {
+        console.log("non entro")
         if (!_.isEmpty(recordPattern[symbol])) {
             console.log("Non opero");
             recordPattern[symbol] = []
@@ -283,17 +283,6 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         // 1) Strategy - Breakout
                         if (closeIncreased > recordPatternValue['lh']) {
 
-                            //let symbolReplaced = symbol.replace('USDT', '/USDT')
-                            //console.log(symbolReplaced)
-
-                            // Filter with ema = 200
-                            //client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
-
-                            //console.log("Result: ", result);
-                            //console.log(result)
-
-                            //if (result['value'] < close) {
-
                             const fib = fibonacci.fibonacciRetrecement({
                                 levels: {
                                     0: recordPatternValue['hh'],
@@ -340,11 +329,6 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                             recordPatternValue['entryprice'] = closeIncreased
                             recordPatternValue['entrypricedate'] = new Date()
 
-                            //} else {
-                            // Open short position
-                            //    recordPattern[symbol] = []
-                            //}
-                            //});
                         }
 
                     }
