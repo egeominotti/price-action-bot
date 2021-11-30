@@ -265,6 +265,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
 
                     let recordPatternData = {
                         'symbol': symbol,
+                        'interval': interval,
                         'entryprice': 0,
                         'takeprofit': pattern['takeprofit'],
                         'stoploss': pattern['stoploss'],
