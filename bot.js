@@ -25,8 +25,6 @@ let indexArray = {}
 let recordPattern = {}
 
 let apiUrlTrade = process.env.URI_API_TRADE;
-
-
 let balance = 5000
 let totalPercentage = 0
 
@@ -98,10 +96,10 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
             const recordPatternValue = _.head(recordPattern[symbol]);
             if (recordPatternValue['confirmed'] === true) {
 
-                let entryprice = recordPatternValue['entryprice']
-                let entrypricedate = recordPatternValue['entrypricedate']
-                let takeprofit = recordPatternValue['takeprofit']
-                let stoploss = recordPatternValue['stoploss']
+                let entryprice =        recordPatternValue['entryprice']
+                let entrypricedate =    recordPatternValue['entrypricedate']
+                let takeprofit =        recordPatternValue['takeprofit']
+                let stoploss =          recordPatternValue['stoploss']
 
                 // Stop Loss
                 if (close <= stoploss) {
@@ -160,7 +158,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         let message = "Symbol: " + symbol + "\n" +
                             "Interval: " + interval + "\n" +
                             "Balance: " + balance + "\n" +
-                            "Entry date: " + entrydate.toString() + "\n" +
+                            "Entry date: " + entrypricedate.toString() + "\n" +
                             "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
                             "hh: " + recordPatternValue['hh'] + "\n" +
                             "ll: " + recordPatternValue['ll'] + "\n" +
@@ -229,7 +227,7 @@ binance.websockets.candlesticks(coinsArray, timeFrame, (candlesticks) => {
                         let message = "Symbol: " + symbol + "\n" +
                             "Interval: " + interval + "\n" +
                             "Balance: " + balance + "\n" +
-                            "Entry data: " + entrydate.toString() + "\n" +
+                            "Entry data: " + entrypricedate.toString() + "\n" +
                             "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
                             "hh: " + recordPatternValue['hh'] + "\n" +
                             "ll: " + recordPatternValue['ll'] + "\n" +
