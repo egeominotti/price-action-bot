@@ -51,7 +51,6 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
                 });
         }
 
-        // 👉
         let message = "ENTRY: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
             "Entry found at: " + entrypricedate.toUTCString() + "\n" +

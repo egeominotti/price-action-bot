@@ -34,7 +34,7 @@ let timeFrame = [
 
 
 let tradeEnabled = false;
-let ratioStopLoss = 0.997
+let ratioStopLoss = 1.0025
 let ratioTakeProfit = 0.995
 
 // Production Only
@@ -118,7 +118,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
             console.log(err)
         });
 
-        let message = "👉 TAKEPROFIT: " + symbol + " ✅" + "\n" +
+        let message = "TAKEPROFIT: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
             "Balance: " + balance + "\n" +
             "Entry date: " + entrypricedate.toUTCString() + "\n" +
@@ -191,8 +191,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
             console.log(err)
         });
 
-
-        let message = "👉 STOPLOSS: " + symbol + " ⛔" + "\n" +
+        let message = "STOPLOSS: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
             "Balance: " + balance + "\n" +
             "Entry date: " + entrypricedate.toUTCString() + "\n" +
