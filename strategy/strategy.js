@@ -63,7 +63,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         Telegram.sendMessage(message)
 
         recordPatternValue['confirmed'] = true
-        recordPatternValue['entryprice'] = closeIncreased
+        recordPatternValue['entryprice'] = close
         recordPatternValue['entrypricedate'] = entrypricedate
         recordPatternValue['strategy'] = 'breakout'
 
