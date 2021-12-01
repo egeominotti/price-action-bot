@@ -13,15 +13,14 @@ const Telegram = require('../utility/telegram');
  */
 function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue) {
 
-    let closeIncreased = close * 1.0023
-    let takeprofit = recordPatternValue['takeprofit']
-    let stoploss = recordPatternValue['stoploss']
-    let hh = recordPatternValue['hh']
-    let ll = recordPatternValue['ll']
-    let lh = recordPatternValue['lh']
-    let hl = recordPatternValue['hl']
+    let takeprofit =    recordPatternValue['takeprofit']
+    let stoploss =      recordPatternValue['stoploss']
+    let hh =            recordPatternValue['hh']
+    let ll =            recordPatternValue['ll']
+    let lh =            recordPatternValue['lh']
+    let hl =            recordPatternValue['hl']
 
-    if (closeIncreased > recordPatternValue['lh']) {
+    if (close > recordPatternValue['lh'] * 1.0023) {
 
 
         // const fib = fibonacci.fibonacciRetrecement({
@@ -52,8 +51,8 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
                 });
         }
 
-
-        let message = "👉 ENTRY: " + symbol + "\n" +
+        // 👉
+        let message = "ENTRY: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
             "Entry found at: " + entrypricedate.toUTCString() + "\n" +
             "takeprofit: " + takeprofit + "\n" +
