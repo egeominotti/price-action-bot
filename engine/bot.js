@@ -13,7 +13,7 @@ const binance = new Binance();
 
 require('dotenv').config();
 
-const client = taapi.client("MY_SECRET");
+const client = taapi.client(process.env.API_KEY_TAAPI);
 
 let apiUrlTrade = process.env.URI_API_TRADE;
 
