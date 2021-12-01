@@ -27,7 +27,6 @@ let indexArray = {}
 let recordPattern = {}
 
 let timeFrame = [
-    '1m',
     '5m',
     '15m',
     '1h',
