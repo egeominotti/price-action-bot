@@ -11,7 +11,7 @@ const Telegram = require('../utility/telegram');
  * @param apiUrlTrade
  * @param recordPatternValue
  */
-function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue) {
+function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry) {
 
     let takeprofit =    recordPatternValue['takeprofit']
     let stoploss =      recordPatternValue['stoploss']
@@ -20,7 +20,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
     let lh =            recordPatternValue['lh']
     let hl =            recordPatternValue['hl']
 
-    if (close > recordPatternValue['lh'] * 1.0023) {
+    if (close > recordPatternValue['lh'] * ratioEntry) {
 
         // const fib = fibonacci.fibonacciRetrecement({
         //     levels: {

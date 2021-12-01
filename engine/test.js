@@ -34,8 +34,9 @@ let timeFrame = [
 
 
 let tradeEnabled = false;
-let ratioStopLoss = 1.0025
-let ratioTakeProfit = 0.995
+let ratioStopLoss = 1.001
+let ratioTakeProfit = 0.9985
+let ratioEntry = 1.0005
 
 // Production Only
 if (process.env.DEBUG === 'false') {
@@ -312,7 +313,7 @@ for (let time of timeFrame) {
                         recordPattern[key] = []
                     } else {
                         // Strategy - Breakout
-                        Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                        Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
                     }
                 }
             }
