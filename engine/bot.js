@@ -59,6 +59,14 @@ for (let time of timeFrame) {
 }
 
 
+// Send updated balance on instagram each 4 hours
+//analysis.getBalance();
+
+let balance = 3000
+let totalPercentage = 0
+let sumSizeTrade = 0;
+const sizeTrade = 200
+
 function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
     let entryprice = recordPatternValue['entryprice']
@@ -68,11 +76,18 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
     if (close >= takeprofit) {
 
+        let finaleTradeValue;
+
         let takeProfitPercentage = (takeprofit - entryprice) / entryprice
+        let finaleSizeTrade = (sizeTrade / entryprice) * takeprofit;
 
         takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
         totalPercentage += takeProfitPercentage
         balance = _.round((balance / entryprice) * takeprofit, 2)
+
+        finaleTradeValue = finaleSizeTrade - sizeTrade
+
+        sumSizeTrade += finaleTradeValue;
 
         if (tradeEnabled) {
 
@@ -97,7 +112,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
             type: 'TAKEPROFIT',
             symbol: symbol,
             interval: interval,
-            balance: balance,
+            balance: balance + sumSizeTrade,
             entryprice: entryprice,
             entrypricedate: entrypricedate,
             takeprofitvalue: takeprofit,
@@ -118,7 +133,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
         let message = "TAKEPROFIT: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
-            "Balance: " + balance + "\n" +
+            "Balance: " + balance + sumSizeTrade + "\n" +
             "Entry date: " + entrypricedate.toUTCString() + "\n" +
             "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
             "hh: " + recordPatternValue['hh'] + "\n" +
@@ -141,12 +156,16 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
     // Stop Loss
     if (close <= stoploss) {
 
+        let finaleTradeValue;
         let stopLossPercentage = (stoploss - entryprice) / entryprice
         stopLossPercentage = _.round(stopLossPercentage * 100, 2)
-
+        let finaleSizeTrade = (sizeTrade / entryprice) * stoploss;
+        finaleTradeValue = finaleSizeTrade - sizeTrade
         totalPercentage += stopLossPercentage
 
         balance = _.round((balance / entryprice) * stoploss, 2)
+
+        sumSizeTrade += finaleTradeValue;
 
         if (tradeEnabled) {
 
@@ -170,7 +189,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
             type: 'STOPLOSS',
             symbol: symbol,
             interval: interval,
-            balance: balance,
+            balance: balance + sumSizeTrade,
             entryprice: entryprice,
             entrypricedate: entrypricedate,
             stoplossvalue: stoploss,
@@ -191,7 +210,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 
         let message = "STOPLOSS: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
-            "Balance: " + balance + "\n" +
+            "Balance: " + balance + sumSizeTrade + "\n" +
             "Entry date: " + entrypricedate.toUTCString() + "\n" +
             "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
             "hh: " + recordPatternValue['hh'] + "\n" +
@@ -204,12 +223,6 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
     }
 }
 
-
-// Send updated balance on instagram each 4 hours
-analysis.getBalance();
-
-let balance = 5000
-let totalPercentage = 0
 
 for (let time of timeFrame) {
 
