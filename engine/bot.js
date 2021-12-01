@@ -54,7 +54,6 @@ if (process.env.DEBUG === 'false') {
 for (let time of timeFrame) {
     for (const token of coinsArray) {
         let key = token + "_" + time
-
         indexArray[key] = -1;
         tokenArray[key] = [];
         recordPattern[key] = [];
@@ -252,6 +251,7 @@ for (let time of timeFrame) {
             let hour = dataValue.getUTCHours();
 
             //if (hour <= 0 || hour >= 5) {
+
             if (_.isEmpty(recordPattern[key])) {
 
                 indexArray[key] += 1
