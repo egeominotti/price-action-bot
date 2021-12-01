@@ -280,7 +280,7 @@ function HigherLow(storeData, indexLowerHigh, maxLowerHigh) {
  *
  * @param storeData
  * @param symbol
- * @returns {boolean|{hh, ll, hl, stoploss: number, takeprofit: *, lh, entryprice}}
+ * @returns {boolean|{hh: *, ll: *, hl: *, lh: *}}
  */
 function patternMatching(storeData, symbol) {
 
@@ -304,13 +304,7 @@ function patternMatching(storeData, symbol) {
                     let lastTicker;
                     for (let currentTicker of storeData) lastTicker = currentTicker;
 
-                    let entryPrice = LH['value'];
-                    let takeProfit = LH['value'] + (HH['value'] - LL['value'])
-
                     return {
-                        'takeprofit': takeProfit,
-                        'entryprice': entryPrice,
-                        'stoploss': HL['value'],
                         'hh': HH['value'],
                         'll': LL['value'],
                         'lh': LH['value'],

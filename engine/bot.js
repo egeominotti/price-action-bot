@@ -20,11 +20,8 @@ let apiUrlTrade = process.env.URI_API_TRADE;
 mongoose.connect(process.env.URI_MONGODB);
 
 let tradeEnabled = false;
-let ratioStopLoss = 1.001
-let ratioTakeProfit = 0.9985
-let ratioEntry = 1.0023
-
 let coinsArray = coins.getCoins()
+
 let tokenArray = {}
 let indexArray = {}
 let recordPattern = {}
@@ -33,8 +30,10 @@ let timeFrame = [
     '1m',
     '5m',
     '15m',
+    '45m',
     '1h',
     '4h',
+    '8h',
     '1D',
     '3D',
     '1W',
@@ -46,8 +45,10 @@ if (process.env.DEBUG === 'false') {
         '1m',
         '5m',
         '15m',
+        '45m',
         '1h',
         '4h',
+        '8h',
         '1D',
         '3D',
         '1W',
@@ -291,8 +292,6 @@ for (let time of timeFrame) {
                     let recordPatternData = {
                         'symbol': symbol,
                         'interval': interval,
-                        'takeprofit': pattern['takeprofit'] * ratioTakeProfit,
-                        'stoploss': pattern['stoploss'] * ratioStopLoss,
                         'hh': pattern['hh'],
                         'll': pattern['ll'],
                         'lh': pattern['lh'],
@@ -328,14 +327,12 @@ for (let time of timeFrame) {
                         recordPattern[key] = []
                     } else {
 
-                        let symbolReplace = symbol.replace('USDT', '/USDT')
-                        client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 200}).then(function (result) {
+                        let symbolReplaced = symbol.replace('USDT', '/USDT')
+                        client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
                             let ema = result['value']
                             if (ema < close) {
                                 console.log(recordPatternValue)
-                                Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
-                            } else {
-                                recordPattern[key] = []
+                                Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
                             }
                         });
 
