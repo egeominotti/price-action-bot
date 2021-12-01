@@ -1,7 +1,17 @@
-const axios = require("axios");
-const bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
-const bot_chat_id = '-558016221'
+require('dotenv').config();
 
+const axios = require("axios");
+
+let bot_token = ''
+let bot_chat_id = ''
+
+if (process.env.DEBUG === 'false') {
+    bot_token = '1889367095:AAGS13rjA6xWAGvcUTOy1W1vUZvPnNxcDaw'
+    bot_chat_id = '-558016221'
+} else {
+    bot_token = '2136128892:AAFOQs6Qri5eqZKIeEovq8wthAxPYDjkBkY'
+    bot_chat_id = '-699520069'
+}
 
 /**
  *

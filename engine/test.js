@@ -21,22 +21,6 @@ let tokenArray = {}
 let indexArray = {}
 let recordPattern = {}
 
-
-let tradeEnabled = false;
-let isTelegramEnabled = false;
-
-// if (process.env.DEBUG === 'false') {
-//     isTelegramEnabled = true
-// } else {
-//     isTelegramEnabled = false
-// }
-
-
-// if (isTelegramEnabled) {
-//     let startMessage = 'Bot Pattern Analysis System Started for interval: ' + timeFrame
-//     Telegram.sendMessage(startMessage)
-// }
-
 let timeFrame = [
     '1m',
     '5m',
@@ -47,6 +31,33 @@ let timeFrame = [
     '3D',
     '1W',
 ]
+
+
+let tradeEnabled = false;
+let isTelegramEnabled = false;
+
+let ratioStopLoss = 0.997
+let ratioTakeProfit = 0.995
+
+// Production Only
+if (process.env.DEBUG === 'false') {
+    isTelegramEnabled = true
+    timeFrame = [
+        '5m',
+        '15m',
+        '1h',
+        '4h',
+        '1D',
+        '3D',
+        '1W',
+    ]
+}
+
+
+if (isTelegramEnabled) {
+
+}
+
 
 for (let time of timeFrame) {
     for (const token of coinsArray) {
@@ -63,7 +74,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
     let entryprice = recordPatternValue['entryprice']
     let entrypricedate = recordPatternValue['entrypricedate']
-    let takeprofit = recordPatternValue['takeprofit']
+    let takeprofit = recordPatternValue['takeprofit'] * ratioTakeProfit
     let strategy = recordPatternValue['strategy']
 
     if (close >= takeprofit) {
@@ -137,7 +148,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 
     let entryprice = recordPatternValue['entryprice']
     let entrypricedate = recordPatternValue['entrypricedate']
-    let stoploss = recordPatternValue['stoploss']
+    let stoploss = recordPatternValue['stoploss'] * ratioStopLoss
     let strategy = recordPatternValue['strategy']
 
     // Stop Loss
@@ -219,6 +230,9 @@ let totalPercentage = 0
 
 for (let time of timeFrame) {
 
+    let startMessage = 'Bot Pattern Analysis System Started for interval: ' + time
+    Telegram.sendMessage(startMessage)
+
     binance.websockets.candlesticks(coinsArray, time, (candlesticks) => {
 
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
@@ -241,7 +255,8 @@ for (let time of timeFrame) {
             if (recordPatternValue['confirmed'] === true) {
 
                 stopLoss(key, close, recordPatternValue, symbol, interval)
-                takeProfit(key, close, recordPatternValue, symbol, interval)}
+                takeProfit(key, close, recordPatternValue, symbol, interval)
+            }
         }
 
         // Check at close tick
@@ -250,68 +265,73 @@ for (let time of timeFrame) {
             let dataValue = new Date();
             let hour = dataValue.getUTCHours();
 
-            if (hour <= 0 || hour >= 5) {
+            //if (hour <= 0 || hour >= 5) {
+            if (_.isEmpty(recordPattern[key])) {
 
-                console.log(hour)
+                indexArray[key] += 1
 
-                if (_.isEmpty(recordPattern[key])) {
+                let ticker = {
+                    'index': parseInt(indexArray[key]),
+                    'symbol': symbol.toString(),
+                    'open': parseFloat(open),
+                    'close': parseFloat(close),
+                    'low': parseFloat(low),
+                    'high': parseFloat(high),
+                    'interval': interval.toString(),
+                    'time': new Date()
+                }
 
-                    indexArray[key] += 1
+                tokenArray[key].push(ticker)
+                let pattern = Pattern.patternMatching(tokenArray[key], symbol)
 
-                    let ticker = {
-                        'index': parseInt(indexArray[key]),
-                        'symbol': symbol.toString(),
-                        'open': parseFloat(open),
-                        'close': parseFloat(close),
-                        'low': parseFloat(low),
-                        'high': parseFloat(high),
-                        'interval': interval.toString(),
-                        'time': new Date()
+                if (!_.isEmpty(pattern)) {
+
+                    let recordPatternData = {
+                        'symbol': symbol,
+                        'interval': interval,
+                        'takeprofit': pattern['takeprofit'],
+                        'stoploss': pattern['stoploss'],
+                        'hh': pattern['hh'],
+                        'll': pattern['ll'],
+                        'lh': pattern['lh'],
+                        'hl': pattern['hl'],
                     }
 
-                    tokenArray[key].push(ticker)
-                    let pattern = Pattern.patternMatching(tokenArray[key], symbol)
-
-                    if (!_.isEmpty(pattern)) {
-
-                        let recordPatternData = {
-                            'symbol': symbol,
-                            'interval': interval,
-                            'entryprice': 0,
-                            'takeprofit': pattern['takeprofit'],
-                            'stoploss': pattern['stoploss'],
-                            'hh': pattern['hh'],
-                            'll': pattern['ll'],
-                            'lh': pattern['lh'],
-                            'hl': pattern['hl'],
-                            'confirmed': false,
-                            'entrypricedate': null,
-                            'strategy': ''
+                    // Se già esiste una pair simile in recordPattern allora non la aggiungo
+                    let dupFounded = false;
+                    for (let time of timeFrame) {
+                        let keySearch = symbol + "_" + time
+                        if (!_.isEmpty(recordPatternData[keySearch])){
+                            dupFounded = true;
+                            break;
                         }
+                    }
 
+                    // Discard dup symbol with different time frame
+                    if (!dupFounded) {
                         recordPattern[key].push(recordPatternData)
                         tokenArray[key] = [];
                         indexArray[key] = -1
                     }
 
-                } else {
+                }
 
-                    let recordPatternValue = _.head(recordPattern[key]);
-                    console.log(recordPatternValue);
+            } else {
 
-                    if (recordPatternValue['confirmed'] === false) {
+                let recordPatternValue = _.head(recordPattern[key]);
+                console.log(recordPatternValue)
+                if (recordPatternValue['confirmed'] === false) {
 
-                        if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
-                            recordPattern[key] = []
-                        } else {
-                            // Strategy - Breakout
-                            Strategy.strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabled, apiUrlTrade, recordPatternValue)
-                        }
+                    if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
+                        recordPattern[key] = []
+                    } else {
+                        // Strategy - Breakout
+                        Strategy.strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabled, apiUrlTrade, recordPatternValue)
                     }
-
                 }
             }
 
+            //}
         }
 
     });
