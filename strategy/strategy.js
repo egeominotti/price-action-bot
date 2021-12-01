@@ -11,7 +11,7 @@ const Telegram = require('../utility/telegram');
  * @param apiUrlTrade
  * @param recordPatternValue
  */
-function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabled, apiUrlTrade, recordPatternValue) {
+function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue) {
 
     let closeIncreased = close * 1.0023
     let takeprofit = recordPatternValue['takeprofit']
@@ -52,25 +52,24 @@ function strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabl
                 });
         }
 
-        if (isTelegramEnabled) {
 
-            let message = "👉 ENTRY: " + symbol + "\n" +
-                "Interval: " + interval + "\n" +
-                "Entry found at: " + entrypricedate.toUTCString() + "\n" +
-                "takeprofit: " + takeprofit + "\n" +
-                "stoploss:  " + stoploss + "\n" +
-                "hh: " + hh + "\n" +
-                "ll: " + ll + "\n" +
-                "lh: " + lh + "\n" +
-                "hl: " + hl
+        let message = "👉 ENTRY: " + symbol + "\n" +
+            "Interval: " + interval + "\n" +
+            "Entry found at: " + entrypricedate.toUTCString() + "\n" +
+            "takeprofit: " + takeprofit + "\n" +
+            "stoploss:  " + stoploss + "\n" +
+            "hh: " + hh + "\n" +
+            "ll: " + ll + "\n" +
+            "lh: " + lh + "\n" +
+            "hl: " + hl
 
-            Telegram.sendMessage(message)
-        }
+        Telegram.sendMessage(message)
 
         recordPatternValue['confirmed'] = true
         recordPatternValue['entryprice'] = closeIncreased
         recordPatternValue['entrypricedate'] = entrypricedate
         recordPatternValue['strategy'] = 'breakout'
+
     }
 }
 

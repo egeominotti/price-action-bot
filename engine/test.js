@@ -74,7 +74,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
     let entryprice = recordPatternValue['entryprice']
     let entrypricedate = recordPatternValue['entrypricedate']
-    let takeprofit = recordPatternValue['takeprofit'] * ratioTakeProfit
+    let takeprofit = recordPatternValue['takeprofit']
     let strategy = recordPatternValue['strategy']
 
     if (close >= takeprofit) {
@@ -127,19 +127,17 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
             console.log(err)
         });
 
-        if (isTelegramEnabled) {
-            let message = "👉 TAKEPROFIT: " + symbol + " ✅" + "\n" +
-                "Interval: " + interval + "\n" +
-                "Balance: " + balance + "\n" +
-                "Entry date: " + entrypricedate.toUTCString() + "\n" +
-                "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
-                "hh: " + recordPatternValue['hh'] + "\n" +
-                "ll: " + recordPatternValue['ll'] + "\n" +
-                "lh: " + recordPatternValue['lh'] + "\n" +
-                "hl: " + recordPatternValue['hl']
+        let message = "👉 TAKEPROFIT: " + symbol + " ✅" + "\n" +
+            "Interval: " + interval + "\n" +
+            "Balance: " + balance + "\n" +
+            "Entry date: " + entrypricedate.toUTCString() + "\n" +
+            "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
+            "hh: " + recordPatternValue['hh'] + "\n" +
+            "ll: " + recordPatternValue['ll'] + "\n" +
+            "lh: " + recordPatternValue['lh'] + "\n" +
+            "hl: " + recordPatternValue['hl']
 
-            Telegram.sendMessage(message)
-        }
+        Telegram.sendMessage(message)
         recordPattern[key] = []
     }
 }
@@ -148,7 +146,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 
     let entryprice = recordPatternValue['entryprice']
     let entrypricedate = recordPatternValue['entrypricedate']
-    let stoploss = recordPatternValue['stoploss'] * ratioStopLoss
+    let stoploss = recordPatternValue['stoploss']
     let strategy = recordPatternValue['strategy']
 
     // Stop Loss
@@ -203,20 +201,17 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         });
 
 
-        if (isTelegramEnabled) {
+        let message = "👉 STOPLOSS: " + symbol + " ⛔" + "\n" +
+            "Interval: " + interval + "\n" +
+            "Balance: " + balance + "\n" +
+            "Entry date: " + entrypricedate.toUTCString() + "\n" +
+            "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
+            "hh: " + recordPatternValue['hh'] + "\n" +
+            "ll: " + recordPatternValue['ll'] + "\n" +
+            "lh: " + recordPatternValue['lh'] + "\n" +
+            "hl: " + recordPatternValue['hl']
 
-            let message = "👉 STOPLOSS: " + symbol + " ⛔" + "\n" +
-                "Interval: " + interval + "\n" +
-                "Balance: " + balance + "\n" +
-                "Entry date: " + entrypricedate.toUTCString() + "\n" +
-                "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
-                "hh: " + recordPatternValue['hh'] + "\n" +
-                "ll: " + recordPatternValue['ll'] + "\n" +
-                "lh: " + recordPatternValue['lh'] + "\n" +
-                "hl: " + recordPatternValue['hl']
-
-            Telegram.sendMessage(message)
-        }
+        Telegram.sendMessage(message)
         recordPattern[key] = []
     }
 }
@@ -289,8 +284,8 @@ for (let time of timeFrame) {
                     let recordPatternData = {
                         'symbol': symbol,
                         'interval': interval,
-                        'takeprofit': pattern['takeprofit'],
-                        'stoploss': pattern['stoploss'],
+                        'takeprofit': pattern['takeprofit'] * ratioTakeProfit,
+                        'stoploss': pattern['stoploss'] * ratioStopLoss,
                         'hh': pattern['hh'],
                         'll': pattern['ll'],
                         'lh': pattern['lh'],
@@ -301,7 +296,7 @@ for (let time of timeFrame) {
                     let dupFounded = false;
                     for (let time of timeFrame) {
                         let keySearch = symbol + "_" + time
-                        if (!_.isEmpty(recordPatternData[keySearch])){
+                        if (!_.isEmpty(recordPatternData[keySearch])) {
                             dupFounded = true;
                             break;
                         }
@@ -326,7 +321,7 @@ for (let time of timeFrame) {
                         recordPattern[key] = []
                     } else {
                         // Strategy - Breakout
-                        Strategy.strategyBreakout(symbol, interval, close, isTelegramEnabled, tradeEnabled, apiUrlTrade, recordPatternValue)
+                        Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
                     }
                 }
             }
