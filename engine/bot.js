@@ -330,16 +330,83 @@ for (let time of timeFrame) {
                     } else {
 
                         let symbolReplace = symbol.replace('USDT', '/USDT')
-                        client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 200}).then(function (result) {
-                            console.log("Result: ", result);
-                            let ema200 = result['value']
-                            if (ema200 < close) {
-                                // Strategy - Breakout
-                                Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
-                            } else {
-                                recordPattern[key] = []
-                            }
-                        });
+
+                        if (interval === '1m' || interval === '5m' || interval === '15m') {
+
+                            client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 60}).then(function (result) {
+                                console.log("Result: ", result);
+                                let ema = result['value']
+                                if (ema < close) {
+                                    // Strategy - Breakout
+                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
+                                } else {
+                                    recordPattern[key] = []
+                                }
+                            });
+
+
+                        } else if (interval === '1h') {
+                            client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
+                                console.log("Result: ", result);
+                                let ema = result['value']
+                                if (ema < close) {
+                                    // Strategy - Breakout
+                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
+                                } else {
+                                    recordPattern[key] = []
+                                }
+                            });
+
+                        } else if (interval === '4h') {
+                            client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
+                                console.log("Result: ", result);
+                                let ema = result['value']
+                                if (ema < close) {
+                                    // Strategy - Breakout
+                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
+                                } else {
+                                    recordPattern[key] = []
+                                }
+                            });
+
+                        } else if (interval === '1D') {
+                            client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
+                                console.log("Result: ", result);
+                                let ema200 = result['value']
+                                if (ema200 < close) {
+                                    // Strategy - Breakout
+                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
+                                } else {
+                                    recordPattern[key] = []
+                                }
+                            });
+
+                        } else if (interval === '3D') {
+                            client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
+                                console.log("Result: ", result);
+                                let ema = result['value']
+                                if (ema < close) {
+                                    // Strategy - Breakout
+                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
+                                } else {
+                                    recordPattern[key] = []
+                                }
+                            });
+
+                        } else if (interval === '1W') {
+                            client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
+                                console.log("Result: ", result);
+                                let ema = result['value']
+                                if (ema < close) {
+                                    // Strategy - Breakout
+                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
+                                } else {
+                                    recordPattern[key] = []
+                                }
+                            });
+
+                        }
+
 
                     }
                 }
