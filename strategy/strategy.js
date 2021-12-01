@@ -69,6 +69,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         recordPatternValue['strategy'] = 'breakout'
 
     }
+
 }
 
 module.exports = {
