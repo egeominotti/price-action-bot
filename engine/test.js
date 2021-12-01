@@ -34,14 +34,11 @@ let timeFrame = [
 
 
 let tradeEnabled = false;
-let isTelegramEnabled = false;
-
 let ratioStopLoss = 0.997
 let ratioTakeProfit = 0.995
 
 // Production Only
 if (process.env.DEBUG === 'false') {
-    isTelegramEnabled = true
     timeFrame = [
         '5m',
         '15m',
@@ -52,12 +49,6 @@ if (process.env.DEBUG === 'false') {
         '1W',
     ]
 }
-
-
-if (isTelegramEnabled) {
-
-}
-
 
 for (let time of timeFrame) {
     for (const token of coinsArray) {
