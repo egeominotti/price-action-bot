@@ -322,7 +322,6 @@ for (let time of timeFrame) {
             } else {
 
                 let recordPatternValue = _.head(recordPattern[key]);
-                console.log(recordPatternValue)
                 if (recordPatternValue['confirmed'] === false) {
 
                     if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
@@ -331,10 +330,9 @@ for (let time of timeFrame) {
 
                         let symbolReplace = symbol.replace('USDT', '/USDT')
                         client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 200}).then(function (result) {
-                            console.log("Result: ", result);
                             let ema = result['value']
                             if (ema < close) {
-                                // Strategy - Breakout
+                                console.log(recordPatternValue)
                                 Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
                             } else {
                                 recordPattern[key] = []
