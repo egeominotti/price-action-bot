@@ -37,9 +37,6 @@ let timeFrame = [
     '1W',
 ]
 
-
-
-
 // Production Only
 if (process.env.DEBUG === 'false') {
     timeFrame = [
