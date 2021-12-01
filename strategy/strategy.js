@@ -33,7 +33,6 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
 
     if (interval === '1m') {
 
-
         ratioEntry = 1
         ratioTakeProfit = 1
         ratioStopLoss = 1
