@@ -20,9 +20,9 @@ let apiUrlTrade = process.env.URI_API_TRADE;
 mongoose.connect(process.env.URI_MONGODB);
 
 let tradeEnabled = false;
-let ratioStopLoss = 1.001
-let ratioTakeProfit = 0.9985
-let ratioEntry = 1.0023
+let ratioStopLoss =     1.001
+let ratioTakeProfit =   0.9985
+let ratioEntry =        1.0023
 
 let coinsArray = coins.getCoins()
 let tokenArray = {}
