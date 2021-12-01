@@ -330,7 +330,6 @@ for (let time of timeFrame) {
                     } else {
 
                         let symbolReplace = symbol.replace('USDT', '/USDT')
-
                         client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 200}).then(function (result) {
                             console.log("Result: ", result);
                             let ema = result['value']
