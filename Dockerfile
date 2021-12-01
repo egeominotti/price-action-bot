@@ -5,4 +5,4 @@ RUN chown -R node:node /bot
 COPY package*.json ./
 RUN npm install
 COPY . .
-CMD node engine/test.js
+CMD node engine/bot.js
