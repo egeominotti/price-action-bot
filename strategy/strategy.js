@@ -22,7 +22,6 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
 
     if (close > recordPatternValue['lh'] * 1.0023) {
 
-
         // const fib = fibonacci.fibonacciRetrecement({
         //     levels: {
         //         0: recordPatternValue['hh'],
