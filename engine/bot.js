@@ -333,7 +333,7 @@ for (let time of timeFrame) {
 
                         if (interval === '1m' || interval === '5m' || interval === '15m') {
 
-                            client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 60}).then(function (result) {
+                            client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
                                 console.log("Result: ", result);
                                 let ema = result['value']
                                 if (ema < close) {
@@ -346,6 +346,7 @@ for (let time of timeFrame) {
 
 
                         } else if (interval === '1h') {
+
                             client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
                                 console.log("Result: ", result);
                                 let ema = result['value']
@@ -358,6 +359,7 @@ for (let time of timeFrame) {
                             });
 
                         } else if (interval === '4h') {
+
                             client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
                                 console.log("Result: ", result);
                                 let ema = result['value']
@@ -370,6 +372,7 @@ for (let time of timeFrame) {
                             });
 
                         } else if (interval === '1D') {
+
                             client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
                                 console.log("Result: ", result);
                                 let ema200 = result['value']
@@ -382,6 +385,7 @@ for (let time of timeFrame) {
                             });
 
                         } else if (interval === '3D') {
+
                             client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
                                 console.log("Result: ", result);
                                 let ema = result['value']
@@ -394,6 +398,7 @@ for (let time of timeFrame) {
                             });
 
                         } else if (interval === '1W') {
+
                             client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 223}).then(function (result) {
                                 console.log("Result: ", result);
                                 let ema = result['value']
@@ -404,7 +409,6 @@ for (let time of timeFrame) {
                                     recordPattern[key] = []
                                 }
                             });
-
                         }
 
 
