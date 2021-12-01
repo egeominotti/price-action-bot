@@ -7,10 +7,13 @@ const Pattern = require('../pattern/triangle')
 const Telegram = require('../utility/telegram');
 const analysis = require('../analytics/analysis');
 const Strategy = require('../strategy/strategy');
+const taapi = require("taapi");
 const _ = require("lodash");
 const binance = new Binance();
 
 require('dotenv').config();
+
+const client = taapi.client("MY_SECRET");
 
 let apiUrlTrade = process.env.URI_API_TRADE;
 
@@ -19,7 +22,7 @@ mongoose.connect(process.env.URI_MONGODB);
 let tradeEnabled = false;
 let ratioStopLoss = 1.001
 let ratioTakeProfit = 0.9985
-let ratioEntry = 1.0005
+let ratioEntry = 1.0023
 
 let coinsArray = coins.getCoins()
 let tokenArray = {}
@@ -27,6 +30,7 @@ let indexArray = {}
 let recordPattern = {}
 
 let timeFrame = [
+    '1m',
     '5m',
     '15m',
     '1h',
@@ -39,6 +43,7 @@ let timeFrame = [
 // Production Only
 if (process.env.DEBUG === 'false') {
     timeFrame = [
+        '1m',
         '5m',
         '15m',
         '1h',
@@ -323,13 +328,22 @@ for (let time of timeFrame) {
                     if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
                         recordPattern[key] = []
                     } else {
-                        // Strategy - Breakout
-                        Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
+
+                        let symbolReplace = symbol.replace('USDT', '/USDT')
+                        client.getIndicator("ema", "binance", symbolReplace, interval, {optInTimePeriod: 200}).then(function (result) {
+                            console.log("Result: ", result);
+                            let ema200 = result['value']
+                            if (ema200 < close) {
+                                // Strategy - Breakout
+                                Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry)
+                            } else {
+                                recordPattern[key] = []
+                            }
+                        });
+
                     }
                 }
             }
-
-            //}
         }
 
     });

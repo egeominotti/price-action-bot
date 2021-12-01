@@ -6,10 +6,10 @@ const Telegram = require('../utility/telegram');
  * @param symbol
  * @param interval
  * @param close
- * @param isTelegramEnabled
  * @param tradeEnabled
  * @param apiUrlTrade
  * @param recordPatternValue
+ * @param ratioEntry
  */
 function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue, ratioEntry) {
 
