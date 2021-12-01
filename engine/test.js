@@ -281,6 +281,7 @@ for (let time of timeFrame) {
                         'll': pattern['ll'],
                         'lh': pattern['lh'],
                         'hl': pattern['hl'],
+                        'confirmed': false
                     }
 
                     // Se già esiste una pair simile in recordPattern allora non la aggiungo
