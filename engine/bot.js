@@ -25,7 +25,7 @@ let tokenArray = {}
 let indexArray = {}
 let recordPattern = {}
 
-let filterEma = false
+let filterEma = true;
 
 let timeFrame = [
     '1m',
