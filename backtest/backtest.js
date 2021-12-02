@@ -1,7 +1,7 @@
 const Binance = require('node-binance-api');
-const logic = require('./logic');
+const Pattern = require('../pattern/triangle');
 const axios = require('axios').default;
-const coins = require('./coins');
+const coins = require('../utility/coins');
 const fs = require('fs');
 const _ = require("lodash");
 const binance = new Binance();
@@ -49,7 +49,7 @@ for (let symbol of coinsArray) {
 
                     index++;
                     ticksArray.push(ticker)
-                    let pattern = logic.patternMatching(ticksArray, symbol)
+                    let pattern = Pattern.patternMatching(ticksArray, symbol)
                     if (!_.isEmpty(pattern)) {
                         patternData = pattern
                         ticksArray = []
