@@ -7,13 +7,11 @@ const Pattern = require('../pattern/triangle')
 const Telegram = require('../utility/telegram');
 const analysis = require('../analytics/analysis');
 const Strategy = require('../strategy/strategy');
-const taapi = require("taapi");
 const _ = require("lodash");
 const binance = new Binance();
 
 require('dotenv').config();
 
-const client = taapi.client(process.env.API_KEY_TAAPI);
 const apiUrlTrade = process.env.URI_API_TRADE;
 
 mongoose.connect(process.env.URI_MONGODB);
@@ -308,18 +306,33 @@ for (let time of timeFrame) {
 
                         try {
 
-                            client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
-                                let ema = result['value']
-                                if (ema < close) {
-                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
-                                    console.log(recordPatternValue)
-                                } else {
-                                    recordPattern[key] = []
+                            axios.get('https://api.taapi.io/ema', {
+                                params: {
+                                    secret: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVnZW9taW5vdHRpQGdtYWlsLmNvbSIsImlhdCI6MTYzODM5MjA1NSwiZXhwIjo3OTQ1NTkyMDU1fQ.N6fSSuYwMI4-eD8N9GTi7I29oF_l3Zjj_vgWtUv-_NM',
+                                    exchange: "binance",
+                                    symbol: symbolReplaced,
+                                    interval: interval,
+                                    optInTimePeriod: 200
                                 }
-                            });
+                            })
+                                .then(function (response) {
+                                    let ema = response.data['value']
+                                    console.log(ema)
+                                    if (ema < close) {
+                                        Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                                        console.log(recordPatternValue)
+                                    } else {
+                                        recordPattern[key] = []
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log(error.response.data);
+                                    console.log("Error:" + error.response.data)
+                                    Telegram.sendMessage('Error: ' + error.response.data)
+                                });
+
 
                         } catch (e) {
-                            console.log("Error:" + e.toString())
                             Telegram.sendMessage('Error: ' + e.toString())
                         }
 
