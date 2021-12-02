@@ -22,8 +22,8 @@ mongoose.connect(process.env.URI_MONGODB);
 let tradeEnabled = false;
 let coinsArray = coins.getCoins()
 
-let tokenArray = {}
-let indexArray = {}
+let tokenArray =    {}
+let indexArray =    {}
 let recordPattern = {}
 
 let timeFrame = [
