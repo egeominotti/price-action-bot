@@ -125,6 +125,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         let message = "TAKEPROFIT: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
             "Balance: " + newBalance + "\n" +
+            "Entry Price: " + entryprice + "\n" +
             "Entry date: " + entrypricedate.toUTCString() + "\n" +
             "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
             "hh: " + recordPatternValue['hh'] + "\n" +
@@ -204,6 +205,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         let message = "STOPLOSS: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
             "Balance: " + newBalance + "\n" +
+            "Entry Price: " + entryprice + "\n" +
             "Entry date: " + entrypricedate.toUTCString() + "\n" +
             "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
             "hh: " + recordPatternValue['hh'] + "\n" +

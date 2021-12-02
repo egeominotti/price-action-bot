@@ -116,14 +116,14 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
 
         let message = "ENTRY: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
-            "entryprice: " + close + "\n" +
-            "takeprofit: " + takeprofit + "\n" +
-            "stoploss:  " + stoploss + "\n" +
+            "Entryprice: " + close + "\n" +
+            "Takeprofit: " + takeprofit + "\n" +
+            "Stoploss:  " + stoploss + "\n" +
             "hh: " + hh + "\n" +
             "ll: " + ll + "\n" +
             "lh: " + lh + "\n" +
             "hl: " + hl + "\n" +
-            "Date: " + entrypricedate.toUTCString()
+            "Date Entry: " + entrypricedate.toUTCString()
 
         Telegram.sendMessage(message)
 
