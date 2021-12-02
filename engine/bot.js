@@ -26,13 +26,12 @@ let indexArray = {}
 let recordPattern = {}
 
 let timeFrame = [
-    '1m',
     '5m',
     '15m',
     '45m',
     '1h',
     '4h',
-    '8h',
+    //'8h',
     '1D',
     '3D',
     '1W',

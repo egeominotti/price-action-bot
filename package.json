@@ -2,16 +2,11 @@
   "dependencies": {
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
-    "forever": "^4.0.1",
-    "forever-monitor": "^3.0.3",
-    "kucoin-node-api": "^2.1.4",
-    "kucoin-websocket-api": "^0.2.3",
     "loadsh": "0.0.4",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^6.0.13",
     "node-binance-api": "^0.13.1",
     "taapi": "^1.0.5",
-    "web3": "^1.6.1"
   }
 }
