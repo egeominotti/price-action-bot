@@ -242,7 +242,6 @@ for (let time of timeFrame) {
 
             const recordPatternValue = _.head(recordPattern[key]);
             if (recordPatternValue['confirmed'] === true) {
-
                 stopLoss(key, close, recordPatternValue, symbol, interval)
                 takeProfit(key, close, recordPatternValue, symbol, interval)
             }
@@ -306,8 +305,8 @@ for (let time of timeFrame) {
                         client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
                             let ema = result['value']
                             if (ema < close) {
-                                console.log(recordPatternValue)
                                 Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                                console.log(recordPatternValue)
                             }
                         });
 
