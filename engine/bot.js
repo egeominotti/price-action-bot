@@ -26,6 +26,7 @@ let indexArray = {}
 let recordPattern = {}
 
 let timeFrame = [
+    '1m',
     '5m',
     '15m',
     '45m',
@@ -278,6 +279,10 @@ for (let time of timeFrame) {
                         'll': pattern['ll'],
                         'lh': pattern['lh'],
                         'hl': pattern['hl'],
+                        'hh_close': pattern['hh_close'],
+                        'll_open': pattern['ll_open'],
+                        'lh_close': pattern['lh_close'],
+                        'hl_open': pattern['hl_open'],
                         'confirmed': false
                     }
 

@@ -122,7 +122,9 @@ function HigherHigh(storeData) {
 
             return {
                 'index': maxIndex,
-                'value': max['max']
+                'value': max['max'],
+                'close': close,
+                'low': low
             };
 
         } else {
@@ -145,7 +147,9 @@ function HigherHigh(storeData) {
 
                         return {
                             'index': maxIndex,
-                            'value': max['max']
+                            'value': max['max'],
+                            'close': close,
+                            'low': low
                         };
 
                     }
@@ -182,7 +186,9 @@ function LowerLow(storeData, indexHigherHigh) {
 
             return {
                 'index': minIndex,
-                'value': min['min']
+                'value': min['min'],
+                'high': high,
+                'close': close
             };
 
         } else {
@@ -204,7 +210,9 @@ function LowerLow(storeData, indexHigherHigh) {
 
                         return {
                             'index': minIndex,
-                            'value': min['min']
+                            'value': min['min'],
+                            'high': high,
+                            'close': close
                         };
 
                     }
@@ -308,7 +316,11 @@ function patternMatching(storeData, symbol) {
                         'hh': HH['value'],
                         'll': LL['value'],
                         'lh': LH['value'],
-                        'hl': HL['value']
+                        'hl': HL['value'],
+                        'hh_close': HH['close'],
+                        'll_open': LL['open'],
+                        'lh_close': LH['close'],
+                        'hl_open': HL['open']
                     }
 
                 }
