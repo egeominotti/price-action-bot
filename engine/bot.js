@@ -14,14 +14,9 @@ const binance = new Binance();
 require('dotenv').config();
 
 const client = taapi.client(process.env.API_KEY_TAAPI);
-let apiUrlTrade = process.env.URI_API_TRADE;
+const apiUrlTrade = process.env.URI_API_TRADE;
 
 mongoose.connect(process.env.URI_MONGODB);
-
-console.log(process.env)
-console.log(process.env)
-console.log(process.env)
-console.log(process.env)
 
 let tradeEnabled = false;
 let coinsArray = coins.getCoins()
