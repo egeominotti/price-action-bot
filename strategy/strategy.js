@@ -40,8 +40,6 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
 
         takeprofit = (lh + (hh - ll)) * ratioTakeProfit;
         stoploss = ll * ratioStopLoss;
-        console.log(takeprofit)
-        console.log(stoploss)
 
     } else if (interval === '5m') {
 
@@ -51,8 +49,6 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
 
         takeprofit = (lh + (hh - ll)) * ratioTakeProfit;
         stoploss = ll * ratioStopLoss;
-        console.log(takeprofit)
-        console.log(stoploss)
 
     } else if (interval === '15m') {
 
