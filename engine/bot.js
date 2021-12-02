@@ -39,22 +39,6 @@ let timeFrame = [
     '1W',
 ]
 
-// Production Only
-if (process.env.DEBUG === 'false') {
-    timeFrame = [
-        '1m',
-        '5m',
-        '15m',
-        '45m',
-        '1h',
-        '4h',
-        '8h',
-        '1D',
-        '3D',
-        '1W',
-    ]
-}
-
 for (let time of timeFrame) {
     for (const token of coinsArray) {
         let key = token + "_" + time
