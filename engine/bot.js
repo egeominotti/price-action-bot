@@ -25,8 +25,6 @@ let tokenArray = {}
 let indexArray = {}
 let recordPattern = {}
 
-let filterEma = true;
-
 let timeFrame = [
     '1m',
     '5m',
@@ -302,19 +300,14 @@ for (let time of timeFrame) {
                         recordPattern[key] = []
                     } else {
 
-                        if (filterEma) {
-                            let symbolReplaced = symbol.replace('USDT', '/USDT')
-                            client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
-                                let ema = result['value']
-                                if (ema < close) {
-                                    console.log(recordPatternValue)
-                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
-                                }
-                            });
-                        } else {
-                            console.log(recordPatternValue)
-                            Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
-                        }
+                        let symbolReplaced = symbol.replace('USDT', '/USDT')
+                        client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
+                            let ema = result['value']
+                            if (ema < close) {
+                                console.log(recordPatternValue)
+                                Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                            }
+                        });
 
                     }
                 }
