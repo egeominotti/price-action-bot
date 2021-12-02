@@ -173,6 +173,7 @@ function LowerLow(storeData, indexHigherHigh) {
     let min = MinTickLow(storeData, indexHigherHigh);
     let high = min['tick']['high']
     let close = min['tick']['close']
+    let open = min['tick']['open']
     let minIndex = min['tick']['index']
 
     let fail = false
@@ -188,7 +189,8 @@ function LowerLow(storeData, indexHigherHigh) {
                 'index': minIndex,
                 'value': min['min'],
                 'high': high,
-                'close': close
+                'close': close,
+                'open': open
             };
 
         } else {
@@ -212,7 +214,8 @@ function LowerLow(storeData, indexHigherHigh) {
                             'index': minIndex,
                             'value': min['min'],
                             'high': high,
-                            'close': close
+                            'close': close,
+                            'open': open
                         };
 
                     }
@@ -246,7 +249,9 @@ function LowerHigh(storeData, indexLowerLow) {
 
             return {
                 'index': maxIndex,
-                'value': max['max']
+                'value': max['max'],
+                'close': close,
+                'low': low
             };
         }
     }
@@ -267,6 +272,7 @@ function HigherLow(storeData, indexLowerHigh, maxLowerHigh) {
     let min = MinTickLow(storeData, indexLowerHigh);
     let close = min['tick']['close']
     let high = min['tick']['high']
+    let open = min['tick']['open']
     let minIndex = min['tick']['index']
 
     for (let index = indexLowerHigh + 1; index < storeData.length; ++index) {
@@ -276,7 +282,10 @@ function HigherLow(storeData, indexLowerHigh, maxLowerHigh) {
 
             return {
                 'index': minIndex,
-                'value': min['min']
+                'value': min['min'],
+                'close': close,
+                'high': high,
+                'open': open
             };
         }
     }

@@ -57,6 +57,7 @@ for (let symbol of coinsArray) {
                     }
 
                     if (patternData !== undefined) {
+
                         if (low < patternData['ll'] || close > patternData['hh']) {
                             patternData = undefined;
 
@@ -76,6 +77,7 @@ for (let symbol of coinsArray) {
                             }
                         }
                     }
+
                 }
             }
 
