@@ -77,6 +77,8 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         finaleTradeValue = finaleSizeTrade - sizeTrade
 
         sumSizeTrade += finaleTradeValue;
+        let newBalance = balance + sumSizeTrade
+
 
         if (tradeEnabled) {
 
@@ -101,7 +103,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
             type: 'TAKEPROFIT',
             symbol: symbol,
             interval: interval,
-            balance: balance + sumSizeTrade,
+            balance: newBalance,
             entryprice: entryprice,
             entrypricedate: entrypricedate,
             takeprofitvalue: takeprofit,
@@ -120,7 +122,6 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
             console.log(err)
         });
 
-        let newBalance = balance + sumSizeTrade
 
         let message = "TAKEPROFIT: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
@@ -157,6 +158,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         //balance = _.round((balance / entryprice) * stoploss, 2)
 
         sumSizeTrade += finaleTradeValue;
+        let newBalance = balance + sumSizeTrade
 
         if (tradeEnabled) {
 
@@ -180,7 +182,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
             type: 'STOPLOSS',
             symbol: symbol,
             interval: interval,
-            balance: balance + sumSizeTrade,
+            balance: newBalance,
             entryprice: entryprice,
             entrypricedate: entrypricedate,
             stoplossvalue: stoploss,
@@ -199,7 +201,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
             console.log(err)
         });
 
-        let newBalance = balance + sumSizeTrade
+
 
         let message = "STOPLOSS: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
@@ -236,11 +238,9 @@ for (let time of timeFrame) {
 
         let key = symbol + "_" + interval
 
-        // Check real-time
         if (!_.isEmpty(recordPattern[key])) {
 
             const recordPatternValue = _.head(recordPattern[key]);
-
             if (recordPatternValue['confirmed'] === true) {
 
                 stopLoss(key, close, recordPatternValue, symbol, interval)
@@ -295,6 +295,7 @@ for (let time of timeFrame) {
             } else {
 
                 let recordPatternValue = _.head(recordPattern[key]);
+                console.log(recordPatternValue)
                 if (recordPatternValue['confirmed'] === false) {
 
                     if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
