@@ -299,13 +299,21 @@ for (let time of timeFrame) {
                     } else {
 
                         let symbolReplaced = symbol.replace('USDT', '/USDT')
-                        client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
-                            let ema = result['value']
-                            if (ema < close) {
-                                Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
-                                console.log(recordPatternValue)
-                            }
-                        });
+
+                        try {
+
+                            client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
+                                let ema = result['value']
+                                if (ema < close) {
+                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                                    console.log(recordPatternValue)
+                                }
+                            });
+
+                        } catch (e) {
+                            let startMessage = 'Errore: ' + e.toString()
+                            Telegram.sendMessage(startMessage)
+                        }
 
                     }
                 }
