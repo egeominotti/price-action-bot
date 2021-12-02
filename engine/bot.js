@@ -313,6 +313,8 @@ for (let time of timeFrame) {
                                 if (ema < close) {
                                     Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
                                     console.log(recordPatternValue)
+                                } else {
+                                    recordPattern[key] = []
                                 }
                             });
 
