@@ -21,9 +21,11 @@ mongoose.connect(process.env.URI_MONGODB);
 let tradeEnabled = false;
 let coinsArray = coins.getCoins()
 
-let tokenArray =    {}
-let indexArray =    {}
+let tokenArray = {}
+let indexArray = {}
 let recordPattern = {}
+
+let filterEma = false
 
 let timeFrame = [
     '1m',
@@ -247,9 +249,8 @@ for (let time of timeFrame) {
         // Check at close tick
         if (isFinal) {
 
-            let dataValue = new Date();
-            let hour = dataValue.getUTCHours();
-
+            //let dataValue = new Date();
+            //let hour = dataValue.getUTCHours();
             //if (hour <= 0 || hour >= 5) {
 
             if (_.isEmpty(recordPattern[key])) {
@@ -282,22 +283,9 @@ for (let time of timeFrame) {
                         'confirmed': false
                     }
 
-                    // Se già esiste una pair simile in recordPattern allora non la aggiungo
-                    let dupFounded = false;
-                    for (let time of timeFrame) {
-                        let keySearch = symbol + "_" + time
-                        if (!_.isEmpty(recordPatternData[keySearch])) {
-                            dupFounded = true;
-                            break;
-                        }
-                    }
-
-                    // Discard dup symbol with different time frame
-                    if (!dupFounded) {
-                        recordPattern[key].push(recordPatternData)
-                        tokenArray[key] = [];
-                        indexArray[key] = -1
-                    }
+                    recordPattern[key].push(recordPatternData)
+                    tokenArray[key] = [];
+                    indexArray[key] = -1
 
                 }
 
@@ -310,14 +298,19 @@ for (let time of timeFrame) {
                         recordPattern[key] = []
                     } else {
 
-                        let symbolReplaced = symbol.replace('USDT', '/USDT')
-                        client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
-                            let ema = result['value']
-                            if (ema < close) {
-                                console.log(recordPatternValue)
-                                Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
-                            }
-                        });
+                        if (filterEma) {
+                            let symbolReplaced = symbol.replace('USDT', '/USDT')
+                            client.getIndicator("ema", "binance", symbolReplaced, interval, {optInTimePeriod: 200}).then(function (result) {
+                                let ema = result['value']
+                                if (ema < close) {
+                                    console.log(recordPatternValue)
+                                    Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                                }
+                            });
+                        } else {
+                            console.log(recordPatternValue)
+                            Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                        }
 
                     }
                 }

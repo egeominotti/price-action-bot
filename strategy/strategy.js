@@ -16,17 +16,18 @@ const Telegram = require('../utility/telegram');
  * @param close
  * @param tradeEnabled
  * @param apiUrlTrade
- * @param recordPatternValue
+ * @param record
  */
-function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue) {
+function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, record) {
 
-    let hh = recordPatternValue['hh']
-    let ll = recordPatternValue['ll']
-    let lh = recordPatternValue['lh']
-    let hl = recordPatternValue['hl']
+    let hh = record['hh']
+    let ll = record['ll']
+    let lh = record['lh']
+    let hl = record['hl']
 
     let takeprofit = 0;
     let stoploss = 0;
+
     let ratioEntry = 0
     let ratioStopLoss = 0;
     let ratioTakeProfit = 0;
@@ -37,8 +38,10 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 1
         ratioStopLoss = 1
 
-        takeprofit = (lh['value'] + (hh['value'] - ll['value'])) * ratioTakeProfit;
-        stoploss = ll['value'] * ratioStopLoss;
+        takeprofit = (lh + (hh - ll)) * ratioTakeProfit;
+        stoploss = ll * ratioStopLoss;
+        console.log(takeprofit)
+        console.log(stoploss)
 
     } else if (interval === '5m') {
 
@@ -46,8 +49,10 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 0.9985
         ratioStopLoss = 1.001
 
-        takeprofit = (lh['value'] + (hh['value'] - ll['value'])) * ratioTakeProfit;
-        stoploss = ll['value'] * ratioStopLoss;
+        takeprofit = (lh + (hh - ll)) * ratioTakeProfit;
+        stoploss = ll * ratioStopLoss;
+        console.log(takeprofit)
+        console.log(stoploss)
 
     } else if (interval === '15m') {
 
@@ -55,8 +60,8 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 0.9985
         ratioStopLoss = 1.003
 
-        takeprofit = (lh['value'] + (hh['value'] - ll['value'])) * ratioTakeProfit;
-        stoploss = ll['value'] * ratioStopLoss;
+        takeprofit = (lh + (hh - ll)) * ratioTakeProfit;
+        stoploss = ll * ratioStopLoss;
 
     } else if (interval === '45m') {
 
@@ -64,8 +69,8 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 1
         ratioStopLoss = 1
 
-        takeprofit = (lh['value'] + (hh['value'] - ll['value'])) * ratioTakeProfit;
-        stoploss = ll['value'] * ratioStopLoss;
+        takeprofit = (lh + (hh - ll)) * ratioTakeProfit;
+        stoploss = ll * ratioStopLoss;
 
     } else if (interval === '1h') {
 
@@ -73,8 +78,8 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 1
         ratioStopLoss = 1.015
 
-        takeprofit = (lh['value'] + (hh['value'] - ll['value'])) * ratioTakeProfit;
-        stoploss = hl['value'] * ratioStopLoss;
+        takeprofit = (lh + (hh - ll)) * ratioTakeProfit;
+        stoploss = hl * ratioStopLoss;
 
     } else if (interval === '4h') {
 
@@ -82,20 +87,11 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 0.985
         ratioStopLoss = 1.015
 
-        takeprofit = (lh['value'] + (hh['value'] - ll['value'])) * ratioTakeProfit;
-        stoploss = hl['value'] * ratioStopLoss;
+        takeprofit = (lh + (hh - ll)) * ratioTakeProfit;
+        stoploss = hl * ratioStopLoss;
     }
 
-
-    if (close > recordPatternValue['lh'] * ratioEntry) {
-
-        // const fib = fibonacci.fibonacciRetrecement({
-        //     levels: {
-        //         0: recordPatternValue['hh'],
-        //         1: recordPatternValue['ll']
-        //     }
-        // })
-        // console.log(fib)
+    if (close > record['lh'] * ratioEntry) {
 
         let entrypricedate = new Date()
 
@@ -129,12 +125,12 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
 
         Telegram.sendMessage(message)
 
-        recordPatternValue['confirmed'] = true
-        recordPatternValue['entryprice'] = close
-        recordPatternValue['entrypricedate'] = entrypricedate
-        recordPatternValue['takeprofit'] = takeprofit
-        recordPatternValue['stoploss'] = stoploss
-        recordPatternValue['strategy'] = 'breakout'
+        record['confirmed'] = true
+        record['entryprice'] = close
+        record['entrypricedate'] = entrypricedate
+        record['takeprofit'] = takeprofit
+        record['stoploss'] = stoploss
+        record['strategy'] = 'breakout'
     }
 
 }
