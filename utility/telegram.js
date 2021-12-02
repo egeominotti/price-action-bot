@@ -1,6 +1,5 @@
-require('dotenv').config();
-
 const axios = require("axios");
+require('dotenv').config();
 
 let bot_token = ''
 let bot_chat_id = ''
