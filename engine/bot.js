@@ -291,6 +291,7 @@ for (let time of timeFrame) {
 
                 }
 
+
             } else {
 
                 let recordPatternValue = _.head(recordPattern[key]);
