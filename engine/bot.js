@@ -74,7 +74,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
         takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
         totalPercentage += takeProfitPercentage
-        balance = _.round((balance / entryprice) * takeprofit, 2)
+        //balance = _.round((balance / entryprice) * takeprofit, 2)
 
         finaleTradeValue = finaleSizeTrade - sizeTrade
 
@@ -122,9 +122,11 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
             console.log(err)
         });
 
+        let newBalance = balance + sumSizeTrade
+
         let message = "TAKEPROFIT: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
-            "Balance: " + balance + sumSizeTrade + "\n" +
+            "Balance: " + newBalance + "\n" +
             "Entry date: " + entrypricedate.toUTCString() + "\n" +
             "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
             "hh: " + recordPatternValue['hh'] + "\n" +
@@ -154,7 +156,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         finaleTradeValue = finaleSizeTrade - sizeTrade
         totalPercentage += stopLossPercentage
 
-        balance = _.round((balance / entryprice) * stoploss, 2)
+        //balance = _.round((balance / entryprice) * stoploss, 2)
 
         sumSizeTrade += finaleTradeValue;
 
@@ -199,9 +201,11 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
             console.log(err)
         });
 
+        let newBalance = balance + sumSizeTrade
+
         let message = "STOPLOSS: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
-            "Balance: " + balance + sumSizeTrade + "\n" +
+            "Balance: " + newBalance + "\n" +
             "Entry date: " + entrypricedate.toUTCString() + "\n" +
             "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
             "hh: " + recordPatternValue['hh'] + "\n" +
