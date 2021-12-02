@@ -87,7 +87,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         stoploss = hl * ratioStopLoss;
     }
 
-    if (close > record['lh'] * ratioEntry) {
+    if (close > lh * ratioEntry) {
 
         let entrypricedate = new Date()
 
@@ -111,9 +111,9 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
 
         let message = "ENTRY: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
-            "Entry found at: " + entrypricedate.toUTCString() + "\n" +
             "takeprofit: " + takeprofit + "\n" +
             "stoploss:  " + stoploss + "\n" +
+            "Date: " + entrypricedate.toUTCString() + "\n" +
             "hh: " + hh + "\n" +
             "ll: " + ll + "\n" +
             "lh: " + lh + "\n" +
