@@ -31,7 +31,6 @@ let timeFrame = [
     '45m',
     '1h',
     '4h',
-    //'8h',
     '1D',
     '3D',
     '1W',
@@ -76,7 +75,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         finaleTradeValue = finaleSizeTrade - sizeTrade
 
         sumSizeTrade += finaleTradeValue;
-        let newBalance = balance + sumSizeTrade
+        let newBalance = _.round(balance + sumSizeTrade, 2)
 
 
         if (tradeEnabled) {
@@ -157,7 +156,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         //balance = _.round((balance / entryprice) * stoploss, 2)
 
         sumSizeTrade += finaleTradeValue;
-        let newBalance = balance + sumSizeTrade
+        let newBalance = _.round(balance + sumSizeTrade, 2)
 
         if (tradeEnabled) {
 
@@ -199,7 +198,6 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         }).catch((err) => {
             console.log(err)
         });
-
 
 
         let message = "STOPLOSS: " + symbol + "\n" +
