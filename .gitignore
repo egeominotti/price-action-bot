@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-
+.eD8N9GTi7I29oF_l3Zjj_vgWtUv
 # testing
 /coverage
 /data
@@ -13,6 +13,7 @@
 .ieea
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
