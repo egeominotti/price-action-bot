@@ -317,6 +317,7 @@ for (let time of timeFrame) {
                             });
 
                         } catch (e) {
+                            console.log("Error:" + e.toString())
                             Telegram.sendMessage('Error: ' + e.toString())
                         }
 
