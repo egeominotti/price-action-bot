@@ -308,7 +308,7 @@ for (let time of timeFrame) {
 
                             axios.get('https://api.taapi.io/ema', {
                                 params: {
-                                    secret: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVnZW9taW5vdHRpQGdtYWlsLmNvbSIsImlhdCI6MTYzODM5MjA1NSwiZXhwIjo3OTQ1NTkyMDU1fQ.N6fSSuYwMI4-eD8N9GTi7I29oF_l3Zjj_vgWtUv-_NM',
+                                    secret: process.env.API_KEY_TAAPI,
                                     exchange: "binance",
                                     symbol: symbolReplaced,
                                     interval: interval,
