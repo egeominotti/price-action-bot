@@ -43,7 +43,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 1
         ratioStopLoss = 1
 
-        takeprofit = lh_close + (hh_close - ll_close);
+        takeprofit = lh_close + hh_close - ll;
         stoploss = ll * ratioStopLoss;
 
     } else if (interval === '5m') {
@@ -52,7 +52,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 0.9985
         ratioStopLoss = 1.001
 
-        takeprofit = lh_close + (hh_close - ll_close);
+        takeprofit = lh_close + hh_close - ll;
         stoploss = ll * ratioStopLoss;
 
     } else if (interval === '15m') {
@@ -61,7 +61,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 0.9985
         ratioStopLoss = 1.003
 
-        takeprofit = lh_close + (hh_close - ll_close);
+        takeprofit = lh_close + hh_close - ll;
         stoploss = ll * ratioStopLoss;
 
     } else if (interval === '45m') {
@@ -70,7 +70,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 1
         ratioStopLoss = 1
 
-        takeprofit = lh_close + (hh_close - ll_close);
+        takeprofit = lh_close + hh_close - ll;
         stoploss = ll * ratioStopLoss;
 
     } else if (interval === '1h') {
@@ -79,7 +79,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 1
         ratioStopLoss = 1.015
 
-        takeprofit = lh_close + (hh_close - ll_close);
+        takeprofit = lh_close + hh_close - ll;
         stoploss = hl * ratioStopLoss;
 
     } else if (interval === '4h') {
@@ -88,7 +88,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 0.985
         ratioStopLoss = 1.015
 
-        takeprofit = lh_close + (hh_close - ll_close);
+        takeprofit = lh_close + hh_close - ll;
         stoploss = hl * ratioStopLoss;
     }
 
