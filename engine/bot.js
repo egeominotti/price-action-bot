@@ -302,39 +302,40 @@ for (let time of timeFrame) {
                         recordPattern[key] = []
                     } else {
 
-                        let symbolReplaced = symbol.replace('USDT', '/USDT')
+                        Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                        console.log(recordPatternValue)
 
-                        try {
-
-                            axios.get('https://api.taapi.io/ema', {
-                                params: {
-                                    secret: process.env.API_KEY_TAAPI,
-                                    exchange: "binance",
-                                    symbol: symbolReplaced,
-                                    interval: interval,
-                                    optInTimePeriod: 200
-                                }
-                            })
-                                .then(function (response) {
-                                    let ema = response.data['value']
-                                    console.log(ema)
-                                    if (ema < close) {
-                                        Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
-                                        console.log(recordPatternValue)
-                                    } else {
-                                        recordPattern[key] = []
-                                    }
-                                })
-                                .catch(function (error) {
-                                    console.log(error.response.data);
-                                    console.log("Error:" + error.response.data)
-                                    Telegram.sendMessage('Error: ' + error.response.data)
-                                });
-
-
-                        } catch (e) {
-                            Telegram.sendMessage('Error: ' + e.toString())
-                        }
+                        // try {
+                        //     let symbolReplaced = symbol.replace('USDT', '/USDT')
+                        //     axios.get('https://api.taapi.io/ema', {
+                        //         params: {
+                        //             secret: process.env.API_KEY_TAAPI,
+                        //             exchange: "binance",
+                        //             symbol: symbolReplaced,
+                        //             interval: interval,
+                        //             optInTimePeriod: 200
+                        //         }
+                        //     })
+                        //         .then(function (response) {
+                        //             let ema = response.data['value']
+                        //             console.log(ema)
+                        //             if (ema < close) {
+                        //                 Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                        //                 console.log(recordPatternValue)
+                        //             } else {
+                        //                 recordPattern[key] = []
+                        //             }
+                        //         })
+                        //         .catch(function (error) {
+                        //             console.log(error.response.data);
+                        //             console.log("Error:" + error.response.data)
+                        //             Telegram.sendMessage('Error: ' + error.response.data)
+                        //         });
+                        //
+                        //
+                        // } catch (e) {
+                        //     Telegram.sendMessage('Error: ' + e.toString())
+                        // }
 
                     }
                 }
