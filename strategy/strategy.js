@@ -20,14 +20,14 @@ const Telegram = require('../utility/telegram');
  */
 function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, record) {
 
-    let hh =            record['hh']
-    let ll =            record['ll']
-    let lh =            record['lh']
-    let hl =            record['hl']
-    let hh_close =      record['hh_close']
-    let ll_open =       record['ll_open']
-    let lh_close =      record['lh_close']
-    let hl_open =       record['hl_open']
+    let hh = record['hh']
+    let ll = record['ll']
+    let lh = record['lh']
+    let hl = record['hl']
+    let hh_close = record['hh_close']
+    let ll_open = record['ll_open']
+    let lh_close = record['lh_close']
+    let hl_open = record['hl_open']
 
     let takeprofit = 0;
     let stoploss = 0;
