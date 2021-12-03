@@ -20,15 +20,14 @@ const Telegram = require('../utility/telegram');
  */
 function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, record) {
 
-    let hh = record['hh']
-    let ll = record['ll']
-    let lh = record['lh']
-    let hl = record['hl']
-    let hh_close = record['hh_close']
-    let ll_open = record['ll_open']
-    let lh_close = record['lh_close']
-    let hl_open = record['hl_open']
-
+    let hh =            record['hh']
+    let ll =            record['ll']
+    let lh =            record['lh']
+    let hl =            record['hl']
+    let hh_close =      record['hh_close']
+    let ll_open =       record['ll_open']
+    let lh_close =      record['lh_close']
+    let hl_open =       record['hl_open']
 
     let takeprofit = 0;
     let stoploss = 0;
@@ -43,7 +42,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 1
         ratioStopLoss = 1
 
-        takeprofit = (lh_close + (hh_close - ll_open)) * ratioTakeProfit;
+        takeprofit = lh_close + (hh_close - ll_open);
         stoploss = ll * ratioStopLoss;
 
     } else if (interval === '5m') {
@@ -52,7 +51,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 0.9985
         ratioStopLoss = 1.001
 
-        takeprofit = (lh_close + (hh_close - ll_open)) * ratioTakeProfit;
+        takeprofit = lh_close + (hh_close - ll_open);
         stoploss = ll * ratioStopLoss;
 
     } else if (interval === '15m') {
@@ -61,7 +60,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 0.9985
         ratioStopLoss = 1.003
 
-        takeprofit = (lh_close + (hh_close - ll_open)) * ratioTakeProfit;
+        takeprofit = lh_close + (hh_close - ll_open);
         stoploss = ll * ratioStopLoss;
 
     } else if (interval === '45m') {
@@ -70,7 +69,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 1
         ratioStopLoss = 1
 
-        takeprofit = (lh_close + (hh_close - ll_open)) * ratioTakeProfit;
+        takeprofit = lh_close + (hh_close - ll_open);
         stoploss = ll * ratioStopLoss;
 
     } else if (interval === '1h') {
@@ -79,7 +78,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 1
         ratioStopLoss = 1.015
 
-        takeprofit = (lh_close + (hh_close - ll_open)) * ratioTakeProfit;
+        takeprofit = lh_close + (hh_close - ll_open);
         stoploss = hl * ratioStopLoss;
 
     } else if (interval === '4h') {
@@ -88,7 +87,7 @@ function strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, re
         ratioTakeProfit = 0.985
         ratioStopLoss = 1.015
 
-        takeprofit = (lh_close + (hh_close - ll_open)) * ratioTakeProfit;
+        takeprofit = lh_close + (hh_close - ll_open);
         stoploss = hl * ratioStopLoss;
     }
 
