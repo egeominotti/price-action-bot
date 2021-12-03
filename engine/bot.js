@@ -280,6 +280,7 @@ for (let time of timeFrame) {
                         'hl': pattern['hl'],
                         'hh_close': pattern['hh_close'],
                         'll_open': pattern['ll_open'],
+                        'll_close' : pattern['ll_close'],
                         'lh_close': pattern['lh_close'],
                         'hl_open': pattern['hl_open'],
                         'confirmed': false

@@ -328,6 +328,7 @@ function patternMatching(storeData, symbol) {
                         'hl': HL['value'],
                         'hh_close': HH['close'],
                         'll_open': LL['open'],
+                        'll_close': LL['close'],
                         'lh_close': LH['close'],
                         'hl_open': HL['open']
                     }
