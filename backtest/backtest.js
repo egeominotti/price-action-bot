@@ -25,64 +25,62 @@ let ticksArray = []
 let patternData = undefined
 let patternDataArray = []
 
-for (let symbol of coinsArray) {
 
-    for (let tt of timeFrame) {
+for (let tt of timeFrame) {
 
-        binance.candlesticks(symbol, tt, (error, ticks, symbol) => {
+    binance.candlesticks('ETHUSDT', tt, (error, ticks, symbol) => {
 
-            if (!_.isEmpty(ticks)) {
+        if (!_.isEmpty(ticks)) {
 
-                let index = 0;
-                for (let t of ticks) {
-                    let [time, open, high, low, close, ignored] = t;
+            let index = 0;
+            for (let t of ticks) {
+                let [time, open, high, low, close, ignored] = t;
 
-                    let ticker = {
-                        'index': index,
-                        'symbol': symbol.toString(),
-                        'open': parseFloat(open),
-                        'close': parseFloat(close),
-                        'low': parseFloat(low),
-                        'high': parseFloat(high),
-                        'time': time,
-                    }
+                let ticker = {
+                    'index': index,
+                    'symbol': symbol.toString(),
+                    'open': parseFloat(open),
+                    'close': parseFloat(close),
+                    'low': parseFloat(low),
+                    'high': parseFloat(high),
+                    'time': time,
+                }
 
-                    index++;
-                    ticksArray.push(ticker)
-                    let pattern = Pattern.patternMatching(ticksArray, symbol)
-                    if (!_.isEmpty(pattern)) {
-                        patternData = pattern
-                        ticksArray = []
-                        index = 0;
-                    }
+                index++;
+                ticksArray.push(ticker)
+                let pattern = Pattern.patternMatching(ticksArray, symbol)
+                if (!_.isEmpty(pattern)) {
+                    patternData = pattern
+                    ticksArray = []
+                    index = 0;
+                }
 
-                    if (patternData !== undefined) {
+                if (patternData !== undefined) {
 
-                        if (low < patternData['ll'] || close > patternData['hh']) {
+                    if (low < patternData['ll'] || close > patternData['hh']) {
+                        patternData = undefined;
+
+                    } else {
+
+                        if (close > patternData['lh']) {
+
+                            patternData['symbol'] = symbol;
+                            patternData['timeframe'] = tt
+                            patternData['date'] = new Date(time).toUTCString();
+                            patternDataArray.push(patternData)
+
+                            fs.writeFileSync("backtest/backtest.json", JSON.stringify(patternDataArray, null, 4), function (err) {
+                            });
+
                             patternData = undefined;
-
-                        } else {
-
-                            if (close > patternData['lh']) {
-
-                                patternData['symbol'] = symbol;
-                                patternData['timeframe'] = tt
-                                patternData['date'] = new Date(time).toLocaleString();
-                                patternDataArray.push(patternData)
-
-                                fs.writeFileSync("backtest/backtest.json", JSON.stringify(patternDataArray, null, 4), function (err) {
-                                });
-
-                                patternData = undefined;
-                            }
                         }
                     }
-
                 }
-            }
 
-        }, {limit: 1000});
-    }
+            }
+        }
+
+    }, {limit: 1000});
 }
 
 
