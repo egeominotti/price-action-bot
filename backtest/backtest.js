@@ -70,7 +70,7 @@ for (let symbol of coinsArray) {
                                 patternData['date'] = new Date(time).toLocaleString();
                                 patternDataArray.push(patternData)
 
-                                fs.writeFileSync("backtest.json", JSON.stringify(patternDataArray, null, 4), function (err) {
+                                fs.writeFileSync("backtest/backtest.json", JSON.stringify(patternDataArray, null, 4), function (err) {
                                 });
 
                                 patternData = undefined;
