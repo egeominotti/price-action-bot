@@ -477,7 +477,7 @@ async function init(candle) {
 
     try {
 
-        init(1000).then(() => {
+        init(100).then(() => {
             console.log(tokenArray)
             console.log("BOT STARTED")
             exchangeInfo();
