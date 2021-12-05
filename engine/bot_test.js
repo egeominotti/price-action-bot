@@ -8,7 +8,6 @@ const Telegram = require('../utility/telegram');
 const analysis = require('../analytics/analysis');
 const Strategy = require('../strategy/strategy');
 const _ = require("lodash");
-const sleep = require('sleep');
 
 const fs = require("fs");
 const binance = new Binance();
@@ -37,6 +36,7 @@ let timeFrame = [
     '1W',
 ]
 
+
 // Init
 for (let time of timeFrame) {
 
@@ -48,7 +48,7 @@ for (let time of timeFrame) {
         tokenArray[key] = [];
         recordPattern[key] = [];
 
-        binance.candlesticks(token, time, (error, ticks, symbol) => {
+        binance.candlesticks(coinsArray, time, (error, ticks, symbol) => {
 
             if (!_.isEmpty(ticks)) {
 
@@ -56,7 +56,8 @@ for (let time of timeFrame) {
 
                     indexArray[key] += 1
 
-                    let [time, open, high, low, close, ignored] = t;
+                    let last_tick = ticks[ticks.length - 1];
+                    let [time, open, high, low, close, ignored] = last_tick;
                     let ticker = {
                         'index': parseInt(indexArray[key]),
                         'symbol': symbol,
@@ -66,12 +67,14 @@ for (let time of timeFrame) {
                         'high': parseFloat(high),
                         'time': time,
                     }
+
                     tokenArray[key].push(ticker)
                     //console.log(tokenArray)
                 }
             }
 
         }, {limit: 50});
+
     }
 }
 
@@ -282,7 +285,7 @@ for (let time of timeFrame) {
             //if (hour <= 0 || hour >= 5) {
 
             if (!_.isEmpty(tokenArray[key])) {
-
+                console.log(tokenArray[key])
                 let pattern = Pattern.patternMatching(tokenArray[key], symbol)
                 if (!_.isEmpty(pattern)) {
 

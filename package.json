@@ -6,7 +6,6 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^6.0.13",
-    "node-binance-api": "^0.13.1",
-    "sleep": "^6.3.0"
+    "node-binance-api": "^0.13.1"
   }
 }
