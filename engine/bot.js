@@ -458,6 +458,7 @@ async function initValue(token, time, candle) {
 
 
 async function init(candle) {
+
     return new Promise(async function (resolve, reject) {
 
         for (const token of coinsArray) {
@@ -468,6 +469,7 @@ async function init(candle) {
         }
         resolve()
     });
+
 }
 
 
@@ -475,7 +477,7 @@ async function init(candle) {
 
     try {
 
-        init(5).then(() => {
+        init(1000).then(() => {
             console.log(tokenArray)
             console.log("BOT STARTED")
             exchangeInfo();
