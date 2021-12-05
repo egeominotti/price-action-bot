@@ -60,7 +60,6 @@ for (let time of timeFrame) {
 
                     indexArray[key] += 1
 
-                    //let last_tick = ticks[ticks.length - 1];
                     let [time, open, high, low, close, ignored] = t;
                     let ticker = {
                         'index': parseInt(indexArray[key]),
