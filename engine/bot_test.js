@@ -37,20 +37,9 @@ let timeFrame = [
     '1W',
 ]
 
-
-// for (let time of timeFrame) {
-//
-//     for (const token of coinsArray) {
-//         let key = token + "_" + time
-//         indexArray[key] = -1;
-//         tokenArray[key] = [];
-//         recordPattern[key] = [];
-//     }
-//
-// }
-
 // Init
 for (let time of timeFrame) {
+
     for (const token of coinsArray) {
 
         let key = token + "_" + time
@@ -60,6 +49,7 @@ for (let time of timeFrame) {
         recordPattern[key] = [];
 
         binance.candlesticks(token, time, (error, ticks, symbol) => {
+
             if (!_.isEmpty(ticks)) {
 
                 for (let t of ticks) {
