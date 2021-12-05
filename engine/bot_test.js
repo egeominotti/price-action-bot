@@ -28,12 +28,11 @@ let recordPattern = {}
 let timeFrame = [
     '5m',
     '15m',
-    '45m',
     '1h',
     '4h',
-    '1D',
-    '3D',
-    '1W',
+    '1d',
+    '3d',
+    '1w',
 ]
 
 
@@ -48,7 +47,7 @@ for (let time of timeFrame) {
         tokenArray[key] = [];
         recordPattern[key] = [];
 
-        binance.candlesticks(coinsArray, time, (error, ticks, symbol) => {
+        binance.candlesticks(token, time, (error, ticks, symbol) => {
 
             if (!_.isEmpty(ticks)) {
 
@@ -56,8 +55,8 @@ for (let time of timeFrame) {
 
                     indexArray[key] += 1
 
-                    let last_tick = ticks[ticks.length - 1];
-                    let [time, open, high, low, close, ignored] = last_tick;
+                    //let last_tick = ticks[ticks.length - 1];
+                    let [time, open, high, low, close, ignored] = t;
                     let ticker = {
                         'index': parseInt(indexArray[key]),
                         'symbol': symbol,
@@ -69,12 +68,11 @@ for (let time of timeFrame) {
                     }
 
                     tokenArray[key].push(ticker)
-                    //console.log(tokenArray)
+
                 }
             }
 
-        }, {limit: 50});
-
+        }, {limit: 200});
     }
 }
 
@@ -285,7 +283,6 @@ for (let time of timeFrame) {
             //if (hour <= 0 || hour >= 5) {
 
             if (!_.isEmpty(tokenArray[key])) {
-                console.log(tokenArray[key])
                 let pattern = Pattern.patternMatching(tokenArray[key], symbol)
                 if (!_.isEmpty(pattern)) {
 

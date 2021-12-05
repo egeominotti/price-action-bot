@@ -26,20 +26,58 @@ let recordPattern = {}
 let timeFrame = [
     '5m',
     '15m',
-    '45m',
     '1h',
     '4h',
-    '1D',
-    '3D',
-    '1W',
+    '1d',
+    '3d',
+    '1w',
 ]
 
+// for (let time of timeFrame) {
+//     for (const token of coinsArray) {
+//         let key = token + "_" + time
+//         indexArray[key] = -1;
+//         tokenArray[key] = [];
+//         recordPattern[key] = [];
+//     }
+// }
+
 for (let time of timeFrame) {
+
     for (const token of coinsArray) {
+
         let key = token + "_" + time
+
         indexArray[key] = -1;
         tokenArray[key] = [];
         recordPattern[key] = [];
+
+        binance.candlesticks(token, time, (error, ticks, symbol) => {
+
+            if (!_.isEmpty(ticks)) {
+
+                for (let t of ticks) {
+
+                    indexArray[key] += 1
+
+                    //let last_tick = ticks[ticks.length - 1];
+                    let [time, open, high, low, close, ignored] = t;
+                    let ticker = {
+                        'index': parseInt(indexArray[key]),
+                        'symbol': symbol,
+                        'open': parseFloat(open),
+                        'close': parseFloat(close),
+                        'low': parseFloat(low),
+                        'high': parseFloat(high),
+                        'time': time,
+                    }
+
+                    tokenArray[key].push(ticker)
+
+                }
+            }
+
+        }, {limit: 200});
     }
 }
 
@@ -280,7 +318,7 @@ for (let time of timeFrame) {
                         'hl': pattern['hl'],
                         'hh_close': pattern['hh_close'],
                         'll_open': pattern['ll_open'],
-                        'll_close' : pattern['ll_close'],
+                        'll_close': pattern['ll_close'],
                         'lh_close': pattern['lh_close'],
                         'hl_open': pattern['hl_open'],
                         'confirmed': false
