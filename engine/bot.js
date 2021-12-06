@@ -19,7 +19,7 @@ require('dotenv').config();
 
 mongoose.connect(process.env.URI_MONGODB);
 
-let tradeEnabled = false;
+let tradeEnabled = true;
 let coinsArray = coins.getCoins()
 
 let tokenArray = {}
@@ -30,7 +30,7 @@ let recordPattern = {}
 let balance = 3000
 let totalPercentage = 0
 let sumSizeTrade = 0;
-const sizeTrade = 30
+const sizeTrade = 20
 
 let timeFrame = [
     '5m',
@@ -479,7 +479,7 @@ async function init(candle) {
     try {
 
         init(100).then(() => {
-            console.log(tokenArray)
+            //console.log(tokenArray)
             console.log("BOT STARTED")
             exchangeInfo();
             websocketsAnalyser();
