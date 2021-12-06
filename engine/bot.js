@@ -19,7 +19,7 @@ require('dotenv').config();
 
 mongoose.connect(process.env.URI_MONGODB);
 
-let tradeEnabled = true;
+let tradeEnabled = false;
 let coinsArray = coins.getCoins()
 
 let tokenArray = {}
@@ -30,7 +30,7 @@ let recordPattern = {}
 let balance = 3000
 let totalPercentage = 0
 let sumSizeTrade = 0;
-const sizeTrade = 20
+const sizeTrade = 15
 
 let timeFrame = [
     '5m',
@@ -187,39 +187,39 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 }
 
 
-async function exchangeInfo() {
-
-    binance.exchangeInfo(function (error, data) {
-
-            // INIT EXCHANGE INFO
-            for (let obj of data.symbols) {
-
-                if (coinsArray.indexOf(obj.symbol) !== -1) {
-                    let filters = {status: obj.status};
-                    for (let filter of obj.filters) {
-                        if (filter.filterType === "MIN_NOTIONAL") {
-                            filters.minNotional = filter.minNotional;
-                        } else if (filter.filterType === "PRICE_FILTER") {
-                            filters.minPrice = filter.minPrice;
-                            filters.maxPrice = filter.maxPrice;
-                            filters.tickSize = filter.tickSize;
-                        } else if (filter.filterType === "LOT_SIZE") {
-                            filters.stepSize = filter.stepSize;
-                            filters.minQty = filter.minQty;
-                            filters.maxQty = filter.maxQty;
-                        }
-                    }
-                    filters.baseAssetPrecision = obj.baseAssetPrecision;
-                    filters.quoteAssetPrecision = obj.quoteAssetPrecision;
-                    filters.icebergAllowed = obj.icebergAllowed;
-                    exchangeInfoArray[obj.symbol] = filters;
-
-                }
-            }
-        }
-    );
-
-}
+// async function exchangeInfo() {
+//
+//     binance.exchangeInfo(function (error, data) {
+//
+//             // INIT EXCHANGE INFO
+//             for (let obj of data.symbols) {
+//
+//                 if (coinsArray.indexOf(obj.symbol) !== -1) {
+//                     let filters = {status: obj.status};
+//                     for (let filter of obj.filters) {
+//                         if (filter.filterType === "MIN_NOTIONAL") {
+//                             filters.minNotional = filter.minNotional;
+//                         } else if (filter.filterType === "PRICE_FILTER") {
+//                             filters.minPrice = filter.minPrice;
+//                             filters.maxPrice = filter.maxPrice;
+//                             filters.tickSize = filter.tickSize;
+//                         } else if (filter.filterType === "LOT_SIZE") {
+//                             filters.stepSize = filter.stepSize;
+//                             filters.minQty = filter.minQty;
+//                             filters.maxQty = filter.maxQty;
+//                         }
+//                     }
+//                     filters.baseAssetPrecision = obj.baseAssetPrecision;
+//                     filters.quoteAssetPrecision = obj.quoteAssetPrecision;
+//                     filters.icebergAllowed = obj.icebergAllowed;
+//                     exchangeInfoArray[obj.symbol] = filters;
+//
+//                 }
+//             }
+//         }
+//     );
+//
+// }
 
 
 function websocketsAnalyser() {
@@ -227,7 +227,6 @@ function websocketsAnalyser() {
     // // INIT WEBSOCKET
     for (let time of timeFrame) {
 
-        console.log(tokenArray)
         let startMessage = 'Bot Pattern Analysis System Started for interval: ' + time
         Telegram.sendMessage(startMessage)
 
@@ -458,6 +457,46 @@ async function initValue(token, time, candle) {
 }
 
 
+async function exchangeInfo() {
+
+    return new Promise(async function (resolve, reject) {
+
+        binance.exchangeInfo(function (error, data) {
+
+                if(error !== null) reject(error);
+
+                for (let obj of data.symbols) {
+
+                    if (coinsArray.indexOf(obj.symbol) !== -1) {
+                        let filters = {status: obj.status};
+                        for (let filter of obj.filters) {
+                            if (filter.filterType === "MIN_NOTIONAL") {
+                                filters.minNotional = filter.minNotional;
+                            } else if (filter.filterType === "PRICE_FILTER") {
+                                filters.minPrice = filter.minPrice;
+                                filters.maxPrice = filter.maxPrice;
+                                filters.tickSize = filter.tickSize;
+                            } else if (filter.filterType === "LOT_SIZE") {
+                                filters.stepSize = filter.stepSize;
+                                filters.minQty = filter.minQty;
+                                filters.maxQty = filter.maxQty;
+                            }
+                        }
+                        filters.baseAssetPrecision = obj.baseAssetPrecision;
+                        filters.quoteAssetPrecision = obj.quoteAssetPrecision;
+                        filters.icebergAllowed = obj.icebergAllowed;
+                        exchangeInfoArray[obj.symbol] = filters;
+
+                    }
+                }
+                resolve()
+            }
+        );
+
+    });
+
+}
+
 async function init(candle) {
 
     return new Promise(async function (resolve, reject) {
@@ -478,12 +517,15 @@ async function init(candle) {
 
     try {
 
-        init(100).then(() => {
-            //console.log(tokenArray)
-            console.log("BOT STARTED")
-            exchangeInfo();
-            websocketsAnalyser();
+        exchangeInfo().then(() => {
+            console.log("DATI exchangeInfo")
+            init(100).then(() => {
+                //console.log(tokenArray)
+                console.log("BOT STARTED")
+                //websocketsAnalyser();
+            })
         })
+
 
     } catch (e) {
         console.log(e)
