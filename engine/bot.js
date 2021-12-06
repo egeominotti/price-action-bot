@@ -10,6 +10,19 @@ const analysis = require('../analytics/analysis');
 const Strategy = require('../strategy/strategy');
 const _ = require("lodash");
 
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send(tokenArray)
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+})
+
+
 const binance = new Binance().options({
     APIKEY: '',
     APISECRET: ''
@@ -41,15 +54,6 @@ let timeFrame = [
     '3d',
     '1w',
 ]
-
-for (let time of timeFrame) {
-    for (const token of coinsArray) {
-        let key = token + "_" + time
-        indexArray[key] = -1;
-        tokenArray[key] = [];
-        recordPattern[key] = [];
-    }
-}
 
 
 function takeProfit(key, close, recordPatternValue, symbol, interval) {
@@ -187,44 +191,8 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 }
 
 
-// async function exchangeInfo() {
-//
-//     binance.exchangeInfo(function (error, data) {
-//
-//             // INIT EXCHANGE INFO
-//             for (let obj of data.symbols) {
-//
-//                 if (coinsArray.indexOf(obj.symbol) !== -1) {
-//                     let filters = {status: obj.status};
-//                     for (let filter of obj.filters) {
-//                         if (filter.filterType === "MIN_NOTIONAL") {
-//                             filters.minNotional = filter.minNotional;
-//                         } else if (filter.filterType === "PRICE_FILTER") {
-//                             filters.minPrice = filter.minPrice;
-//                             filters.maxPrice = filter.maxPrice;
-//                             filters.tickSize = filter.tickSize;
-//                         } else if (filter.filterType === "LOT_SIZE") {
-//                             filters.stepSize = filter.stepSize;
-//                             filters.minQty = filter.minQty;
-//                             filters.maxQty = filter.maxQty;
-//                         }
-//                     }
-//                     filters.baseAssetPrecision = obj.baseAssetPrecision;
-//                     filters.quoteAssetPrecision = obj.quoteAssetPrecision;
-//                     filters.icebergAllowed = obj.icebergAllowed;
-//                     exchangeInfoArray[obj.symbol] = filters;
-//
-//                 }
-//             }
-//         }
-//     );
-//
-// }
-
-
 async function websocketsAnalyser() {
 
-    // // INIT WEBSOCKET
     for (let time of timeFrame) {
 
         let startMessage = 'Bot Pattern Analysis System Started for interval: ' + time
@@ -463,7 +431,7 @@ async function exchangeInfo() {
 
         binance.exchangeInfo(function (error, data) {
 
-                if(error !== null) reject(error);
+                if (error !== null) reject(error);
 
                 for (let obj of data.symbols) {
 
@@ -501,13 +469,36 @@ async function init(candle) {
 
     return new Promise(async function (resolve, reject) {
 
-        for (const token of coinsArray) {
+        if (candle === 0) {
             for (let time of timeFrame) {
-                initValue(token, time, candle).then(() => console.log("Downloaded candlestick for: " + token + " " + time)).catch(() => reject())
-                await new Promise(r => setTimeout(r, 50));
+                for (const token of coinsArray) {
+                    let key = token + "_" + time
+                    indexArray[key] = -1;
+                    tokenArray[key] = [];
+                    recordPattern[key] = [];
+                }
+            }
+        } else {
+            for (const token of coinsArray) {
+                for (let time of timeFrame) {
+                    initValue(token, time, candle).then(() => console.log("Downloaded candlestick for: " + token + " " + time)).catch(() => reject())
+                    await new Promise(r => setTimeout(r, 50));
+                }
             }
         }
         resolve()
+    });
+
+}
+
+async function getPriceVariation(symbol) {
+
+    return new Promise(async function (resolve, reject) {
+
+        binance.prevDay(symbol, (error, prevDay, symbol) => {
+            resolve(prevDay.priceChangePercent)
+        });
+
     });
 
 }
@@ -517,15 +508,18 @@ async function init(candle) {
 
     try {
 
+        getPriceVariation('BTCUSDT').then((val) => {
+            console.log(val)
+        });
+
         exchangeInfo().then(() => {
             console.log("DATI exchangeInfo")
-            init(5).then(() => {
+            init(0).then(() => {
                 console.log("BOT STARTED")
                 websocketsAnalyser();
                 console.log(tokenArray)
             })
         })
-
 
     } catch (e) {
         console.log(e)
