@@ -503,7 +503,7 @@ async function init(candle) {
 
         for (const token of coinsArray) {
             for (let time of timeFrame) {
-                initValue(token, time, candle).then(() => console.log("Scaricato " + token + " " + time)).catch(() => reject())
+                initValue(token, time, candle).then(() => console.log("Downloaded candlestick for: " + token + " " + time)).catch(() => reject())
                 await new Promise(r => setTimeout(r, 50));
             }
         }
@@ -520,7 +520,6 @@ async function init(candle) {
         exchangeInfo().then(() => {
             console.log("DATI exchangeInfo")
             init(100).then(() => {
-                //console.log(tokenArray)
                 console.log("BOT STARTED")
                 //websocketsAnalyser();
             })
