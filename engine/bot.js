@@ -276,31 +276,31 @@ function websocketsAnalyser() {
                 //let hour = dataValue.getUTCHours();
                 //if (hour <= 0 || hour >= 5) {
 
-                if (!_.isEmpty(tokenArray[key])) {
-                    let pattern = Pattern.patternMatching(tokenArray[key], symbol)
-                    if (!_.isEmpty(pattern)) {
-
-                        let recordPatternData = {
-                            'symbol': symbol,
-                            'interval': interval,
-                            'hh': pattern['hh'],
-                            'll': pattern['ll'],
-                            'lh': pattern['lh'],
-                            'hl': pattern['hl'],
-                            'hh_close': pattern['hh_close'],
-                            'll_open': pattern['ll_open'],
-                            'll_close': pattern['ll_close'],
-                            'lh_close': pattern['lh_close'],
-                            'hl_open': pattern['hl_open'],
-                            'confirmed': false
-                        }
-
-                        recordPattern[key].push(recordPatternData)
-                        tokenArray[key] = [];
-                        indexArray[key] = -1
-
-                    }
-                }
+                // if (!_.isEmpty(tokenArray[key])) {
+                //     let pattern = Pattern.patternMatching(tokenArray[key], symbol)
+                //     if (!_.isEmpty(pattern)) {
+                //
+                //         let recordPatternData = {
+                //             'symbol': symbol,
+                //             'interval': interval,
+                //             'hh': pattern['hh'],
+                //             'll': pattern['ll'],
+                //             'lh': pattern['lh'],
+                //             'hl': pattern['hl'],
+                //             'hh_close': pattern['hh_close'],
+                //             'll_open': pattern['ll_open'],
+                //             'll_close': pattern['ll_close'],
+                //             'lh_close': pattern['lh_close'],
+                //             'hl_open': pattern['hl_open'],
+                //             'confirmed': false
+                //         }
+                //
+                //         recordPattern[key].push(recordPatternData)
+                //         tokenArray[key] = [];
+                //         indexArray[key] = -1
+                //
+                //     }
+                // }
 
                 if (_.isEmpty(recordPattern[key])) {
 
@@ -318,6 +318,7 @@ function websocketsAnalyser() {
                     }
 
                     tokenArray[key].push(ticker)
+
                     let pattern = Pattern.patternMatching(tokenArray[key], symbol)
 
                     if (!_.isEmpty(pattern)) {
