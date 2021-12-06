@@ -222,7 +222,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 // }
 
 
-function websocketsAnalyser() {
+async function websocketsAnalyser() {
 
     // // INIT WEBSOCKET
     for (let time of timeFrame) {
@@ -519,9 +519,10 @@ async function init(candle) {
 
         exchangeInfo().then(() => {
             console.log("DATI exchangeInfo")
-            init(100).then(() => {
+            init(5).then(() => {
                 console.log("BOT STARTED")
-                //websocketsAnalyser();
+                websocketsAnalyser();
+                console.log(tokenArray)
             })
         })
 
