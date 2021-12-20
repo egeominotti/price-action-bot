@@ -250,7 +250,7 @@ async function websocketsAnalyser() {
 
                     if (ema < close) {
 
-                        console.log("OPERO: " + symbol + " - " + interval + " - " + _.round(ema, 4))
+                        console.log("WORK: " + symbol + " - " + interval + " - " + _.round(ema, 4))
 
                         if (_.isEmpty(recordPattern[key])) {
 
