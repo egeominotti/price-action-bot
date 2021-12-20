@@ -246,9 +246,9 @@ async function websocketsAnalyser() {
                     //let hour = dataValue.getUTCHours();
                     //if (hour <= 0 || hour >= 5) {
 
-                    if (ema < close) {
+                    if (close < ema) {
 
-                        console.log("WORK ema below close price: " + symbol + " - " + interval + " - EMA200 " + _.round(ema, 4) + " - Close: " + close)
+                        console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200 " + _.round(ema, 4) + " - Close: " + close)
 
                         if (_.isEmpty(recordPattern[key])) {
 
