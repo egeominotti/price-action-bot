@@ -242,7 +242,7 @@ async function websocketsAnalyser() {
             // Check at close tick
             if (isFinal) {
 
-                calculateEMA(symbol, interval, 400, 200).then(function (ema) {
+                calculateEMA(symbol, interval, 350, 200).then(function (ema) {
 
                     //let dataValue = new Date();
                     //let hour = dataValue.getUTCHours();
