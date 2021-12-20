@@ -330,6 +330,7 @@ async function websocketsAnalyser() {
                                 }
                             }
                         }
+
                     } else {
                         tokenArray[key] = [];
                         indexArray[key] = -1;
