@@ -9,18 +9,20 @@ const Telegram = require('../utility/telegram');
 const analysis = require('../analytics/analysis');
 const Strategy = require('../strategy/strategy');
 const _ = require("lodash");
+const EMA = require('technicalindicators').EMA
 
-const express = require('express')
-const app = express()
-const port = 3000
 
-app.get('/', (req, res) => {
-  res.send(tokenArray)
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+// const express = require('express')
+// const app = express()
+// const port = 3000
+//
+// app.get('/', (req, res) => {
+//     res.send(tokenArray)
+// })
+//
+// app.listen(port, () => {
+//     console.log(`Example app listening at http://localhost:${port}`)
+// })
 
 
 const binance = new Binance().options({
@@ -36,6 +38,7 @@ let tradeEnabled = false;
 let coinsArray = coins.getCoins()
 
 let tokenArray = {}
+let tokenArrayAnalysis = {}
 let exchangeInfoArray = {}
 let indexArray = {}
 let recordPattern = {}
@@ -46,6 +49,7 @@ let sumSizeTrade = 0;
 const sizeTrade = 15
 
 let timeFrame = [
+    '1m',
     '5m',
     '15m',
     '1h',
@@ -239,35 +243,38 @@ async function websocketsAnalyser() {
             // Check at close tick
             if (isFinal) {
 
+                let ticker = {
+                    'symbol': symbol,
+                    'open': parseFloat(open),
+                    'close': parseFloat(close),
+                    'low': parseFloat(low),
+                    'high': parseFloat(high),
+                    'interval': interval,
+                    'time': new Date()
+                }
+
+                tokenArrayAnalysis[key].push(ticker);
+
+
+                let closeArray = []
+                let openArray = []
+                let highArray = []
+                let lowArray = []
+
+                for (let elem of tokenArrayAnalysis[key]) {
+                    closeArray.push(elem.close)
+                    openArray.push(elem.open)
+                    highArray.push(elem.high)
+                    lowArray.push(elem.low)
+                }
+
+                let ema = EMA.calculate({period: 200, values: closeArray})
+                console.log(symbol)
+                console.log(ema[ema.length -1])
+
                 //let dataValue = new Date();
                 //let hour = dataValue.getUTCHours();
                 //if (hour <= 0 || hour >= 5) {
-
-                // if (!_.isEmpty(tokenArray[key])) {
-                //     let pattern = Pattern.patternMatching(tokenArray[key], symbol)
-                //     if (!_.isEmpty(pattern)) {
-                //
-                //         let recordPatternData = {
-                //             'symbol': symbol,
-                //             'interval': interval,
-                //             'hh': pattern['hh'],
-                //             'll': pattern['ll'],
-                //             'lh': pattern['lh'],
-                //             'hl': pattern['hl'],
-                //             'hh_close': pattern['hh_close'],
-                //             'll_open': pattern['ll_open'],
-                //             'll_close': pattern['ll_close'],
-                //             'lh_close': pattern['lh_close'],
-                //             'hl_open': pattern['hl_open'],
-                //             'confirmed': false
-                //         }
-                //
-                //         recordPattern[key].push(recordPatternData)
-                //         tokenArray[key] = [];
-                //         indexArray[key] = -1
-                //
-                //     }
-                // }
 
                 if (_.isEmpty(recordPattern[key])) {
 
@@ -385,12 +392,8 @@ async function initValue(token, time, candle) {
         binance.candlesticks(token, time, (error, ticks, symbol) => {
 
             const key = token + "_" + time
-
-            let indexOrder = 1
-
-            indexArray[key] = -1;
-            tokenArray[key] = [];
-            recordPattern[key] = [];
+            let indexOrder = 0;
+            tokenArrayAnalysis[key] = [];
 
             if (error !== null) reject()
 
@@ -400,11 +403,8 @@ async function initValue(token, time, candle) {
 
                     if (indexOrder <= ticks.length - 1) {
 
-                        indexArray[key] += 1
-
                         let [time, open, high, low, close, ignored] = t;
                         let ticker = {
-                            'index': parseInt(indexArray[key]),
                             'symbol': symbol,
                             'open': parseFloat(open),
                             'close': parseFloat(close),
@@ -413,7 +413,7 @@ async function initValue(token, time, candle) {
                             'time': time,
                         }
 
-                        tokenArray[key].push(ticker)
+                        tokenArrayAnalysis[key].push(ticker)
                         indexOrder++;
                     }
                 }
@@ -469,21 +469,10 @@ async function init(candle) {
 
     return new Promise(async function (resolve, reject) {
 
-        if (candle === 0) {
+        for (const token of coinsArray) {
             for (let time of timeFrame) {
-                for (const token of coinsArray) {
-                    let key = token + "_" + time
-                    indexArray[key] = -1;
-                    tokenArray[key] = [];
-                    recordPattern[key] = [];
-                }
-            }
-        } else {
-            for (const token of coinsArray) {
-                for (let time of timeFrame) {
-                    initValue(token, time, candle).then(() => console.log("Downloaded candlestick for: " + token + " " + time)).catch(() => reject())
-                    await new Promise(r => setTimeout(r, 50));
-                }
+                initValue(token, time, candle).then(() => console.log("Downloaded candlestick for: " + token + " " + time)).catch(() => reject())
+                await new Promise(r => setTimeout(r, 50));
             }
         }
         resolve()
@@ -500,7 +489,6 @@ async function getPriceVariation(symbol) {
         });
 
     });
-
 }
 
 
@@ -508,16 +496,20 @@ async function getPriceVariation(symbol) {
 
     try {
 
-        getPriceVariation('BTCUSDT').then((val) => {
-            console.log(val)
-        });
+        for (let time of timeFrame) {
+            for (const token of coinsArray) {
+                let key = token + "_" + time
+                indexArray[key] = -1;
+                tokenArray[key] = [];
+                recordPattern[key] = [];
+            }
+        }
 
         exchangeInfo().then(() => {
             console.log("DATI exchangeInfo")
-            init(0).then(() => {
+            init(600).then(() => {
                 console.log("BOT STARTED")
                 websocketsAnalyser();
-                console.log(tokenArray)
             })
         })
 
