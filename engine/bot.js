@@ -250,10 +250,9 @@ async function websocketsAnalyser() {
                     //let hour = dataValue.getUTCHours();
                     //if (hour <= 0 || hour >= 5) {
 
-                    if (ema[0] < close) {
+                    if (ema < close) {
 
-                        console.log("OPERO: " + symbol + " - " + interval + " - " + _.round(ema[0], 4))
-
+                        console.log("OPERO: " + symbol + " - " + interval + " - " + _.round(ema, 4))
 
                         if (_.isEmpty(recordPattern[key])) {
 
@@ -340,7 +339,6 @@ async function websocketsAnalyser() {
 
                 }).catch(() => reject())
 
-
             }
 
         });
@@ -364,7 +362,7 @@ async function calculateEMA(token, time, candle, period) {
                 }
                 closeArray.pop()
                 let ema = EMA.calculate({period: period, values: closeArray})
-                resolve(ema)
+                resolve(_.last(ema))
             }
 
         }, {limit: candle});
