@@ -245,15 +245,15 @@ async function websocketsAnalyser() {
 
                 calculateEMA(symbol, interval, 350, 200).then(function (ema) {
 
-                    console.log(symbol)
-                    console.log(interval)
-                    console.log(ema[0])
 
                     //let dataValue = new Date();
                     //let hour = dataValue.getUTCHours();
                     //if (hour <= 0 || hour >= 5) {
 
                     if (ema[0] < close) {
+
+                        console.log("OPERO: " + symbol + " - " + interval + " - " + _.round(ema[0], 4))
+
 
                         if (_.isEmpty(recordPattern[key])) {
 
@@ -311,6 +311,7 @@ async function websocketsAnalyser() {
                                     let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
 
                                     if (isStrategyBreakoutFound) {
+
                                         if (tradeEnabled) {
 
                                             console.log(exchangeInfoArray[symbol])
@@ -322,14 +323,19 @@ async function websocketsAnalyser() {
                                             let buyAmount = binance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
                                             binance.marketBuy(symbol, buyAmount);
                                         }
+
                                     }
                                     console.log(recordPatternValue)
 
                                 }
                             }
                         }
-
+                    } else {
+                        tokenArray[key] = [];
+                        indexArray[key] = -1;
+                        recordPattern[key] = [];
                     }
+
 
                 }).catch(() => reject())
 
