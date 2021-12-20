@@ -37,10 +37,10 @@ mongoose.connect(process.env.URI_MONGODB);
 let tradeEnabled = false;
 let coinsArray = coins.getCoins()
 
-let tokenArray =        {}
+let tokenArray = {}
 let exchangeInfoArray = {}
-let indexArray =        {}
-let recordPattern =     {}
+let indexArray = {}
+let recordPattern = {}
 
 let balance = 3000
 let totalPercentage = 0
@@ -248,7 +248,7 @@ async function websocketsAnalyser() {
 
                     if (ema < close) {
 
-                        console.log("WORK: " + symbol + " - " + interval + " - " + _.round(ema, 4))
+                        console.log("WORK: " + symbol + " - " + interval + " - EMA200 " + _.round(ema, 4))
 
                         if (_.isEmpty(recordPattern[key])) {
 
@@ -441,6 +441,7 @@ async function getPriceVariation(symbol) {
         for (let time of timeFrame) {
             for (const token of coinsArray) {
                 let key = token + "_" + time
+
                 indexArray[key] = -1;
                 tokenArray[key] = [];
                 recordPattern[key] = [];
