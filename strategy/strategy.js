@@ -1,6 +1,4 @@
-const axios = require("axios");
 const Telegram = require('../utility/telegram');
-const Binance = require("node-binance-api");
 
 /**
  *

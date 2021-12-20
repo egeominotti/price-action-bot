@@ -51,8 +51,8 @@ let timeFrame = [
     '1h',
     '4h',
     '1d',
-    '3d',
-    '1w',
+    //'3d',
+    //'1w',
 ]
 
 
@@ -354,7 +354,7 @@ async function websocketsAnalyser() {
                             //             let ema = response.data['value']
                             //             console.log(ema)
                             //             if (ema < close) {
-                            //                 Strategy.strategyBreakout(symbol, interval, close, tradeEnabled, apiUrlTrade, recordPatternValue)
+                            //                 Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
                             //                 console.log(recordPatternValue)
                             //             } else {
                             //                 recordPattern[key] = []
