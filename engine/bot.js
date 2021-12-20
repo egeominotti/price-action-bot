@@ -243,149 +243,128 @@ async function websocketsAnalyser() {
             // Check at close tick
             if (isFinal) {
 
-                let ticker = {
-                    'symbol': symbol,
-                    'open': parseFloat(open),
-                    'close': parseFloat(close),
-                    'low': parseFloat(low),
-                    'high': parseFloat(high),
-                    'interval': interval,
-                    'time': new Date()
-                }
+                calculateEMA(symbol, interval, 350, 200).then(function (ema) {
 
-                tokenArrayAnalysis[key].push(ticker);
+                    console.log(symbol)
+                    console.log(interval)
+                    console.log(ema[0])
 
+                    //let dataValue = new Date();
+                    //let hour = dataValue.getUTCHours();
+                    //if (hour <= 0 || hour >= 5) {
 
-                let closeArray = []
-                let openArray = []
-                let highArray = []
-                let lowArray = []
+                    if (ema[0] < close) {
 
-                for (let elem of tokenArrayAnalysis[key]) {
-                    closeArray.push(elem.close)
-                    openArray.push(elem.open)
-                    highArray.push(elem.high)
-                    lowArray.push(elem.low)
-                }
+                        if (_.isEmpty(recordPattern[key])) {
 
-                let ema = EMA.calculate({period: 200, values: closeArray})
-                console.log(symbol)
-                console.log(ema[ema.length -1])
+                            indexArray[key] += 1
 
-                //let dataValue = new Date();
-                //let hour = dataValue.getUTCHours();
-                //if (hour <= 0 || hour >= 5) {
+                            let ticker = {
+                                'index': parseInt(indexArray[key]),
+                                'symbol': symbol.toString(),
+                                'open': parseFloat(open),
+                                'close': parseFloat(close),
+                                'low': parseFloat(low),
+                                'high': parseFloat(high),
+                                'interval': interval.toString(),
+                                'time': new Date()
+                            }
 
-                if (_.isEmpty(recordPattern[key])) {
+                            tokenArray[key].push(ticker)
 
-                    indexArray[key] += 1
+                            let pattern = Pattern.patternMatching(tokenArray[key], symbol)
 
-                    let ticker = {
-                        'index': parseInt(indexArray[key]),
-                        'symbol': symbol.toString(),
-                        'open': parseFloat(open),
-                        'close': parseFloat(close),
-                        'low': parseFloat(low),
-                        'high': parseFloat(high),
-                        'interval': interval.toString(),
-                        'time': new Date()
-                    }
+                            if (!_.isEmpty(pattern)) {
 
-                    tokenArray[key].push(ticker)
+                                let recordPatternData = {
+                                    'symbol': symbol,
+                                    'interval': interval,
+                                    'hh': pattern['hh'],
+                                    'll': pattern['ll'],
+                                    'lh': pattern['lh'],
+                                    'hl': pattern['hl'],
+                                    'hh_close': pattern['hh_close'],
+                                    'll_open': pattern['ll_open'],
+                                    'll_close': pattern['ll_close'],
+                                    'lh_close': pattern['lh_close'],
+                                    'hl_open': pattern['hl_open'],
+                                    'confirmed': false
+                                }
 
-                    let pattern = Pattern.patternMatching(tokenArray[key], symbol)
+                                recordPattern[key].push(recordPatternData)
+                                tokenArray[key] = [];
+                                indexArray[key] = -1
 
-                    if (!_.isEmpty(pattern)) {
-
-                        let recordPatternData = {
-                            'symbol': symbol,
-                            'interval': interval,
-                            'hh': pattern['hh'],
-                            'll': pattern['ll'],
-                            'lh': pattern['lh'],
-                            'hl': pattern['hl'],
-                            'hh_close': pattern['hh_close'],
-                            'll_open': pattern['ll_open'],
-                            'll_close': pattern['ll_close'],
-                            'lh_close': pattern['lh_close'],
-                            'hl_open': pattern['hl_open'],
-                            'confirmed': false
-                        }
-
-                        recordPattern[key].push(recordPatternData)
-                        tokenArray[key] = [];
-                        indexArray[key] = -1
-
-                    }
+                            }
 
 
-                } else {
-
-                    let recordPatternValue = _.head(recordPattern[key]);
-                    console.log(recordPatternValue)
-                    if (recordPatternValue['confirmed'] === false) {
-
-                        if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
-                            recordPattern[key] = []
                         } else {
 
-                            let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
+                            let recordPatternValue = _.head(recordPattern[key]);
+                            console.log(recordPatternValue)
+                            if (recordPatternValue['confirmed'] === false) {
 
-                            if (isStrategyBreakoutFound) {
-                                if (tradeEnabled) {
+                                if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
+                                    recordPattern[key] = []
+                                } else {
 
-                                    console.log(exchangeInfoArray[symbol])
-                                    const binance = new Binance().options({
-                                        APIKEY: 'g4m5LHCwMI1evVuaf6zgKXtszDnSboQla5O5c7uWVtBmdbaiTLNQWPnO9ImbYB9U',
-                                        APISECRET: 'b2kxHirJLXDrXuFGvLWUtXvRyUXQu4NvsY8lSy94bJjnJFn0SmESuBq60DJi9b0B'
-                                    });
+                                    let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
 
-                                    let buyAmount = binance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
-                                    binance.marketBuy(symbol, buyAmount);
+                                    if (isStrategyBreakoutFound) {
+                                        if (tradeEnabled) {
+
+                                            console.log(exchangeInfoArray[symbol])
+                                            const binance = new Binance().options({
+                                                APIKEY: 'g4m5LHCwMI1evVuaf6zgKXtszDnSboQla5O5c7uWVtBmdbaiTLNQWPnO9ImbYB9U',
+                                                APISECRET: 'b2kxHirJLXDrXuFGvLWUtXvRyUXQu4NvsY8lSy94bJjnJFn0SmESuBq60DJi9b0B'
+                                            });
+
+                                            let buyAmount = binance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
+                                            binance.marketBuy(symbol, buyAmount);
+                                        }
+                                    }
+                                    console.log(recordPatternValue)
+
                                 }
                             }
-                            console.log(recordPatternValue)
-
-                            // try {
-                            //     let symbolReplaced = symbol.replace('USDT', '/USDT')
-                            //     axios.get('https://api.taapi.io/ema', {
-                            //         params: {
-                            //             secret: process.env.API_KEY_TAAPI,
-                            //             exchange: "binance",
-                            //             symbol: symbolReplaced,
-                            //             interval: interval,
-                            //             optInTimePeriod: 200
-                            //         }
-                            //     })
-                            //         .then(function (response) {
-                            //             let ema = response.data['value']
-                            //             console.log(ema)
-                            //             if (ema < close) {
-                            //                 Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
-                            //                 console.log(recordPatternValue)
-                            //             } else {
-                            //                 recordPattern[key] = []
-                            //             }
-                            //         })
-                            //         .catch(function (error) {
-                            //             console.log(error.response.data);
-                            //             console.log("Error:" + error.response.data)
-                            //             Telegram.sendMessage('Error: ' + error.response.data)
-                            //         });
-                            //
-                            //
-                            // } catch (e) {
-                            //     Telegram.sendMessage('Error: ' + e.toString())
-                            // }
-
                         }
+
                     }
-                }
+
+                }).catch(() => reject())
+
+
             }
 
         });
     }
 }
+
+
+async function calculateEMA(token, time, candle, period) {
+    return new Promise(function (resolve, reject) {
+
+        binance.candlesticks(token, time, (error, ticks, symbol) => {
+
+            let closeArray = []
+            if (error !== null) reject()
+
+            if (!_.isEmpty(ticks)) {
+
+                for (let t of ticks) {
+                    let [time, open, high, low, close, ignored] = t;
+                    closeArray.push(parseFloat(close));
+                }
+                closeArray.pop()
+                let ema = EMA.calculate({period: period, values: closeArray})
+                resolve(ema)
+            }
+
+        }, {limit: candle});
+
+    });
+}
+
 
 async function initValue(token, time, candle) {
     return new Promise(function (resolve, reject) {
@@ -506,16 +485,13 @@ async function getPriceVariation(symbol) {
         }
 
         exchangeInfo().then(() => {
-            console.log("DATI exchangeInfo")
-            init(600).then(() => {
-                console.log("BOT STARTED")
-                websocketsAnalyser();
-            })
+            websocketsAnalyser();
         })
 
     } catch (e) {
         console.log(e)
     }
+
 })();
 
 
