@@ -46,10 +46,10 @@ let recordPattern = {}
 let balance = 3000
 let totalPercentage = 0
 let sumSizeTrade = 0;
-const sizeTrade = 15
+const sizeTrade = 200;
 
 let timeFrame = [
-    '1m',
+    //'1m',
     '5m',
     '15m',
     '1h',
