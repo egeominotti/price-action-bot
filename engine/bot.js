@@ -371,44 +371,6 @@ async function calculateEMA(token, time, candle, period) {
 }
 
 
-async function initValue(token, time, candle) {
-    return new Promise(function (resolve, reject) {
-        binance.candlesticks(token, time, (error, ticks, symbol) => {
-
-            const key = token + "_" + time
-            let indexOrder = 0;
-            tokenArrayAnalysis[key] = [];
-
-            if (error !== null) reject()
-
-            if (!_.isEmpty(ticks)) {
-                // TOOO: remove last element
-                for (let t of ticks) {
-
-                    if (indexOrder <= ticks.length - 1) {
-
-                        let [time, open, high, low, close, ignored] = t;
-                        let ticker = {
-                            'symbol': symbol,
-                            'open': parseFloat(open),
-                            'close': parseFloat(close),
-                            'low': parseFloat(low),
-                            'high': parseFloat(high),
-                            'time': time,
-                        }
-
-                        tokenArrayAnalysis[key].push(ticker)
-                        indexOrder++;
-                    }
-                }
-                resolve()
-            }
-
-        }, {limit: candle});
-    });
-}
-
-
 async function exchangeInfo() {
 
     return new Promise(async function (resolve, reject) {
