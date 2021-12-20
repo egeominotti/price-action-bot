@@ -248,7 +248,7 @@ async function websocketsAnalyser() {
 
                     if (ema < close) {
 
-                        console.log("WORK: " + symbol + " - " + interval + " - EMA200 " + _.round(ema, 4))
+                        console.log("WORK ema below close price: " + symbol + " - " + interval + " - EMA200 " + _.round(ema, 4) + " Close: " + close)
 
                         if (_.isEmpty(recordPattern[key])) {
 
