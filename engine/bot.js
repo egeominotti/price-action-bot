@@ -366,7 +366,6 @@ async function calculateEMA(token, time, candle, period) {
     });
 }
 
-
 async function exchangeInfo() {
 
     return new Promise(async function (resolve, reject) {
@@ -403,21 +402,6 @@ async function exchangeInfo() {
             }
         );
 
-    });
-
-}
-
-async function init(candle) {
-
-    return new Promise(async function (resolve, reject) {
-
-        for (const token of coinsArray) {
-            for (let time of timeFrame) {
-                initValue(token, time, candle).then(() => console.log("Downloaded candlestick for: " + token + " " + time)).catch(() => reject())
-                await new Promise(r => setTimeout(r, 50));
-            }
-        }
-        resolve()
     });
 
 }
