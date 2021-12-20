@@ -37,11 +37,10 @@ mongoose.connect(process.env.URI_MONGODB);
 let tradeEnabled = false;
 let coinsArray = coins.getCoins()
 
-let tokenArray = {}
-let tokenArrayAnalysis = {}
+let tokenArray =        {}
 let exchangeInfoArray = {}
-let indexArray = {}
-let recordPattern = {}
+let indexArray =        {}
+let recordPattern =     {}
 
 let balance = 3000
 let totalPercentage = 0
