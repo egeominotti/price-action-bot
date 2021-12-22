@@ -282,6 +282,7 @@ async function websocketsAnalyser() {
                                     'll_close': pattern['ll_close'],
                                     'lh_close': pattern['lh_close'],
                                     'hl_open': pattern['hl_open'],
+                                    'hh_high': pattern['hh_high'],
                                     'confirmed': false
                                 }
 
