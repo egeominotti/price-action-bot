@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 const Binance = require('node-binance-api');
-const axios = require('axios').default;
 const coins = require('../utility/coins');
 const Logger = require('../models/logger');
-const User = require('../models/user');
 const Pattern = require('../pattern/triangle')
 const Telegram = require('../utility/telegram');
-const analysis = require('../analytics/analysis');
 const Strategy = require('../strategy/strategy');
+
+const axios = require('axios').default;
+const User = require('../models/user');
+const analysis = require('../analytics/analysis');
+
 const _ = require("lodash");
 const EMA = require('technicalindicators').EMA
 
@@ -26,8 +28,8 @@ const EMA = require('technicalindicators').EMA
 
 
 const binance = new Binance().options({
-    APIKEY: '',
-    APISECRET: ''
+    APIKEY: 'g4m5LHCwMI1evVuaf6zgKXtszDnSboQla5O5c7uWVtBmdbaiTLNQWPnO9ImbYB9U',
+    APISECRET: 'b2kxHirJLXDrXuFGvLWUtXvRyUXQu4NvsY8lSy94bJjnJFn0SmESuBq60DJi9b0B'
 });
 
 require('dotenv').config();
@@ -45,7 +47,7 @@ let recordPattern = {}
 let balance = 3000
 let totalPercentage = 0
 let sumSizeTrade = 0;
-const sizeTrade = 200;
+const sizeTrade = 50;
 
 let timeFrame = [
     //'1m',
@@ -246,7 +248,7 @@ async function websocketsAnalyser() {
                     //let hour = dataValue.getUTCHours();
                     //if (hour <= 0 || hour >= 5) {
 
-                    if (ema < close) {
+                    if (close > ema) {
 
                         console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + close)
 
@@ -310,11 +312,6 @@ async function websocketsAnalyser() {
                                         if (tradeEnabled) {
 
                                             console.log(exchangeInfoArray[symbol])
-                                            const binance = new Binance().options({
-                                                APIKEY: 'g4m5LHCwMI1evVuaf6zgKXtszDnSboQla5O5c7uWVtBmdbaiTLNQWPnO9ImbYB9U',
-                                                APISECRET: 'b2kxHirJLXDrXuFGvLWUtXvRyUXQu4NvsY8lSy94bJjnJFn0SmESuBq60DJi9b0B'
-                                            });
-
                                             let buyAmount = binance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
                                             binance.marketBuy(symbol, buyAmount);
                                         }
