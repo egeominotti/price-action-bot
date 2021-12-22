@@ -47,12 +47,12 @@ let recordPattern = {}
 let balance = 3000
 let totalPercentage = 0
 let sumSizeTrade = 0;
-const sizeTrade = 50;
+const sizeTrade = 200;
 
 let timeFrame = [
     '1m',
-    // '5m',
-    // '15m',
+    '5m',
+    '15m',
     // '1h',
     // '4h',
     // '1d',
@@ -279,6 +279,7 @@ async function websocketsAnalyser() {
                                     'hl': pattern['hl'],
                                     'hh_close': pattern['hh_close'],
                                     'll_open': pattern['ll_open'],
+                                    'll_low': pattern['ll_low'],
                                     'll_close': pattern['ll_close'],
                                     'lh_close': pattern['lh_close'],
                                     'hl_open': pattern['hl_open'],

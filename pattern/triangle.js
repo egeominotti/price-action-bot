@@ -176,6 +176,7 @@ function LowerLow(storeData, indexHigherHigh) {
     let min = MinTickLow(storeData, indexHigherHigh);
     let high = min['tick']['high']
     let close = min['tick']['close']
+    let low = min['tick']['low']
     let open = min['tick']['open']
     let minIndex = min['tick']['index']
 
@@ -193,7 +194,8 @@ function LowerLow(storeData, indexHigherHigh) {
                 'value': min['min'],
                 'high': high,
                 'close': close,
-                'open': open
+                'open': open,
+                'low': low
             };
 
         } else {
@@ -218,7 +220,8 @@ function LowerLow(storeData, indexHigherHigh) {
                             'value': min['min'],
                             'high': high,
                             'close': close,
-                            'open': open
+                            'open': open,
+                            'low': low
                         };
 
                     }
@@ -332,6 +335,7 @@ function patternMatching(storeData, symbol) {
                         'hh_close': HH['close'],
                         'hh_high': HH['high'],
                         'll_open': LL['open'],
+                        'll_low': LL['low'],
                         'll_close': LL['close'],
                         'lh_close': LH['close'],
                         'hl_open': HL['open']

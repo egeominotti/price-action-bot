@@ -27,10 +27,11 @@ function strategyBreakout(symbol, interval, close, record) {
     let hh_high = record['hh_high']
     let ll_open = record['ll_open']
     let ll_close = record['ll_close']
+    let ll_low = record['ll_low']
     let lh_close = record['lh_close']
     let hl_open = record['hl_open']
 
-    let takeprofit = hh_high - ll_close + lh_close;
+    let takeprofit = (hh_high - ll_low + lh_close) * 0.999;
     let stoploss = 0;
 
     let ratioEntry = 0
