@@ -110,6 +110,7 @@ function HigherHigh(storeData) {
 
     let max = MaxTickHigh(storeData);
     let low = max['tick']['low']
+    let high = max['tick']['high']
     let close = max['tick']['close']
     let maxIndex = max['index']
 
@@ -124,7 +125,8 @@ function HigherHigh(storeData) {
                 'index': maxIndex,
                 'value': max['max'],
                 'close': close,
-                'low': low
+                'low': low,
+                'high': high
             };
 
         } else {
@@ -149,7 +151,8 @@ function HigherHigh(storeData) {
                             'index': maxIndex,
                             'value': max['max'],
                             'close': close,
-                            'low': low
+                            'low': low,
+                            'high': high
                         };
 
                     }
@@ -237,9 +240,9 @@ function LowerLow(storeData, indexHigherHigh) {
 function LowerHigh(storeData, indexLowerLow) {
 
     let max = MaxTickHigh(storeData, indexLowerLow);
-    let close = max['tick']['close']
-    let low = max['tick']['low']
-    let maxIndex = max['tick']['index']
+    let close =     max['tick']['close']
+    let low =       max['tick']['low']
+    let maxIndex =  max['tick']['index']
 
 
     for (let index = indexLowerLow + 1; index < storeData.length; index++) {
@@ -327,6 +330,7 @@ function patternMatching(storeData, symbol) {
                         'lh': LH['value'],
                         'hl': HL['value'],
                         'hh_close': HH['close'],
+                        'hh_high': HH['high'],
                         'll_open': LL['open'],
                         'll_close': LL['close'],
                         'lh_close': LH['close'],

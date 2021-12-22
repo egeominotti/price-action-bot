@@ -50,12 +50,12 @@ let sumSizeTrade = 0;
 const sizeTrade = 50;
 
 let timeFrame = [
-    //'1m',
-    '5m',
-    '15m',
-    '1h',
-    '4h',
-    '1d',
+    '1m',
+    // '5m',
+    // '15m',
+    // '1h',
+    // '4h',
+    // '1d',
 ]
 
 
@@ -75,7 +75,6 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
         takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
         totalPercentage += takeProfitPercentage
-        //balance = _.round((balance / entryprice) * takeprofit, 2)
 
         finaleTradeValue = finaleSizeTrade - sizeTrade
 
@@ -143,8 +142,6 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         let finaleSizeTrade = (sizeTrade / entryprice) * stoploss;
         finaleTradeValue = finaleSizeTrade - sizeTrade
         totalPercentage += stopLossPercentage
-
-        //balance = _.round((balance / entryprice) * stoploss, 2)
 
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
@@ -242,7 +239,7 @@ async function websocketsAnalyser() {
             // Check at close tick
             if (isFinal) {
 
-                calculateEMA(symbol, interval, 500, 200).then(function (ema) {
+                calculateEMA(symbol, interval, 350, 200).then(function (ema) {
 
                     //let dataValue = new Date();
                     //let hour = dataValue.getUTCHours();
