@@ -344,7 +344,7 @@ async function calculateEMA(token, time, candle, period) {
         binance.candlesticks(token, time, (error, ticks, symbol) => {
 
             let closeArray = []
-            if (error !== null) reject()
+            if (error === null) reject()
 
             if (!_.isEmpty(ticks)) {
 
@@ -368,7 +368,7 @@ async function exchangeInfo() {
 
         binance.exchangeInfo(function (error, data) {
 
-                if (error !== null) reject(error);
+                if (error === null) reject(error);
 
                 for (let obj of data.symbols) {
 
