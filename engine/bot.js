@@ -318,6 +318,10 @@ async function websocketsAnalyser() {
 
                                 }
                             }
+
+                            if (exclusionList[key] === true) {
+                                recordPattern[key] = [];
+                            }
                         }
 
                     } else {
