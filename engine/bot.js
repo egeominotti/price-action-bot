@@ -217,6 +217,7 @@ async function websocketsAnalyser() {
                         if (takeprofit) {
                             // EXCLUDED SYMBOL FROM ENTRY
                             exclusionList[key] = true;
+                            console.log(exclusionList[key])
                         }
 
                     }
@@ -330,7 +331,6 @@ async function websocketsAnalyser() {
 
                 }).catch(() => reject())
             }
-
 
         });
     }
