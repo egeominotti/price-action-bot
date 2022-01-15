@@ -34,10 +34,11 @@ const sizeTrade = 200;
 
 
 let timeFrame = [
-    '5m',
-    '15m',
-    '1h',
-    '4h',
+    '1m',
+    // '5m',
+    // '15m',
+    // '1h',
+    // '4h',
 ]
 
 
@@ -196,33 +197,30 @@ async function websocketsAnalyser() {
 
             if (!_.isEmpty(recordPattern[key])) {
 
-                if (exclusionList[symbol] === false) {
+                const recordPatternValue = _.head(recordPattern[key]);
+                if (recordPatternValue['confirmed'] === true && exclusionList[key] === false) {
 
-                    const recordPatternValue = _.head(recordPattern[key]);
-                    if (recordPatternValue['confirmed'] === true) {
+                    let stoploss =      stopLoss(key, close, recordPatternValue, symbol, interval)
+                    let takeprofit =    takeProfit(key, close, recordPatternValue, symbol, interval)
 
-                        let stoploss = stopLoss(key, close, recordPatternValue, symbol, interval)
-                        let takeprofit = takeProfit(key, close, recordPatternValue, symbol, interval)
+                    if (stoploss || takeprofit) {
 
+                        if (tradeEnabled) {
 
-                        if (stoploss || takeprofit) {
+                            binance.balance((error, balances) => {
+                                if (error) return console.error(error);
+                                console.log(exchangeInfoArray[symbol])
+                                let sellAmount = binance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
+                                binance.marketSell(symbol, sellAmount);
+                            });
+                        }
 
-                            if (tradeEnabled) {
-
-                                binance.balance((error, balances) => {
-                                    if (error) return console.error(error);
-                                    console.log(exchangeInfoArray[symbol])
-                                    let sellAmount = binance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
-                                    binance.marketSell(symbol, sellAmount);
-                                });
-                            }
-
-                            if (takeprofit) {
-                                exclusionList[symbol] = true;
-                            }
+                        if (takeprofit) {
+                            exclusionList[key] = true;
                         }
 
                     }
+
                 }
             }
 
@@ -235,9 +233,14 @@ async function websocketsAnalyser() {
                     let hour = dataValue.getUTCHours();
 
                     //if (hour <= 0 || hour >= 5) {
+
+                    // UNLOCK PAIR WITH TIME FRAME
                     if (hour === 0) {
-                        for (const token of coinsArray) {
-                            exclusionList[token] = false;
+                        for (let time of timeFrame) {
+                            for (const token of coinsArray) {
+                                let key = token + "_" + time
+                                exclusionList[key] = false;
+                            }
                         }
                     }
 
@@ -294,11 +297,7 @@ async function websocketsAnalyser() {
 
                             let recordPatternValue = _.head(recordPattern[key]);
                             console.log(recordPatternValue)
-                            if (recordPatternValue['confirmed'] === false) {
-
-                                if (exclusionList[symbol] === true) {
-                                    recordPattern[key] = []
-                                }
+                            if (recordPatternValue['confirmed'] === false && exclusionList[key] === false) {
 
                                 if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
                                     recordPattern[key] = []
@@ -309,7 +308,6 @@ async function websocketsAnalyser() {
                                     if (isStrategyBreakoutFound) {
 
                                         if (tradeEnabled) {
-
                                             console.log(exchangeInfoArray[symbol])
                                             let buyAmount = binance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
                                             binance.marketBuy(symbol, buyAmount);
@@ -408,14 +406,11 @@ async function exchangeInfo() {
 
     try {
 
-        for (const token of coinsArray) {
-            exclusionList[token] = false;
-        }
-
         for (let time of timeFrame) {
             for (const token of coinsArray) {
                 let key = token + "_" + time
 
+                exclusionList[key] = false;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
                 recordPattern[key] = [];
