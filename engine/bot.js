@@ -34,7 +34,6 @@ const sizeTrade = 200;
 
 
 let timeFrame = [
-    //'1m',
     '5m',
     '15m',
     '1h',
@@ -200,8 +199,8 @@ async function websocketsAnalyser() {
                 const recordPatternValue = _.head(recordPattern[key]);
                 if (recordPatternValue['confirmed'] === true && exclusionList[key] === false) {
 
-                    let stoploss =      stopLoss(key, close, recordPatternValue, symbol, interval)
-                    let takeprofit =    takeProfit(key, close, recordPatternValue, symbol, interval)
+                    let stoploss = stopLoss(key, close, recordPatternValue, symbol, interval)
+                    let takeprofit = takeProfit(key, close, recordPatternValue, symbol, interval)
 
                     if (stoploss || takeprofit) {
 
