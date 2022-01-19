@@ -23,6 +23,8 @@ function strategyBreakout(symbol, interval, close, record) {
     let ll = record['ll']
     let lh = record['lh']
     let hl = record['hl']
+
+    /*
     let hh_close = record['hh_close']
     let hh_high = record['hh_high']
     let ll_open = record['ll_open']
@@ -30,10 +32,11 @@ function strategyBreakout(symbol, interval, close, record) {
     let ll_low = record['ll_low']
     let lh_close = record['lh_close']
     let hl_open = record['hl_open']
+    */
 
     //let takeprofit = (lh_close + hh_high) - ll_low;
-    let ratioStopLoss = 0.995;
-    let takeprofit = ll * 2;
+    let ratioStopLoss = 0.999;
+    let takeprofit = (close - ll) * 2;
     let stoploss = ll * ratioStopLoss;
 
     if (close > lh) {
