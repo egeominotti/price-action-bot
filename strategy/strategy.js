@@ -17,9 +17,7 @@ const Telegram = require('../utility/telegram');
  */
 function strategyBreakout(symbol, interval, close, record) {
 
-    // HH high
     let hh = record['hh']
-    // LL low
     let ll = record['ll']
     let lh = record['lh']
     let hl = record['hl']
