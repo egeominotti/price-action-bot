@@ -31,53 +31,10 @@ function strategyBreakout(symbol, interval, close, record) {
     let lh_close = record['lh_close']
     let hl_open = record['hl_open']
 
-    let takeprofit = (lh_close + hh_high) - ll_low;
-    let stoploss = 0;
-
-    let ratioEntry = 0
-    let ratioStopLoss = 0;
-    let ratioTakeProfit = 0;
-
-    if (interval === '1m') {
-
-        ratioEntry = 1
-        ratioTakeProfit = 1
-        ratioStopLoss = 1
-
-        stoploss = ll * ratioStopLoss;
-
-    } else if (interval === '5m') {
-
-        ratioEntry = 1.0020
-        ratioTakeProfit = 0.9985
-        ratioStopLoss = 1.001
-
-        stoploss = ll * ratioStopLoss;
-
-    } else if (interval === '15m') {
-
-        ratioEntry = 1.0025
-        ratioTakeProfit = 0.9985
-        ratioStopLoss = 1.003
-
-        stoploss = ll * ratioStopLoss;
-
-    } else if (interval === '1h') {
-
-        ratioEntry = 1.008
-        ratioTakeProfit = 1
-        ratioStopLoss = 1.015
-
-        stoploss = hl * ratioStopLoss;
-
-    } else if (interval === '4h') {
-
-        ratioEntry = 1.01
-        ratioTakeProfit = 0.985
-        ratioStopLoss = 1.015
-
-        stoploss = hl * ratioStopLoss;
-    }
+    //let takeprofit = (lh_close + hh_high) - ll_low;
+    let ratioStopLoss = 0.995;
+    let takeprofit = ll * 2;
+    let stoploss = ll * ratioStopLoss;
 
     if (close > lh) {
 
