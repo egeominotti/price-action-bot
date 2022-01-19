@@ -34,6 +34,7 @@ const sizeTrade = 200;
 
 
 let timeFrame = [
+    '5m',
     '15m',
     '1h',
     '4h',
@@ -330,7 +331,7 @@ async function websocketsAnalyser() {
 
                     }
 
-                }).catch(() => reject())
+                }).catch(() => console.log("Can't calculate EMA for symbol:" + symbol))
 
             }
 
@@ -344,7 +345,7 @@ async function calculateEMA(token, time, candle, period) {
 
         binance.candlesticks(token, time, (error, ticks, symbol) => {
 
-            let closeArray = []
+            let closeArray = [];
             if (error !== null) reject()
 
             if (!_.isEmpty(ticks)) {
