@@ -1,19 +1,12 @@
 const Telegram = require('../utility/telegram');
 
 /**
- *-2,
- * StrategyBreakout
- * StrategyRetest
- * BuyOnHigherLow
- *
- */
-
-/**
  *
  * @param symbol
  * @param interval
  * @param close
  * @param record
+ * @returns {boolean}
  */
 function strategyBreakout(symbol, interval, close, record) {
 
