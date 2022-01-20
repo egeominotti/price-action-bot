@@ -1,7 +1,7 @@
 const Telegram = require('../utility/telegram');
 
 /**
- *
+ *-2,
  * StrategyBreakout
  * StrategyRetest
  * BuyOnHigherLow
@@ -22,11 +22,17 @@ function strategyBreakout(symbol, interval, close, record) {
     let lh = record['lh']
     let hl = record['hl']
 
-    let ratioStopLoss = 0.99;
-    let takeprofit = ((close - ll) * 2) + close;
-    let stoploss = ll * ratioStopLoss;
+
+    let takeprofit = (close - ll) * 2 + close;
+    let stoploss = ll * 0.99;
+
+    console.log(close)
+    console.log(ll)
+    console.log(takeprofit)
+    console.log(stoploss)
 
     /*
+
     let hh_close = record['hh_close']
     let hh_high = record['hh_high']
     let ll_open = record['ll_open']
@@ -34,10 +40,9 @@ function strategyBreakout(symbol, interval, close, record) {
     let ll_low = record['ll_low']
     let lh_close = record['lh_close']
     let hl_open = record['hl_open']
+    let takeprofit = (lh_close + hh_high) - ll_low;
+
     */
-
-    //let takeprofit = (lh_close + hh_high) - ll_low;
-
 
     if (close > lh) {
 

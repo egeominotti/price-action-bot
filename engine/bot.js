@@ -192,6 +192,8 @@ async function websocketsAnalyser() {
                 x: isFinal,
             } = ticks;
 
+            let currentClose = parseFloat(close)
+
             let key = symbol + "_" + interval
 
             if (!_.isEmpty(recordPattern[key])) {
@@ -199,8 +201,8 @@ async function websocketsAnalyser() {
                 const recordPatternValue = _.head(recordPattern[key]);
                 if (recordPatternValue['confirmed'] === true && exclusionList[key] === false) {
 
-                    let stoploss = stopLoss(key, close, recordPatternValue, symbol, interval)
-                    let takeprofit = takeProfit(key, close, recordPatternValue, symbol, interval)
+                    let stoploss = stopLoss(key, currentClose, recordPatternValue, symbol, interval)
+                    let takeprofit = takeProfit(key, currentClose, recordPatternValue, symbol, interval)
 
                     if (stoploss || takeprofit) {
 
@@ -245,9 +247,9 @@ async function websocketsAnalyser() {
                         }
                     }
 
-                    if (close > ema) {
+                    if (currentClose > ema) {
 
-                        console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + close)
+                        console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + currentClose)
 
                         if (_.isEmpty(recordPattern[key])) {
 
@@ -303,17 +305,17 @@ async function websocketsAnalyser() {
                             console.log(recordPatternValue)
                             if (recordPatternValue['confirmed'] === false && exclusionList[key] === false) {
 
-                                if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
+                                if (low < recordPatternValue['ll'] || currentClose > recordPatternValue['hh']) {
                                     recordPattern[key] = []
                                 } else {
 
-                                    let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
+                                    let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, currentClose, recordPatternValue)
 
                                     if (isStrategyBreakoutFound) {
 
                                         if (tradeEnabled) {
                                             console.log(exchangeInfoArray[symbol])
-                                            let buyAmount = binance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
+                                            let buyAmount = binance.roundStep(sizeTrade / currentClose, exchangeInfoArray[symbol].stepSize);
                                             binance.marketBuy(symbol, buyAmount);
                                         }
 
