@@ -111,6 +111,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         recordPattern[key] = null;
         // Add pair with key to exclusion list
         exclusionList[key] = true;
+        console.log(exclusionList)
 
         return true;
     }
