@@ -330,7 +330,7 @@ async function engine() {
 
                             console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + currentClose)
 
-                            // if not exists pattern search
+                            // if not exists pattern search it
                             if (recordPattern[key] == null) {
 
                                 indexArray[key] += 1
@@ -400,7 +400,6 @@ async function engine() {
                                 }
                             }
 
-
                         }
 
                     }).catch(
@@ -409,6 +408,7 @@ async function engine() {
                             resetAll(key)
                         }
                     )
+                    // end calculate ema
                 }
 
             }
