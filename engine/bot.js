@@ -6,9 +6,9 @@ const Pattern = require('../pattern/triangle')
 const Telegram = require('../utility/telegram');
 const Strategy = require('../strategy/strategy');
 
-const axios = require('axios').default;
-const User = require('../models/user');
-const analysis = require('../analytics/analysis');
+// const axios = require('axios').default;
+// const User = require('../models/user');
+// const analysis = require('../analytics/analysis');
 
 const _ = require("lodash");
 const EMA = require('technicalindicators').EMA
@@ -35,10 +35,10 @@ const sizeTrade = 200;
 
 let timeFrame = [
     '1m',
-    '5m',
-    '15m',
-    '1h',
-    '4h',
+    // '5m',
+    // '15m',
+    // '1h',
+    // '4h',
 ]
 
 
@@ -102,6 +102,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
         Telegram.sendMessage(message)
         recordPattern[key] = null;
+        // Add pair with key to exclusion list
         exclusionList[key] = true;
 
         return true;
@@ -225,8 +226,6 @@ async function websocketsAnalyser() {
             // Check at close tick
             if (isFinal) {
 
-                console.log(exclusionList[key])
-
                 if (exclusionList[key] === true) {
                     let dataValue = new Date();
                     let hour = dataValue.getUTCHours();
@@ -313,18 +312,27 @@ async function websocketsAnalyser() {
 
                         } else {
 
-                            tokenArray[key] = [];
-                            indexArray[key] = -1;
-                            recordPattern[key] = null;
+                            resetAll(key)
                         }
 
-                    }).catch(() => console.log("Error: Can't calculate EMA for symbol: " + symbol))
+                    }).catch(function () {
+                            console.log("Error: Can't calculate EMA for symbol: " + symbol)
+                            resetAll(key)
+                        }
+                    )
                 }
 
             }
 
         });
     }
+}
+
+function resetAll(key) {
+    exclusionList[key] = false;
+    indexArray[key] = -1;
+    tokenArray[key] = [];
+    recordPattern[key] = null;
 }
 
 
@@ -399,11 +407,7 @@ async function exchangeInfo() {
         for (let time of timeFrame) {
             for (const token of coinsArray) {
                 let key = token + "_" + time
-
-                exclusionList[key] = false;
-                indexArray[key] = -1;
-                tokenArray[key] = [];
-                recordPattern[key] = null;
+                resetAll(key)
             }
         }
 
