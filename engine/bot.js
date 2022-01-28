@@ -12,7 +12,14 @@ const Strategy = require('../strategy/strategy');
 
 const _ = require("lodash");
 const EMA = require('technicalindicators').EMA
-const binance = new Binance();
+const binance = new Binance().options({
+    useServerTime: true,
+    recvWindow: 60000, // Set a higher recvWindow to increase response timeout
+    verbose: true, // Add extra output when subscribing to WebSockets, etc
+    log: log => {
+        console.log(log); // You can create your own logger here, or disable console output
+    }
+});
 
 require('dotenv').config();
 
@@ -175,166 +182,12 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
     return false;
 }
 
-
-async function websocketsAnalyser() {
-
-    for (let time of timeFrame) {
-
-        let startMessage = 'Bot Pattern Analysis System Started for interval: ' + time
-        Telegram.sendMessage(startMessage)
-
-        binance.websockets.candlesticks(coinsArray, time, (candlesticks) => {
-
-            let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
-            let {
-                o: open,
-                h: high,
-                l: low,
-                c: close,
-                i: interval,
-                x: isFinal,
-            } = ticks;
-
-            let currentClose = parseFloat(close)
-            let key = symbol + "_" + interval
-
-            if (recordPattern[key] !== null) {
-
-                let recordPatternValue = recordPattern[key];
-                if (recordPatternValue['confirmed'] === true) {
-
-                    let stoploss = stopLoss(key, currentClose, recordPatternValue, symbol, interval)
-                    let takeprofit = takeProfit(key, currentClose, recordPatternValue, symbol, interval)
-
-                    if (stoploss || takeprofit) {
-
-                        if (tradeEnabled) {
-
-                            binance.balance((error, balances) => {
-                                if (error) return console.error(error);
-                                console.log(exchangeInfoArray[symbol])
-                                let sellAmount = binance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
-                                binance.marketSell(symbol, sellAmount);
-                            });
-                        }
-
-                    }
-
-                }
-            }
-
-            // Check at close tick
-            if (isFinal) {
-
-                if (exclusionList[key] === true) {
-                    let dataValue = new Date();
-                    let hour = dataValue.getUTCHours();
-                    if (hour === 0) {
-                        exclusionList[key] = false;
-                    }
-                }
-
-                if (exclusionList[key] === false) {
-
-                    calculateEMA(symbol, interval, 250, 200).then(function (ema) {
-
-                        if (currentClose > ema) {
-
-                            console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + currentClose)
-
-                            if (recordPattern[key] !== null) {
-
-                                indexArray[key] += 1
-
-                                let ticker = {
-                                    'index': parseInt(indexArray[key]),
-                                    'symbol': symbol.toString(),
-                                    'open': parseFloat(open),
-                                    'close': parseFloat(close),
-                                    'low': parseFloat(low),
-                                    'high': parseFloat(high),
-                                    'interval': interval.toString(),
-                                    'time': new Date()
-                                }
-
-                                tokenArray[key].push(ticker)
-
-                                let pattern = Pattern.patternMatching(tokenArray[key], symbol)
-
-                                if (!_.isEmpty(pattern)) {
-
-                                    recordPattern[key] = {
-                                        'symbol': symbol,
-                                        'interval': interval,
-                                        'hh': pattern['hh'],
-                                        'll': pattern['ll'],
-                                        'lh': pattern['lh'],
-                                        'hl': pattern['hl'],
-                                        'hh_close': pattern['hh_close'],
-                                        'll_open': pattern['ll_open'],
-                                        'll_low': pattern['ll_low'],
-                                        'll_close': pattern['ll_close'],
-                                        'lh_close': pattern['lh_close'],
-                                        'hl_open': pattern['hl_open'],
-                                        'hh_high': pattern['hh_high'],
-                                        'confirmed': false
-                                    }
-
-                                    tokenArray[key] = [];
-                                    indexArray[key] = -1
-                                }
-
-
-                            } else {
-
-                                let recordPatternValue = recordPattern[key];
-                                if (recordPatternValue['confirmed'] === false) {
-
-                                    if (low < recordPatternValue['ll'] || currentClose > recordPatternValue['hh']) {
-                                        recordPattern[key] = null;
-                                    } else {
-
-                                        let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, currentClose, recordPatternValue)
-
-                                        if (isStrategyBreakoutFound) {
-
-                                            if (tradeEnabled) {
-                                                console.log(exchangeInfoArray[symbol])
-                                                let buyAmount = binance.roundStep(sizeTrade / currentClose, exchangeInfoArray[symbol].stepSize);
-                                                binance.marketBuy(symbol, buyAmount);
-                                            }
-
-                                        }
-                                        console.log(recordPatternValue)
-                                    }
-                                }
-                            }
-
-                        } else {
-
-                            resetAll(key)
-                        }
-
-                    }).catch(function () {
-                            console.log("Error: Can't calculate EMA for symbol: " + symbol)
-                            resetAll(key)
-                        }
-                    )
-                }
-
-            }
-
-        });
-    }
-}
-
 function resetAll(key) {
     exclusionList[key] = false;
     indexArray[key] = -1;
     tokenArray[key] = [];
     recordPattern[key] = null;
 }
-
 
 async function calculateEMA(token, time, candle, period) {
     return new Promise(function (resolve, reject) {
@@ -399,6 +252,167 @@ async function exchangeInfo() {
     });
 }
 
+async function engine() {
+
+    for (let time of timeFrame) {
+
+        let startMessage = 'Bot Pattern Analysis System Started for interval: ' + time
+        Telegram.sendMessage(startMessage)
+
+        binance.websockets.candlesticks(coinsArray, time, (candlesticks) => {
+
+            let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
+            let {
+                o: open,
+                h: high,
+                l: low,
+                c: close,
+                i: interval,
+                x: isFinal,
+            } = ticks;
+
+            let currentClose = parseFloat(close)
+            let key = symbol + "_" + interval
+
+            if (recordPattern[key] !== null) {
+
+                let recordPatternValue = recordPattern[key];
+                if (recordPatternValue['confirmed'] === true) {
+
+                    let stoploss = stopLoss(key, currentClose, recordPatternValue, symbol, interval)
+                    let takeprofit = takeProfit(key, currentClose, recordPatternValue, symbol, interval)
+
+                    if (stoploss || takeprofit) {
+
+                        if (tradeEnabled) {
+
+                            binance.balance((error, balances) => {
+                                if (error) return console.error(error);
+                                console.log(exchangeInfoArray[symbol])
+                                let sellAmount = binance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
+                                binance.marketSell(symbol, sellAmount);
+                            });
+                        }
+
+                    }
+
+                }
+            }
+
+            // Check at close tick
+            if (isFinal) {
+
+                if (exclusionList[key] === true) {
+                    let dataValue = new Date();
+                    let hour = dataValue.getUTCHours();
+                    if (hour === 0) {
+                        exclusionList[key] = false;
+                    }
+                }
+
+                if (exclusionList[key] === false) {
+
+                    calculateEMA(symbol, interval, 250, 200).then(function (ema) {
+
+                        // if (process.env.DEBUG) {
+                        //     console.log(key)
+                        //     console.log(currentClose)
+                        //     console.log(ema)
+                        // }
+
+                        if (currentClose < ema) {
+                            resetAll(key)
+                        } else {
+
+                            console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + currentClose)
+
+                            // if not exists pattern search
+                            if (recordPattern[key] == null) {
+
+                                indexArray[key] += 1
+
+                                let ticker = {
+                                    'index': parseInt(indexArray[key]),
+                                    'symbol': symbol.toString(),
+                                    'open': parseFloat(open),
+                                    'close': parseFloat(close),
+                                    'low': parseFloat(low),
+                                    'high': parseFloat(high),
+                                    'interval': interval.toString(),
+                                    'time': new Date()
+                                }
+
+                                tokenArray[key].push(ticker)
+                                console.log(tokenArray[key])
+
+                                let pattern = Pattern.patternMatching(tokenArray[key], symbol)
+                                if (!_.isEmpty(pattern)) {
+
+                                    recordPattern[key] = {
+                                        'symbol': symbol,
+                                        'interval': interval,
+                                        'hh': pattern['hh'],
+                                        'll': pattern['ll'],
+                                        'lh': pattern['lh'],
+                                        'hl': pattern['hl'],
+                                        'hh_close': pattern['hh_close'],
+                                        'll_open': pattern['ll_open'],
+                                        'll_low': pattern['ll_low'],
+                                        'll_close': pattern['ll_close'],
+                                        'lh_close': pattern['lh_close'],
+                                        'hl_open': pattern['hl_open'],
+                                        'hh_high': pattern['hh_high'],
+                                        'confirmed': false
+                                    }
+
+                                    tokenArray[key] = [];
+                                    indexArray[key] = -1
+                                }
+                            }
+
+
+                            // exists pattern
+                            if (recordPattern[key] != null) {
+
+                                let recordPatternValue = recordPattern[key];
+                                if (recordPatternValue['confirmed'] === false) {
+
+                                    if (low < recordPatternValue['ll'] || currentClose > recordPatternValue['hh']) {
+                                        recordPattern[key] = null;
+                                    } else {
+
+                                        let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, currentClose, recordPatternValue)
+                                        if (isStrategyBreakoutFound) {
+
+                                            if (tradeEnabled) {
+                                                console.log(exchangeInfoArray[symbol])
+                                                let buyAmount = binance.roundStep(sizeTrade / currentClose, exchangeInfoArray[symbol].stepSize);
+                                                binance.marketBuy(symbol, buyAmount);
+                                            }
+
+                                        }
+                                        console.log(recordPatternValue)
+                                    }
+                                }
+                            }
+
+
+                        }
+
+                    }).catch(
+                        function () {
+                            console.log("Error: Can't calculate EMA for symbol rest engine for: " + symbol)
+                            resetAll(key)
+                        }
+                    )
+                }
+
+            }
+
+        });
+    }
+}
+
 
 (async () => {
 
@@ -412,7 +426,7 @@ async function exchangeInfo() {
         }
 
         exchangeInfo().then(() => {
-            websocketsAnalyser();
+            engine();
         })
 
     } catch (e) {
