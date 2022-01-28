@@ -26,7 +26,7 @@ function strategyBreakout(symbol, interval, close, record) {
     let lh = record['lh']
     let hl = record['hl']
 
-    let stoploss = ll * 0.99;
+    let stoploss = ll * 0.995;
     let takeprofit = (close - stoploss) * 2 + close;
 
     if (close > lh) {

@@ -287,7 +287,6 @@ async function engine() {
                     if (stoploss || takeprofit) {
 
                         if (tradeEnabled) {
-
                             binance.balance((error, balances) => {
                                 if (error) return console.error(error);
                                 console.log(exchangeInfoArray[symbol])
@@ -295,7 +294,6 @@ async function engine() {
                                 binance.marketSell(symbol, sellAmount);
                             });
                         }
-
                     }
 
                 }
