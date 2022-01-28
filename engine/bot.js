@@ -34,6 +34,7 @@ const sizeTrade = 200;
 
 
 let timeFrame = [
+    '1m',
     '5m',
     '15m',
     '1h',
@@ -100,7 +101,8 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
             "hl: " + recordPatternValue['hl']
 
         Telegram.sendMessage(message)
-        recordPattern[key] = []
+        recordPattern[key] = null;
+        exclusionList[key] = true;
 
         return true;
     }
@@ -164,7 +166,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
             "hl: " + recordPatternValue['hl']
 
         Telegram.sendMessage(message)
-        recordPattern[key] = []
+        recordPattern[key] = null;
 
         return true;
     }
@@ -193,12 +195,11 @@ async function websocketsAnalyser() {
             } = ticks;
 
             let currentClose = parseFloat(close)
-
             let key = symbol + "_" + interval
 
-            if (!_.isEmpty(recordPattern[key])) {
+            if (recordPattern[key] !== null) {
 
-                const recordPatternValue = _.head(recordPattern[key]);
+                let recordPatternValue = recordPattern[key];
                 if (recordPatternValue['confirmed'] === true) {
 
                     let stoploss = stopLoss(key, currentClose, recordPatternValue, symbol, interval)
@@ -216,12 +217,6 @@ async function websocketsAnalyser() {
                             });
                         }
 
-                        if (takeprofit) {
-                            // EXCLUDED SYMBOL FROM ENTRY
-                            exclusionList[key] = true;
-                            console.log(exclusionList)
-                        }
-
                     }
 
                 }
@@ -229,6 +224,8 @@ async function websocketsAnalyser() {
 
             // Check at close tick
             if (isFinal) {
+
+                console.log(exclusionList[key])
 
                 if (exclusionList[key] === true) {
                     let dataValue = new Date();
@@ -242,13 +239,11 @@ async function websocketsAnalyser() {
 
                     calculateEMA(symbol, interval, 250, 200).then(function (ema) {
 
-                        //if (hour <= 0 || hour >= 5) {
-
                         if (currentClose > ema) {
 
                             console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + currentClose)
 
-                            if (_.isEmpty(recordPattern[key])) {
+                            if (recordPattern[key] !== null) {
 
                                 indexArray[key] += 1
 
@@ -269,7 +264,7 @@ async function websocketsAnalyser() {
 
                                 if (!_.isEmpty(pattern)) {
 
-                                    let recordPatternData = {
+                                    recordPattern[key] = {
                                         'symbol': symbol,
                                         'interval': interval,
                                         'hh': pattern['hh'],
@@ -286,7 +281,6 @@ async function websocketsAnalyser() {
                                         'confirmed': false
                                     }
 
-                                    recordPattern[key].push(recordPatternData)
                                     tokenArray[key] = [];
                                     indexArray[key] = -1
                                 }
@@ -294,12 +288,11 @@ async function websocketsAnalyser() {
 
                             } else {
 
-                                let recordPatternValue = _.head(recordPattern[key]);
-                                console.log(recordPatternValue)
+                                let recordPatternValue = recordPattern[key];
                                 if (recordPatternValue['confirmed'] === false) {
 
                                     if (low < recordPatternValue['ll'] || currentClose > recordPatternValue['hh']) {
-                                        recordPattern[key] = []
+                                        recordPattern[key] = null;
                                     } else {
 
                                         let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, currentClose, recordPatternValue)
@@ -322,11 +315,10 @@ async function websocketsAnalyser() {
 
                             tokenArray[key] = [];
                             indexArray[key] = -1;
-                            recordPattern[key] = [];
-
+                            recordPattern[key] = null;
                         }
 
-                    }).catch(() => console.log("Can't calculate EMA for symbol:" + symbol))
+                    }).catch(() => console.log("Error: Can't calculate EMA for symbol: " + symbol))
                 }
 
             }
@@ -411,7 +403,7 @@ async function exchangeInfo() {
                 exclusionList[key] = false;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
-                recordPattern[key] = [];
+                recordPattern[key] = null;
             }
         }
 

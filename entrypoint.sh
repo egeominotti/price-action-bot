@@ -1,2 +1,2 @@
 #!/bin/sh
-node Manager.js
+#node Manager.js
