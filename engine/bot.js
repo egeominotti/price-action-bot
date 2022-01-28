@@ -277,6 +277,7 @@ async function engine() {
             if (recordPattern[key] !== null) {
 
                 let recordPatternValue = recordPattern[key];
+
                 if (recordPatternValue['confirmed'] === true) {
 
                     let stoploss = stopLoss(key, currentClose, recordPatternValue, symbol, interval)
@@ -305,7 +306,10 @@ async function engine() {
                 if (exclusionList[key] === true) {
                     let dataValue = new Date();
                     let hour = dataValue.getUTCHours();
-                    if (hour === 0) {
+                    let minutes = dataValue.getUTCMinutes();
+
+                    // if midnight and zero minutes then unlock pair
+                    if (hour === 0 && minutes === 0) {
                         exclusionList[key] = false;
                     }
                 }
