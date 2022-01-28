@@ -274,6 +274,7 @@ async function engine() {
             let currentClose = parseFloat(close)
             let key = symbol + "_" + interval
 
+            // check in real time - takeprofit and stoploss
             if (recordPattern[key] !== null) {
 
                 let recordPatternValue = recordPattern[key];
@@ -304,6 +305,7 @@ async function engine() {
             if (isFinal) {
 
                 if (exclusionList[key] === true) {
+
                     let dataValue = new Date();
                     let hour = dataValue.getUTCHours();
                     let minutes = dataValue.getUTCMinutes();
@@ -312,6 +314,7 @@ async function engine() {
                     if (hour === 0 && minutes === 0) {
                         exclusionList[key] = false;
                     }
+
                 }
 
                 if (exclusionList[key] === false) {
@@ -347,7 +350,7 @@ async function engine() {
                                 }
 
                                 tokenArray[key].push(ticker)
-                                console.log(tokenArray[key])
+                                //console.log(tokenArray[key])
 
                                 let pattern = Pattern.patternMatching(tokenArray[key], symbol)
                                 if (!_.isEmpty(pattern)) {
