@@ -315,14 +315,11 @@ async function engine() {
 
                         if (currentClose < ema) {
 
-                            // salvano i dati delle candele
-
                             if (recordPattern[key]['confirmed'] === false) {
                                 recordPattern[key] = null;
                                 indexArray[key] = -1;
                                 tokenArray[key] = [];
                             }
-                            // il pattern trovato
 
                         }
 
