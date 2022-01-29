@@ -183,13 +183,6 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
     return false;
 }
 
-function resetAll(key) {
-    exclusionList[key] = false;
-    indexArray[key] = -1;
-    tokenArray[key] = [];
-    recordPattern[key] = null;
-}
-
 async function calculateEMA(token, time, candle, period) {
     return new Promise(function (resolve, reject) {
 
@@ -321,9 +314,16 @@ async function engine() {
                     calculateEMA(symbol, interval, 250, 200).then(function (ema) {
 
                         if (currentClose < ema) {
-                            if (recordPattern[key] !== null && recordPattern[key]['confirmed'] === false) {
-                                resetAll(key)
+
+                            // salvano i dati delle candele
+                            indexArray[key] = -1;
+                            tokenArray[key] = [];
+
+                            if (recordPattern[key]['confirmed'] === false) {
+                                recordPattern[key] = null;
                             }
+                            // il pattern trovato
+
                         }
 
                         if (currentClose > ema) {
@@ -403,8 +403,13 @@ async function engine() {
 
                     }).catch(
                         function () {
+
                             console.log("Error: Can't calculate EMA for symbol rest engine for: " + symbol)
-                            resetAll(key)
+
+                            indexArray[key] = -1;
+                            tokenArray[key] = [];
+                            recordPattern[key] = null;
+
                         }
                     )
                     // end calculate ema
@@ -423,8 +428,13 @@ async function engine() {
 
         for (let time of timeFrame) {
             for (const token of coinsArray) {
+
                 let key = token + "_" + time
-                resetAll(key)
+
+                exclusionList[key] = false;
+                indexArray[key] = -1;
+                tokenArray[key] = [];
+                recordPattern[key] = null;
             }
         }
 
