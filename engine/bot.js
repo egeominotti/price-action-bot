@@ -405,9 +405,11 @@ async function engine() {
 
                             console.log("Error: Can't calculate EMA for symbol rest engine for: " + symbol)
 
-                            indexArray[key] = -1;
-                            tokenArray[key] = [];
-                            recordPattern[key] = null;
+                            if (entryCoins[key] === false) {
+                                recordPattern[key] = null;
+                                indexArray[key] = -1;
+                                tokenArray[key] = [];
+                            }
 
                         }
                     )
