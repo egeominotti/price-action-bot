@@ -71,28 +71,28 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         let newBalance = _.round(balance + sumSizeTrade, 2)
 
 
-        const logger = new Logger({
-            type: 'TAKEPROFIT',
-            symbol: symbol,
-            interval: interval,
-            balance: newBalance,
-            entryprice: entryprice,
-            entrypricedate: entrypricedate,
-            takeprofitvalue: takeprofit,
-            takeprofitpercentage: takeProfitPercentage,
-            takeprofitdate: new Date(),
-            hh: recordPatternValue['hh'],
-            ll: recordPatternValue['ll'],
-            lh: recordPatternValue['lh'],
-            hl: recordPatternValue['hl'],
-            strategy: strategy
-        })
-
-        logger.save().then((result) => {
-            console.log(result)
-        }).catch((err) => {
-            console.log(err)
-        });
+        // const logger = new Logger({
+        //     type: 'TAKEPROFIT',
+        //     symbol: symbol,
+        //     interval: interval,
+        //     balance: newBalance,
+        //     entryprice: entryprice,
+        //     entrypricedate: entrypricedate,
+        //     takeprofitvalue: takeprofit,
+        //     takeprofitpercentage: takeProfitPercentage,
+        //     takeprofitdate: new Date(),
+        //     hh: recordPatternValue['hh'],
+        //     ll: recordPatternValue['ll'],
+        //     lh: recordPatternValue['lh'],
+        //     hl: recordPatternValue['hl'],
+        //     strategy: strategy
+        // })
+        //
+        // logger.save().then((result) => {
+        //     console.log(result)
+        // }).catch((err) => {
+        //     console.log(err)
+        // });
 
 
         let message = "TAKEPROFIT: " + symbol + "\n" +
@@ -139,28 +139,28 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
 
-        const logger = new Logger({
-            type: 'STOPLOSS',
-            symbol: symbol,
-            interval: interval,
-            balance: newBalance,
-            entryprice: entryprice,
-            entrypricedate: entrypricedate,
-            stoplossvalue: stoploss,
-            stoplosspercentage: stopLossPercentage,
-            stoplossdate: new Date(),
-            hh: recordPatternValue['hh'],
-            ll: recordPatternValue['ll'],
-            lh: recordPatternValue['lh'],
-            hl: recordPatternValue['hl'],
-            strategy: strategy
-        })
-
-        logger.save().then((result) => {
-            console.log(result)
-        }).catch((err) => {
-            console.log(err)
-        });
+        // const logger = new Logger({
+        //     type: 'STOPLOSS',
+        //     symbol: symbol,
+        //     interval: interval,
+        //     balance: newBalance,
+        //     entryprice: entryprice,
+        //     entrypricedate: entrypricedate,
+        //     stoplossvalue: stoploss,
+        //     stoplosspercentage: stopLossPercentage,
+        //     stoplossdate: new Date(),
+        //     hh: recordPatternValue['hh'],
+        //     ll: recordPatternValue['ll'],
+        //     lh: recordPatternValue['lh'],
+        //     hl: recordPatternValue['hl'],
+        //     strategy: strategy
+        // })
+        //
+        // logger.save().then((result) => {
+        //     console.log(result)
+        // }).catch((err) => {
+        //     console.log(err)
+        // });
 
 
         let message = "STOPLOSS: " + symbol + "\n" +
@@ -279,7 +279,6 @@ async function engine() {
             if (recordPattern[key] !== null) {
 
                 let recordPatternValue = recordPattern[key];
-
                 if (recordPatternValue['confirmed'] === true) {
 
                     let stoploss = stopLoss(key, currentClose, recordPatternValue, symbol, interval)
@@ -316,23 +315,22 @@ async function engine() {
 
                 }
 
+
                 if (exclusionList[key] === false) {
 
                     calculateEMA(symbol, interval, 250, 200).then(function (ema) {
 
-                        // if (process.env.DEBUG) {
-                        //     console.log(key)
-                        //     console.log(currentClose)
-                        //     console.log(ema)
-                        // }
-
                         if (currentClose < ema) {
-                            resetAll(key)
-                        } else {
+                            if (recordPattern[key] !== null && recordPattern[key]['confirmed'] === false) {
+                                resetAll(key)
+                            }
+                        }
+
+                        if (currentClose > ema) {
 
                             console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + currentClose)
 
-                            // if not exists pattern search it
+                            // Cerco il pattern per la n-esima pair se il prezzo è sopra l'ema
                             if (recordPattern[key] == null) {
 
                                 indexArray[key] += 1
@@ -349,9 +347,8 @@ async function engine() {
                                 }
 
                                 tokenArray[key].push(ticker)
-                                //console.log(tokenArray[key])
-
                                 let pattern = Pattern.patternMatching(tokenArray[key], symbol)
+
                                 if (!_.isEmpty(pattern)) {
 
                                     recordPattern[key] = {
@@ -377,7 +374,7 @@ async function engine() {
                             }
 
 
-                            // exists pattern
+                            // Se il pattern esiste provo a confermarlo sempre se il prezzo è sopra l'ema
                             if (recordPattern[key] != null) {
 
                                 let recordPatternValue = recordPattern[key];
@@ -412,8 +409,8 @@ async function engine() {
                     )
                     // end calculate ema
                 }
-
             }
+
 
         });
     }
