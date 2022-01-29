@@ -33,6 +33,7 @@ let exchangeInfoArray = {}
 let indexArray = {}
 let recordPattern = {}
 let exclusionList = {}
+let entryCoins = {}
 
 let balance = 3000
 let totalPercentage = 0
@@ -314,13 +315,11 @@ async function engine() {
                     calculateEMA(symbol, interval, 250, 200).then(function (ema) {
 
                         if (currentClose < ema) {
-
-                            if (recordPattern[key]['confirmed'] === false) {
+                            if (entryCoins[key] === false) {
                                 recordPattern[key] = null;
                                 indexArray[key] = -1;
                                 tokenArray[key] = [];
                             }
-
                         }
 
                         if (currentClose > ema) {
@@ -344,7 +343,6 @@ async function engine() {
                                 }
 
                                 tokenArray[key].push(ticker)
-                                recordPattern[key] = {'confirmed': false}
 
                                 let pattern = Pattern.patternMatching(tokenArray[key], symbol)
 
@@ -392,6 +390,8 @@ async function engine() {
                                                 binance.marketBuy(symbol, buyAmount);
                                             }
 
+                                            entryCoins[key] = true;
+
                                         }
                                         console.log(recordPatternValue)
                                     }
@@ -433,6 +433,7 @@ async function engine() {
                 exclusionList[key] = false;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
+                entryCoins[key] = false;
                 recordPattern[key] = null;
             }
         }
