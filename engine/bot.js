@@ -316,11 +316,11 @@ async function engine() {
                         if (currentClose < ema) {
 
                             // salvano i dati delle candele
-                            indexArray[key] = -1;
-                            tokenArray[key] = [];
 
                             if (recordPattern[key]['confirmed'] === false) {
                                 recordPattern[key] = null;
+                                indexArray[key] = -1;
+                                tokenArray[key] = [];
                             }
                             // il pattern trovato
 
@@ -347,6 +347,8 @@ async function engine() {
                                 }
 
                                 tokenArray[key].push(ticker)
+                                recordPattern[key] = {'confirmed': false}
+
                                 let pattern = Pattern.patternMatching(tokenArray[key], symbol)
 
                                 if (!_.isEmpty(pattern)) {
