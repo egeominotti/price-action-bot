@@ -315,11 +315,13 @@ async function engine() {
                     calculateEMA(symbol, interval, 250, 200).then(function (ema) {
 
                         if (currentClose < ema) {
+
                             if (entryCoins[key] === false) {
                                 recordPattern[key] = null;
                                 indexArray[key] = -1;
                                 tokenArray[key] = [];
                             }
+
                         }
 
                         if (currentClose > ema) {
@@ -390,6 +392,7 @@ async function engine() {
                                                 binance.marketBuy(symbol, buyAmount);
                                             }
 
+                                            // set entry in array with key
                                             entryCoins[key] = true;
 
                                         }
