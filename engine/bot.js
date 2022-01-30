@@ -41,15 +41,38 @@ let takeProfitArray = {}
 let stopLossArray = {}
 let entryArray = {}
 
-app.get('/entryArray', (req, res) => {
+
+let balance = 3000
+let totalPercentage = 0
+let sumSizeTrade = 0;
+const sizeTrade = 200;
+
+
+let timeFrame = [
+    '5m',
+    '15m',
+    '1h',
+    '4h',
+]
+
+app.get('/info', (req, res) => {
+    let obj = {
+        'balance': balance,
+        'sizeTrade': sizeTrade,
+        'uptime': 0,
+    }
+    res.send(obj);
+});
+
+app.get('/trade/entry', (req, res) => {
     res.send(entryArray);
 });
 
-app.get('/takeProfitArray', (req, res) => {
+app.get('/trade/takeprofit', (req, res) => {
     res.send(takeProfitArray);
 });
 
-app.get('/stopLossArray', (req, res) => {
+app.get('/trade/stoploss', (req, res) => {
     res.send(stopLossArray);
 });
 
@@ -72,19 +95,6 @@ app.get('/getEntryCoins', (req, res) => {
 app.get('/getRecordPattern', (req, res) => {
     res.send(recordPattern);
 });
-
-let balance = 3000
-let totalPercentage = 0
-let sumSizeTrade = 0;
-const sizeTrade = 200;
-
-
-let timeFrame = [
-    '5m',
-    '15m',
-    '1h',
-    '4h',
-]
 
 
 function takeProfit(key, close, recordPatternValue, symbol, interval) {
