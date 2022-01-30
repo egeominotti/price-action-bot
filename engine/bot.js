@@ -5,13 +5,16 @@ const Logger = require('../models/logger');
 const Pattern = require('../pattern/triangle')
 const Telegram = require('../utility/telegram');
 const Strategy = require('../strategy/strategy');
+const express = require('express')
 
-// const axios = require('axios').default;
-// const User = require('../models/user');
-// const analysis = require('../analytics/analysis');
+const app = express();
+const port = 3000;
+
+app.listen(port, () => console.log(`TAS bot app listening on port ${port}!`))
 
 const _ = require("lodash");
 const EMA = require('technicalindicators').EMA
+
 const binance = new Binance().options({
     useServerTime: true,
     recvWindow: 60000, // Set a higher recvWindow to increase response timeout
@@ -34,6 +37,41 @@ let indexArray = {}
 let recordPattern = {}
 let exclusionList = {}
 let entryCoins = {}
+let takeProfitArray = {}
+let stopLossArray = {}
+let entryArray = {}
+
+app.get('/entryArray', (req, res) => {
+    res.send(entryArray);
+});
+
+app.get('/takeProfitArray', (req, res) => {
+    res.send(takeProfitArray);
+});
+
+app.get('/stopLossArray', (req, res) => {
+    res.send(stopLossArray);
+});
+
+app.get('/tokenArray', (req, res) => {
+    res.send(tokenArray);
+});
+
+app.get('/exchangeInfoArray', (req, res) => {
+    res.send(exchangeInfoArray);
+});
+
+app.get('/getExclusionList', (req, res) => {
+    res.send(exclusionList);
+});
+
+app.get('/getEntryCoins', (req, res) => {
+    res.send(entryCoins);
+});
+
+app.get('/getRecordPattern', (req, res) => {
+    res.send(recordPattern);
+});
 
 let balance = 3000
 let totalPercentage = 0
@@ -72,28 +110,32 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         let newBalance = _.round(balance + sumSizeTrade, 2)
 
 
-        // const logger = new Logger({
-        //     type: 'TAKEPROFIT',
-        //     symbol: symbol,
-        //     interval: interval,
-        //     balance: newBalance,
-        //     entryprice: entryprice,
-        //     entrypricedate: entrypricedate,
-        //     takeprofitvalue: takeprofit,
-        //     takeprofitpercentage: takeProfitPercentage,
-        //     takeprofitdate: new Date(),
-        //     hh: recordPatternValue['hh'],
-        //     ll: recordPatternValue['ll'],
-        //     lh: recordPatternValue['lh'],
-        //     hl: recordPatternValue['hl'],
-        //     strategy: strategy
-        // })
-        //
-        // logger.save().then((result) => {
-        //     console.log(result)
-        // }).catch((err) => {
-        //     console.log(err)
-        // });
+        let takeprofitObj = {
+            type: 'TAKEPROFIT',
+            symbol: symbol,
+            interval: interval,
+            balance: newBalance,
+            entryprice: entryprice,
+            entrypricedate: entrypricedate,
+            takeprofitvalue: takeprofit,
+            takeprofitpercentage: takeProfitPercentage,
+            takeprofitdate: new Date(),
+            hh: recordPatternValue['hh'],
+            ll: recordPatternValue['ll'],
+            lh: recordPatternValue['lh'],
+            hl: recordPatternValue['hl'],
+            strategy: strategy
+        }
+
+        const logger = new Logger(takeprofitObj)
+
+        logger.save().then((result) => {
+            console.log(result)
+        }).catch((err) => {
+            console.log(err)
+        });
+
+        takeProfitArray[key] = takeprofitObj
 
 
         let message = "TAKEPROFIT: " + symbol + "\n" +
@@ -112,6 +154,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
         // Add pair with key to exclusion list
         exclusionList[key] = true;
+
         console.log(exclusionList)
 
         return true;
@@ -140,28 +183,32 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
 
-        // const logger = new Logger({
-        //     type: 'STOPLOSS',
-        //     symbol: symbol,
-        //     interval: interval,
-        //     balance: newBalance,
-        //     entryprice: entryprice,
-        //     entrypricedate: entrypricedate,
-        //     stoplossvalue: stoploss,
-        //     stoplosspercentage: stopLossPercentage,
-        //     stoplossdate: new Date(),
-        //     hh: recordPatternValue['hh'],
-        //     ll: recordPatternValue['ll'],
-        //     lh: recordPatternValue['lh'],
-        //     hl: recordPatternValue['hl'],
-        //     strategy: strategy
-        // })
-        //
-        // logger.save().then((result) => {
-        //     console.log(result)
-        // }).catch((err) => {
-        //     console.log(err)
-        // });
+        let stopLossObj = {
+            type: 'STOPLOSS',
+            symbol: symbol,
+            interval: interval,
+            balance: newBalance,
+            entryprice: entryprice,
+            entrypricedate: entrypricedate,
+            stoplossvalue: stoploss,
+            stoplosspercentage: stopLossPercentage,
+            stoplossdate: new Date(),
+            hh: recordPatternValue['hh'],
+            ll: recordPatternValue['ll'],
+            lh: recordPatternValue['lh'],
+            hl: recordPatternValue['hl'],
+            strategy: strategy
+        }
+
+        const logger = new Logger(stopLossObj)
+
+        logger.save().then((result) => {
+            console.log(result)
+        }).catch((err) => {
+            console.log(err)
+        });
+
+        stopLossArray[key] = stopLossObj
 
 
         let message = "STOPLOSS: " + symbol + "\n" +
@@ -309,19 +356,16 @@ async function engine() {
 
                 }
 
-
-                if (exclusionList[key] === false) {
+                // if pair is not excluded for take profit and pair is not entered in position
+                if (exclusionList[key] === false && entryCoins[key] === false) {
 
                     calculateEMA(symbol, interval, 250, 200).then(function (ema) {
 
                         if (currentClose < ema) {
 
-                            if (entryCoins[key] === false) {
-                                recordPattern[key] = null;
-                                indexArray[key] = -1;
-                                tokenArray[key] = [];
-                            }
-
+                            recordPattern[key] = null;
+                            indexArray[key] = -1;
+                            tokenArray[key] = [];
                         }
 
                         if (currentClose > ema) {
@@ -384,7 +428,9 @@ async function engine() {
                                     } else {
 
                                         let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, currentClose, recordPatternValue)
+
                                         if (isStrategyBreakoutFound) {
+
 
                                             if (tradeEnabled) {
                                                 console.log(exchangeInfoArray[symbol])
@@ -394,6 +440,8 @@ async function engine() {
 
                                             // set entry in array with key
                                             entryCoins[key] = true;
+                                            // store entry
+                                            entryArray[key] = recordPatternValue
 
                                         }
                                         console.log(recordPatternValue)
@@ -435,11 +483,16 @@ async function engine() {
 
                 let key = token + "_" + time
 
+
                 exclusionList[key] = false;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
                 entryCoins[key] = false;
+
                 recordPattern[key] = null;
+                takeProfitArray[key] = null;
+                stopLossArray[key] = null;
+                entryArray[key] = null;
             }
         }
 
