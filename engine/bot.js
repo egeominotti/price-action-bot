@@ -451,6 +451,7 @@ async function engine() {
                                 exclusionList: exclusionList,
                                 stopLossArray: stopLossArray,
                                 takeProfitArray: takeProfitArray,
+                                balance: balance
                             });
 
                         if (tradeEnabled) {
