@@ -33,10 +33,12 @@ let coinsArray = coins.getCoins()
 
 let tokenArray = {}
 let exchangeInfoArray = {}
+
 let indexArray = {}
 let recordPattern = {}
 let exclusionList = {}
 let entryCoins = {}
+
 let takeProfitArray = {}
 let stopLossArray = {}
 let entryArray = {}
