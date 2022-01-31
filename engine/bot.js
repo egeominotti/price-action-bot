@@ -359,6 +359,7 @@ async function exchangeInfo() {
                     stopLossArray = dbData.stopLossArray;
                     entryArray = dbData.entryArray;
                     emaArray = dbData.emaArray;
+                    balance = dbData.balance;
 
                 } else {
 
@@ -400,6 +401,7 @@ async function exchangeInfo() {
                         stopLossArray: stopLossArray,
                         entryArray: entryArray,
                         emaArray: emaArray,
+                        balance: balance,
                     })
                 }
 

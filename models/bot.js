@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 
 const botSchema = new Schema({
     name: {type: String, required: true},
+    balance: {type: Number, required: true},
     exchangeInfoArray: {type: JSON, required: false},
     tokenArray: {type: JSON, required: false},
     indexArray: {type: JSON, required: false},
