@@ -472,7 +472,6 @@ async function engine() {
                                 }
 
                                 tokenArray[key].push(ticker)
-
                                 let pattern = Pattern.patternMatching(tokenArray[key], symbol)
 
                                 if (!_.isEmpty(pattern)) {
@@ -516,7 +515,7 @@ async function engine() {
 
 
                                             if (tradeEnabled) {
-                                                console.log(exchangeInfoArray[symbol])
+                                                //console.log(exchangeInfoArray[symbol])
                                                 let buyAmount = binance.roundStep(sizeTrade / currentClose, exchangeInfoArray[symbol].stepSize);
                                                 binance.marketBuy(symbol, buyAmount);
                                             }
@@ -534,34 +533,28 @@ async function engine() {
 
                         }
 
-                        // update / entryCoins - entryArray - tokenArray - indexArray - recordPattern
-
-                        // update object
-
                     }).catch(
-                        function () {
-
-                            console.log("Error: Can't calculate EMA for symbol rest engine for: " + symbol)
+                        (error) => {
                             recordPattern[key] = null;
                             indexArray[key] = -1;
                             tokenArray[key] = [];
-
+                            console.log("Error: Can't calculate EMA for symbol rest engine for: " + error)
                         }
-                    )
-                    // end calculate ema
+
+                    ).finally(
+                        async () => {
+                            await Bot.findOneAndUpdate({name: keyDbModel},
+                                {
+                                    recordPattern: recordPattern,
+                                    indexArray: indexArray,
+                                    tokenArray: tokenArray,
+                                    entryArray: entryArray,
+                                    entryCoins: entryCoins
+                                });
+                        }
+                    ) // end calculate ema
                 }
-
-                await Bot.findOneAndUpdate({name: keyDbModel},
-                    {
-                        recordPattern: recordPattern,
-                        indexArray: indexArray,
-                        tokenArray: tokenArray,
-                        entryArray: entryArray,
-                        entryCoins: entryCoins
-                    });
             }
-
-
         });
     }
 }
