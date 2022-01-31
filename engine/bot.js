@@ -491,7 +491,6 @@ async function engine() {
 
                 let key = token + "_" + time
 
-
                 exclusionList[key] = false;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
