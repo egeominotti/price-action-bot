@@ -12,6 +12,7 @@ const botSchema = new Schema({
     takeProfitArray: {type: JSON, required: false},
     stopLossArray: {type: JSON, required: false},
     entryArray: {type: JSON, required: false},
+    emaArray: {type: JSON, required: false},
 });
 
 module.exports = mongoose.model('Bot', botSchema)

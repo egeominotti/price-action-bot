@@ -32,12 +32,15 @@ mongoose.connect(process.env.URI_MONGODB);
 let keyDbModel = '';
 let timeFrame = [];
 
-if (process.env.DEBUG) {
+if (process.env.DEBUG === 'true') {
     keyDbModel = 'bot_development';
     timeFrame = [
         '1m',
     ]
-} else {
+}
+
+if (process.env.DEBUG === 'false') {
+
     keyDbModel = 'bot_production';
     timeFrame = [
         '5m',
@@ -50,6 +53,7 @@ if (process.env.DEBUG) {
 
 let tradeEnabled = false;
 let coinsArray = coins.getCoins()
+let emaArray = {}
 
 let tokenArray = {}
 let exchangeInfoArray = {}
@@ -62,6 +66,7 @@ let entryCoins = {}
 let takeProfitArray = {}
 let stopLossArray = {}
 let entryArray = {}
+
 
 let balance = 3000
 let totalPercentage = 0
@@ -190,6 +195,32 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 
     return false;
 }
+
+
+async function downloadCandlestick(token, time, candle, key) {
+
+    return new Promise(function (resolve, reject) {
+
+        binance.candlesticks(token, time, (error, ticks, token) => {
+
+            let closeArray = [];
+            if (error !== null) reject()
+
+            if (!_.isEmpty(ticks)) {
+
+                for (let t of ticks) {
+                    let [time, open, high, low, close, ignored] = t;
+                    closeArray.push(parseFloat(close));
+                }
+                closeArray.pop()
+                emaArray[key] = closeArray
+            }
+
+        }, {limit: candle});
+
+    });
+}
+
 
 function stopLoss(key, close, recordPatternValue, symbol, interval) {
 
@@ -327,6 +358,7 @@ async function exchangeInfo() {
                     takeProfitArray = dbData.takeProfitArray;
                     stopLossArray = dbData.stopLossArray;
                     entryArray = dbData.entryArray;
+                    emaArray = dbData.emaArray;
 
                 } else {
 
@@ -334,6 +366,14 @@ async function exchangeInfo() {
                         for (const token of coinsArray) {
 
                             let key = token + "_" + time
+
+                            // downloadCandlestick(token, time, 250, key).then( () => {
+                            //     console.log("Downloaded candlesticj  " + key)
+                            // }).catch(
+                            //     function (error) {
+                            //         console.log("Error: Can't download candlestick: " + error)
+                            //     }
+                            // )
 
                             exclusionList[key] = false;
                             indexArray[key] = -1;
@@ -344,6 +384,7 @@ async function exchangeInfo() {
                             takeProfitArray[key] = null;
                             stopLossArray[key] = null;
                             entryArray[key] = null;
+                            emaArray[key] = null;
                         }
                     }
 
@@ -357,7 +398,8 @@ async function exchangeInfo() {
                         entryCoins: entryCoins,
                         takeProfitArray: takeProfitArray,
                         stopLossArray: stopLossArray,
-                        entryArray: entryArray
+                        entryArray: entryArray,
+                        emaArray: emaArray,
                     })
                 }
 
@@ -417,8 +459,6 @@ async function engine() {
                                 binance.marketSell(symbol, sellAmount);
                             });
                         }
-
-
                     }
 
                 }
@@ -442,6 +482,11 @@ async function engine() {
 
                 // if pair is not excluded for take profit and pair is not entered in position
                 if (exclusionList[key] === false && entryCoins[key] === false) {
+
+                    // emaArray[key].shift();
+                    // emaArray[key].push(parseFloat(close))
+                    // let ema = EMA.calculate({period: 200, values: emaArray[key]})
+                    // console.log("CALCULATE EMA for: " + key + " value: " + parseFloat(_.last(ema)))
 
                     calculateEMA(symbol, interval, 250, 200).then(function (ema) {
 
@@ -540,7 +585,6 @@ async function engine() {
                             tokenArray[key] = [];
                             console.log("Error: Can't calculate EMA for symbol rest engine for: " + error)
                         }
-
                     ).finally(
                         async () => {
                             await Bot.findOneAndUpdate({name: keyDbModel},
