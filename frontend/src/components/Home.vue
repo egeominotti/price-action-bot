@@ -10,6 +10,9 @@
           >
             <b-card-text class="custom-data-bot">
               Balance: {{ balance }}$ |
+              Entry Counter: {{ counterEN }} |
+              Takeprofit Counter: {{ counterTP }} |
+              Stoploss Counter: {{ counterSL }} |
               TradeSize: {{ sizeTrade }} |
               Uptime: {{ uptime }}
             </b-card-text>
@@ -26,7 +29,7 @@
       <b-row>
         <b-col>
           <b-card
-              title="Entry Token"
+              title="Entry"
               class="custom-header-b-card"
           >
             <b-card-text class="custom-font">
@@ -46,7 +49,7 @@
 
         <b-col>
           <b-card
-              title="Takeprofit Token"
+              title="Takeprofit"
               class="custom-header-b-card"
           >
             <b-card-text>
@@ -58,7 +61,7 @@
 
         <b-col>
           <b-card
-              title="Stoploss Token"
+              title="Stoploss"
               class="custom-header-b-card"
           >
             <b-card-text>
@@ -90,6 +93,9 @@ export default {
       token: null,
       tokenArray: null,
       exclusionListArray: [],
+      counterTP: 0,
+      counterSL: 0,
+      counterEN: 0,
       takeProfitArray: [],
       stopLossArray: [],
       entryArray: [],
@@ -117,17 +123,36 @@ export default {
       for (let k in entryArrayData)
         if (entryArrayData[k] !== null) this.entryArray.push(entryArrayData[k]);
 
+      this.entryArray = this.entryArray.sort(function (a, b) {
+        return a.entrypricedate < b.entrypricedate ? 1 : a.entrypricedate > b.entrypricedate ? -1 : 0
+      });
+
+
       const takeProfitArrayReq = await fetch(BASE_URL + '/trade/takeprofit');
       const takeProfitArrayData = await takeProfitArrayReq.json();
 
       for (let k in takeProfitArrayData)
         if (takeProfitArrayData[k] !== null) this.takeProfitArray.push(takeProfitArrayData[k]);
 
+      this.takeProfitArray = this.takeProfitArray.sort(function (a, b) {
+        return a.takeprofitdate < b.takeprofitdate ? 1 : a.takeprofitdate > b.takeprofitdate ? -1 : 0
+      });
+
+
       const stopLossArrayReq = await fetch(BASE_URL + '/trade/stoploss');
       const stopLossArrayData = await stopLossArrayReq.json();
 
       for (let k in stopLossArrayData)
         if (stopLossArrayData[k] !== null) this.stopLossArray.push(stopLossArrayData[k]);
+
+      this.stopLossArray = this.stopLossArray.sort(function (a, b) {
+        return a.stoplossdate < b.stoplossdate ? 1 : a.stoplossdate > b.stoplossdate ? -1 : 0
+      });
+
+
+      this.counterEN = this.entryArray.length;
+      this.counterSL = this.stopLossArray.length;
+      this.counterTP = this.takeProfitArray.length;
 
       // const exclusionListArratReq = await fetch(BASE_URL + '/getExclusionList');
       // const exclusionListArrayDat = await exclusionListArratReq.json();
@@ -157,9 +182,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-td {
-  font-size: 14px !important;
-}
 
 div {
   font-size: 14px;
@@ -172,5 +194,14 @@ p.card-text.custom-data-bot {
 
 h4.card-title {
   font-size: 18px;
+}
+
+td {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+h4.card-title {
+  font-size: 16px !important;
 }
 </style>
