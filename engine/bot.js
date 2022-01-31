@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Binance = require('node-binance-api');
 const coins = require('../utility/coins');
 const Logger = require('../models/logger');
+const Bot = require('../models/bot');
 const Pattern = require('../pattern/triangle')
 const Telegram = require('../utility/telegram');
 const Strategy = require('../strategy/strategy');
@@ -28,6 +29,25 @@ require('dotenv').config();
 
 mongoose.connect(process.env.URI_MONGODB);
 
+let keyDbModel = '';
+let timeFrame = [];
+
+if (process.env.DEBUG) {
+    keyDbModel = 'bot_development';
+    timeFrame = [
+        '1m',
+    ]
+} else {
+    keyDbModel = 'bot_production';
+    timeFrame = [
+        '5m',
+        '15m',
+        '1h',
+        '4h',
+    ]
+}
+
+
 let tradeEnabled = false;
 let coinsArray = coins.getCoins()
 
@@ -43,19 +63,11 @@ let takeProfitArray = {}
 let stopLossArray = {}
 let entryArray = {}
 
-
 let balance = 3000
 let totalPercentage = 0
 let sumSizeTrade = 0;
 const sizeTrade = 200;
 
-
-let timeFrame = [
-    '5m',
-    '15m',
-    '1h',
-    '4h',
-]
 
 app.get('/info', (req, res) => {
     let obj = {
@@ -66,36 +78,45 @@ app.get('/info', (req, res) => {
     res.send(obj);
 });
 
-app.get('/trade/entry', (req, res) => {
-    res.send(entryArray);
+
+app.get('/trade/entry', async (req, res) => {
+    const dbData = await Bot.findOne({name: keyDbModel});
+    res.send(dbData.entryArray);
 });
 
-app.get('/trade/takeprofit', (req, res) => {
-    res.send(takeProfitArray);
+app.get('/trade/takeprofit', async (req, res) => {
+    const dbData = await Bot.findOne({name: keyDbModel});
+    res.send(dbData.takeProfitArray);
 });
 
-app.get('/trade/stoploss', (req, res) => {
-    res.send(stopLossArray);
+app.get('/trade/stoploss', async (req, res) => {
+    const dbData = await Bot.findOne({name: keyDbModel});
+    res.send(dbData.stopLossArray);
 });
 
-app.get('/tokenArray', (req, res) => {
-    res.send(tokenArray);
+app.get('/tokenArray', async (req, res) => {
+    const dbData = await Bot.findOne({name: keyDbModel});
+    res.send(dbData.tokenArray);
 });
 
-app.get('/exchangeInfoArray', (req, res) => {
-    res.send(exchangeInfoArray);
+app.get('/exchangeInfoArray', async (req, res) => {
+    const dbData = await Bot.findOne({name: keyDbModel});
+    res.send(dbData.exchangeInfoArray);
 });
 
-app.get('/getExclusionList', (req, res) => {
-    res.send(exclusionList);
+app.get('/getExclusionList', async (req, res) => {
+    const dbData = await Bot.findOne({name: keyDbModel});
+    res.send(dbData.exclusionList);
 });
 
-app.get('/getEntryCoins', (req, res) => {
-    res.send(entryCoins);
+app.get('/getEntryCoins', async (req, res) => {
+    const dbData = await Bot.findOne({name: keyDbModel});
+    res.send(dbData.entryCoins);
 });
 
-app.get('/getRecordPattern', (req, res) => {
-    res.send(recordPattern);
+app.get('/getRecordPattern', async (req, res) => {
+    const dbData = await Bot.findOne({name: keyDbModel});
+    res.send(dbData.recordPattern);
 });
 
 
@@ -148,7 +169,8 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         });
 
         takeProfitArray[key] = takeprofitObj
-
+        recordPattern[key] = null;
+        exclusionList[key] = true;
 
         let message = "TAKEPROFIT: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
@@ -162,12 +184,6 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
             "hl: " + recordPatternValue['hl']
 
         Telegram.sendMessage(message)
-        recordPattern[key] = null;
-
-        // Add pair with key to exclusion list
-        exclusionList[key] = true;
-
-        console.log(exclusionList)
 
         return true;
     }
@@ -221,7 +237,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         });
 
         stopLossArray[key] = stopLossObj
-
+        recordPattern[key] = null;
 
         let message = "STOPLOSS: " + symbol + "\n" +
             "Interval: " + interval + "\n" +
@@ -235,7 +251,6 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
             "hl: " + recordPatternValue['hl']
 
         Telegram.sendMessage(message)
-        recordPattern[key] = null;
 
         return true;
     }
@@ -271,7 +286,7 @@ async function exchangeInfo() {
 
     return new Promise(async function (resolve, reject) {
 
-        binance.exchangeInfo(function (error, data) {
+        binance.exchangeInfo(async function (error, data) {
 
                 if (error !== null) reject(error);
 
@@ -299,6 +314,53 @@ async function exchangeInfo() {
 
                     }
                 }
+
+                const dbData = await Bot.findOne({name: keyDbModel});
+                if (dbData !== null) {
+
+                    tokenArray = dbData.tokenArray;
+                    indexArray = dbData.indexArray;
+                    exchangeInfoArray = dbData.exchangeInfoArray;
+                    recordPattern = dbData.recordPattern;
+                    exclusionList = dbData.exclusionList;
+                    entryCoins = dbData.entryCoins;
+                    takeProfitArray = dbData.takeProfitArray;
+                    stopLossArray = dbData.stopLossArray;
+                    entryArray = dbData.entryArray;
+
+                } else {
+
+                    for (let time of timeFrame) {
+                        for (const token of coinsArray) {
+
+                            let key = token + "_" + time
+
+                            exclusionList[key] = false;
+                            indexArray[key] = -1;
+                            tokenArray[key] = [];
+                            entryCoins[key] = false;
+
+                            recordPattern[key] = null;
+                            takeProfitArray[key] = null;
+                            stopLossArray[key] = null;
+                            entryArray[key] = null;
+                        }
+                    }
+
+                    await Bot.create({
+                        name: keyDbModel,
+                        exchangeInfoArray: exchangeInfoArray,
+                        tokenArray: tokenArray,
+                        indexArray: indexArray,
+                        recordPattern: recordPattern,
+                        exclusionList: exclusionList,
+                        entryCoins: entryCoins,
+                        takeProfitArray: takeProfitArray,
+                        stopLossArray: stopLossArray,
+                        entryArray: entryArray
+                    })
+                }
+
                 resolve()
             }
         );
@@ -313,7 +375,7 @@ async function engine() {
         let startMessage = 'Bot Pattern Analysis System Started for interval: ' + time
         Telegram.sendMessage(startMessage)
 
-        binance.websockets.candlesticks(coinsArray, time, (candlesticks) => {
+        binance.websockets.candlesticks(coinsArray, time, async (candlesticks) => {
 
             let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
             let {
@@ -339,6 +401,14 @@ async function engine() {
 
                     if (stoploss || takeprofit) {
 
+                        await Bot.findOneAndUpdate({name: keyDbModel},
+                            {
+                                recordPattern: recordPattern,
+                                exclusionList: exclusionList,
+                                stopLossArray: stopLossArray,
+                                takeProfitArray: takeProfitArray,
+                            });
+
                         if (tradeEnabled) {
                             binance.balance((error, balances) => {
                                 if (error) return console.error(error);
@@ -347,6 +417,8 @@ async function engine() {
                                 binance.marketSell(symbol, sellAmount);
                             });
                         }
+
+
                     }
 
                 }
@@ -374,7 +446,6 @@ async function engine() {
                     calculateEMA(symbol, interval, 250, 200).then(function (ema) {
 
                         if (currentClose < ema) {
-
                             recordPattern[key] = null;
                             indexArray[key] = -1;
                             tokenArray[key] = [];
@@ -463,11 +534,14 @@ async function engine() {
 
                         }
 
+                        // update / entryCoins - entryArray - tokenArray - indexArray - recordPattern
+
+                        // update object
+
                     }).catch(
                         function () {
 
                             console.log("Error: Can't calculate EMA for symbol rest engine for: " + symbol)
-
                             recordPattern[key] = null;
                             indexArray[key] = -1;
                             tokenArray[key] = [];
@@ -476,6 +550,15 @@ async function engine() {
                     )
                     // end calculate ema
                 }
+
+                await Bot.findOneAndUpdate({name: keyDbModel},
+                    {
+                        recordPattern: recordPattern,
+                        indexArray: indexArray,
+                        tokenArray: tokenArray,
+                        entryArray: entryArray,
+                        entryCoins: entryCoins
+                    });
             }
 
 
@@ -488,23 +571,7 @@ async function engine() {
 
     try {
 
-        for (let time of timeFrame) {
-            for (const token of coinsArray) {
-
-                let key = token + "_" + time
-
-                exclusionList[key] = false;
-                indexArray[key] = -1;
-                tokenArray[key] = [];
-                entryCoins[key] = false;
-
-                recordPattern[key] = null;
-                takeProfitArray[key] = null;
-                stopLossArray[key] = null;
-                entryArray[key] = null;
-            }
-        }
-
+        // Esistono già i dati allora li precarico
         exchangeInfo().then(() => {
             engine();
         })

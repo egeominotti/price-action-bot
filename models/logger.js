@@ -5,6 +5,7 @@ const loggerSchema = new Schema({
     type: {type: String, required: false},
     symbol: {type: String, required: false},
     interval: {type: String, required: false},
+    balance: {type: String, required: false},
     entryprice: {type: String, required: false},
     entrypricedate: {type: Date, required: false},
     takeprofitvalue: {type: String, required: false},
