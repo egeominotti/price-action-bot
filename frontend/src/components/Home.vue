@@ -89,6 +89,7 @@ export default {
       sizeTrade: 0,
       token: null,
       tokenArray: null,
+      exclusionListArray: [],
       takeProfitArray: [],
       stopLossArray: [],
       entryArray: [],
@@ -101,10 +102,11 @@ export default {
       this.entryArray = [];
       this.stopLossArray = [];
       this.takeProfitArray = [];
+      this.exclusionListArray = []
 
       const infoReq = await fetch(BASE_URL + '/info');
       const infoData = await infoReq.json();
-
+      console.log(infoData)
       this.balance = infoData.balance;
       this.uptime = infoData.uptime;
       this.sizeTrade = infoData.sizeTrade;
@@ -126,6 +128,12 @@ export default {
 
       for (let k in stopLossArrayData)
         if (stopLossArrayData[k] !== null) this.stopLossArray.push(stopLossArrayData[k]);
+
+      // const exclusionListArratReq = await fetch(BASE_URL + '/getExclusionList');
+      // const exclusionListArrayDat = await exclusionListArratReq.json();
+      // console.log(exclusionListArrayDat)
+      // for (let k in exclusionListArrayDat)
+      //   if (exclusionListArrayDat[k] !== null) this.stopLossArray.push(exclusionListArrayDat[k]);
 
     },
 
