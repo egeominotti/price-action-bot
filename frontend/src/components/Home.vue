@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <br>
     <b-container fluid>
       <b-row>
         <b-col>
@@ -9,8 +9,8 @@
               class="custom-header-b-card"
           >
             <b-card-text class="custom-data-bot">
-              Balance: {{ balance }}$
-              TradeSize: {{ sizeTrade }}
+              Balance: {{ balance }}$ |
+              TradeSize: {{ sizeTrade }} |
               Uptime: {{ uptime }}
             </b-card-text>
 
@@ -20,6 +20,7 @@
 
       </b-row>
     </b-container>
+    <br>
 
     <b-container fluid>
       <b-row>
@@ -34,6 +35,14 @@
 
           </b-card>
         </b-col>
+
+
+      </b-row>
+    </b-container>
+
+    <br>
+    <b-container fluid>
+      <b-row>
 
         <b-col>
           <b-card
@@ -74,19 +83,24 @@ const BASE_URL = 'http://localhost:3000';
 export default {
   data() {
     return {
+      timer: '',
       balance: 0,
       uptime: 0,
       sizeTrade: 0,
       token: null,
       tokenArray: null,
-      takeProfitArray: null,
-      stopLossArray: null,
+      takeProfitArray: [],
+      stopLossArray: [],
       entryArray: [],
     }
   },
   methods: {
 
     async getData() {
+
+      this.entryArray = [];
+      this.stopLossArray = [];
+      this.takeProfitArray = [];
 
       const infoReq = await fetch(BASE_URL + '/info');
       const infoData = await infoReq.json();
@@ -113,10 +127,21 @@ export default {
       for (let k in stopLossArrayData)
         if (stopLossArrayData[k] !== null) this.stopLossArray.push(stopLossArrayData[k]);
 
+    },
+
+    cancelAutoUpdate() {
+      clearInterval(this.timer);
     }
+
   },
   mounted() {
     this.getData();
+    // refresh-data each 1 minute
+    this.timer = setInterval(this.getData, 100000);
+  },
+
+  beforeDestroy() {
+    this.cancelAutoUpdate();
   }
 
 }
@@ -125,11 +150,11 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 td {
-  font-size: 12px !important;
+  font-size: 14px !important;
 }
 
 div {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 p.card-text.custom-data-bot {
