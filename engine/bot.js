@@ -228,6 +228,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         });
 
         takeProfitArray[key] = takeprofitObj
+        // se fa take profit escludo il pair fino a mezzanotte
         exclusionList[key] = true;
 
         let message = "TAKEPROFIT: " + symbol + "\n" +
