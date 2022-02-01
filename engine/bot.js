@@ -73,7 +73,6 @@ if (process.env.DEBUG === 'false') {
 
 let tradeEnabled = false;
 let coinsArray = coins.getCoins()
-let emaArray = {}
 
 let tokenArray = {}
 let exchangeInfoArray = {}
@@ -390,7 +389,6 @@ async function exchangeInfo() {
                     takeProfitArray = dbData.takeProfitArray;
                     stopLossArray = dbData.stopLossArray;
                     entryArray = dbData.entryArray;
-                    emaArray = dbData.emaArray;
 
                 } else {
 
@@ -408,7 +406,6 @@ async function exchangeInfo() {
                             takeProfitArray[key] = null;
                             stopLossArray[key] = null;
                             entryArray[key] = null;
-                            emaArray[key] = null;
                         }
                     }
 
@@ -423,7 +420,6 @@ async function exchangeInfo() {
                         takeProfitArray: takeProfitArray,
                         stopLossArray: stopLossArray,
                         entryArray: entryArray,
-                        emaArray: emaArray,
                     })
                 }
 
@@ -508,6 +504,7 @@ async function engine() {
 
                 }
 
+                // Controlla se già è stato fatto un take profit, e che non c'e un entry in corso
                 if (exclusionList[key] === false && entryCoins[key] === false) {
 
                     calculateEMA(symbol, interval, 250, 200).then(function (ema) {
