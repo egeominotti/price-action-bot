@@ -200,6 +200,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
 
+        // update variable balance
         variableBalance = newBalance
 
         let takeprofitObj = {
@@ -486,8 +487,6 @@ async function engine() {
                                 stopLossArray: stopLossArray,
                                 takeProfitArray: takeProfitArray,
                             });
-
-
                     }
 
                 }
@@ -496,7 +495,7 @@ async function engine() {
             // Check at close tick
             if (isFinal) {
 
-                if (exclusionList[key] === true && entryCoins[key] === false) {
+                if (exclusionList[key] === true) {
 
                     let dataValue = new Date();
                     let hour = dataValue.getUTCHours();
