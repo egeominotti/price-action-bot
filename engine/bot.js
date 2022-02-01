@@ -426,14 +426,6 @@ async function exchangeInfo() {
 
                             let key = token + "_" + time
 
-                            // downloadCandlestick(token, time, 250, key).then( () => {
-                            //     console.log("Downloaded candlesticj  " + key)
-                            // }).catch(
-                            //     function (error) {
-                            //         console.log("Error: Can't download candlestick: " + error)
-                            //     }
-                            // )
-
                             exclusionList[key] = false;
                             indexArray[key] = -1;
                             tokenArray[key] = [];
