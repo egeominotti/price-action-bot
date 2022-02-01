@@ -503,6 +503,15 @@ async function engine() {
 
                     if (stoploss || takeprofit) {
 
+                        if (tradeEnabled) {
+                            binance.balance((error, balances) => {
+                                if (error) return console.error(error);
+                                //console.log(exchangeInfoArray[symbol])
+                                let sellAmount = binance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
+                                binance.marketSell(symbol, sellAmount);
+                            });
+                        }
+
                         await Bot.findOneAndUpdate({name: keyDbModel},
                             {
                                 recordPattern: recordPattern,
@@ -511,15 +520,6 @@ async function engine() {
                                 takeProfitArray: takeProfitArray,
                                 balance: variableBalance
                             });
-
-                        if (tradeEnabled) {
-                            binance.balance((error, balances) => {
-                                if (error) return console.error(error);
-                                console.log(exchangeInfoArray[symbol])
-                                let sellAmount = binance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
-                                binance.marketSell(symbol, sellAmount);
-                            });
-                        }
                     }
 
                 }
@@ -619,19 +619,28 @@ async function engine() {
 
                                         if (isStrategyBreakoutFound) {
 
-
                                             if (tradeEnabled) {
-                                                //console.log(exchangeInfoArray[symbol])
                                                 let buyAmount = binance.roundStep(sizeTrade / currentClose, exchangeInfoArray[symbol].stepSize);
                                                 binance.marketBuy(symbol, buyAmount);
                                             }
 
-                                            // set entry in array with key
                                             entryCoins[key] = true;
-                                            // store entry
                                             entryArray[key] = recordPatternValue
 
+                                            let message = "ENTRY: " + symbol + "\n" +
+                                                "Interval: " + interval + "\n" +
+                                                "Entryprice: " + currentClose + "\n" +
+                                                "Takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                                "Stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                                "hh: " + recordPatternValue['hh'] + "\n" +
+                                                "ll: " + recordPatternValue['ll'] + "\n" +
+                                                "lh: " + recordPatternValue['lh'] + "\n" +
+                                                "hl: " + recordPatternValue['hl'] + "\n" +
+                                                "Date Entry: " + recordPatternValue['entrypricedate'].toUTCString()
+
+                                            Telegram.sendMessage(message)
                                         }
+
                                         console.log(recordPatternValue)
                                     }
                                 }
