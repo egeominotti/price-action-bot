@@ -362,6 +362,28 @@ async function calculateEMA(token, time, candle, period) {
     });
 }
 
+async function downloadCandlestick(token, time, candle) {
+    return new Promise(function (resolve, reject) {
+
+        binance.candlesticks(token, time, (error, ticks, symbol) => {
+
+            let closeArray = [];
+            if (error !== null) reject()
+
+            if (!_.isEmpty(ticks)) {
+                for (let t of ticks) {
+                    let [time, open, high, low, close, ignored] = t;
+                    closeArray.push(parseFloat(close));
+                }
+                closeArray.pop()
+                resolve(closeArray);
+            }
+
+        }, {limit: candle});
+
+    });
+}
+
 async function exchangeInfo() {
 
     return new Promise(async function (resolve, reject) {
@@ -654,12 +676,63 @@ async function engine() {
     }
 }
 
+async function test(coin, time) {
+
+    binance.websockets.candlesticks(coin, time, async (candlesticks) => {
+
+        let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
+        let {
+            o: open,
+            h: high,
+            l: low,
+            c: close,
+            i: interval,
+            x: isFinal,
+        } = ticks;
+
+        let currentClose = parseFloat(close)
+        console.log(currentClose)
+
+    });
+}
+
+async function provola(){
+    console.log("VENGO DOPO")
+}
 
 (async () => {
 
     try {
 
-        // Esistono già i dati allora li precarico
+        // let trendCoins = [];
+        // for (const token of coinsArray) {
+        //
+        //     await binance.prices(token, (error, ticker) => {
+        //
+        //
+        //         downloadCandlestick(token, '1d', 100).then((result) => {
+        //
+        //             let ema = EMA.calculate({period: 10, values: result})
+        //             let lastEma = _.last(ema);
+        //             let currentPrice = ticker[token]
+        //
+        //
+        //             if (currentPrice > lastEma) {
+        //                 console.log(lastEma + " _ " + currentPrice + "_ " + token)
+        //             }
+        //
+        //         }).catch((err) => {
+        //             console.log(err);
+        //         }).finally(() => {
+        //         })
+        //     });
+        //
+        // }
+        //
+        // await provola().then(() => {
+        // })
+
+        //Esistono già i dati allora li precarico
         exchangeInfo().then(() => {
             engine();
         })
