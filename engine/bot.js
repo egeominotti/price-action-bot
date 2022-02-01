@@ -53,6 +53,23 @@ if (process.env.DEBUG === 'false') {
     ]
 }
 
+// management user
+// let userAPI = [
+//     {'nome': 'egeo', 'api_key': '', 'api_secret': ''},
+//     {'nome': 'matteo', 'api_key': '', 'api_secret': ''},
+//     {'nome': 'carlo', 'api_key': '', 'api_secret': ''},
+// ]
+//
+// let arrObjectInstanceBinance = []
+//
+// for (let user in userAPI) {
+//     const binance = new Binance().options({
+//         API_KEY: user.api_key,
+//         API_SECRET: user.api_secret,
+//     });
+//     arrObjectInstanceBinance.push(binance);
+// }
+
 
 let tradeEnabled = false;
 let coinsArray = coins.getCoins()
@@ -70,7 +87,6 @@ let takeProfitArray = {}
 let stopLossArray = {}
 let entryArray = {}
 
-
 let balance = 3000
 let variableBalance = 0;
 let totalPercentage = 0
@@ -85,6 +101,41 @@ app.get('/info', (req, res) => {
         'uptime': 0,
     }
     res.send(obj);
+});
+
+app.get('/trade/enableTrade', async (req, res) => {
+    tradeEnabled = true;
+    res.send({'trade': tradeEnabled});
+});
+
+app.get('/trade/disableTrade', async (req, res) => {
+    tradeEnabled = false;
+    res.send({'trade': tradeEnabled});
+});
+
+app.get('/trade/emergency', async (req, res) => {
+
+    for (let time of timeFrame) {
+        for (const token of coinsArray) {
+            let key = token + "_" + time
+            if (recordPattern[key] !== null) {
+                variableBalance = 3000;
+
+                if (tradeEnabled) {
+                    for (let objBinance in arrObjectInstanceBinance) {
+                        objBinance.balance((error, balances) => {
+                            if (error) return console.error(error);
+                            console.log(exchangeInfoArray[token])
+                            let sellAmount = binance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
+                            binance.marketSell(token, sellAmount);
+                        });
+                    }
+                }
+            }
+        }
+    }
+    res.send({'stop_all': true});
+
 });
 
 
