@@ -96,7 +96,7 @@ const sizeTrade = 200;
 
 app.get('/info', (req, res) => {
     let obj = {
-        'balance': balance,
+        'balance': variableBalance,
         'sizeTrade': sizeTrade,
         'tradeEnabled': tradeEnabled,
         'uptime': 0,
@@ -120,8 +120,6 @@ app.get('/trade/emergency', async (req, res) => {
         for (const token of coinsArray) {
             let key = token + "_" + time
             if (recordPattern[key] !== null) {
-                variableBalance = 3000;
-
                 if (tradeEnabled) {
                     for (let objBinance in arrObjectInstanceBinance) {
                         objBinance.balance((error, balances) => {
@@ -231,21 +229,20 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         });
 
         takeProfitArray[key] = takeprofitObj
-        recordPattern[key] = null;
         exclusionList[key] = true;
 
-        // let message = "TAKEPROFIT: " + symbol + "\n" +
-        //     "Interval: " + interval + "\n" +
-        //     "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
-        //     "Balance: " + newBalance + "\n" +
-        //     "Entry Price: " + entryprice + "\n" +
-        //     "Entry date: " + entrypricedate.toUTCString() + "\n" +
-        //     "hh: " + recordPatternValue['hh'] + "\n" +
-        //     "ll: " + recordPatternValue['ll'] + "\n" +
-        //     "lh: " + recordPatternValue['lh'] + "\n" +
-        //     "hl: " + recordPatternValue['hl']
-        //
-        // Telegram.sendMessage(message)
+        let message = "TAKEPROFIT: " + symbol + "\n" +
+            "Interval: " + interval + "\n" +
+            "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
+            "Balance: " + newBalance + "\n" +
+            "Entry Price: " + entryprice + "\n" +
+            "Entry date: " + entrypricedate.toUTCString() + "\n" +
+            "hh: " + recordPatternValue['hh'] + "\n" +
+            "ll: " + recordPatternValue['ll'] + "\n" +
+            "lh: " + recordPatternValue['lh'] + "\n" +
+            "hl: " + recordPatternValue['hl']
+
+        Telegram.sendMessage(message)
 
         return true;
     }
@@ -273,6 +270,8 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
+
+        // update variable balance
         variableBalance = newBalance
 
         let stopLossObj = {
@@ -303,18 +302,18 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         stopLossArray[key] = stopLossObj
         recordPattern[key] = null;
 
-        // let message = "STOPLOSS: " + symbol + "\n" +
-        //     "Interval: " + interval + "\n" +
-        //     "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
-        //     "Balance: " + newBalance + "\n" +
-        //     "Entry Price: " + entryprice + "\n" +
-        //     "Entry date: " + entrypricedate.toUTCString() + "\n" +
-        //     "hh: " + recordPatternValue['hh'] + "\n" +
-        //     "ll: " + recordPatternValue['ll'] + "\n" +
-        //     "lh: " + recordPatternValue['lh'] + "\n" +
-        //     "hl: " + recordPatternValue['hl']
-        //
-        // Telegram.sendMessage(message)
+        let message = "STOPLOSS: " + symbol + "\n" +
+            "Interval: " + interval + "\n" +
+            "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
+            "Balance: " + newBalance + "\n" +
+            "Entry Price: " + entryprice + "\n" +
+            "Entry date: " + entrypricedate.toUTCString() + "\n" +
+            "hh: " + recordPatternValue['hh'] + "\n" +
+            "ll: " + recordPatternValue['ll'] + "\n" +
+            "lh: " + recordPatternValue['lh'] + "\n" +
+            "hl: " + recordPatternValue['hl']
+
+        Telegram.sendMessage(message)
 
         return true;
     }
@@ -392,7 +391,6 @@ async function exchangeInfo() {
                     stopLossArray = dbData.stopLossArray;
                     entryArray = dbData.entryArray;
                     emaArray = dbData.emaArray;
-                    balance = dbData.balance;
 
                 } else {
 
@@ -426,7 +424,6 @@ async function exchangeInfo() {
                         stopLossArray: stopLossArray,
                         entryArray: entryArray,
                         emaArray: emaArray,
-                        balance: balance,
                     })
                 }
 
@@ -485,8 +482,11 @@ async function engine() {
                                 exclusionList: exclusionList,
                                 stopLossArray: stopLossArray,
                                 takeProfitArray: takeProfitArray,
-                                balance: variableBalance
                             });
+
+                        entryArray[key] = null;
+                        recordPattern[key] = null;
+                        entryCoins[key] = false;
                     }
 
                 }
@@ -587,22 +587,20 @@ async function engine() {
 
                                             entryCoins[key] = true;
                                             entryArray[key] = recordPatternValue
-                                            //
-                                            // let message = "ENTRY: " + symbol + "\n" +
-                                            //     "Interval: " + interval + "\n" +
-                                            //     "Entryprice: " + currentClose + "\n" +
-                                            //     "Takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                            //     "Stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                            //     "hh: " + recordPatternValue['hh'] + "\n" +
-                                            //     "ll: " + recordPatternValue['ll'] + "\n" +
-                                            //     "lh: " + recordPatternValue['lh'] + "\n" +
-                                            //     "hl: " + recordPatternValue['hl'] + "\n" +
-                                            //     "Date Entry: " + recordPatternValue['entrypricedate'].toUTCString()
-                                            //
-                                            // Telegram.sendMessage(message)
-                                        }
 
-                                        //console.log(recordPatternValue)
+                                            let message = "ENTRY: " + symbol + "\n" +
+                                                "Interval: " + interval + "\n" +
+                                                "Entryprice: " + currentClose + "\n" +
+                                                "Takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                                "Stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                                "hh: " + recordPatternValue['hh'] + "\n" +
+                                                "ll: " + recordPatternValue['ll'] + "\n" +
+                                                "lh: " + recordPatternValue['lh'] + "\n" +
+                                                "hl: " + recordPatternValue['hl'] + "\n" +
+                                                "Date Entry: " + recordPatternValue['entrypricedate'].toUTCString()
+
+                                            Telegram.sendMessage(message)
+                                        }
                                     }
                                 }
                             }
@@ -619,7 +617,6 @@ async function engine() {
                             console.log("Error: Can't calculate EMA for symbol rest engine for: " + error)
                         }
                     ).finally(
-
                         async () => {
                             await Bot.findOneAndUpdate({name: keyDbModel},
                                 {
