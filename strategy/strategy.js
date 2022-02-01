@@ -1,5 +1,3 @@
-const Telegram = require('../utility/telegram');
-
 /**
  *
  * @param symbol
@@ -26,7 +24,6 @@ function strategyBreakout(symbol, interval, close, record) {
     }
 
     return false;
-
 }
 
 module.exports = {
