@@ -473,17 +473,21 @@ async function engine() {
                             });
                         }
 
+                        entryArray[key] = null;
+                        recordPattern[key] = null;
+                        entryCoins[key] = false;
+
                         await Bot.findOneAndUpdate({name: keyDbModel},
                             {
                                 recordPattern: recordPattern,
                                 exclusionList: exclusionList,
+                                entryArray: entryArray,
+                                entryCoins: entryCoins,
                                 stopLossArray: stopLossArray,
                                 takeProfitArray: takeProfitArray,
                             });
 
-                        entryArray[key] = null;
-                        recordPattern[key] = null;
-                        entryCoins[key] = false;
+
                     }
 
                 }
@@ -492,7 +496,7 @@ async function engine() {
             // Check at close tick
             if (isFinal) {
 
-                if (exclusionList[key] === true) {
+                if (exclusionList[key] === true && entryCoins[key] === false) {
 
                     let dataValue = new Date();
                     let hour = dataValue.getUTCHours();
@@ -584,6 +588,7 @@ async function engine() {
                                             }
 
                                             entryCoins[key] = true;
+                                            // store entry
                                             entryArray[key] = recordPatternValue
 
                                             let message = "ENTRY: " + symbol + "\n" +
