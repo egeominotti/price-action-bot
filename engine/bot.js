@@ -72,6 +72,7 @@ let entryArray = {}
 
 
 let balance = 3000
+let variableBalance = 0;
 let totalPercentage = 0
 let sumSizeTrade = 0;
 const sizeTrade = 200;
@@ -150,6 +151,7 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
 
+        variableBalance = newBalance
 
         let takeprofitObj = {
             type: 'TAKEPROFIT',
@@ -244,6 +246,7 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
+        variableBalance = newBalance
 
         let stopLossObj = {
             type: 'STOPLOSS',
@@ -454,7 +457,7 @@ async function engine() {
                                 exclusionList: exclusionList,
                                 stopLossArray: stopLossArray,
                                 takeProfitArray: takeProfitArray,
-                                balance: balance
+                                balance: variableBalance
                             });
 
                         if (tradeEnabled) {
