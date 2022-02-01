@@ -9,6 +9,7 @@
               class="custom-header-b-card"
           >
             <b-card-text class="custom-data-bot">
+              Tradestatus: {{ tradeEnabled }} |
               Balance: {{ balance }}$ |
               Entry Counter: {{ counterEN }} |
               Takeprofit Counter: {{ counterTP }} |
@@ -16,6 +17,13 @@
               TradeSize: {{ sizeTrade }} |
               Uptime: {{ uptime }}
             </b-card-text>
+
+            <b-button v-if="entryArray.length > 0" @click="closeAllPosition()" variant="danger">Close All Position</b-button>
+            <br>
+            <br>
+
+            <b-button v-if="tradeEnabled === false" @click="enableTrade()" class="space-increment" variant="success">Enable Trade</b-button>
+            <b-button v-else @click="disableTrade()" ariant="dark">Disable Trade</b-button>
 
           </b-card>
         </b-col>
@@ -33,7 +41,7 @@
               class="custom-header-b-card"
           >
             <b-card-text class="custom-font">
-              <b-table striped hover :items="entryArray"></b-table>
+              <b-table hover :items="entryArray"></b-table>
             </b-card-text>
 
           </b-card>
@@ -53,7 +61,7 @@
               class="custom-header-b-card"
           >
             <b-card-text>
-              <b-table striped hover :items="takeProfitArray"></b-table>
+              <b-table hover :items="takeProfitArray"></b-table>
             </b-card-text>
 
           </b-card>
@@ -65,7 +73,7 @@
               class="custom-header-b-card"
           >
             <b-card-text>
-              <b-table striped hover :items="stopLossArray"></b-table>
+              <b-table hover :items="stopLossArray"></b-table>
             </b-card-text>
 
           </b-card>
@@ -90,6 +98,7 @@ export default {
       balance: 0,
       uptime: 0,
       sizeTrade: 0,
+      tradeEnabled: false,
       token: null,
       tokenArray: null,
       exclusionListArray: [],
@@ -116,6 +125,7 @@ export default {
       this.balance = infoData.balance;
       this.uptime = infoData.uptime;
       this.sizeTrade = infoData.sizeTrade;
+      //this.tradeEnabled = infoData.tradeEnabled;
 
       const entryArrayReq = await fetch(BASE_URL + '/trade/entry');
       const entryArrayData = await entryArrayReq.json();
@@ -164,7 +174,27 @@ export default {
 
     cancelAutoUpdate() {
       clearInterval(this.timer);
-    }
+    },
+
+    async closeAllPosition() {
+      const res = await fetch(BASE_URL + '/trade/emergency');
+      const result = await res.json();
+      console.log(result);
+    },
+
+    async enableTrade() {
+      //const res = await fetch(BASE_URL + '/trade/enableTrade');
+      //const result = await res.json();
+      //console.log(result);
+      this.tradeEnabled = true;
+    },
+
+    async disableTrade() {
+      //const res = await fetch(BASE_URL + '/trade/disableTrade');
+      //const result = await res.json();
+      //console.log(result);
+      this.tradeEnabled = false;
+    },
 
   },
   mounted() {
@@ -203,5 +233,9 @@ td {
 
 h4.card-title {
   font-size: 16px !important;
+}
+
+button.btn.space-increment.btn-success {
+  margin-right: 12px;
 }
 </style>

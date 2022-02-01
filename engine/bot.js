@@ -98,6 +98,7 @@ app.get('/info', (req, res) => {
     let obj = {
         'balance': balance,
         'sizeTrade': sizeTrade,
+        'tradeEnabled': tradeEnabled,
         'uptime': 0,
     }
     res.send(obj);
