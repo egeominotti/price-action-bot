@@ -254,31 +254,6 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
 }
 
 
-async function downloadCandlestick(token, time, candle, key) {
-
-    return new Promise(function (resolve, reject) {
-
-        binance.candlesticks(token, time, (error, ticks, token) => {
-
-            let closeArray = [];
-            if (error !== null) reject()
-
-            if (!_.isEmpty(ticks)) {
-
-                for (let t of ticks) {
-                    let [time, open, high, low, close, ignored] = t;
-                    closeArray.push(parseFloat(close));
-                }
-                closeArray.pop()
-                emaArray[key] = closeArray
-            }
-
-        }, {limit: candle});
-
-    });
-}
-
-
 function stopLoss(key, close, recordPatternValue, symbol, interval) {
 
     let entryprice = recordPatternValue['entryprice']
