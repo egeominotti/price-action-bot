@@ -14,16 +14,24 @@
               Entry Counter: {{ counterEN }} |
               Takeprofit Counter: {{ counterTP }} |
               Stoploss Counter: {{ counterSL }} |
-              TradeSize: {{ sizeTrade }} |
+              TradeSize: {{ sizeTrade }}$ |
               Uptime: {{ uptime }}
             </b-card-text>
 
-            <b-button v-if="entryArray.length > 0" @click="closeAllPosition()" variant="danger">Close All Position</b-button>
+            <b-button v-if="entryArray.length > 0" @click="closeAllPosition()" variant="danger">Close All Position
+            </b-button>
             <br>
             <br>
 
-            <b-button v-if="tradeEnabled === false" @click="enableTrade()" class="space-increment" variant="success">Enable Trade</b-button>
+            <b-button v-if="tradeEnabled === false" @click="enableTrade()" class="space-increment" variant="success">
+              Enable Trade
+            </b-button>
             <b-button v-else @click="disableTrade()" ariant="dark">Disable Trade</b-button>
+
+            <b-button v-if="tradeEnabled === false" @click="enableTelegram()" class="space-increment" variant="success">
+              Enable Telegram
+            </b-button>
+            <b-button v-else @click="disbaleTelegram()" ariant="dark">Disable Telegram</b-button>
 
           </b-card>
         </b-col>
@@ -99,6 +107,7 @@ export default {
       uptime: 0,
       sizeTrade: 0,
       tradeEnabled: false,
+      telegramEnabled: false,
       token: null,
       tokenArray: null,
       exclusionListArray: [],
@@ -125,7 +134,8 @@ export default {
       this.balance = infoData.balance;
       this.uptime = infoData.uptime;
       this.sizeTrade = infoData.sizeTrade;
-      //this.tradeEnabled = infoData.tradeEnabled;
+      this.tradeEnabled = infoData.tradeEnabled;
+      this.telegramEnable = infoData.telegramEnabled;
 
       const entryArrayReq = await fetch(BASE_URL + '/trade/entry');
       const entryArrayData = await entryArrayReq.json();
@@ -194,6 +204,20 @@ export default {
       //const result = await res.json();
       //console.log(result);
       this.tradeEnabled = false;
+    },
+
+    async enableTelegram() {
+      //const res = await fetch(BASE_URL + '/trade/enableTrade');
+      //const result = await res.json();
+      //console.log(result);
+      this.telegramEnabled = true;
+    },
+
+    async disbaleTelegram() {
+      //const res = await fetch(BASE_URL + '/trade/disableTrade');
+      //const result = await res.json();
+      //console.log(result);
+      this.telegramEnabled = false;
     },
 
   },

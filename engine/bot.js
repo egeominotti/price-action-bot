@@ -72,6 +72,7 @@ if (process.env.DEBUG === 'false') {
 
 
 let tradeEnabled = false;
+let telegramEnabled = false;
 let coinsArray = coins.getCoins()
 
 let tokenArray = {}
@@ -98,6 +99,7 @@ app.get('/info', (req, res) => {
         'balance': variableBalance,
         'sizeTrade': sizeTrade,
         'tradeEnabled': tradeEnabled,
+        'telegramEnabled': telegramEnabled,
         'uptime': 0,
     }
     res.send(obj);
@@ -111,6 +113,16 @@ app.get('/trade/enableTrade', async (req, res) => {
 app.get('/trade/disableTrade', async (req, res) => {
     tradeEnabled = false;
     res.send({'trade': tradeEnabled});
+});
+
+app.get('/notify/enableTelegram', async (req, res) => {
+    telegramEnabled = true;
+    res.send({'trade': telegramEnabled});
+});
+
+app.get('/trade/disableTelegram', async (req, res) => {
+    telegramEnabled = false;
+    res.send({'trade': telegramEnabled});
 });
 
 app.get('/trade/emergency', async (req, res) => {
@@ -232,18 +244,20 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         // se fa take profit escludo il pair fino a mezzanotte
         exclusionList[key] = true;
 
-        // let message = "TAKEPROFIT: " + symbol + "\n" +
-        //     "Interval: " + interval + "\n" +
-        //     "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
-        //     "Balance: " + newBalance + "\n" +
-        //     "Entry Price: " + entryprice + "\n" +
-        //     "Entry date: " + entrypricedate.toUTCString() + "\n" +
-        //     "hh: " + recordPatternValue['hh'] + "\n" +
-        //     "ll: " + recordPatternValue['ll'] + "\n" +
-        //     "lh: " + recordPatternValue['lh'] + "\n" +
-        //     "hl: " + recordPatternValue['hl']
-        //
-        // Telegram.sendMessage(message)
+        if (telegramEnabled) {
+            let message = "TAKEPROFIT: " + symbol + "\n" +
+                "Interval: " + interval + "\n" +
+                "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
+                "Balance: " + newBalance + "\n" +
+                "Entry Price: " + entryprice + "\n" +
+                "Entry date: " + entrypricedate.toUTCString() + "\n" +
+                "hh: " + recordPatternValue['hh'] + "\n" +
+                "ll: " + recordPatternValue['ll'] + "\n" +
+                "lh: " + recordPatternValue['lh'] + "\n" +
+                "hl: " + recordPatternValue['hl']
+
+            Telegram.sendMessage(message)
+        }
 
         return true;
     }
@@ -303,18 +317,20 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         stopLossArray[key] = stopLossObj
         recordPattern[key] = null;
 
-        // let message = "STOPLOSS: " + symbol + "\n" +
-        //     "Interval: " + interval + "\n" +
-        //     "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
-        //     "Balance: " + newBalance + "\n" +
-        //     "Entry Price: " + entryprice + "\n" +
-        //     "Entry date: " + entrypricedate.toUTCString() + "\n" +
-        //     "hh: " + recordPatternValue['hh'] + "\n" +
-        //     "ll: " + recordPatternValue['ll'] + "\n" +
-        //     "lh: " + recordPatternValue['lh'] + "\n" +
-        //     "hl: " + recordPatternValue['hl']
-        //
-        // Telegram.sendMessage(message)
+        if (telegramEnabled) {
+            let message = "STOPLOSS: " + symbol + "\n" +
+                "Interval: " + interval + "\n" +
+                "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
+                "Balance: " + newBalance + "\n" +
+                "Entry Price: " + entryprice + "\n" +
+                "Entry date: " + entrypricedate.toUTCString() + "\n" +
+                "hh: " + recordPatternValue['hh'] + "\n" +
+                "ll: " + recordPatternValue['ll'] + "\n" +
+                "lh: " + recordPatternValue['lh'] + "\n" +
+                "hl: " + recordPatternValue['hl']
+
+            Telegram.sendMessage(message)
+        }
 
         return true;
     }
@@ -590,19 +606,20 @@ async function engine() {
                                             // store entry
                                             entryArray[key] = recordPatternValue
 
-                                            //
-                                            // let message = "ENTRY: " + symbol + "\n" +
-                                            //     "Interval: " + interval + "\n" +
-                                            //     "Entryprice: " + currentClose + "\n" +
-                                            //     "Takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                            //     "Stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                            //     "hh: " + recordPatternValue['hh'] + "\n" +
-                                            //     "ll: " + recordPatternValue['ll'] + "\n" +
-                                            //     "lh: " + recordPatternValue['lh'] + "\n" +
-                                            //     "hl: " + recordPatternValue['hl'] + "\n" +
-                                            //     "Date Entry: " + recordPatternValue['entrypricedate'].toUTCString()
-                                            //
-                                            // Telegram.sendMessage(message)
+                                            if (telegramEnabled) {
+                                                let message = "ENTRY: " + symbol + "\n" +
+                                                    "Interval: " + interval + "\n" +
+                                                    "Entryprice: " + currentClose + "\n" +
+                                                    "Takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                                    "Stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                                    "hh: " + recordPatternValue['hh'] + "\n" +
+                                                    "ll: " + recordPatternValue['ll'] + "\n" +
+                                                    "lh: " + recordPatternValue['lh'] + "\n" +
+                                                    "hl: " + recordPatternValue['hl'] + "\n" +
+                                                    "Date Entry: " + recordPatternValue['entrypricedate'].toUTCString()
+
+                                                Telegram.sendMessage(message)
+                                            }
                                         }
                                     }
                                 }
