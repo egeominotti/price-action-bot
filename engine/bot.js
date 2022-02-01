@@ -232,18 +232,18 @@ function takeProfit(key, close, recordPatternValue, symbol, interval) {
         // se fa take profit escludo il pair fino a mezzanotte
         exclusionList[key] = true;
 
-        let message = "TAKEPROFIT: " + symbol + "\n" +
-            "Interval: " + interval + "\n" +
-            "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
-            "Balance: " + newBalance + "\n" +
-            "Entry Price: " + entryprice + "\n" +
-            "Entry date: " + entrypricedate.toUTCString() + "\n" +
-            "hh: " + recordPatternValue['hh'] + "\n" +
-            "ll: " + recordPatternValue['ll'] + "\n" +
-            "lh: " + recordPatternValue['lh'] + "\n" +
-            "hl: " + recordPatternValue['hl']
-
-        Telegram.sendMessage(message)
+        // let message = "TAKEPROFIT: " + symbol + "\n" +
+        //     "Interval: " + interval + "\n" +
+        //     "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
+        //     "Balance: " + newBalance + "\n" +
+        //     "Entry Price: " + entryprice + "\n" +
+        //     "Entry date: " + entrypricedate.toUTCString() + "\n" +
+        //     "hh: " + recordPatternValue['hh'] + "\n" +
+        //     "ll: " + recordPatternValue['ll'] + "\n" +
+        //     "lh: " + recordPatternValue['lh'] + "\n" +
+        //     "hl: " + recordPatternValue['hl']
+        //
+        // Telegram.sendMessage(message)
 
         return true;
     }
@@ -303,18 +303,18 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
         stopLossArray[key] = stopLossObj
         recordPattern[key] = null;
 
-        let message = "STOPLOSS: " + symbol + "\n" +
-            "Interval: " + interval + "\n" +
-            "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
-            "Balance: " + newBalance + "\n" +
-            "Entry Price: " + entryprice + "\n" +
-            "Entry date: " + entrypricedate.toUTCString() + "\n" +
-            "hh: " + recordPatternValue['hh'] + "\n" +
-            "ll: " + recordPatternValue['ll'] + "\n" +
-            "lh: " + recordPatternValue['lh'] + "\n" +
-            "hl: " + recordPatternValue['hl']
-
-        Telegram.sendMessage(message)
+        // let message = "STOPLOSS: " + symbol + "\n" +
+        //     "Interval: " + interval + "\n" +
+        //     "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
+        //     "Balance: " + newBalance + "\n" +
+        //     "Entry Price: " + entryprice + "\n" +
+        //     "Entry date: " + entrypricedate.toUTCString() + "\n" +
+        //     "hh: " + recordPatternValue['hh'] + "\n" +
+        //     "ll: " + recordPatternValue['ll'] + "\n" +
+        //     "lh: " + recordPatternValue['lh'] + "\n" +
+        //     "hl: " + recordPatternValue['hl']
+        //
+        // Telegram.sendMessage(message)
 
         return true;
     }
@@ -590,18 +590,19 @@ async function engine() {
                                             // store entry
                                             entryArray[key] = recordPatternValue
 
-                                            let message = "ENTRY: " + symbol + "\n" +
-                                                "Interval: " + interval + "\n" +
-                                                "Entryprice: " + currentClose + "\n" +
-                                                "Takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
-                                                "Stoploss:  " + recordPatternValue['stoploss'] + "\n" +
-                                                "hh: " + recordPatternValue['hh'] + "\n" +
-                                                "ll: " + recordPatternValue['ll'] + "\n" +
-                                                "lh: " + recordPatternValue['lh'] + "\n" +
-                                                "hl: " + recordPatternValue['hl'] + "\n" +
-                                                "Date Entry: " + recordPatternValue['entrypricedate'].toUTCString()
-
-                                            Telegram.sendMessage(message)
+                                            //
+                                            // let message = "ENTRY: " + symbol + "\n" +
+                                            //     "Interval: " + interval + "\n" +
+                                            //     "Entryprice: " + currentClose + "\n" +
+                                            //     "Takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
+                                            //     "Stoploss:  " + recordPatternValue['stoploss'] + "\n" +
+                                            //     "hh: " + recordPatternValue['hh'] + "\n" +
+                                            //     "ll: " + recordPatternValue['ll'] + "\n" +
+                                            //     "lh: " + recordPatternValue['lh'] + "\n" +
+                                            //     "hl: " + recordPatternValue['hl'] + "\n" +
+                                            //     "Date Entry: " + recordPatternValue['entrypricedate'].toUTCString()
+                                            //
+                                            // Telegram.sendMessage(message)
                                         }
                                     }
                                 }
