@@ -664,7 +664,7 @@ function exchangeInfoFull() {
                 } else {
 
                     for (let time of timeFrame) {
-                        for (const token of exchangeInfoArray) {
+                        for (const token in exchangeInfoArray) {
 
                             let key = token + "_" + time
 
