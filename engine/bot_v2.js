@@ -385,8 +385,6 @@ async function calculateEMA(key, close, token, time, candle, period) {
 
 async function engine(coin) {
 
-    //let startMessage = 'Bot Pattern Analysis System Started';
-    //Telegram.sendMessage(startMessage)
 
     for (let time of timeFrame) {
 
@@ -649,6 +647,23 @@ function exchangeInfoFull() {
                         exchangeInfoArray[obj.symbol] = filters;
                     }
                 }
+
+                await Bot.create({
+                    name: keyDbModel,
+                    exchangeInfoArray: exchangeInfoArray,
+                    tokenArray: tokenArray,
+                    indexArray: indexArray,
+                    recordPattern: recordPattern,
+                    exclusionList: exclusionList,
+                    entryCoins: entryCoins,
+                    takeProfitArray: takeProfitArray,
+                    stopLossArray: stopLossArray,
+                    entryArray: entryArray,
+                })
+
+                let startMessage = 'Multipattern Bot Pattern Analysis System Started';
+                Telegram.sendMessage(startMessage)
+
                 resolve()
             }
         );
@@ -685,7 +700,7 @@ function init() {
                 }
                 return undefined;
 
-            }).then((result) => {
+            }).then(async (result) => {
 
                 if (result !== undefined) {
 
@@ -703,8 +718,9 @@ function init() {
                         entryArray[key] = null;
                     }
 
+
                     //TODO: non deve rientrare nell'engine se giò esiste entryCoins
-                    engine(token);
+                    await engine(token);
                 }
 
             }).catch(() => {

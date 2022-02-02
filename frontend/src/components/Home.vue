@@ -97,7 +97,7 @@
 
 <script>
 
-const BASE_URL = 'http://49.12.78.119:3000';
+const BASE_URL = 'http://188.34.189.183:3000';
 
 export default {
   data() {
@@ -135,7 +135,7 @@ export default {
       this.uptime = infoData.uptime;
       this.sizeTrade = infoData.sizeTrade;
       this.tradeEnabled = infoData.tradeEnabled;
-      this.telegramEnable = infoData.telegramEnabled;
+      this.telegramEnabled = infoData.telegramEnabled;
 
       const entryArrayReq = await fetch(BASE_URL + '/trade/entry');
       const entryArrayData = await entryArrayReq.json();
