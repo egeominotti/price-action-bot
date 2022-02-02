@@ -245,6 +245,7 @@ async function checkExit(obj) {
 function checkEntry(
     obj,
 ) {
+
     let close = obj.close;
     let open = obj.open;
     let low = obj.low;
@@ -280,8 +281,7 @@ function checkEntry(
     if (exclusionList[key] === false && entryCoins[key] === false) {
 
         Indicators.ema(close, symbol, interval, 200, 300, emaArray).then((ema) => {
-            console.log(close)
-            console.log(ema)
+
             if (close < ema) {
                 recordPattern[key] = null;
                 indexArray[key] = -1;
@@ -289,7 +289,6 @@ function checkEntry(
             }
 
             if (close > ema) {
-                console.log(close)
                 console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + close)
 
                 // Cerco il pattern per la n-esima pair se il prezzo è sopra l'ema
