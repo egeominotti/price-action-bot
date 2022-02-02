@@ -672,11 +672,11 @@ function exchangeInfoFull() {
                             indexArray[key] = -1;
                             tokenArray[key] = [];
                             entryCoins[key] = false;
-
                             recordPattern[key] = null;
                             takeProfitArray[key] = null;
                             stopLossArray[key] = null;
                             entryArray[key] = null;
+                            emaArray[key] = null;
                         }
                     }
 
