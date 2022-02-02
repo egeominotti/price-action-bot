@@ -28,7 +28,7 @@ function ema(close, token, time, periodEma, limitCandle, arrayCache) {
         if (arrayCache[key] !== undefined) {
 
             if (close !== undefined) {
-                arrayCache[key].pop();
+                arrayCache[key].shift();
                 arrayCache[key].push(parseFloat(close))
             }
 
