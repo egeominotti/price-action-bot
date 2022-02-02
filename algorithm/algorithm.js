@@ -98,6 +98,93 @@ function takeProfit(obj) {
 }
 
 
+function forceSell(obj) {
+
+    let close = obj.close;
+    let key = obj.key;
+    let symbol = obj.symbol;
+    let interval = obj.interval;
+    let recordPattern = obj.recordPattern;
+    let balance = obj.balance;
+    let stopLossArray = obj.stopLossArray;
+    let telegramEnabled = obj.telegramEnabled;
+    let variableBalance = obj.variableBalance;
+    let sumSizeTrade = obj.sumSizeTrade;
+    let sizeTrade = obj.sizeTrade;
+    let totalPercentage = obj.totalPercentage;
+
+    let entryprice = recordPattern['entryprice']
+    let entrypricedate = recordPattern['entrypricedate']
+    let stoploss = recordPattern['stoploss']
+    let strategy = recordPattern['strategy']
+
+    // Stop Loss
+    if (close <= stoploss) {
+
+        let finaleTradeValue;
+        let stopLossPercentage = (stoploss - entryprice) / entryprice
+        stopLossPercentage = _.round(stopLossPercentage * 100, 2)
+        let finaleSizeTrade = (sizeTrade / entryprice) * stoploss;
+        finaleTradeValue = finaleSizeTrade - sizeTrade
+        totalPercentage += stopLossPercentage
+
+        sumSizeTrade += finaleTradeValue;
+        let newBalance = _.round(balance + sumSizeTrade, 2)
+
+        // update variable balance
+        variableBalance = newBalance
+
+        let stopLossObj = {
+            type: 'FORCE_SELL',
+            symbol: symbol,
+            interval: interval,
+            balance: newBalance,
+            entryprice: entryprice,
+            entrypricedate: entrypricedate,
+            stoplossvalue: stoploss,
+            stoplosspercentage: stopLossPercentage,
+            stoplossdate: new Date(),
+            hh: recordPattern['hh'],
+            ll: recordPattern['ll'],
+            lh: recordPattern['lh'],
+            hl: recordPattern['hl'],
+            strategy: strategy
+        }
+
+        const logger = new Logger(stopLossObj)
+
+        logger.save().then((result) => {
+            console.log(result)
+        }).catch((err) => {
+            console.log(err)
+        });
+
+        stopLossArray[key] = stopLossObj
+        recordPattern[key] = null;
+
+        if (telegramEnabled) {
+            let message = "TRAILING STOPLOSS|TAKEPROFIT: " + symbol + "\n" +
+                "Interval: " + interval + "\n" +
+                "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
+                "Balance: " + newBalance + "\n" +
+                "Entry Price: " + entryprice + "\n" +
+                "Entry date: " + entrypricedate.toUTCString() + "\n" +
+                "hh: " + recordPattern['hh'] + "\n" +
+                "ll: " + recordPattern['ll'] + "\n" +
+                "lh: " + recordPattern['lh'] + "\n" +
+                "hl: " + recordPattern['hl']
+
+            Telegram.sendMessage(message)
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+
+
 function stopLoss(obj) {
 
     let close = obj.close;
@@ -397,5 +484,8 @@ function checkEntry(
 
 module.exports = {
     checkEntry,
-    checkExit
+    checkExit,
+    stopLoss,
+    takeProfit,
+    forceSell
 }

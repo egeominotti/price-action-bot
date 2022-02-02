@@ -226,7 +226,9 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                 if (isFinal) {
 
+
                     if (interval === '1d') {
+
 
                         if (exclusionList[key] === true) {
                             exclusionList[key] = false;
@@ -250,6 +252,18 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                                     Algorithms.checkEntry(obj)
                                 }
+
+                                if (parseFloat(close) < ema) {
+
+                                    if (entryArray[key] === true) {
+                                        Algorithms.forceSell(obj)
+                                    }
+
+                                    recordPattern[key] = null;
+                                    indexArray[key] = -1;
+                                    tokenArray[key] = [];
+                                }
+
                             }
 
                         }).catch((err) => {
@@ -276,6 +290,18 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                                     Algorithms.checkEntry(obj)
                                 }
+
+                                if (parseFloat(close) < ema) {
+
+                                    if (entryArray[key] === true) {
+                                        Algorithms.forceSell(obj)
+                                    }
+
+                                    recordPattern[key] = null;
+                                    indexArray[key] = -1;
+                                    tokenArray[key] = [];
+                                }
+
                             }
 
                         }).catch((err) => {
