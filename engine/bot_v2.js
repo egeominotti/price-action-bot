@@ -720,14 +720,12 @@ function init() {
 
         init();
 
-        // // // // terminate websocket
+        // // // terminate websocket
         // setInterval(function () {
-        //     endpointsArr = []
         //     // Terminate all websocket endpoints, every 6 sec
         //     let endpoints = binance.websockets.subscriptions();
         //     for (let endpoint in endpoints) {
-        //         //console.log("..websocket: " + endpoint);
-        //         endpointsArr.push(endpoint)
+        //         console.log("..websocket: " + endpoint);
         //         //let ws = endpoints[endpoint];
         //         //ws.terminate();
         //     }
