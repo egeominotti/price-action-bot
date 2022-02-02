@@ -344,8 +344,8 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
 
 async function calculateEMA(key, close, token, time, candle, period) {
     return new Promise(function (resolve, reject) {
-        // fix it
 
+        // TODO: da ricontrollare
         if (emaArray[key] !== null) {
             emaArray[key].pop();
             emaArray[key].push(parseFloat(close))
