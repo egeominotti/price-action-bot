@@ -16,8 +16,7 @@ const app = express();
 app.use(cors());
 
 const port = 3000;
-
-app.listen(port, () => console.log(`TAS bot app listening on port ${port}!`))
+app.listen(port)
 
 const _ = require("lodash");
 const EMA = require('technicalindicators').EMA
@@ -80,6 +79,7 @@ let coinsArray = coins.getCoins()
 
 let tokenArray = {}
 let exchangeInfoArray = {}
+let emaArray = {}
 
 let indexArray = {}
 let recordPattern = {}
@@ -341,171 +341,42 @@ function stopLoss(key, close, recordPatternValue, symbol, interval) {
     return false;
 }
 
-async function calculateEMA(token, time, candle, period) {
+
+async function calculateEMA(key, close, token, time, candle, period) {
     return new Promise(function (resolve, reject) {
+        // fix it
 
-        binance.candlesticks(token, time, (error, ticks, symbol) => {
+        if (emaArray[key] !== null) {
+            console.log("Calcolo ema dalla cache")
+            emaArray[key].shift();
+            emaArray[key].push(parseFloat(close))
+            let ema = EMA.calculate({period: period, values: emaArray[key]})
+            resolve(_.last(ema))
 
-            let closeArray = [];
-            if (error !== null) reject()
+        } else {
+            binance.candlesticks(token, time, (error, ticks, symbol) => {
+                console.log("Scarico le candele")
+                let closeArray = [];
+                if (error !== null) reject()
 
-            if (!_.isEmpty(ticks)) {
+                if (!_.isEmpty(ticks)) {
 
-                for (let t of ticks) {
-                    let [time, open, high, low, close, ignored] = t;
-                    closeArray.push(parseFloat(close));
+                    for (let t of ticks) {
+                        let [time, open, high, low, close, ignored] = t;
+                        closeArray.push(parseFloat(close));
+                    }
+                    closeArray.pop()
+                    emaArray[key] = closeArray
+                    let ema = EMA.calculate({period: period, values: closeArray})
+                    resolve(_.last(ema))
                 }
-                closeArray.pop()
-                let ema = EMA.calculate({period: period, values: closeArray})
-                resolve(_.last(ema))
-            }
 
-        }, {limit: candle});
+            }, {limit: candle});
+        }
 
     });
 }
 
-async function exchangeInfoFull() {
-
-    return new Promise(async function (resolve, reject) {
-
-        binance.exchangeInfo(async function (error, data) {
-
-                if (error !== null) reject(error);
-
-                for (let obj of data.symbols) {
-
-                    if (obj.status === 'TRADING' && obj.quoteAsset === 'USDT') {
-                        let filters = {status: obj.status};
-                        for (let filter of obj.filters) {
-                            if (filter.filterType === "MIN_NOTIONAL") {
-                                filters.minNotional = filter.minNotional;
-                            } else if (filter.filterType === "PRICE_FILTER") {
-                                filters.minPrice = filter.minPrice;
-                                filters.maxPrice = filter.maxPrice;
-                                filters.tickSize = filter.tickSize;
-                            } else if (filter.filterType === "LOT_SIZE") {
-                                filters.stepSize = filter.stepSize;
-                                filters.minQty = filter.minQty;
-                                filters.maxQty = filter.maxQty;
-                            }
-                        }
-                        filters.baseAssetPrecision = obj.baseAssetPrecision;
-                        filters.quoteAssetPrecision = obj.quoteAssetPrecision;
-                        filters.icebergAllowed = obj.icebergAllowed;
-                        exchangeInfoArray[obj.symbol] = filters;
-                    }
-                }
-
-
-                for (let time of timeFrame) {
-                    for (const token in exchangeInfoArray) {
-
-                        let key = token + "_" + time
-                        exclusionList[key] = false;
-                        indexArray[key] = -1;
-                        tokenArray[key] = [];
-                        entryCoins[key] = false;
-
-                        recordPattern[key] = null;
-                        takeProfitArray[key] = null;
-                        stopLossArray[key] = null;
-                        entryArray[key] = null;
-                    }
-                }
-
-                resolve()
-            }
-        );
-
-    });
-}
-
-async function exchangeInfo() {
-
-    return new Promise(async function (resolve, reject) {
-
-        binance.exchangeInfo(async function (error, data) {
-
-                if (error !== null) reject(error);
-
-                for (let obj of data.symbols) {
-
-                    if (coinsArray.indexOf(obj.symbol) !== -1) {
-                        let filters = {status: obj.status};
-                        for (let filter of obj.filters) {
-                            if (filter.filterType === "MIN_NOTIONAL") {
-                                filters.minNotional = filter.minNotional;
-                            } else if (filter.filterType === "PRICE_FILTER") {
-                                filters.minPrice = filter.minPrice;
-                                filters.maxPrice = filter.maxPrice;
-                                filters.tickSize = filter.tickSize;
-                            } else if (filter.filterType === "LOT_SIZE") {
-                                filters.stepSize = filter.stepSize;
-                                filters.minQty = filter.minQty;
-                                filters.maxQty = filter.maxQty;
-                            }
-                        }
-                        filters.baseAssetPrecision = obj.baseAssetPrecision;
-                        filters.quoteAssetPrecision = obj.quoteAssetPrecision;
-                        filters.icebergAllowed = obj.icebergAllowed;
-                        exchangeInfoArray[obj.symbol] = filters;
-
-                    }
-                }
-
-                const dbData = await Bot.findOne({name: keyDbModel});
-                if (dbData !== null) {
-
-                    tokenArray = dbData.tokenArray;
-                    indexArray = dbData.indexArray;
-                    exchangeInfoArray = dbData.exchangeInfoArray;
-                    recordPattern = dbData.recordPattern;
-                    exclusionList = dbData.exclusionList;
-                    entryCoins = dbData.entryCoins;
-                    takeProfitArray = dbData.takeProfitArray;
-                    stopLossArray = dbData.stopLossArray;
-                    entryArray = dbData.entryArray;
-
-                } else {
-
-                    for (let time of timeFrame) {
-                        for (const token of coinsArray) {
-
-                            let key = token + "_" + time
-
-                            exclusionList[key] = false;
-                            indexArray[key] = -1;
-                            tokenArray[key] = [];
-                            entryCoins[key] = false;
-
-                            recordPattern[key] = null;
-                            takeProfitArray[key] = null;
-                            stopLossArray[key] = null;
-                            entryArray[key] = null;
-                        }
-                    }
-
-                    await Bot.create({
-                        name: keyDbModel,
-                        exchangeInfoArray: exchangeInfoArray,
-                        tokenArray: tokenArray,
-                        indexArray: indexArray,
-                        recordPattern: recordPattern,
-                        exclusionList: exclusionList,
-                        entryCoins: entryCoins,
-                        takeProfitArray: takeProfitArray,
-                        stopLossArray: stopLossArray,
-                        entryArray: entryArray,
-                    })
-                }
-
-                resolve()
-            }
-        );
-
-    });
-}
 
 async function engine(coin) {
 
@@ -586,7 +457,9 @@ async function engine(coin) {
                 // Controlla se già è stato fatto un take profit, e che non c'e un entry in corso
                 if (exclusionList[key] === false && entryCoins[key] === false) {
 
-                    calculateEMA(symbol, interval, 250, 200).then(function (ema) {
+                    calculateEMA(key, currentClose, symbol, interval, 300, 200).then((ema) => {
+
+                        console.log(ema)
 
                         if (currentClose < ema) {
                             recordPattern[key] = null;
@@ -713,26 +586,67 @@ async function engine(coin) {
     }
 }
 
-async function downloadCandlestick(timeframe, token, candles) {
-    return new Promise(async function (resolve, reject) {
+function downloadCandlestick(timeframe, token, candles) {
+
+    return new Promise(function (resolve, reject) {
 
         binance.candlesticks(token, timeframe, (error, ticks, symbol) => {
 
-            let closeArray = [];
             if (error !== null) reject(error)
+            if (_.isEmpty(ticks)) reject(error)
 
+            let closeArray = [];
             if (!_.isEmpty(ticks)) {
 
                 for (let t of ticks) {
-                    let [time, open, high, low, close, ignored] = t;
+                    let [time, open, high, low, close, volume, closeTime, assetVolume, trades, buyBaseVolume, buyAssetVolume, ignored] = t;
                     closeArray.push(parseFloat(close));
                 }
                 closeArray.pop()
                 resolve(closeArray)
+            } else {
+                reject(error)
             }
 
         }, {limit: candles});
+    });
+}
 
+
+function exchangeInfoFull() {
+
+    return new Promise(async function (resolve, reject) {
+
+        binance.exchangeInfo(async function (error, data) {
+
+                if (error !== null) reject(error);
+
+                for (let obj of data.symbols) {
+
+                    if (obj.status === 'TRADING' && obj.quoteAsset === 'USDT') {
+                        let filters = {status: obj.status};
+                        for (let filter of obj.filters) {
+                            if (filter.filterType === "MIN_NOTIONAL") {
+                                filters.minNotional = filter.minNotional;
+                            } else if (filter.filterType === "PRICE_FILTER") {
+                                filters.minPrice = filter.minPrice;
+                                filters.maxPrice = filter.maxPrice;
+                                filters.tickSize = filter.tickSize;
+                            } else if (filter.filterType === "LOT_SIZE") {
+                                filters.stepSize = filter.stepSize;
+                                filters.minQty = filter.minQty;
+                                filters.maxQty = filter.maxQty;
+                            }
+                        }
+                        filters.baseAssetPrecision = obj.baseAssetPrecision;
+                        filters.quoteAssetPrecision = obj.quoteAssetPrecision;
+                        filters.icebergAllowed = obj.icebergAllowed;
+                        exchangeInfoArray[obj.symbol] = filters;
+                    }
+                }
+                resolve()
+            }
+        );
 
     });
 }
@@ -745,7 +659,6 @@ async function downloadCandlestick(timeframe, token, candles) {
         //     console.log('This job was supposed to run at ' + fireDate + ', but actually ran at ' + new Date());
         // });
 
-        let endpointsArr = [];
 
         // // // // terminate websocket
         // setInterval(function () {
@@ -760,49 +673,55 @@ async function downloadCandlestick(timeframe, token, candles) {
         //     }
         // }, 1000);
 
-        exchangeInfoFull().then(async () => {
+        await exchangeInfoFull().then(async () => {
 
             let tickerPrice = await binance.prices();
 
-            setTimeout(() => {
-                for (const token in exchangeInfoArray) {
+            for (const token in exchangeInfoArray) {
 
-                    downloadCandlestick('1d', token, 150).then((result) => {
+                downloadCandlestick('1d', token, 150).then((result) => {
 
-                        if (result !== undefined) {
+                    if (result !== undefined) {
 
-                            let ema = EMA.calculate({period: 5, values: result})
-                            let lastEma = _.last(ema);
+                        let ema = EMA.calculate({period: 5, values: result})
+                        let lastEma = _.last(ema);
 
-                            if (lastEma !== undefined && lastEma > 0) {
-                                if (tickerPrice[token] !== null && tickerPrice[token] > 0) {
+                        if (lastEma !== undefined && lastEma > 0) {
+                            if (tickerPrice[token] !== null && tickerPrice[token] > 0) {
 
-                                    let currentPrice = tickerPrice[token]
-                                    if (currentPrice > lastEma) {
-                                        return token
-                                    }
+                                let currentPrice = tickerPrice[token]
+                                if (currentPrice > lastEma) {
+                                    return token
                                 }
                             }
                         }
-                        return undefined;
+                    }
+                    return undefined;
 
-                    }).then((result) => {
-                        if (result !== undefined) {
-                            console.log(token)
-                            console.log(endpointsArr)
-                            engine(token);
+                }).then((result) => {
+
+                    if (result !== undefined) {
+
+                        for (let time of timeFrame) {
+                            let key = token + "_" + time
+                            exclusionList[key] = false;
+                            entryCoins[key] = false;
+                            indexArray[key] = -1;
+                            tokenArray[key] = [];
+                            emaArray[key] = null;
+                            recordPattern[key] = null;
+                            takeProfitArray[key] = null;
+                            stopLossArray[key] = null;
+                            entryArray[key] = null;
                         }
-                    }).catch((err) => {
 
-                    });
-                }
+                        engine(token);
+                    }
 
-            }, 1000)
-
-
-        }).catch((err) => {
-            console.log("error exchangeInfoFull")
-            console.log(err)
+                }).catch(() => {
+                });
+            }
+        }).catch(() => {
         });
 
     } catch (e) {
