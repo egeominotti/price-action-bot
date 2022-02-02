@@ -41,9 +41,9 @@ if (process.env.DEBUG === 'true') {
     keyDbModel = 'bot_v2_development';
     timeFrame = [
         '5m',
-        '15m',
-        '1h',
-        '4h',
+        //'15m',
+        //'1h',
+        //'4h',
     ]
 }
 
@@ -52,9 +52,9 @@ if (process.env.DEBUG === 'false') {
     keyDbModel = 'bot_v2_production';
     timeFrame = [
         '5m',
-        '15m',
-        '1h',
-        '4h',
+        //'15m',
+        //'1h',
+        //'4h',
     ]
 }
 
@@ -461,8 +461,6 @@ async function engine(coin) {
                 if (exclusionList[key] === false && entryCoins[key] === false) {
 
                     calculateEMA(key, currentClose, symbol, interval, 300, 200).then((ema) => {
-
-                        //console.log(ema)
 
                         if (currentClose < ema) {
                             recordPattern[key] = null;
