@@ -23,7 +23,7 @@ const EMA = require('technicalindicators').EMA
 
 const binance = new Binance().options({
     useServerTime: true,
-    recvWindow: 60000, // Set a higher recvWindow to increase response timeout
+    //recvWindow: 60000, // Set a higher recvWindow to increase response timeout
     verbose: true, // Add extra output when subscribing to WebSockets, etc
     log: log => {
         console.log(log); // You can create your own logger here, or disable console output
@@ -748,6 +748,8 @@ function init() {
 (async () => {
 
     try {
+
+
 
         // schedule.scheduleJob('* 1 * * *', function (fireDate) {
         //     init();
