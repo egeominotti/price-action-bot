@@ -123,7 +123,7 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                     if (interval === '1d') {
 
-                        Indicators.ema(parseFloat(close), symbol, '1d', 5, 10, emaDaily).then((ema) => {
+                        Indicators.ema(parseFloat(close), symbol, '1d', 5, 150, emaDaily).then((ema) => {
 
                             if (entryArray[key] === null) {
 
@@ -148,7 +148,7 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                     } else {
 
-                        Indicators.ema(undefined, symbol, '1d', 5, 10, emaDaily).then((ema) => {
+                        Indicators.ema(undefined, symbol, '1d', 5, 150, emaDaily).then((ema) => {
 
                             if (entryArray[key] === null) {
 

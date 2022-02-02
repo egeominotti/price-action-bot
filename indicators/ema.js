@@ -42,16 +42,18 @@ function ema(close, token, time, periodEma, limitCandle, arrayCache) {
                 if (error !== null) reject(error)
                 if (_.isEmpty(ticks)) reject(error)
 
-                let closeArray = [];
-                for (let t of ticks) {
-                    let [time, open, high, low, close, ignored] = t;
-                    closeArray.push(parseFloat(close));
-                }
-                closeArray.pop()
-                arrayCache[key] = closeArray
+                if (!_.isEmpty(ticks)) {
+                    let closeArray = [];
+                    for (let t of ticks) {
+                        let [time, open, high, low, close, ignored] = t;
+                        closeArray.push(parseFloat(close));
+                    }
+                    closeArray.pop()
+                    arrayCache[key] = closeArray
 
-                let ema = EMA.calculate({period: periodEma, values: closeArray})
-                resolve(_.last(ema))
+                    let ema = EMA.calculate({period: periodEma, values: closeArray})
+                    resolve(_.last(ema))
+                }
 
             }, {limit: limitCandle});
         }
