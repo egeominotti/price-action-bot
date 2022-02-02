@@ -18,11 +18,12 @@ const binance = new Binance().options({
 });
 
 let timeFrame = [
-    '5m',
-    '15m',
-    '1h',
-    '4h',
-    '1d',
+    '1m',
+    // '5m',
+    // '15m',
+    // '1h',
+    // '4h',
+    // '1d',
 ];
 
 let telegramEnabled = true;
@@ -122,13 +123,13 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                     if (interval === '1d') {
 
-                        Indicators.ema(parseFloat(close), symbol, interval, 5, 50, emaDaily).then((ema) => {
+                        Indicators.ema(parseFloat(close), symbol, '1d', 5, 10, emaDaily).then((ema) => {
 
                             if (entryArray[key] === null) {
 
                                 if (parseFloat(close) > ema) {
 
-                                    console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + _.round(ema, 4) + " - Close: " + close)
+                                    console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
 
                                     obj['symbol'] = symbol;
                                     obj['key'] = key;
@@ -142,19 +143,18 @@ Exchange.exchangeInfo(obj).then(async () => {
                                 }
                             }
 
-                        }).catch((err) => {
-                            console.log(err)
+                        }).catch(() => {
                         })
 
                     } else {
 
-                        Indicators.ema(undefined, symbol, interval, 5, 50, emaDaily).then((ema) => {
+                        Indicators.ema(undefined, symbol, '1d', 5, 10, emaDaily).then((ema) => {
 
                             if (entryArray[key] === null) {
 
                                 if (parseFloat(close) > ema) {
 
-                                    console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + _.round(ema, 4) + " - Close: " + close)
+                                    console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
 
                                     obj['symbol'] = symbol;
                                     obj['key'] = key;
@@ -168,8 +168,7 @@ Exchange.exchangeInfo(obj).then(async () => {
                                 }
                             }
 
-                        }).catch((err) => {
-                            console.log(err)
+                        }).catch(() => {
                         })
 
 

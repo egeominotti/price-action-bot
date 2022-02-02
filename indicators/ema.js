@@ -20,7 +20,7 @@ const binance = new Binance().options({
  * @param arrayCache
  * @returns {Promise<unknown>}
  */
-async function ema(close, token, time, periodEma, limitCandle, arrayCache) {
+function ema(close, token, time, periodEma, limitCandle, arrayCache) {
     return new Promise(function (resolve, reject) {
 
         let key = token + "_" + time
@@ -43,19 +43,15 @@ async function ema(close, token, time, periodEma, limitCandle, arrayCache) {
                 if (_.isEmpty(ticks)) reject(error)
 
                 let closeArray = [];
-
-                if (!_.isEmpty(ticks)) {
-
-                    for (let t of ticks) {
-                        let [time, open, high, low, close, ignored] = t;
-                        closeArray.push(parseFloat(close));
-                    }
-                    closeArray.pop()
-                    arrayCache[key] = closeArray
-
-                    let ema = EMA.calculate({period: periodEma, values: closeArray})
-                    resolve(_.last(ema))
+                for (let t of ticks) {
+                    let [time, open, high, low, close, ignored] = t;
+                    closeArray.push(parseFloat(close));
                 }
+                closeArray.pop()
+                arrayCache[key] = closeArray
+
+                let ema = EMA.calculate({period: periodEma, values: closeArray})
+                resolve(_.last(ema))
 
             }, {limit: limitCandle});
         }
