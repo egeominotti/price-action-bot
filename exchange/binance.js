@@ -50,50 +50,67 @@ function exchangeInfo(obj) {
                     }
                 }
 
-                const dbData = await Bot.findOne({name: dbKey});
-                if (dbData !== null) {
 
-                    tokenArray = dbData.tokenArray;
-                    indexArray = dbData.indexArray;
-                    exchangeInfoArray = dbData.exchangeInfoArray;
-                    recordPattern = dbData.recordPattern;
-                    exclusionList = dbData.exclusionList;
-                    entryCoins = dbData.entryCoins;
-                    takeProfitArray = dbData.takeProfitArray;
-                    stopLossArray = dbData.stopLossArray;
-                    entryArray = dbData.entryArray;
+                for (let time of timeFrame) {
+                    for (const token in exchangeInfoArray) {
+                        let key = token + "_" + time
 
-                } else {
-
-                    for (let time of timeFrame) {
-                        for (const token in exchangeInfoArray) {
-
-                            let key = token + "_" + time
-
-                            exclusionList[key] = false;
-                            indexArray[key] = -1;
-                            tokenArray[key] = [];
-                            entryCoins[key] = false;
-                            recordPattern[key] = null;
-                            takeProfitArray[key] = null;
-                            stopLossArray[key] = null;
-                            entryArray[key] = null;
-                        }
+                        exclusionList[key] = false;
+                        indexArray[key] = -1;
+                        tokenArray[key] = [];
+                        entryCoins[key] = false;
+                        recordPattern[key] = null;
+                        takeProfitArray[key] = null;
+                        stopLossArray[key] = null;
+                        entryArray[key] = null;
                     }
-
-                    await Bot.create({
-                        name: dbKey,
-                        exchangeInfoArray: exchangeInfoArray,
-                        tokenArray: tokenArray,
-                        indexArray: indexArray,
-                        recordPattern: recordPattern,
-                        exclusionList: exclusionList,
-                        entryCoins: entryCoins,
-                        takeProfitArray: takeProfitArray,
-                        stopLossArray: stopLossArray,
-                        entryArray: entryArray,
-                    })
                 }
+                console.log(exchangeInfoArray)
+
+                // const dbData = await Bot.findOne({name: dbKey});
+                // if (dbData !== null) {
+                //
+                //     tokenArray = dbData.tokenArray;
+                //     indexArray = dbData.indexArray;
+                //     exchangeInfoArray = dbData.exchangeInfoArray;
+                //     recordPattern = dbData.recordPattern;
+                //     exclusionList = dbData.exclusionList;
+                //     entryCoins = dbData.entryCoins;
+                //     takeProfitArray = dbData.takeProfitArray;
+                //     stopLossArray = dbData.stopLossArray;
+                //     entryArray = dbData.entryArray;
+                //
+                // } else {
+                //
+                //     for (let time of timeFrame) {
+                //         for (const token in exchangeInfoArray) {
+                //
+                //             let key = token + "_" + time
+                //
+                //             exclusionList[key] = false;
+                //             indexArray[key] = -1;
+                //             tokenArray[key] = [];
+                //             entryCoins[key] = false;
+                //             recordPattern[key] = null;
+                //             takeProfitArray[key] = null;
+                //             stopLossArray[key] = null;
+                //             entryArray[key] = null;
+                //         }
+                //     }
+                //
+                //     await Bot.create({
+                //         name: dbKey,
+                //         exchangeInfoArray: exchangeInfoArray,
+                //         tokenArray: tokenArray,
+                //         indexArray: indexArray,
+                //         recordPattern: recordPattern,
+                //         exclusionList: exclusionList,
+                //         entryCoins: entryCoins,
+                //         takeProfitArray: takeProfitArray,
+                //         stopLossArray: stopLossArray,
+                //         entryArray: entryArray,
+                //     })
+                // }
 
                 // let startMessage = 'Multipattern Bot Pattern Analysis Engine System Started';
                 // Telegram.sendMessage(startMessage)

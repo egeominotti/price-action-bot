@@ -113,7 +113,7 @@ Exchange.exchangeInfo(obj).then(async () => {
                 obj['open'] = parseFloat(open);
                 obj['low'] = parseFloat(low);
 
-                if (entryArray[key] !== null) {
+                if (recordPattern[key] !== null) {
                     Algorithms.checkExit(obj)
                 }
 
@@ -121,7 +121,7 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                     Indicators.ema(parseFloat(close), symbol, interval, 5, 100, emaDaily).then((ema) => {
 
-                        if (entryArray[key] === null) {
+                        if (recordPattern[key] === null) {
 
                             if (parseFloat(close) > ema) {
 
