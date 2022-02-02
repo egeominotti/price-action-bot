@@ -125,7 +125,7 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                             if (parseFloat(close) > ema) {
 
-                                console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + _.round(ema, 4) + " - Close: " + close)
+                                console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + _.round(ema, 4) + " - Close: " + close)
 
                                 obj['symbol'] = symbol;
                                 obj['key'] = key;
