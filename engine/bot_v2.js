@@ -41,6 +41,9 @@ if (process.env.DEBUG === 'true') {
     keyDbModel = 'bot_v2_development';
     timeFrame = [
         '5m',
+        '15m',
+        '1h',
+        '4h',
     ]
 }
 
@@ -715,10 +718,10 @@ function init() {
 
     try {
 
-        schedule.scheduleJob('* 1 * * *', function (fireDate) {
-            init();
-            console.log('System update from new pair');
-        });
+        // schedule.scheduleJob('* 1 * * *', function (fireDate) {
+        //     init();
+        //     console.log('System update from new pair');
+        // });
 
         init();
 
