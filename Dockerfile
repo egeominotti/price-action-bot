@@ -6,4 +6,4 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 EXPOSE 3000
-CMD node engine/bot.js
+CMD node engine/bot_v2.js
