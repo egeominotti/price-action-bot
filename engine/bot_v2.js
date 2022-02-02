@@ -364,6 +364,62 @@ async function calculateEMA(token, time, candle, period) {
     });
 }
 
+async function exchangeInfoFull() {
+
+    return new Promise(async function (resolve, reject) {
+
+        binance.exchangeInfo(async function (error, data) {
+
+                if (error !== null) reject(error);
+
+                for (let obj of data.symbols) {
+
+                    if (obj.status === 'TRADING' && obj.quoteAsset === 'USDT') {
+                        let filters = {status: obj.status};
+                        for (let filter of obj.filters) {
+                            if (filter.filterType === "MIN_NOTIONAL") {
+                                filters.minNotional = filter.minNotional;
+                            } else if (filter.filterType === "PRICE_FILTER") {
+                                filters.minPrice = filter.minPrice;
+                                filters.maxPrice = filter.maxPrice;
+                                filters.tickSize = filter.tickSize;
+                            } else if (filter.filterType === "LOT_SIZE") {
+                                filters.stepSize = filter.stepSize;
+                                filters.minQty = filter.minQty;
+                                filters.maxQty = filter.maxQty;
+                            }
+                        }
+                        filters.baseAssetPrecision = obj.baseAssetPrecision;
+                        filters.quoteAssetPrecision = obj.quoteAssetPrecision;
+                        filters.icebergAllowed = obj.icebergAllowed;
+                        exchangeInfoArray[obj.symbol] = filters;
+                    }
+                }
+
+
+                for (let time of timeFrame) {
+                    for (const token in exchangeInfoArray) {
+
+                        let key = token + "_" + time
+                        exclusionList[key] = false;
+                        indexArray[key] = -1;
+                        tokenArray[key] = [];
+                        entryCoins[key] = false;
+
+                        recordPattern[key] = null;
+                        takeProfitArray[key] = null;
+                        stopLossArray[key] = null;
+                        entryArray[key] = null;
+                    }
+                }
+
+                resolve()
+            }
+        );
+
+    });
+}
+
 async function exchangeInfo() {
 
     return new Promise(async function (resolve, reject) {
@@ -450,14 +506,14 @@ async function exchangeInfo() {
     });
 }
 
-async function engine() {
+async function engine(coin) {
 
     //let startMessage = 'Bot Pattern Analysis System Started';
     //Telegram.sendMessage(startMessage)
 
     for (let time of timeFrame) {
 
-        binance.websockets.candlesticks(coinsArray, time, async (candlesticks) => {
+        binance.websockets.candlesticks(coin, time, async (candlesticks) => {
 
             let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
             let {
@@ -656,13 +712,80 @@ async function engine() {
     }
 }
 
+async function downloadCandlestick(token, candles) {
+    return new Promise(async function (resolve, reject) {
+
+        binance.candlesticks(token, '1d', (error, ticks, symbol) => {
+
+            let closeArray = [];
+            if (error !== null) reject(error)
+
+            if (!_.isEmpty(ticks)) {
+
+                for (let t of ticks) {
+                    let [time, open, high, low, close, ignored] = t;
+                    closeArray.push(parseFloat(close));
+                }
+                closeArray.pop()
+                resolve(closeArray)
+            }
+
+        }, {limit: candles});
+
+
+    });
+}
+
 (async () => {
 
     try {
 
-        exchangeInfo().then(() => {
-            engine();
-        })
+        // // // terminate websocket
+        // setInterval(function () {
+        //     // Terminate all websocket endpoints, every 6 sec
+        //     let endpoints = binance.websockets.subscriptions();
+        //     for (let endpoint in endpoints) {
+        //         console.log("..websocket: " + endpoint);
+        //         //let ws = endpoints[endpoint];
+        //         //ws.terminate();
+        //     }
+        // }, 10000);
+
+        exchangeInfoFull().then(async () => {
+
+            let tickerPrice = await binance.prices();
+            for (const token in exchangeInfoArray) {
+
+                downloadCandlestick(token, 100).then((result) => {
+
+                    if (result !== undefined) {
+
+                        let ema = EMA.calculate({period: 10, values: result})
+                        let lastEma = _.last(ema);
+
+                        if (lastEma !== undefined && lastEma > 0) {
+                            if (tickerPrice[token] !== null && tickerPrice[token] > 0) {
+
+                                let currentPrice = tickerPrice[token]
+                                if (currentPrice > lastEma) {
+                                    return token
+                                }
+                            }
+                        }
+                    }
+                    return undefined;
+
+                }).then((result) => {
+                    if (result !== undefined) {
+                        engine(token);
+                    }
+                });
+            }
+
+        }).catch((err) => {
+            console.log("error exchangeInfoFull")
+            console.log(err)
+        });
 
     } catch (e) {
         console.log(e)

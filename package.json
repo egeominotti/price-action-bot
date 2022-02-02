@@ -9,6 +9,7 @@
     "moment": "^2.29.1",
     "mongoose": "^6.0.13",
     "node-binance-api": "^0.13.1",
+    "sleep-promise": "^9.1.0",
     "technicalindicators": "^3.1.0",
     "vue": "^2.6.14"
   }
