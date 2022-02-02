@@ -280,7 +280,7 @@ function checkEntry(
 
     if (exclusionList[key] === false && entryCoins[key] === false) {
 
-        Indicators.ema(close, symbol, interval, 200, 300, emaArray).then((ema) => {
+        Indicators.ema(close, symbol, interval, 200, 500, emaArray).then((ema) => {
 
             if (close < ema) {
                 recordPattern[key] = null;
