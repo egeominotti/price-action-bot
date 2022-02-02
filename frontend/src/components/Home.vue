@@ -5,7 +5,7 @@
       <b-row>
         <b-col>
           <b-card
-              title="General Info"
+              title="BOTV2 metrics"
               class="custom-header-b-card"
           >
             <b-card-text class="custom-data-bot">

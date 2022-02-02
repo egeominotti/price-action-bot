@@ -648,6 +648,24 @@ function exchangeInfoFull() {
                     }
                 }
 
+                for (let time of timeFrame) {
+                    for (const token of exchangeInfoArray) {
+
+                        let key = token + "_" + time
+
+                        exclusionList[key] = false;
+                        indexArray[key] = -1;
+                        tokenArray[key] = [];
+                        entryCoins[key] = false;
+
+                        recordPattern[key] = null;
+                        takeProfitArray[key] = null;
+                        stopLossArray[key] = null;
+                        entryArray[key] = null;
+                    }
+                }
+
+
                 await Bot.create({
                     name: keyDbModel,
                     exchangeInfoArray: exchangeInfoArray,
@@ -661,7 +679,7 @@ function exchangeInfoFull() {
                     entryArray: entryArray,
                 })
 
-                let startMessage = 'Multipattern Bot Pattern Analysis System Started';
+                let startMessage = 'Multipattern Bot Pattern Analysis Engine System Started';
                 Telegram.sendMessage(startMessage)
 
                 resolve()
@@ -703,21 +721,6 @@ function init() {
             }).then(async (result) => {
 
                 if (result !== undefined) {
-
-                    for (let time of timeFrame) {
-
-                        let key = token + "_" + time
-                        exclusionList[key] = false;
-                        entryCoins[key] = false;
-                        indexArray[key] = -1;
-                        tokenArray[key] = [];
-                        emaArray[key] = null;
-                        recordPattern[key] = null;
-                        takeProfitArray[key] = null;
-                        stopLossArray[key] = null;
-                        entryArray[key] = null;
-                    }
-
 
                     //TODO: non deve rientrare nell'engine se giò esiste entryCoins
                     await engine(token);
