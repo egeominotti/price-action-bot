@@ -7,7 +7,8 @@ const Pattern = require('../pattern/triangle')
 const Telegram = require('../utility/telegram');
 const Strategy = require('../strategy/strategy');
 const express = require('express')
-const sleep = require('sleep-promise');
+const schedule = require('node-schedule');
+
 
 const cors = require('cors')
 
@@ -712,10 +713,10 @@ async function engine(coin) {
     }
 }
 
-async function downloadCandlestick(token, candles) {
+async function downloadCandlestick(timeframe, token, candles) {
     return new Promise(async function (resolve, reject) {
 
-        binance.candlesticks(token, '1d', (error, ticks, symbol) => {
+        binance.candlesticks(token, timeframe, (error, ticks, symbol) => {
 
             let closeArray = [];
             if (error !== null) reject(error)
@@ -740,47 +741,64 @@ async function downloadCandlestick(token, candles) {
 
     try {
 
-        // // // terminate websocket
-        // setInterval(function () {
-        //     // Terminate all websocket endpoints, every 6 sec
-        //     let endpoints = binance.websockets.subscriptions();
-        //     for (let endpoint in endpoints) {
-        //         console.log("..websocket: " + endpoint);
-        //         //let ws = endpoints[endpoint];
-        //         //ws.terminate();
-        //     }
-        // }, 10000);
+        // schedule.scheduleJob('* * * * *', function (fireDate) {
+        //     console.log('This job was supposed to run at ' + fireDate + ', but actually ran at ' + new Date());
+        // });
+
+        let endpointsArr = [];
+
+        // // // // terminate websocket
+        setInterval(function () {
+            endpointsArr = []
+            // Terminate all websocket endpoints, every 6 sec
+            let endpoints = binance.websockets.subscriptions();
+            for (let endpoint in endpoints) {
+                //console.log("..websocket: " + endpoint);
+                endpointsArr.push(endpoint)
+                //let ws = endpoints[endpoint];
+                //ws.terminate();
+            }
+        }, 1000);
 
         exchangeInfoFull().then(async () => {
 
             let tickerPrice = await binance.prices();
-            for (const token in exchangeInfoArray) {
 
-                downloadCandlestick(token, 100).then((result) => {
+            setTimeout(() => {
+                for (const token in exchangeInfoArray) {
 
-                    if (result !== undefined) {
+                    downloadCandlestick('1d', token, 150).then((result) => {
 
-                        let ema = EMA.calculate({period: 10, values: result})
-                        let lastEma = _.last(ema);
+                        if (result !== undefined) {
 
-                        if (lastEma !== undefined && lastEma > 0) {
-                            if (tickerPrice[token] !== null && tickerPrice[token] > 0) {
+                            let ema = EMA.calculate({period: 5, values: result})
+                            let lastEma = _.last(ema);
 
-                                let currentPrice = tickerPrice[token]
-                                if (currentPrice > lastEma) {
-                                    return token
+                            if (lastEma !== undefined && lastEma > 0) {
+                                if (tickerPrice[token] !== null && tickerPrice[token] > 0) {
+
+                                    let currentPrice = tickerPrice[token]
+                                    if (currentPrice > lastEma) {
+                                        return token
+                                    }
                                 }
                             }
                         }
-                    }
-                    return undefined;
+                        return undefined;
 
-                }).then((result) => {
-                    if (result !== undefined) {
-                        engine(token);
-                    }
-                });
-            }
+                    }).then((result) => {
+                        if (result !== undefined) {
+                            console.log(token)
+                            console.log(endpointsArr)
+                            engine(token);
+                        }
+                    }).catch((err) => {
+                    });
+
+                }
+
+            }, 3000)
+
 
         }).catch((err) => {
             console.log("error exchangeInfoFull")
