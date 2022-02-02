@@ -267,17 +267,7 @@ function checkEntry(
     let entryCoins = obj.entryCoins;
     let dbKey = obj.dbKey;
 
-    if (exclusionList[key] === true) {
 
-        let dataValue = new Date();
-        let hour = dataValue.getUTCHours();
-        let minutes = dataValue.getUTCMinutes();
-
-        // if midnight and zero minutes then unlock pair
-        if (hour === 0 && minutes === 0) {
-            exclusionList[key] = false;
-        }
-    }
 
     if (exclusionList[key] === false && entryCoins[key] === false) {
 

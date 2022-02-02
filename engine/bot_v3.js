@@ -123,6 +123,10 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                     if (interval === '1d') {
 
+                        if (exclusionList[key] === true) {
+                            exclusionList[key] = false;
+                        }
+
                         Indicators.ema(parseFloat(close), symbol, '1d', 5, 150, emaDaily).then((ema) => {
 
                             if (entryArray[key] === null) {
@@ -143,7 +147,9 @@ Exchange.exchangeInfo(obj).then(async () => {
                                 }
                             }
 
-                        }).catch((err) => {console.log(err)})
+                        }).catch((err) => {
+                            console.log(err)
+                        })
 
                     } else {
 
@@ -167,8 +173,9 @@ Exchange.exchangeInfo(obj).then(async () => {
                                 }
                             }
 
-                        }).catch((err) => {console.log(err)})
-
+                        }).catch((err) => {
+                            console.log(err)
+                        })
 
 
                     }
