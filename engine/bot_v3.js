@@ -9,6 +9,7 @@ const _ = require("lodash");
 mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
+    recvWindow: 60000, // Set a higher recvWindow to increase response timeout
     useServerTime: true,
     verbose: true, // Add extra output when subscribing to WebSockets, etc
     log: log => {
@@ -113,35 +114,66 @@ Exchange.exchangeInfo(obj).then(async () => {
                 obj['open'] = parseFloat(open);
                 obj['low'] = parseFloat(low);
 
-                if (recordPattern[key] !== null) {
+                if (entryArray[key] !== null) {
                     Algorithms.checkExit(obj)
                 }
 
                 if (isFinal) {
 
-                    Indicators.ema(parseFloat(close), symbol, interval, 5, 100, emaDaily).then((ema) => {
+                    if (interval === '1d') {
 
-                        if (recordPattern[key] === null) {
+                        Indicators.ema(parseFloat(close), symbol, interval, 5, 50, emaDaily).then((ema) => {
 
-                            if (parseFloat(close) > ema) {
+                            if (entryArray[key] === null) {
 
-                                console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + _.round(ema, 4) + " - Close: " + close)
+                                if (parseFloat(close) > ema) {
 
-                                obj['symbol'] = symbol;
-                                obj['key'] = key;
-                                obj['interval'] = interval;
-                                obj['close'] = parseFloat(close);
-                                obj['high'] = parseFloat(high);
-                                obj['open'] = parseFloat(open);
-                                obj['low'] = parseFloat(low);
+                                    console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + _.round(ema, 4) + " - Close: " + close)
 
-                                Algorithms.checkEntry(obj)
+                                    obj['symbol'] = symbol;
+                                    obj['key'] = key;
+                                    obj['interval'] = interval;
+                                    obj['close'] = parseFloat(close);
+                                    obj['high'] = parseFloat(high);
+                                    obj['open'] = parseFloat(open);
+                                    obj['low'] = parseFloat(low);
+
+                                    Algorithms.checkEntry(obj)
+                                }
                             }
-                        }
 
-                    }).catch((err) => {
-                        console.log(err)
-                    })
+                        }).catch((err) => {
+                            console.log(err)
+                        })
+
+                    } else {
+
+                        Indicators.ema(undefined, symbol, interval, 5, 50, emaDaily).then((ema) => {
+
+                            if (entryArray[key] === null) {
+
+                                if (parseFloat(close) > ema) {
+
+                                    console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + _.round(ema, 4) + " - Close: " + close)
+
+                                    obj['symbol'] = symbol;
+                                    obj['key'] = key;
+                                    obj['interval'] = interval;
+                                    obj['close'] = parseFloat(close);
+                                    obj['high'] = parseFloat(high);
+                                    obj['open'] = parseFloat(open);
+                                    obj['low'] = parseFloat(low);
+
+                                    Algorithms.checkEntry(obj)
+                                }
+                            }
+
+                        }).catch((err) => {
+                            console.log(err)
+                        })
+
+
+                    }
                 }
             });
         }

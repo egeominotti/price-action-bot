@@ -27,8 +27,10 @@ async function ema(close, token, time, periodEma, limitCandle, arrayCache) {
 
         if (arrayCache[key] !== undefined) {
 
-            arrayCache[key].pop();
-            arrayCache[key].push(parseFloat(close))
+            if (close !== undefined) {
+                arrayCache[key].pop();
+                arrayCache[key].push(parseFloat(close))
+            }
 
             let ema = EMA.calculate({period: periodEma, values: arrayCache[key]})
             resolve(_.last(ema))
