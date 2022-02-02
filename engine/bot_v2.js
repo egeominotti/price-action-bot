@@ -461,7 +461,7 @@ async function engine(coin) {
 
                     calculateEMA(key, currentClose, symbol, interval, 300, 200).then((ema) => {
 
-                        console.log(ema)
+                        //console.log(ema)
 
                         if (currentClose < ema) {
                             recordPattern[key] = null;
