@@ -748,17 +748,17 @@ async function downloadCandlestick(timeframe, token, candles) {
         let endpointsArr = [];
 
         // // // // terminate websocket
-        setInterval(function () {
-            endpointsArr = []
-            // Terminate all websocket endpoints, every 6 sec
-            let endpoints = binance.websockets.subscriptions();
-            for (let endpoint in endpoints) {
-                //console.log("..websocket: " + endpoint);
-                endpointsArr.push(endpoint)
-                //let ws = endpoints[endpoint];
-                //ws.terminate();
-            }
-        }, 1000);
+        // setInterval(function () {
+        //     endpointsArr = []
+        //     // Terminate all websocket endpoints, every 6 sec
+        //     let endpoints = binance.websockets.subscriptions();
+        //     for (let endpoint in endpoints) {
+        //         //console.log("..websocket: " + endpoint);
+        //         endpointsArr.push(endpoint)
+        //         //let ws = endpoints[endpoint];
+        //         //ws.terminate();
+        //     }
+        // }, 1000);
 
         exchangeInfoFull().then(async () => {
 
@@ -793,11 +793,11 @@ async function downloadCandlestick(timeframe, token, candles) {
                             engine(token);
                         }
                     }).catch((err) => {
-                    });
 
+                    });
                 }
 
-            }, 3000)
+            }, 1000)
 
 
         }).catch((err) => {
