@@ -4,27 +4,35 @@ const Strategy = require("../strategy/strategy");
 const Telegram = require("../utility/telegram");
 const Bot = require("../models/bot");
 const Indicators = require('../indicators/ema');
-const Binance = require("node-binance-api");
 
-
-
-
-const binance = new Binance().options({
-    verbose: true,
-    log: log => {
-        console.log(log);
-    }
-});
-
+let emaArray = {};
 
 /**
  *
  * @param obj
  */
 function queue(
-  obj,
-
+    obj,
 ) {
+    let close = obj.close;
+    let open = obj.open;
+    let low = obj.low;
+    let high = obj.high;
+    let key = obj.key;
+    let binance = obj.binance;
+    let symbol = obj.symbol;
+    let interval = obj.interval;
+    let exclusionList = obj.exclusionList;
+    let indexArray = obj.indexArray;
+    let recordPattern = obj.recordPattern;
+    let tokenArray = obj.tokenArray;
+    let sizeTrade = obj.sizeTrade;
+    let exchangeInfoArray = obj.exchangeInfoArray;
+    let entryArray = obj.entryArray;
+    let tradeEnabled = obj.tradeEnabled;
+    let telegramEnabled = obj.telegramEnabled;
+    let entryCoins = obj.entryCoins;
+    let dbKey = obj.dbKey;
 
     if (exclusionList[key] === true) {
 
@@ -41,17 +49,17 @@ function queue(
 
     if (exclusionList[key] === false && entryCoins[key] === false) {
 
-         Indicators.ema(currentClose, symbol, interval, 200, 300, emaArray).then((ema) => {
+        Indicators.ema(close, symbol, interval, 200, 300, emaArray).then((ema) => {
 
-            if (currentClose < ema) {
+            if (close < ema) {
                 recordPattern[key] = null;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
             }
 
-            if (currentClose > ema) {
+            if (close > ema) {
 
-                console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + currentClose)
+                console.log("SCANNING... ema below close price: " + obj.symbol + " - " + obj.interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + currentClose)
 
                 // Cerco il pattern per la n-esima pair se il prezzo è sopra l'ema
                 if (recordPattern[key] == null) {
@@ -107,12 +115,12 @@ function queue(
                             recordPattern[key] = null;
                         } else {
 
-                            let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, currentClose, recordPatternValue)
+                            let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
 
                             if (isStrategyBreakoutFound) {
 
                                 if (tradeEnabled) {
-                                    let buyAmount = binance.roundStep(sizeTrade / currentClose, exchangeInfoArray[symbol].stepSize);
+                                    let buyAmount = binance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
                                     binance.marketBuy(symbol, buyAmount);
                                 }
 
@@ -152,7 +160,7 @@ function queue(
             }
         ).finally(
             async () => {
-                await Bot.findOneAndUpdate({name: keyDbModel},
+                await Bot.findOneAndUpdate({name: dbKey},
                     {
                         recordPattern: recordPattern,
                         indexArray: indexArray,

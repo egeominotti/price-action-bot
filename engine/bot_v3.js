@@ -29,16 +29,15 @@ let timeFrame = [
 
 let tokenArray = {}
 let exchangeInfoArray = {}
-let emaArray = {}
-
+let emaDaily = {}
 let indexArray = {}
 let recordPattern = {}
 let exclusionList = {}
 let entryCoins = {}
-
 let takeProfitArray = {}
 let stopLossArray = {}
 let entryArray = {}
+
 let telegramEnabled = true;
 let tradeEnabled = false;
 
@@ -48,11 +47,12 @@ let totalPercentage = 0
 let sumSizeTrade = 0;
 const sizeTrade = 200;
 
-let emaDaily = {}
+
 let dbKey = 'prova';
 
 
 let obj = {
+    'binance': binance,
     //Settings
     'balance': balance,
     'sizeTrade': sizeTrade,
@@ -108,7 +108,6 @@ binance.prevDay(false, async (error, prevDay) => {
                 if (interval === '5m') {
 
                     Indicators.ema(currentClose, symbol, interval, 5, 100, emaDaily).then((ema) => {
-
 
                         if (currentClose > ema) {
                             console.log(symbol)
