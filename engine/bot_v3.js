@@ -4,6 +4,7 @@ const Indicators = require('../indicators/ema');
 const Algorithms = require('../algorithm/algorithm');
 const Exchange = require("../exchange/binance");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 
 mongoose.connect(process.env.URI_MONGODB);
 
@@ -123,6 +124,8 @@ Exchange.exchangeInfo(obj).then(async () => {
                         if (recordPattern[key] === null) {
 
                             if (parseFloat(close) > ema) {
+
+                                console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + _.round(ema, 4) + " - Close: " + close)
 
                                 obj['symbol'] = symbol;
                                 obj['key'] = key;

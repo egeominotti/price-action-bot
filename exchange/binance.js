@@ -65,7 +65,6 @@ function exchangeInfo(obj) {
                         entryArray[key] = null;
                     }
                 }
-                console.log(exchangeInfoArray)
 
                 // const dbData = await Bot.findOne({name: dbKey});
                 // if (dbData !== null) {
