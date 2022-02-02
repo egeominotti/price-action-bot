@@ -74,7 +74,7 @@ if (process.env.DEBUG === 'false') {
 
 
 let tradeEnabled = false;
-let telegramEnabled = false;
+let telegramEnabled = true;
 let coinsArray = coins.getCoins()
 
 let tokenArray = {}
@@ -713,7 +713,7 @@ function init() {
 
     try {
 
-        schedule.scheduleJob('0 1 * * *', function (fireDate) {
+        schedule.scheduleJob('* 1 * * *', function (fireDate) {
             init();
             console.log('System update from new pair');
         });
