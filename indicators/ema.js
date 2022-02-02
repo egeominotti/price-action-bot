@@ -12,7 +12,6 @@ const binance = new Binance().options({
 
 /**
  *
- * @param key
  * @param close
  * @param token
  * @param time

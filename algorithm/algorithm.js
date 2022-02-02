@@ -4,21 +4,27 @@ const Strategy = require("../strategy/strategy");
 const Telegram = require("../utility/telegram");
 const Bot = require("../models/bot");
 const Indicators = require('../indicators/ema');
-let tokenArray = {}
-let exchangeInfoArray = {}
-let emaArray = {}
-
-let indexArray = {}
-let recordPattern = {}
-let exclusionList = {}
-let entryCoins = {}
-
-let takeProfitArray = {}
-let stopLossArray = {}
-let entryArray = {}
+const Binance = require("node-binance-api");
 
 
-function queue(key, currentClose, symbol, interval, keyDbModel) {
+
+
+const binance = new Binance().options({
+    verbose: true,
+    log: log => {
+        console.log(log);
+    }
+});
+
+
+/**
+ *
+ * @param obj
+ */
+function queue(
+  obj,
+
+) {
 
     if (exclusionList[key] === true) {
 
@@ -35,7 +41,7 @@ function queue(key, currentClose, symbol, interval, keyDbModel) {
 
     if (exclusionList[key] === false && entryCoins[key] === false) {
 
-         Indicators.ema(key, currentClose, symbol, interval, 200, 200, emaArray).then((ema) => {
+         Indicators.ema(currentClose, symbol, interval, 200, 300, emaArray).then((ema) => {
 
             if (currentClose < ema) {
                 recordPattern[key] = null;
@@ -54,12 +60,12 @@ function queue(key, currentClose, symbol, interval, keyDbModel) {
 
                     let ticker = {
                         'index': parseInt(indexArray[key]),
-                        'symbol': symbol.toString(),
-                        'open': parseFloat(open),
-                        'close': parseFloat(close),
-                        'low': parseFloat(low),
-                        'high': parseFloat(high),
-                        'interval': interval.toString(),
+                        'symbol': symbol,
+                        'open': open,
+                        'close': close,
+                        'low': low,
+                        'high': high,
+                        'interval': interval,
                         'time': new Date()
                     }
 
@@ -158,4 +164,8 @@ function queue(key, currentClose, symbol, interval, keyDbModel) {
         )
     }
 
+}
+
+module.exports = {
+    queue
 }
