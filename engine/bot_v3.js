@@ -1,18 +1,10 @@
 const Binance = require('node-binance-api');
-const express = require('express')
-const cors = require('cors')
-const _ = require("lodash");
 const Indicators = require('../indicators/ema');
 const Algorithms = require('../algorithm/algorithm');
-const {EMA} = require("technicalindicators");
-const Bot = require("../models/bot");
 const Telegram = require("../utility/telegram");
+const Exchange = require("../exchange/binance");
 const mongoose = require("mongoose");
 
-const app = express();
-app.use(cors());
-const port = 3000;
-app.listen(port)
 
 mongoose.connect(process.env.URI_MONGODB);
 
@@ -32,6 +24,15 @@ let timeFrame = [
     '1d',
 ];
 
+let telegramEnabled = true;
+let tradeEnabled = false;
+
+let balance = 3000
+let variableBalance = 0;
+let totalPercentage = 0
+let sumSizeTrade = 0;
+const sizeTrade = 200;
+
 let tokenArray = {}
 let exchangeInfoArray = {}
 let emaDaily = {}
@@ -43,20 +44,12 @@ let takeProfitArray = {}
 let stopLossArray = {}
 let entryArray = {}
 
-let telegramEnabled = true;
-let tradeEnabled = false;
-
-let balance = 3000
-let variableBalance = 0;
-let totalPercentage = 0
-let sumSizeTrade = 0;
-const sizeTrade = 200;
-
 
 let dbKey = 'prova';
 
 
 let obj = {
+
     'binance': binance,
     //Settings
     'balance': balance,
@@ -67,6 +60,7 @@ let obj = {
     'telegramEnabled': telegramEnabled,
     'tradeEnabled': tradeEnabled,
     // Array Global
+    'timeFrame': timeFrame,
     'exclusionList': exclusionList,
     'recordPattern': recordPattern,
     'indexArray': indexArray,
@@ -78,97 +72,11 @@ let obj = {
     'exchangeInfoArray': exchangeInfoArray,
     //Info DB
     'dbKey': dbKey,
-}
 
-function exchangeInfoFull() {
-
-    return new Promise(async function (resolve, reject) {
-
-        binance.exchangeInfo(async function (error, data) {
-
-                if (error !== null) reject(error);
-
-                for (let obj of data.symbols) {
-
-                    if (obj.status === 'TRADING' && obj.quoteAsset === 'USDT') {
-                        let filters = {status: obj.status};
-                        for (let filter of obj.filters) {
-                            if (filter.filterType === "MIN_NOTIONAL") {
-                                filters.minNotional = filter.minNotional;
-                            } else if (filter.filterType === "PRICE_FILTER") {
-                                filters.minPrice = filter.minPrice;
-                                filters.maxPrice = filter.maxPrice;
-                                filters.tickSize = filter.tickSize;
-                            } else if (filter.filterType === "LOT_SIZE") {
-                                filters.stepSize = filter.stepSize;
-                                filters.minQty = filter.minQty;
-                                filters.maxQty = filter.maxQty;
-                            }
-                        }
-                        filters.baseAssetPrecision = obj.baseAssetPrecision;
-                        filters.quoteAssetPrecision = obj.quoteAssetPrecision;
-                        filters.icebergAllowed = obj.icebergAllowed;
-                        exchangeInfoArray[obj.symbol] = filters;
-                    }
-                }
-
-                const dbData = await Bot.findOne({name: dbKey});
-                if (dbData !== null) {
-
-                    tokenArray = dbData.tokenArray;
-                    indexArray = dbData.indexArray;
-                    exchangeInfoArray = dbData.exchangeInfoArray;
-                    recordPattern = dbData.recordPattern;
-                    exclusionList = dbData.exclusionList;
-                    entryCoins = dbData.entryCoins;
-                    takeProfitArray = dbData.takeProfitArray;
-                    stopLossArray = dbData.stopLossArray;
-                    entryArray = dbData.entryArray;
-
-                } else {
-
-                    for (let time of timeFrame) {
-                        for (const token in exchangeInfoArray) {
-
-                            let key = token + "_" + time
-
-                            exclusionList[key] = false;
-                            indexArray[key] = -1;
-                            tokenArray[key] = [];
-                            entryCoins[key] = false;
-                            recordPattern[key] = null;
-                            takeProfitArray[key] = null;
-                            stopLossArray[key] = null;
-                            entryArray[key] = null;
-                        }
-                    }
-
-                    await Bot.create({
-                        name: dbKey,
-                        exchangeInfoArray: exchangeInfoArray,
-                        tokenArray: tokenArray,
-                        indexArray: indexArray,
-                        recordPattern: recordPattern,
-                        exclusionList: exclusionList,
-                        entryCoins: entryCoins,
-                        takeProfitArray: takeProfitArray,
-                        stopLossArray: stopLossArray,
-                        entryArray: entryArray,
-                    })
-                }
-
-                // let startMessage = 'Multipattern Bot Pattern Analysis Engine System Started';
-                // Telegram.sendMessage(startMessage)
-
-                resolve()
-            }
-        );
-
-    });
 }
 
 
-exchangeInfoFull().then(async () => {
+Exchange.exchangeInfo(obj).then(async () => {
 
     binance.prevDay(false, async (error, prevDay) => {
 
@@ -200,24 +108,26 @@ exchangeInfoFull().then(async () => {
                 obj['symbol'] = symbol;
                 obj['key'] = key;
                 obj['interval'] = interval;
-
                 obj['close'] = parseFloat(close);
                 obj['high'] = parseFloat(high);
                 obj['open'] = parseFloat(open);
                 obj['low'] = parseFloat(low);
 
-                Algorithms.checkExit(obj)
+                if (entryArray[key] !== null) {
+                    Algorithms.checkExit(obj)
+                }
 
                 if (isFinal) {
 
-                    if (interval === '5m') {
+                    Indicators.ema(parseFloat(close), symbol, interval, 5, 100, emaDaily).then((ema) => {
 
-                        Indicators.ema(parseFloat(close), symbol, interval, 5, 100, emaDaily).then((ema) => {
+                        if (entryArray[key] === null) {
 
                             if (parseFloat(close) > ema) {
 
-                                console.log(symbol)
-
+                                obj['symbol'] = symbol;
+                                obj['key'] = key;
+                                obj['interval'] = interval;
                                 obj['close'] = parseFloat(close);
                                 obj['high'] = parseFloat(high);
                                 obj['open'] = parseFloat(open);
@@ -225,17 +135,18 @@ exchangeInfoFull().then(async () => {
 
                                 Algorithms.checkEntry(obj)
                             }
+                        }
 
-                        }).catch((err) => {
-                            console.log(err)
-                        })
-                    }
+                    }).catch((err) => {
+                        console.log(err)
+                    })
                 }
             });
         }
     });
 
 
-}).catch(() => {
+}).catch((err) => {
+    console.log(err)
 });
 
