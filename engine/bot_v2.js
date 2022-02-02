@@ -349,7 +349,7 @@ async function calculateEMA(key, close, token, time, candle, period) {
     return new Promise(function (resolve, reject) {
 
         // TODO: da ricontrollare
-        if (emaArray[key] !== null) {
+        if (emaArray[key] !== undefined) {
             emaArray[key].pop();
             emaArray[key].push(parseFloat(close))
             let ema = EMA.calculate({period: period, values: emaArray[key]})
