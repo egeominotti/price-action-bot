@@ -4,14 +4,245 @@ const Strategy = require("../strategy/strategy");
 const Telegram = require("../utility/telegram");
 const Bot = require("../models/bot");
 const Indicators = require('../indicators/ema');
+const Logger = require("../models/logger");
 
 let emaArray = {};
+
+function takeProfit(obj) {
+
+    let close = obj.close;
+    let key = obj.key;
+    let symbol = obj.symbol;
+    let interval = obj.interval;
+    let exclusionList = obj.exclusionList;
+    let recordPattern = obj.recordPattern;
+    let balance = obj.balance;
+    let takeProfitArray = obj.takeProfitArray;
+    let telegramEnabled = obj.telegramEnabled;
+    let sumSizeTrade = obj.sumSizeTrade;
+    let sizeTrade = obj.sizeTrade;
+    let totalPercentage = obj.totalPercentage;
+
+    let entryprice = recordPattern['entryprice']
+    let entrypricedate = recordPattern['entrypricedate']
+    let takeprofit = recordPattern['takeprofit']
+    let strategy = recordPattern['strategy']
+
+    if (close >= takeprofit) {
+
+        let finaleTradeValue;
+
+        let takeProfitPercentage = (takeprofit - entryprice) / entryprice
+        let finaleSizeTrade = (sizeTrade / entryprice) * takeprofit;
+
+        takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
+        totalPercentage += takeProfitPercentage
+
+        finaleTradeValue = finaleSizeTrade - sizeTrade
+
+        sumSizeTrade += finaleTradeValue;
+        let newBalance = _.round(balance + sumSizeTrade, 2)
+
+        // update variable balance
+        variableBalance = newBalance
+
+        let takeprofitObj = {
+            type: 'TAKEPROFIT',
+            symbol: symbol,
+            interval: interval,
+            balance: newBalance,
+            entryprice: entryprice,
+            entrypricedate: entrypricedate,
+            takeprofitvalue: takeprofit,
+            takeprofitpercentage: takeProfitPercentage,
+            takeprofitdate: new Date(),
+            hh: recordPattern['hh'],
+            ll: recordPattern['ll'],
+            lh: recordPattern['lh'],
+            hl: recordPattern['hl'],
+            strategy: strategy
+        }
+
+        const logger = new Logger(takeprofitObj)
+
+        logger.save().then((result) => {
+            //console.log(result)
+        }).catch((err) => {
+            console.log(err)
+        });
+
+        takeProfitArray[key] = takeprofitObj
+        // se fa take profit escludo il pair fino a mezzanotte
+        exclusionList[key] = true;
+
+        if (telegramEnabled) {
+            let message = "TAKEPROFIT: " + symbol + "\n" +
+                "Interval: " + interval + "\n" +
+                "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
+                "Balance: " + newBalance + "\n" +
+                "Entry Price: " + entryprice + "\n" +
+                "Entry date: " + entrypricedate.toUTCString() + "\n" +
+                "hh: " + recordPattern['hh'] + "\n" +
+                "ll: " + recordPattern['ll'] + "\n" +
+                "lh: " + recordPattern['lh'] + "\n" +
+                "hl: " + recordPattern['hl']
+
+            Telegram.sendMessage(message)
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+
+function stopLoss(obj) {
+
+    let close = obj.close;
+    let key = obj.key;
+    let symbol = obj.symbol;
+    let interval = obj.interval;
+    let recordPattern = obj.recordPattern;
+    let balance = obj.balance;
+    let stopLossArray = obj.stopLossArray;
+    let telegramEnabled = obj.telegramEnabled;
+    let variableBalance = obj.variableBalance;
+    let sumSizeTrade = obj.sumSizeTrade;
+    let sizeTrade = obj.sizeTrade;
+    let totalPercentage = obj.totalPercentage;
+
+    let entryprice = recordPattern['entryprice']
+    let entrypricedate = recordPattern['entrypricedate']
+    let stoploss = recordPattern['stoploss']
+    let strategy = recordPattern['strategy']
+
+    // Stop Loss
+    if (close <= stoploss) {
+
+        let finaleTradeValue;
+        let stopLossPercentage = (stoploss - entryprice) / entryprice
+        stopLossPercentage = _.round(stopLossPercentage * 100, 2)
+        let finaleSizeTrade = (sizeTrade / entryprice) * stoploss;
+        finaleTradeValue = finaleSizeTrade - sizeTrade
+        totalPercentage += stopLossPercentage
+
+        sumSizeTrade += finaleTradeValue;
+        let newBalance = _.round(balance + sumSizeTrade, 2)
+
+        // update variable balance
+        variableBalance = newBalance
+
+        let stopLossObj = {
+            type: 'STOPLOSS',
+            symbol: symbol,
+            interval: interval,
+            balance: newBalance,
+            entryprice: entryprice,
+            entrypricedate: entrypricedate,
+            stoplossvalue: stoploss,
+            stoplosspercentage: stopLossPercentage,
+            stoplossdate: new Date(),
+            hh: recordPattern['hh'],
+            ll: recordPattern['ll'],
+            lh: recordPattern['lh'],
+            hl: recordPattern['hl'],
+            strategy: strategy
+        }
+
+        const logger = new Logger(stopLossObj)
+
+        logger.save().then((result) => {
+            console.log(result)
+        }).catch((err) => {
+            console.log(err)
+        });
+
+        stopLossArray[key] = stopLossObj
+        recordPattern[key] = null;
+
+        if (telegramEnabled) {
+            let message = "STOPLOSS: " + symbol + "\n" +
+                "Interval: " + interval + "\n" +
+                "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
+                "Balance: " + newBalance + "\n" +
+                "Entry Price: " + entryprice + "\n" +
+                "Entry date: " + entrypricedate.toUTCString() + "\n" +
+                "hh: " + recordPattern['hh'] + "\n" +
+                "ll: " + recordPattern['ll'] + "\n" +
+                "lh: " + recordPattern['lh'] + "\n" +
+                "hl: " + recordPattern['hl']
+
+            Telegram.sendMessage(message)
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+
+async function checkExit(obj) {
+
+    let key = obj.key;
+    let binance = obj.binance;
+    let symbol = obj.symbol;
+    let exclusionList = obj.exclusionList;
+    let recordPattern = obj.recordPattern;
+    let exchangeInfoArray = obj.exchangeInfoArray;
+    let entryArray = obj.entryArray;
+    let tradeEnabled = obj.tradeEnabled;
+    let stopLossArray = obj.stopLossArray;
+    let takeProfitArray = obj.takeProfitArray;
+    let entryCoins = obj.entryCoins;
+    let dbKey = obj.dbKey;
+
+
+    // check in real time - takeprofit and stoploss
+    if (recordPattern[key] !== null) {
+
+        let recordPatternValue = recordPattern[key];
+        if (recordPatternValue['confirmed'] === true) {
+
+            let stoploss = stopLoss(obj)
+            let takeprofit = takeProfit(obj)
+
+            if (stoploss || takeprofit) {
+
+                if (tradeEnabled) {
+                    binance.balance((error, balances) => {
+                        if (error) return console.error(error);
+                        //console.log(exchangeInfoArray[symbol])
+                        let sellAmount = binance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
+                        binance.marketSell(symbol, sellAmount);
+                    });
+                }
+
+                entryArray[key] = null;
+                recordPattern[key] = null;
+                entryCoins[key] = false;
+
+                await Bot.findOneAndUpdate({name: dbKey},
+                    {
+                        recordPattern: recordPattern,
+                        exclusionList: exclusionList,
+                        entryArray: entryArray,
+                        entryCoins: entryCoins,
+                        stopLossArray: stopLossArray,
+                        takeProfitArray: takeProfitArray,
+                    });
+            }
+
+        }
+    }
+}
 
 /**
  *
  * @param obj
  */
-function queue(
+function checkEntry(
     obj,
 ) {
     let close = obj.close;
@@ -44,13 +275,13 @@ function queue(
         if (hour === 0 && minutes === 0) {
             exclusionList[key] = false;
         }
-
     }
 
     if (exclusionList[key] === false && entryCoins[key] === false) {
 
         Indicators.ema(close, symbol, interval, 200, 300, emaArray).then((ema) => {
-
+            console.log(close)
+            console.log(ema)
             if (close < ema) {
                 recordPattern[key] = null;
                 indexArray[key] = -1;
@@ -58,8 +289,8 @@ function queue(
             }
 
             if (close > ema) {
-
-                console.log("SCANNING... ema below close price: " + obj.symbol + " - " + obj.interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + currentClose)
+                console.log(close)
+                console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + close)
 
                 // Cerco il pattern per la n-esima pair se il prezzo è sopra l'ema
                 if (recordPattern[key] == null) {
@@ -111,7 +342,7 @@ function queue(
                     let recordPatternValue = recordPattern[key];
                     if (recordPatternValue['confirmed'] === false) {
 
-                        if (low < recordPatternValue['ll'] || currentClose > recordPatternValue['hh']) {
+                        if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
                             recordPattern[key] = null;
                         } else {
 
@@ -131,7 +362,7 @@ function queue(
                                 if (telegramEnabled) {
                                     let message = "ENTRY: " + symbol + "\n" +
                                         "Interval: " + interval + "\n" +
-                                        "Entryprice: " + currentClose + "\n" +
+                                        "Entryprice: " + close + "\n" +
                                         "Takeprofit: " + recordPatternValue['takeprofit'] + "\n" +
                                         "Stoploss:  " + recordPatternValue['stoploss'] + "\n" +
                                         "hh: " + recordPatternValue['hh'] + "\n" +
@@ -175,5 +406,6 @@ function queue(
 }
 
 module.exports = {
-    queue
+    checkEntry,
+    checkExit
 }
