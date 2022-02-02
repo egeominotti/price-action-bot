@@ -347,13 +347,13 @@ async function calculateEMA(key, close, token, time, candle, period) {
         // fix it
 
         if (emaArray[key] !== null) {
-            console.log("Calcolo ema dalla cache")
             emaArray[key].pop();
             emaArray[key].push(parseFloat(close))
             let ema = EMA.calculate({period: period, values: emaArray[key]})
             resolve(_.last(ema))
 
         } else {
+
             binance.candlesticks(token, time, (error, ticks, symbol) => {
                 console.log("Scarico le candele")
                 let closeArray = [];
