@@ -38,7 +38,7 @@ let keyDbModel = '';
 let timeFrame = [];
 
 if (process.env.DEBUG === 'true') {
-    keyDbModel = 'bot_development';
+    keyDbModel = 'bot_v2_development';
     timeFrame = [
         '5m',
     ]
@@ -46,7 +46,7 @@ if (process.env.DEBUG === 'true') {
 
 if (process.env.DEBUG === 'false') {
 
-    keyDbModel = 'bot_production';
+    keyDbModel = 'bot_v2_production';
     timeFrame = [
         '5m',
         '15m',
@@ -348,7 +348,7 @@ async function calculateEMA(key, close, token, time, candle, period) {
 
         if (emaArray[key] !== null) {
             console.log("Calcolo ema dalla cache")
-            emaArray[key].shift();
+            emaArray[key].pop();
             emaArray[key].push(parseFloat(close))
             let ema = EMA.calculate({period: period, values: emaArray[key]})
             resolve(_.last(ema))
@@ -655,10 +655,65 @@ function exchangeInfoFull() {
 
     try {
 
-        // schedule.scheduleJob('* * * * *', function (fireDate) {
-        //     console.log('This job was supposed to run at ' + fireDate + ', but actually ran at ' + new Date());
-        // });
+        schedule.scheduleJob('0 1 * * *', function (fireDate) {
 
+            exchangeInfoFull().then(async () => {
+
+                let tickerPrice = await binance.prices();
+
+                for (const token in exchangeInfoArray) {
+
+                    downloadCandlestick('1d', token, 150).then((result) => {
+
+                        if (result !== undefined) {
+
+                            let ema = EMA.calculate({period: 5, values: result})
+                            let lastEma = _.last(ema);
+
+                            if (lastEma !== undefined && lastEma > 0) {
+
+                                if (tickerPrice[token] !== null && tickerPrice[token] > 0) {
+
+                                    let currentPrice = tickerPrice[token]
+                                    if (currentPrice > lastEma) {
+                                        return token
+                                    }
+                                }
+
+                            }
+                        }
+                        return undefined;
+
+                    }).then((result) => {
+
+                        if (result !== undefined) {
+
+                            for (let time of timeFrame) {
+
+                                let key = token + "_" + time
+                                exclusionList[key] = false;
+                                entryCoins[key] = false;
+                                indexArray[key] = -1;
+                                tokenArray[key] = [];
+                                emaArray[key] = null;
+                                recordPattern[key] = null;
+                                takeProfitArray[key] = null;
+                                stopLossArray[key] = null;
+                                entryArray[key] = null;
+                            }
+
+                            //TODO: non deve rientrare nell'engine se giò esiste entryCoins
+                            engine(token);
+                        }
+
+                    }).catch(() => {
+                    });
+                }
+            }).catch(() => {
+            });
+
+            console.log('System update from new pair');
+        });
 
         // // // // terminate websocket
         // setInterval(function () {
@@ -673,56 +728,6 @@ function exchangeInfoFull() {
         //     }
         // }, 1000);
 
-        await exchangeInfoFull().then(async () => {
-
-            let tickerPrice = await binance.prices();
-
-            for (const token in exchangeInfoArray) {
-
-                downloadCandlestick('1d', token, 150).then((result) => {
-
-                    if (result !== undefined) {
-
-                        let ema = EMA.calculate({period: 5, values: result})
-                        let lastEma = _.last(ema);
-
-                        if (lastEma !== undefined && lastEma > 0) {
-                            if (tickerPrice[token] !== null && tickerPrice[token] > 0) {
-
-                                let currentPrice = tickerPrice[token]
-                                if (currentPrice > lastEma) {
-                                    return token
-                                }
-                            }
-                        }
-                    }
-                    return undefined;
-
-                }).then((result) => {
-
-                    if (result !== undefined) {
-
-                        for (let time of timeFrame) {
-                            let key = token + "_" + time
-                            exclusionList[key] = false;
-                            entryCoins[key] = false;
-                            indexArray[key] = -1;
-                            tokenArray[key] = [];
-                            emaArray[key] = null;
-                            recordPattern[key] = null;
-                            takeProfitArray[key] = null;
-                            stopLossArray[key] = null;
-                            entryArray[key] = null;
-                        }
-
-                        engine(token);
-                    }
-
-                }).catch(() => {
-                });
-            }
-        }).catch(() => {
-        });
 
     } catch (e) {
         console.log(e)
