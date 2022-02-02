@@ -355,9 +355,11 @@ async function calculateEMA(key, close, token, time, candle, period) {
         } else {
 
             binance.candlesticks(token, time, (error, ticks, symbol) => {
-                console.log("Scarico le candele")
+
+                if (error !== null) reject(error)
+                if (_.isEmpty(ticks)) reject(error)
+
                 let closeArray = [];
-                if (error !== null) reject()
 
                 if (!_.isEmpty(ticks)) {
 
