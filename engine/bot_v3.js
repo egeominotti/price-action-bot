@@ -1,10 +1,9 @@
+//const Telegram = require("../utility/telegram");
 const Binance = require('node-binance-api');
 const Indicators = require('../indicators/ema');
 const Algorithms = require('../algorithm/algorithm');
-const Telegram = require("../utility/telegram");
 const Exchange = require("../exchange/binance");
 const mongoose = require("mongoose");
-
 
 mongoose.connect(process.env.URI_MONGODB);
 
