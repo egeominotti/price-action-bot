@@ -651,69 +651,74 @@ function exchangeInfoFull() {
     });
 }
 
+function init() {
+
+    exchangeInfoFull().then(async () => {
+
+        let tickerPrice = await binance.prices();
+
+        for (const token in exchangeInfoArray) {
+
+            downloadCandlestick('1d', token, 150).then((result) => {
+
+                if (result !== undefined) {
+
+                    let ema = EMA.calculate({period: 5, values: result})
+                    let lastEma = _.last(ema);
+
+                    if (lastEma !== undefined && lastEma > 0) {
+
+                        if (tickerPrice[token] !== null && tickerPrice[token] > 0) {
+
+                            let currentPrice = tickerPrice[token]
+                            if (currentPrice > lastEma) {
+                                return token
+                            }
+                        }
+
+                    }
+                }
+                return undefined;
+
+            }).then((result) => {
+
+                if (result !== undefined) {
+
+                    for (let time of timeFrame) {
+
+                        let key = token + "_" + time
+                        exclusionList[key] = false;
+                        entryCoins[key] = false;
+                        indexArray[key] = -1;
+                        tokenArray[key] = [];
+                        emaArray[key] = null;
+                        recordPattern[key] = null;
+                        takeProfitArray[key] = null;
+                        stopLossArray[key] = null;
+                        entryArray[key] = null;
+                    }
+
+                    //TODO: non deve rientrare nell'engine se giò esiste entryCoins
+                    engine(token);
+                }
+
+            }).catch(() => {
+            });
+        }
+    }).catch(() => {
+    });
+}
+
 (async () => {
 
     try {
 
         schedule.scheduleJob('0 1 * * *', function (fireDate) {
-
-            exchangeInfoFull().then(async () => {
-
-                let tickerPrice = await binance.prices();
-
-                for (const token in exchangeInfoArray) {
-
-                    downloadCandlestick('1d', token, 150).then((result) => {
-
-                        if (result !== undefined) {
-
-                            let ema = EMA.calculate({period: 5, values: result})
-                            let lastEma = _.last(ema);
-
-                            if (lastEma !== undefined && lastEma > 0) {
-
-                                if (tickerPrice[token] !== null && tickerPrice[token] > 0) {
-
-                                    let currentPrice = tickerPrice[token]
-                                    if (currentPrice > lastEma) {
-                                        return token
-                                    }
-                                }
-
-                            }
-                        }
-                        return undefined;
-
-                    }).then((result) => {
-
-                        if (result !== undefined) {
-
-                            for (let time of timeFrame) {
-
-                                let key = token + "_" + time
-                                exclusionList[key] = false;
-                                entryCoins[key] = false;
-                                indexArray[key] = -1;
-                                tokenArray[key] = [];
-                                emaArray[key] = null;
-                                recordPattern[key] = null;
-                                takeProfitArray[key] = null;
-                                stopLossArray[key] = null;
-                                entryArray[key] = null;
-                            }
-
-                            //TODO: non deve rientrare nell'engine se giò esiste entryCoins
-                            engine(token);
-                        }
-
-                    }).catch(() => {
-                    });
-                }
-            }).catch(() => {
-            });
-
+            init();
             console.log('System update from new pair');
         });
+
+        init();
 
         // // // // terminate websocket
         // setInterval(function () {
