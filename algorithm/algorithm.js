@@ -22,6 +22,7 @@ function takeProfit(obj) {
     let sumSizeTrade = obj.sumSizeTrade;
     let sizeTrade = obj.sizeTrade;
     let totalPercentage = obj.totalPercentage;
+    let variableBalance = obj.variableBalance;
 
     let entryprice = recordPattern['entryprice']
     let entrypricedate = recordPattern['entrypricedate']
