@@ -676,7 +676,6 @@ function exchangeInfoFull() {
                             takeProfitArray[key] = null;
                             stopLossArray[key] = null;
                             entryArray[key] = null;
-                            emaArray[key] = null;
                         }
                     }
 
