@@ -9,12 +9,12 @@ const Bot = require("../models/bot");
 const cors = require('cors')
 const express = require("express");
 
-const app = express();
-app.use(cors());
-
 const port = 3000;
 
-app.listen(port, () => console.log(`TAS bot app listening on port ${port}!`))
+const app = express();
+app.use(cors());
+app.listen(port)
+
 mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
@@ -239,7 +239,6 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                             if (currentClose > ema) {
 
-
                                 obj['symbol'] = symbol;
                                 obj['key'] = key;
                                 obj['interval'] = interval;
@@ -248,7 +247,7 @@ Exchange.exchangeInfo(obj).then(async () => {
                                 obj['open'] = parseFloat(open);
                                 obj['low'] = parseFloat(low);
 
-                                console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
+                                //console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
 
                                 Algorithms.checkEntry(obj)
                             }
