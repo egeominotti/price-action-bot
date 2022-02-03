@@ -237,7 +237,6 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                         if (entryArray[key] === null) {
 
-                            console.log(entryArray)
                             if (currentClose > ema) {
 
 
