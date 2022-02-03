@@ -183,95 +183,88 @@ let obj = {
 }
 
 
-Exchange.exchangeInfo(obj).then(async () => {
 
-    binance.prevDay(false, async (error, prevDay) => {
 
-        if (error) return console.log(error.body);
+Exchange.exchangeInfo(obj).then(async (listPair) => {
 
-        let markets = [];
+    console.log("------------------------------------------------")
+    console.log("LOAD for scanning... " + listPair.length + " pair")
+    console.log("------------------------------------------------")
 
-        for (let obj of prevDay) {
-            let symbol = obj.symbol;
-            if (!symbol.endsWith('USDT')) continue;
-            markets.push(obj.symbol);
-        }
+    for (const time of timeFrame) {
 
-        for (const time of timeFrame) {
+        binance.websockets.candlesticks(listPair, time, (candlesticks) => {
+            let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
+            let {
+                o: open,
+                h: high,
+                l: low,
+                c: close,
+                i: interval,
+                x: isFinal,
+            } = ticks;
 
-            binance.websockets.candlesticks(markets, time, (candlesticks) => {
-                let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
-                let {
-                    o: open,
-                    h: high,
-                    l: low,
-                    c: close,
-                    i: interval,
-                    x: isFinal,
-                } = ticks;
+            let key = symbol + "_" + interval
 
-                let key = symbol + "_" + interval
+            obj['symbol'] = symbol;
+            obj['key'] = key;
+            obj['interval'] = interval;
+            obj['close'] = parseFloat(close);
+            obj['high'] = parseFloat(high);
+            obj['open'] = parseFloat(open);
+            obj['low'] = parseFloat(low);
 
-                obj['symbol'] = symbol;
-                obj['key'] = key;
-                obj['interval'] = interval;
-                obj['close'] = parseFloat(close);
-                obj['high'] = parseFloat(high);
-                obj['open'] = parseFloat(open);
-                obj['low'] = parseFloat(low);
+            if (entryArray[key] !== null) {
+                Algorithms.checkExit(obj)
+            }
 
-                if (entryArray[key] !== null) {
-                    Algorithms.checkExit(obj)
+            if (isFinal) {
+
+                let currentClose = parseFloat(close)
+                if (interval === '1d') {
+                    if (exclusionList[key] === true) exclusionList[key] = false;
+                    currentClose = undefined;
                 }
 
-                if (isFinal) {
+                Indicators.ema(currentClose, symbol, '1d', 5, 150, emaDaily).then((ema) => {
 
-                    let currentClose = parseFloat(close)
-                    if (interval === '1d') {
-                        if (exclusionList[key] === true) exclusionList[key] = false;
-                        currentClose = undefined;
+                    if (entryArray[key] === null) {
+
+                        if (currentClose > ema) {
+
+                            obj['symbol'] = symbol;
+                            obj['key'] = key;
+                            obj['interval'] = interval;
+                            obj['close'] = parseFloat(close);
+                            obj['high'] = parseFloat(high);
+                            obj['open'] = parseFloat(open);
+                            obj['low'] = parseFloat(low);
+
+                            //console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
+
+                            Algorithms.checkEntry(obj)
+                        }
                     }
 
-                    Indicators.ema(currentClose, symbol, '1d', 5, 150, emaDaily).then((ema) => {
+                    // Se la close è sotto l'ema applico il trailing stop loss | trailing take profit
+                    if (currentClose < ema) {
 
-                        if (entryArray[key] === null) {
-
-                            if (currentClose > ema) {
-
-                                obj['symbol'] = symbol;
-                                obj['key'] = key;
-                                obj['interval'] = interval;
-                                obj['close'] = parseFloat(close);
-                                obj['high'] = parseFloat(high);
-                                obj['open'] = parseFloat(open);
-                                obj['low'] = parseFloat(low);
-
-                                //console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
-
-                                Algorithms.checkEntry(obj)
-                            }
+                        if (entryArray[key] !== null) {
+                            Algorithms.forceSell(obj)
+                        } else {
+                            recordPattern[key] = null;
+                            indexArray[key] = -1;
+                            tokenArray[key] = [];
                         }
+                    }
 
-                        // Se la close è sotto l'ema applico il trailing stop loss | trailing take profit
-                        if (currentClose < ema) {
+                }).catch((err) => {
+                    console.log(err)
+                })
 
-                            if (entryArray[key] !== null) {
-                                Algorithms.forceSell(obj)
-                            } else {
-                                recordPattern[key] = null;
-                                indexArray[key] = -1;
-                                tokenArray[key] = [];
-                            }
-                        }
-
-                    }).catch((err) => {
-                        console.log(err)
-                    })
-
-                }
-            });
-        }
-    });
+            }
+        });
+    }
 
 
 }).catch((err) => {

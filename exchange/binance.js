@@ -51,8 +51,47 @@ function exchangeInfo(obj) {
                 }
 
 
+                let exscluded = [
+                    'BTCUPUSDT',
+                    'ETHUPUSDT',
+                    'ADAUPUSDT',
+                    'LINKUPUSDT',
+                    'BNBUPUSDT',
+                    'TRXUPUSDT',
+                    'XRPUPUSDT',
+                    'DOTUPUSDT',
+                    'BTCDOWNUSDT',
+                    'ETHDOWNUSDT',
+                    'ADADOWNUSDT',
+                    'LINKDOWNUSDT',
+                    'BNBDOWNUSDT',
+                    'TRXDOWNUSDT',
+                    'XRPDOWNUSDT',
+                    'DOTDOWNUSDT'
+                ]
+
+                let pairs = [];
+
+                for (const pair in exchangeInfoArray) {
+
+                    let discard = false;
+
+                    for (const exclude of exscluded) {
+                        if (pair === exclude){
+                            discard = true;
+                        }
+                    }
+
+                    if (!discard) {
+                        pairs.push(pair);
+                    }
+
+                }
+
+
                 for (let time of timeFrame) {
-                    for (const token in exchangeInfoArray) {
+                    for (const token of pairs) {
+
                         let key = token + "_" + time
 
                         exclusionList[key] = false;
@@ -114,7 +153,7 @@ function exchangeInfo(obj) {
                 // let startMessage = 'Multipattern Bot Pattern Analysis Engine System Started';
                 // Telegram.sendMessage(startMessage)
 
-                resolve()
+                resolve(pairs)
             }
         );
 
