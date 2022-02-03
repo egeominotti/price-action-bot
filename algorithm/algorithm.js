@@ -434,7 +434,9 @@ function checkEntry(
                                 entryCoins[key] = true;
                                 entryArray[key] = recordPatternValue
 
+                                console.log("--------------------------------------------------------------")
                                 console.log("ENTRY FOUND... symbol - " + symbol + " timeframe - " + interval)
+                                console.log("--------------------------------------------------------------")
 
                                 if (telegramEnabled) {
                                     let message = "ENTRY: " + symbol + "\n" +
