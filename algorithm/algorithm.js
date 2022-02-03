@@ -413,7 +413,6 @@ function checkEntry(
                 }
 
 
-                // Se il pattern esiste provo a confermarlo sempre se il prezzo è sopra l'ema
                 if (recordPattern[key] != null) {
 
                     let recordPatternValue = recordPattern[key];
