@@ -367,9 +367,9 @@ function checkEntry(
             }
 
             if (close > ema) {
+
                 console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + close)
 
-                // Cerco il pattern per la n-esima pair se il prezzo è sopra l'ema
                 if (recordPattern[key] == null) {
 
                     indexArray[key] += 1
@@ -433,8 +433,9 @@ function checkEntry(
                                 }
 
                                 entryCoins[key] = true;
-                                // store entry
                                 entryArray[key] = recordPatternValue
+
+                                console.log("ENTRY FOUND... symbol - " + symbol + " timeframe - " + interval)
 
                                 if (telegramEnabled) {
                                     let message = "ENTRY: " + symbol + "\n" +
@@ -463,11 +464,11 @@ function checkEntry(
                 recordPattern[key] = null;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
-
                 console.log("Error: Can't calculate EMA for symbol rest engine for: " + error)
             }
         ).finally(
             async () => {
+
                 await Bot.findOneAndUpdate({name: dbKey},
                     {
                         recordPattern: recordPattern,

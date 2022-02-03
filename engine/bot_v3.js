@@ -227,7 +227,6 @@ Exchange.exchangeInfo(obj).then(async () => {
                 if (isFinal) {
 
                     let currentClose = parseFloat(close)
-
                     if (interval === '1d') {
                         if (exclusionList[key] === true) exclusionList[key] = false;
                         currentClose = undefined;
