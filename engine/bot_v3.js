@@ -187,9 +187,9 @@ let obj = {
 
 Exchange.exchangeInfo(obj).then(async (listPair) => {
 
-    console.log("------------------------------------------------")
-    console.log("LOAD for scanning... " + listPair.length + " pair")
-    console.log("------------------------------------------------")
+    console.log("----------------------------------------------------")
+    console.log("LOADED for scanning... " + listPair.length + " pair")
+    console.log("---------------------------------------------------")
 
     for (const time of timeFrame) {
 
