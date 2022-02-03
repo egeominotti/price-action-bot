@@ -114,42 +114,42 @@ app.get('/trade/emergency', async (req, res) => {
 
 
 app.get('/trade/entry', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
+    const dbData = await Bot.findOne({name: dbKey});
     res.send(dbData.entryArray);
 });
 
 app.get('/trade/takeprofit', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
+    const dbData = await Bot.findOne({name: dbKey});
     res.send(dbData.takeProfitArray);
 });
 
 app.get('/trade/stoploss', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
+    const dbData = await Bot.findOne({name: dbKey});
     res.send(dbData.stopLossArray);
 });
 
 app.get('/tokenArray', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
+    const dbData = await Bot.findOne({name: dbKey});
     res.send(dbData.tokenArray);
 });
 
 app.get('/exchangeInfoArray', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
+    const dbData = await Bot.findOne({name: dbKey});
     res.send(dbData.exchangeInfoArray);
 });
 
 app.get('/getExclusionList', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
+    const dbData = await Bot.findOne({name: dbKey});
     res.send(dbData.exclusionList);
 });
 
 app.get('/getEntryCoins', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
+    const dbData = await Bot.findOne({name: dbKey});
     res.send(dbData.entryCoins);
 });
 
 app.get('/getRecordPattern', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
+    const dbData = await Bot.findOne({name: dbKey});
     res.send(dbData.recordPattern);
 });
 
