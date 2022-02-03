@@ -224,10 +224,6 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
                 let closeEMA = parseFloat(close);
                 let currentClose = parseFloat(close)
 
-                // schedule.scheduleJob('0 2 * * *', function () {
-                //     console.log('The answer to life, the universe, and everything!');
-                // });
-
                 if (interval === '1d') {
                     if (exclusionList[key] === true) exclusionList[key] = false;
                 } else {
