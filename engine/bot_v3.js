@@ -237,9 +237,9 @@ Exchange.exchangeInfo(obj).then(async () => {
 
                         if (entryArray[key] === null) {
 
+                            console.log(entryArray)
                             if (currentClose > ema) {
 
-                                console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
 
                                 obj['symbol'] = symbol;
                                 obj['key'] = key;
@@ -248,6 +248,8 @@ Exchange.exchangeInfo(obj).then(async () => {
                                 obj['high'] = parseFloat(high);
                                 obj['open'] = parseFloat(open);
                                 obj['low'] = parseFloat(low);
+
+                                console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
 
                                 Algorithms.checkEntry(obj)
                             }
