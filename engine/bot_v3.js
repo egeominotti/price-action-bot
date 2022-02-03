@@ -55,8 +55,6 @@ let entryCoins = {}
 let takeProfitArray = {}
 let stopLossArray = {}
 let entryArray = {}
-
-
 let dbKey = 'prova';
 
 
@@ -183,8 +181,6 @@ let obj = {
 }
 
 
-
-
 Exchange.exchangeInfo(obj).then(async (listPair) => {
 
     console.log("----------------------------------------------------")
@@ -220,13 +216,21 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
             if (isFinal) {
 
+                obj['close'] = parseFloat(close);
+                obj['high'] = parseFloat(high);
+                obj['open'] = parseFloat(open);
+                obj['low'] = parseFloat(low);
+
+                let closeEMA = parseFloat(close);
                 let currentClose = parseFloat(close)
+
                 if (interval === '1d') {
                     if (exclusionList[key] === true) exclusionList[key] = false;
-                    currentClose = undefined;
+                } else {
+                    closeEMA = undefined;
                 }
 
-                Indicators.ema(currentClose, symbol, '1d', 5, 150, emaDaily).then((ema) => {
+                Indicators.ema(closeEMA, symbol, '1d', 5, 150, emaDaily).then((ema) => {
 
                     if (entryArray[key] === null) {
 
@@ -235,13 +239,8 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
                             obj['symbol'] = symbol;
                             obj['key'] = key;
                             obj['interval'] = interval;
-                            obj['close'] = parseFloat(close);
-                            obj['high'] = parseFloat(high);
-                            obj['open'] = parseFloat(open);
-                            obj['low'] = parseFloat(low);
 
                             //console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
-
                             Algorithms.checkEntry(obj)
                         }
                     }
