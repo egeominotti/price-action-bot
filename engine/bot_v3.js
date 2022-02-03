@@ -229,14 +229,9 @@ Exchange.exchangeInfo(obj).then(async () => {
                     let currentClose = parseFloat(close)
 
                     if (interval === '1d') {
-
-                        if (exclusionList[key] === true) {
-                            exclusionList[key] = false;
-                        }
-
+                        if (exclusionList[key] === true) exclusionList[key] = false;
                         currentClose = undefined;
                     }
-
 
                     Indicators.ema(currentClose, symbol, '1d', 5, 150, emaDaily).then((ema) => {
 
@@ -261,13 +256,13 @@ Exchange.exchangeInfo(obj).then(async () => {
                         // Se la close è sotto l'ema applico il trailing stop loss | trailing take profit
                         if (currentClose < ema) {
 
-                            if (entryArray[key] === true) {
+                            if (entryArray[key] !== null) {
                                 Algorithms.forceSell(obj)
+                            } else {
+                                recordPattern[key] = null;
+                                indexArray[key] = -1;
+                                tokenArray[key] = [];
                             }
-
-                            recordPattern[key] = null;
-                            indexArray[key] = -1;
-                            tokenArray[key] = [];
                         }
 
                     }).catch((err) => {
