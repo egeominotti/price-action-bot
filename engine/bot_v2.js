@@ -19,12 +19,12 @@ app.listen(port)
 mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
-    //recvWindow: 60000, // Set a higher recvWindow to increase response timeout
+    recvWindow: 60000, // Set a higher recvWindow to increase response timeout
     useServerTime: true,
-    // verbose: true, // Add extra output when subscribing to WebSockets, etc
-    // log: log => {
-    //     console.log(log); // You can create your own logger here, or disable console output
-    // }
+    verbose: true, // Add extra output when subscribing to WebSockets, etc
+    log: log => {
+        console.log(log); // You can create your own logger here, or disable console output
+    }
 });
 
 
