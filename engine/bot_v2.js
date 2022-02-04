@@ -246,11 +246,7 @@ Exchange.exchangeInfo().then(async (listPair) => {
 
 setInterval(function () {
 
-    console.log("SONO VIVO")
     console.log(pairs)
-    console.log(pairs.length)
-    console.log(pairs.length)
-    console.log(pairs.length)
     console.log(pairs.length)
 
     if (pairs.length > 100 && started === false) {
