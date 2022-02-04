@@ -10,8 +10,7 @@
     "mongoose": "^6.0.13",
     "node-binance-api": "^0.13.1",
     "node-schedule": "^2.1.0",
-    "sleep-promise": "^9.1.0",
-    "technicalindicators": "^3.1.0",
-    "vue": "^2.6.14"
+    "redis": "^4.0.3",
+    "technicalindicators": "^3.1.0"
   }
 }

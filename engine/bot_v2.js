@@ -31,12 +31,10 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
-    //'1m',
     '5m',
-    // '15m',
-    // '1h',
-    // '4h',
-    // '1d',
+    '15m',
+    '1h',
+    '4h',
 ];
 
 let telegramEnabled = true;
@@ -56,7 +54,6 @@ let floatingPercArr = {};
 let floatingArr = {};
 let tokenArray = {}
 let exchangeInfoArray = {}
-let emaDaily = {}
 let indexArray = {}
 let recordPattern = {}
 let exclusionList = {}
@@ -200,16 +197,13 @@ let obj = {
 }
 
 
-Exchange.exchangeInfo(obj).then(async (listPair) => {
+Exchange.exchangeInfoBot(obj).then(async (listPair) => {
 
     let message = "Hi from HAL V2" + "\n" +
         "LOADED for scanning... " + listPair.length + " pair" + "\n"
     Telegram.sendMessage(message)
 
     setInterval(() => {
-
-        //let totalFloatingPercentage = 0;
-        //let totalFloating = 0;
 
         for (let time of timeFrame) {
             for (const token of listPair) {
@@ -295,56 +289,15 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
              */
             //if (totalEntry < 15) {
 
-            if (isFinal) {
 
-                /**
-                 * Quando l'intervallo è '1d' controllo per il pair corrente che l'ema(5) sia sotto il prezzo e lo inserisco
-                 * all'interno di un object chiamato listEntry che verrà poi processato con la seconda parte dell'algoritmo
-                 */
-                if (interval === '5m') {
-
-                    Indicators.emaWithoutCache(symbol, '1d', 5, 150)
-
-                        .then((ema) => {
-                            let returnValue = false;
-                            if (currentClose > ema) returnValue = true;
-
-                            return returnValue;
-
-                        }).then((result) => {
-
-                        if (result) {
-
-                            obj['close'] = parseFloat(close);
-                            obj['high'] = parseFloat(high);
-                            obj['open'] = parseFloat(open);
-                            obj['low'] = parseFloat(low);
-                            obj['symbol'] = symbol;
-                            obj['key'] = key;
-                            obj['interval'] = interval;
-
-                            listEntry[key] = obj;
-
-                        } else {
-
-                            if (entryArray[key] !== null) {
-                                Algorithms.forceSell(obj)
-                            }
-
-                        }
-
-                    }).catch(() => {})
-                }
-
-                /**
-                 * L'object listEntry contiene la lista di tutte le pair (chiave/valore) che hanno soddisfatto la condizione close > ema(5)
-                 * Se risulta nulla allora il filtro dell'ema non ha indentificato nessun pair utile per essere lavorato
-                 */
-                if (listEntry[key] !== null) {
-                    Algorithms.checkEntry(listEntry[key])
-                }
-
+            /**
+             * L'object listEntry contiene la lista di tutte le pair (chiave/valore) che hanno soddisfatto la condizione close > ema(5)
+             * Se risulta nulla allora il filtro dell'ema non ha indentificato nessun pair utile per essere lavorato
+             */
+            if (listEntry[key] !== null) {
+                Algorithms.checkEntry(listEntry[key])
             }
+
             //}
 
         });
