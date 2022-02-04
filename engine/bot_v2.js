@@ -215,7 +215,7 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
             "--------------------------------------------------------------------" + "\n" +
             "Total Floating Balance: " + +_.round(totalBalanceFloating, 2) + " $" + "\n" +
             "Total Floating Percentage: " + _.round(totalFloatingPercentage, 2) + " %" + "\n" +
-            "Total Floating Profit/Loss" + _.round(totalFloating, 2) + " $"
+            "Total Floating Profit/Loss: " + _.round(totalFloating, 2) + " $"
 
         Telegram.sendMessage(message)
 
