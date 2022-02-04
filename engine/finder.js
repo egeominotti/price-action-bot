@@ -33,20 +33,21 @@ Exchange.exchangeInfo().then(async (listPair) => {
             Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
                 .then(async (ema) => {
-
-                    if (currentClose > ema) {
-                        let obj = JSON.stringify({'ema': ema, 'pair': symbol})
-                        console.log(obj)
-                        await client.set(symbol, obj);
-                    } else {
-                        await client.del(symbol);
+                    if (!isNaN(ema)) {
+                        console.log(ema)
+                        if (currentClose > ema) {
+                            let obj = JSON.stringify({'ema': ema, 'pair': symbol})
+                            console.log(obj)
+                            await client.set(symbol, obj);
+                        } else {
+                            await client.del(symbol);
+                        }
                     }
 
                 }).catch(() => {
             })
         }
     });
-
 
 }).catch((err) => {
     console.log(err)
