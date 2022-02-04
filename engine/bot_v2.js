@@ -5,13 +5,15 @@ const Algorithms = require('../algorithm/algorithm');
 const Exchange = require("../exchange/binance");
 const mongoose = require("mongoose");
 const _ = require("lodash");
-const Bot = require("../models/bot");
 const cors = require('cors')
 const express = require("express");
+
+/*
 const schedule = require('node-schedule');
+const Bot = require("../models/bot");
+*/
 
 const port = 3000;
-
 const app = express();
 app.use(cors());
 app.listen(port)
@@ -19,7 +21,7 @@ app.listen(port)
 mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
-    recvWindow: 60000, // Set a higher recvWindow to increase response timeout
+    recvWindow: 30000, // Set a higher recvWindow to increase response timeout
     useServerTime: true,
     verbose: true, // Add extra output when subscribing to WebSockets, etc
     log: log => {
@@ -45,8 +47,9 @@ let totalPercentage = 0
 let sumSizeTrade = 0;
 const sizeTrade = 200;
 
-let floatingValue = 0;
-let floatingPercValue = 0;
+let totalFloatingValue = 0;
+let totalFloatingPercValue = 0;
+let totalFloatingBalance = 0;
 
 let floatingPercArr = {};
 let floatingArr = {};
@@ -60,7 +63,8 @@ let entryCoins = {}
 let takeProfitArray = {}
 let stopLossArray = {}
 let entryArray = {}
-let dbKey = 'prova';
+
+let dbKey = 'prova_2';
 
 
 app.get('/info', (req, res) => {
@@ -69,8 +73,9 @@ app.get('/info', (req, res) => {
         'sizeTrade': sizeTrade,
         'tradeEnabled': tradeEnabled,
         'telegramEnabled': telegramEnabled,
-        'floatingperc': floatingPercValue,
-        'floating': floatingValue,
+        'floatingperc': totalFloatingPercValue,
+        'floating': totalFloatingValue,
+        'floatingbalance': totalFloatingBalance,
         'uptime': 0,
     }
     res.send(obj);
@@ -195,31 +200,31 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
     setInterval(() => {
 
-        let totalFloatingPercentage = 0;
-        let totalFloating = 0;
+        //let totalFloatingPercentage = 0;
+        //let totalFloating = 0;
 
         for (let time of timeFrame) {
             for (const token of listPair) {
                 let key = token + "_" + time
 
                 if (floatingArr[key] !== null && floatingPercArr[key] !== null) {
-                    totalFloating += floatingArr[key];
-                    totalFloatingPercentage += floatingPercArr[key];
+                    totalFloatingValue += floatingArr[key];
+                    totalFloatingPercValue += floatingPercArr[key];
                 }
             }
         }
 
-        let totalBalanceFloating = balance + totalFloating;
+        totalFloatingBalance = balance + totalFloatingValue;
 
         let message = "Global Statistics Profit/Loss" + "\n" +
             "--------------------------------------------------------------------" + "\n" +
-            "Total Floating Balance: " + +_.round(totalBalanceFloating, 2) + " $" + "\n" +
-            "Total Floating Percentage: " + _.round(totalFloatingPercentage, 2) + " %" + "\n" +
-            "Total Floating Profit/Loss: " + _.round(totalFloating, 2) + " $"
+            "Total Floating Balance: " + +_.round(totalFloatingBalance, 2) + " $" + "\n" +
+            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
 
         Telegram.sendMessage(message)
 
-    }, 300000);
+    }, 900000);
 
     console.log("----------------------------------------------------")
     console.log("LOADED for scanning... " + listPair.length + " pair")
@@ -250,19 +255,19 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
             if (entryArray[key] !== null) {
 
-                let position = sizeTrade / entryArray[key]['entryprice'];
-                let floatingPosition = position * parseFloat(close);
-                let floatingtrade = floatingPosition - sizeTrade;
-                let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
-
-                floatingArr[key] = floatingtrade;
-                floatingPercArr[key] = floatingtradeperc;
-
-                console.log('---------------- Calculate Floating -------------------- ');
-                console.log("Pair... " + symbol + " %")
-                console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-                console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-                console.log('-------------------------------------------------------------- ');
+                // let position = sizeTrade / entryArray[key]['entryprice'];
+                // let floatingPosition = position * parseFloat(close);
+                // let floatingtrade = floatingPosition - sizeTrade;
+                // let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+                //
+                // floatingArr[key] = floatingtrade;
+                // floatingPercArr[key] = floatingtradeperc;
+                //
+                // console.log('---------------- Calculate Floating -------------------- ');
+                // console.log("Pair... " + symbol + " %")
+                // console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+                // console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+                // console.log('-------------------------------------------------------------- ');
 
                 Algorithms.checkExit(obj)
             }
