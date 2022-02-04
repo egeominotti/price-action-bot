@@ -259,6 +259,7 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
             if (entryArray[key] !== null) {
 
+                Algorithms.checkExit(obj)
                 // let position = sizeTrade / entryArray[key]['entryprice'];
                 // let floatingPosition = position * parseFloat(close);
                 // let floatingtrade = floatingPosition - sizeTrade;
@@ -272,8 +273,6 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
                 // console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
                 // console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
                 // console.log('-------------------------------------------------------------- ');
-
-                Algorithms.checkExit(obj)
             }
 
 
@@ -312,6 +311,7 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
                                 obj['interval'] = interval;
 
                                 //console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
+
                                 Algorithms.checkEntry(obj)
                             }
                         }
