@@ -9,9 +9,6 @@ const cors = require('cors')
 const express = require("express");
 const redis = require("redis");
 
-/*
-const Bot = require("../models/bot");
-*/
 const client = redis.createClient();
 client.connect();
 
@@ -19,7 +16,6 @@ client.on('error', (err) => {
     console.log(err)
     console.log('Error occured while connecting or accessing redis server');
 });
-
 
 const port = 3000;
 const app = express();
@@ -40,7 +36,7 @@ const binance = new Binance().options({
 
 let timeFrame = [
     '1m',
-    // '5m',
+    // ìì'5m',
     // '15m',
     // '1h',
     // '4h',
