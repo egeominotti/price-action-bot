@@ -184,7 +184,6 @@ function forceSell(obj) {
 }
 
 
-
 function stopLoss(obj) {
 
     let close = obj.close;
@@ -271,7 +270,7 @@ function stopLoss(obj) {
 }
 
 
-async function checkExit(obj) {
+function checkExit(obj) {
 
     let key = obj.key;
     let binance = obj.binance;
@@ -310,16 +309,6 @@ async function checkExit(obj) {
                 entryArray[key] = null;
                 recordPattern[key] = null;
                 entryCoins[key] = false;
-
-                // await Bot.findOneAndUpdate({name: dbKey},
-                //     {
-                //         recordPattern: recordPattern,
-                //         exclusionList: exclusionList,
-                //         entryArray: entryArray,
-                //         entryCoins: entryCoins,
-                //         stopLossArray: stopLossArray,
-                //         takeProfitArray: takeProfitArray,
-                //     });
             }
 
         }
@@ -352,7 +341,6 @@ function checkEntry(
     let tradeEnabled = obj.tradeEnabled;
     let telegramEnabled = obj.telegramEnabled;
     let entryCoins = obj.entryCoins;
-    let dbKey = obj.dbKey;
 
     if (exclusionList[key] === false && entryCoins[key] === false) {
 
@@ -464,18 +452,6 @@ function checkEntry(
                 indexArray[key] = -1;
                 tokenArray[key] = [];
                 //console.log("Error: Can't calculate EMA for symbol rest engine for: " + error)
-            }
-        ).finally(
-            async () => {
-
-                // await Bot.findOneAndUpdate({name: dbKey},
-                //     {
-                //         recordPattern: recordPattern,
-                //         indexArray: indexArray,
-                //         tokenArray: tokenArray,
-                //         entryArray: entryArray,
-                //         entryCoins: entryCoins
-                //     });
             }
         )
     }

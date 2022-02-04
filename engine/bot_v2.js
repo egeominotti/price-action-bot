@@ -210,7 +210,7 @@ let pairs = [];
 
 Exchange.exchangeInfo().then(async (listPair) => {
 
-    new Binance().websockets.candlesticks(listPair, '1d', async (candlesticks) => {
+    new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
         let {
             c: close,
@@ -255,10 +255,9 @@ Exchange.exchangeInfo().then(async (listPair) => {
 
 setInterval(function () {
 
-    console.log(pairs)
     console.log(pairs.length)
 
-    if (started === false) {
+    if (started === false && pairs.length > 50) {
 
         for (let time of timeFrame) {
             for (const token of pairs) {
@@ -274,7 +273,6 @@ setInterval(function () {
                 stopLossArray[key] = null;
                 entryArray[key] = null;
                 listEntry[key] = null;
-                // Floating percentage
                 floatingArr[key] = 0;
                 floatingPercArr[key] = 0;
             }
@@ -284,7 +282,7 @@ setInterval(function () {
             "LOADED for scanning... " + pairs.length + " pair" + "\n"
         Telegram.sendMessage(message)
 
-        setInterval(() => {
+        setInterval((totalFloatingValue, totalFloatingPercValue, totalFloatingBalance) => {
 
             for (let time of timeFrame) {
                 for (const token of pairs) {
