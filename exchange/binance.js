@@ -104,8 +104,9 @@ function exchangeInfo(obj) {
                         takeProfitArray[key] = null;
                         stopLossArray[key] = null;
                         entryArray[key] = null;
-                        floatingArr[key] = null;
-                        floatingPercArr[key] = null;
+                        // Floating percentage
+                        floatingArr[key] = 0;
+                        floatingPercArr[key] = 0;
                     }
                 }
 

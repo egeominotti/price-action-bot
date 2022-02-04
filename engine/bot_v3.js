@@ -205,6 +205,7 @@ schedule.scheduleJob('* * * * *', function () {
 
     console.log("Percentage... " + _.round(floatingPercValue, 2) + " %")
     console.log("Increment/Decrement... " + _.round(floatingValue, 2) + " $")
+    console.log('------------------------------------------------- ');
 
 });
 
