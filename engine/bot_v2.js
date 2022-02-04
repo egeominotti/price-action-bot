@@ -227,11 +227,18 @@ Exchange.exchangeInfo().then(async (listPair) => {
 
                     if (!isNaN(ema)) {
                         if (currentClose > ema) {
-
                             if (!pairs.includes(symbol)) {
                                 pairs.push(symbol)
                             }
-
+                        } else {
+                            // rimuovo elemento
+                            for (let i = 0; i < pairs.length; i++) {
+                                if (pairs[i] !== null) {
+                                    if (pairs[i] === symbol) {
+                                        pairs.splice(i, 1);
+                                    }
+                                }
+                            }
                         }
                     }
 
