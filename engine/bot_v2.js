@@ -198,6 +198,10 @@ let totalEntry = 0
 
 Exchange.exchangeInfo(obj).then(async (listPair) => {
 
+    let message = "Hi from HAL V2" + "\n" +
+        "LOADED for scanning... " + listPair.length + " pair" + "\n"
+    Telegram.sendMessage(message)
+
     setInterval(() => {
 
         //let totalFloatingPercentage = 0;
@@ -224,7 +228,7 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
         Telegram.sendMessage(message)
 
-    }, 900000);
+    }, 1800000);
 
     console.log("----------------------------------------------------")
     console.log("LOADED for scanning... " + listPair.length + " pair")
