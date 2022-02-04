@@ -33,7 +33,7 @@ const binance = new Binance().options({
     useServerTime: true,
     verbose: false, // Add extra output when subscribing to WebSockets, etc
     log: log => {
-         console.log(log); // You can create your own logger here, or disable console output
+        console.log(log); // You can create your own logger here, or disable console output
     }
 });
 
@@ -223,11 +223,15 @@ Exchange.exchangeInfo().then(async (listPair) => {
 
             Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
-                .then(async (ema) => {
+                .then((ema) => {
 
                     if (!isNaN(ema)) {
                         if (currentClose > ema) {
-                            pairs.push(symbol)
+
+                            if (!pairs.includes(symbol)) {
+                                pairs.push(symbol)
+                            }
+
                         }
                     }
 
