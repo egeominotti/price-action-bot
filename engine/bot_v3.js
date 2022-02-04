@@ -249,7 +249,7 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
         Telegram.sendMessage(message)
 
-    }, 30000);
+    }, 300000);
 
     console.log("----------------------------------------------------")
     console.log("LOADED for scanning... " + listPair.length + " pair")
@@ -278,7 +278,6 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
             obj['open'] = parseFloat(open);
             obj['low'] = parseFloat(low);
 
-
             if (entryArray[key] !== null) {
 
                 let position = sizeTrade / entryArray[key]['entryprice'];
@@ -290,20 +289,9 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
                 floatingPercArr[key] = floatingtradeperc;
 
                 console.log('---------------- Calculate Floating -------------------- ');
-
-                // floatingPercValue += floatingtradeperc;
-                // floatingValue += floatingtrade;
-
-                // for (let time of timeFrame) {
-                //     for (const pair in exchangeInfoArray) {
-                //         let key = pair + "_" + time
-                //         floatingPercValue += floatingPercArr[key];
-                //         floatingValue += floatingArr[key]
-                //     }
-                // }
                 console.log("Pair... " + symbol + " %")
                 console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-                console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + " $")
+                console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
                 console.log('-------------------------------------------------------------- ');
 
                 Algorithms.checkExit(obj)
