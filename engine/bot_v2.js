@@ -205,121 +205,175 @@ let obj = {
 
 }
 
+let started = false;
 
-Exchange.exchangeInfoBot(obj).then(async (listPair) => {
+/**
+ * Finder: Si occupa di selezionare tutte le pair la cui ema(5) sul giornaliero è sotto il prezzo
+ * quindi possibile candidata alla sezione. La chiave viene scritta su redis
+ */
 
-    let listFromFinder = [];
+let pairs = [];
 
-    for (const k of listPair) {
-        console.log(k)
-        const value = await client.get(k);
-        if (value !== null) {
-            console.log(value)
+Exchange.exchangeInfo().then(async (listPair) => {
 
-            let val = JSON.parse(value)
-            console.log(val)
-            if (val.pair === k) {
-                listFromFinder.push(val.pair)
-            }
-        }
-    }
+    new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
+        let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
+        let {
+            c: close,
+            x: isFinal,
+        } = ticks;
 
-    if (listFromFinder.length > 0) {
+        let currentClose = parseFloat(close)
 
-        let message = "Hi from HAL V2" + "\n" +
-            "LOADED for scanning... " + listFromFinder.length + " pair" + "\n"
-        Telegram.sendMessage(message)
+        if (isFinal) {
 
-        setInterval(() => {
+            Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
-            for (let time of timeFrame) {
-                for (const token of listPair) {
-                    let key = token + "_" + time
+                .then(async (ema) => {
 
-                    if (floatingArr[key] !== null && floatingPercArr[key] !== null) {
-                        totalFloatingValue += floatingArr[key];
-                        totalFloatingPercValue += floatingPercArr[key];
+                    if (!isNaN(ema)) {
+                        if (currentClose > ema) {
+                            pairs.push({'ema': ema, 'pair': symbol})
+                        }
                     }
-                }
-            }
 
-            totalFloatingBalance = balance + totalFloatingValue;
-
-            let message = "Global Statistics Profit/Loss" + "\n" +
-                "--------------------------------------------------------------------" + "\n" +
-                "Total Floating Balance: " + +_.round(totalFloatingBalance, 2) + " $" + "\n" +
-                "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-                "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-            Telegram.sendMessage(message)
-
-        }, 1800000);
-
-        console.log("----------------------------------------------------")
-        console.log("LOADED for scanning... " + listPair.length + " pair")
-        console.log("---------------------------------------------------")
-
-        for (const time of timeFrame) {
-
-            binance.websockets.candlesticks(listFromFinder, time, (candlesticks) => {
-                let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
-                let {
-                    o: open,
-                    h: high,
-                    l: low,
-                    c: close,
-                    i: interval,
-                    x: isFinal,
-                } = ticks;
-
-                let key = symbol + "_" + interval
-
-                if (entryArray[key] !== null) {
-
-                    let position = sizeTrade / entryArray[key]['entryprice'];
-                    let floatingPosition = position * parseFloat(close);
-                    let floatingtrade = floatingPosition - sizeTrade;
-                    let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
-
-                    floatingArr[key] = floatingtrade;
-                    floatingPercArr[key] = floatingtradeperc;
-
-                    obj['symbol'] = symbol;
-                    obj['key'] = key;
-                    obj['interval'] = interval;
-                    obj['close'] = parseFloat(close);
-                    obj['high'] = parseFloat(high);
-                    obj['open'] = parseFloat(open);
-                    obj['low'] = parseFloat(low);
-
-                    console.log('---------------- Calculate Floating -------------------- ');
-                    console.log("Pair... " + symbol + " %")
-                    console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-                    console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-                    console.log('-------------------------------------------------------------- ');
-
-                    Algorithms.checkExit(obj)
-                }
-
-                if (isFinal) {
-
-                    obj['symbol'] = symbol;
-                    obj['key'] = key;
-                    obj['interval'] = interval;
-                    obj['close'] = parseFloat(close);
-                    obj['high'] = parseFloat(high);
-                    obj['open'] = parseFloat(open);
-                    obj['low'] = parseFloat(low);
-
-                    Algorithms.checkEntry(obj)
-                }
-
-            });
+                }).catch(() => {})
         }
-    }
-
+    });
 
 }).catch((err) => {
     console.log(err)
 });
+
+setInterval(function () {
+
+    console.log(pairs)
+    if (pairs.length > 100 && started === false) {
+
+        Exchange.exchangeInfoBot(obj).then(async (listPair) => {
+
+            console.log("parto")
+            let listFromFinder = [];
+
+            for (const k of listPair) {
+                console.log(k)
+                const value = await client.get(k);
+                if (value !== null) {
+                    console.log(value)
+
+                    let val = JSON.parse(value)
+                    console.log(val)
+                    if (val.pair === k) {
+                        listFromFinder.push(val.pair)
+                    }
+                }
+            }
+
+            if (listFromFinder.length > 0) {
+
+                let message = "Hi from HAL V2" + "\n" +
+                    "LOADED for scanning... " + listFromFinder.length + " pair" + "\n"
+                Telegram.sendMessage(message)
+
+                setInterval(() => {
+
+                    for (let time of timeFrame) {
+                        for (const token of listPair) {
+                            let key = token + "_" + time
+
+                            if (floatingArr[key] !== null && floatingPercArr[key] !== null) {
+                                totalFloatingValue += floatingArr[key];
+                                totalFloatingPercValue += floatingPercArr[key];
+                            }
+                        }
+                    }
+
+                    totalFloatingBalance = balance + totalFloatingValue;
+
+                    let message = "Global Statistics Profit/Loss" + "\n" +
+                        "--------------------------------------------------------------------" + "\n" +
+                        "Total Floating Balance: " + +_.round(totalFloatingBalance, 2) + " $" + "\n" +
+                        "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+                        "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+                    Telegram.sendMessage(message)
+
+                }, 1800000);
+
+                console.log("----------------------------------------------------")
+                console.log("LOADED for scanning... " + listPair.length + " pair")
+                console.log("---------------------------------------------------")
+
+                started = true;
+
+                for (const time of timeFrame) {
+
+                    binance.websockets.candlesticks(listFromFinder, time, (candlesticks) => {
+                        let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
+                        let {
+                            o: open,
+                            h: high,
+                            l: low,
+                            c: close,
+                            i: interval,
+                            x: isFinal,
+                        } = ticks;
+
+                        let key = symbol + "_" + interval
+
+                        if (entryArray[key] !== null) {
+
+                            let position = sizeTrade / entryArray[key]['entryprice'];
+                            let floatingPosition = position * parseFloat(close);
+                            let floatingtrade = floatingPosition - sizeTrade;
+                            let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+
+                            floatingArr[key] = floatingtrade;
+                            floatingPercArr[key] = floatingtradeperc;
+
+                            obj['symbol'] = symbol;
+                            obj['key'] = key;
+                            obj['interval'] = interval;
+                            obj['close'] = parseFloat(close);
+                            obj['high'] = parseFloat(high);
+                            obj['open'] = parseFloat(open);
+                            obj['low'] = parseFloat(low);
+
+                            console.log('---------------- Calculate Floating -------------------- ');
+                            console.log("Pair... " + symbol + " %")
+                            console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+                            console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+                            console.log('-------------------------------------------------------------- ');
+
+                            Algorithms.checkExit(obj)
+                        }
+
+                        if (isFinal) {
+
+                            obj['symbol'] = symbol;
+                            obj['key'] = key;
+                            obj['interval'] = interval;
+                            obj['close'] = parseFloat(close);
+                            obj['high'] = parseFloat(high);
+                            obj['open'] = parseFloat(open);
+                            obj['low'] = parseFloat(low);
+
+                            Algorithms.checkEntry(obj)
+                        }
+
+                    });
+                }
+            }
+
+
+        }).catch((err) => {
+            console.log(err)
+        });
+    }
+}, 300000);
+
+
+
+
+
 
