@@ -354,8 +354,6 @@ function checkEntry(
     let entryCoins = obj.entryCoins;
     let dbKey = obj.dbKey;
 
-
-
     if (exclusionList[key] === false && entryCoins[key] === false) {
 
         Indicators.ema(close, symbol, interval, 200, 500, emaArray).then((ema) => {

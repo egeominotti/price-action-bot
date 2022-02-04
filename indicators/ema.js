@@ -12,6 +12,39 @@ const binance = new Binance().options({
 
 /**
  *
+ * @param token
+ * @param time
+ * @param periodEma
+ * @param limitCandle
+ * @returns {Promise<unknown>}
+ */
+function emaWithoutCache(token, time, periodEma, limitCandle) {
+    return new Promise(function (resolve, reject) {
+
+        binance.candlesticks(token, time, (error, ticks, symbol) => {
+
+            if (error !== null) reject(error)
+            if (_.isEmpty(ticks)) reject(error)
+
+            if (!_.isEmpty(ticks)) {
+                let closeArray = [];
+                for (let t of ticks) {
+                    let [time, open, high, low, close, ignored] = t;
+                    closeArray.push(parseFloat(close));
+                }
+                closeArray.pop()
+
+                let ema = EMA.calculate({period: periodEma, values: closeArray})
+                resolve(_.last(ema))
+            }
+
+        }, {limit: limitCandle});
+    });
+}
+
+
+/**
+ *
  * @param close
  * @param token
  * @param time
@@ -62,5 +95,6 @@ function ema(close, token, time, periodEma, limitCandle, arrayCache) {
 }
 
 module.exports = {
-    ema
+    ema,
+    emaWithoutCache
 }

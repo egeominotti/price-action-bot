@@ -10,6 +10,7 @@ function exchangeInfo(obj) {
     let binance = obj.binance;
     let timeFrame = obj.timeFrame;
     let exclusionList = obj.exclusionList;
+    let listEntry = obj.listEntry;
     let indexArray = obj.indexArray;
     let recordPattern = obj.recordPattern;
     let tokenArray = obj.tokenArray;
@@ -104,6 +105,7 @@ function exchangeInfo(obj) {
                         takeProfitArray[key] = null;
                         stopLossArray[key] = null;
                         entryArray[key] = null;
+                        listEntry[key] = null;
                         // Floating percentage
                         floatingArr[key] = 0;
                         floatingPercArr[key] = 0;

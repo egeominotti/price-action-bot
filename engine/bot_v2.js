@@ -21,9 +21,9 @@ app.listen(port)
 mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
-    recvWindow: 30000, // Set a higher recvWindow to increase response timeout
-    useServerTime: true,
-    verbose: true, // Add extra output when subscribing to WebSockets, etc
+    //recvWindow: 30000, // Set a higher recvWindow to increase response timeout
+    //useServerTime: true,
+    verbose: false, // Add extra output when subscribing to WebSockets, etc
     log: log => {
         console.log(log); // You can create your own logger here, or disable console output
     }
@@ -31,11 +31,12 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
+    '1m',
     '5m',
-    '15m',
-    '1h',
-    '4h',
-    '1d',
+    // '15m',
+    // '1h',
+    // '4h',
+    // '1d',
 ];
 
 let telegramEnabled = true;
@@ -165,6 +166,9 @@ app.get('/getRecordPattern', async (req, res) => {
     res.send(recordPattern);
 });
 
+let totalEntry = 0
+let listEntry = {};
+
 let obj = {
 
     'binance': binance,
@@ -179,6 +183,7 @@ let obj = {
     // Array Global
     'timeFrame': timeFrame,
     'exclusionList': exclusionList,
+    'listEntry': listEntry,
     'recordPattern': recordPattern,
     'indexArray': indexArray,
     'tokenArray': tokenArray,
@@ -194,7 +199,7 @@ let obj = {
 
 }
 
-let totalEntry = 0
+
 
 Exchange.exchangeInfo(obj).then(async (listPair) => {
 
@@ -248,6 +253,7 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
             } = ticks;
 
             let key = symbol + "_" + interval
+            let currentClose = parseFloat(close)
 
             obj['symbol'] = symbol;
             obj['key'] = key;
@@ -259,14 +265,16 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
             if (entryArray[key] !== null) {
 
+                let position = sizeTrade / entryArray[key]['entryprice'];
+                let floatingPosition = position * parseFloat(close);
+                let floatingtrade = floatingPosition - sizeTrade;
+                let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+
+                floatingArr[key] = floatingtrade;
+                floatingPercArr[key] = floatingtradeperc;
+
                 Algorithms.checkExit(obj)
-                // let position = sizeTrade / entryArray[key]['entryprice'];
-                // let floatingPosition = position * parseFloat(close);
-                // let floatingtrade = floatingPosition - sizeTrade;
-                // let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
-                //
-                // floatingArr[key] = floatingtrade;
-                // floatingPercArr[key] = floatingtradeperc;
+
                 //
                 // console.log('---------------- Calculate Floating -------------------- ');
                 // console.log("Pair... " + symbol + " %")
@@ -286,51 +294,54 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
                 if (isFinal) {
 
-                    obj['close'] = parseFloat(close);
-                    obj['high'] = parseFloat(high);
-                    obj['open'] = parseFloat(open);
-                    obj['low'] = parseFloat(low);
+                    /**
+                     * Quando l'intervallo è 1d controllo per il pair corrente che l'ema(5) sia sotto il prezzo e lo inserisco
+                     * all'interno di un object chiamato listEntry che verrà poi processato con la seconda parte dell'algoritmo
+                     */
+                    if (interval === '5m') {
 
-                    let closeEMA = parseFloat(close);
-                    let currentClose = parseFloat(close)
+                        Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
-                    if (interval === '1d') {
-                        if (exclusionList[key] === true) exclusionList[key] = false;
-                    } else {
-                        closeEMA = undefined;
-                    }
+                            .then((ema) => {
+                                let returnValue = false;
+                                if (currentClose > ema) returnValue = true;
 
-                    Indicators.ema(closeEMA, symbol, '1d', 5, 150, emaDaily).then((ema) => {
+                                return returnValue;
 
-                        if (entryArray[key] === null) {
+                            }).then((result) => {
 
-                            if (currentClose > ema) {
+                            if (result) {
 
+                                obj['close'] = parseFloat(close);
+                                obj['high'] = parseFloat(high);
+                                obj['open'] = parseFloat(open);
+                                obj['low'] = parseFloat(low);
                                 obj['symbol'] = symbol;
                                 obj['key'] = key;
                                 obj['interval'] = interval;
 
-                                //console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
+                                listEntry[key] = obj;
 
-                                Algorithms.checkEntry(obj)
-                            }
-                        }
-
-                        // Se la close è sotto l'ema applico il trailing stop loss | trailing take profit
-                        if (currentClose < ema) {
-
-                            if (entryArray[key] !== null) {
-                                Algorithms.forceSell(obj)
                             } else {
-                                recordPattern[key] = null;
-                                indexArray[key] = -1;
-                                tokenArray[key] = [];
-                            }
-                        }
 
-                    }).catch((err) => {
-                        console.log(err)
-                    })
+                                if (entryArray[key] !== null) {
+                                    Algorithms.forceSell(obj)
+                                }
+
+                            }
+
+                        }).catch((err) => {
+                            console.log(err)
+                        })
+                    }
+
+                    /**
+                     * L'object listEntry contiene la lista di tutte le pair (chiave/valore) che hanno soddisfatto la condizione close > ema(5)
+                     * Se risulta nulla allora il filtro dell'ema non ha indentificato nessun pair utile per essere lavorato
+                     */
+                    if (listEntry[key] !== null) {
+                        Algorithms.checkEntry(listEntry[key])
+                    }
 
                 }
             }
