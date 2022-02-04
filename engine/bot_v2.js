@@ -7,11 +7,20 @@ const mongoose = require("mongoose");
 const _ = require("lodash");
 const cors = require('cors')
 const express = require("express");
+const redis = require("redis");
 
 /*
 const schedule = require('node-schedule');
 const Bot = require("../models/bot");
 */
+const client = redis.createClient();
+client.connect();
+
+client.on('error', (err) => {
+    console.log(err)
+    console.log('Error occured while connecting or accessing redis server');
+});
+
 
 const port = 3000;
 const app = express();
@@ -31,10 +40,11 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
-    '5m',
-    '15m',
-    '1h',
-    '4h',
+    '1m',
+    // '5m',
+    // '15m',
+    // '1h',
+    // '4h',
 ];
 
 let telegramEnabled = true;
@@ -199,8 +209,25 @@ let obj = {
 
 Exchange.exchangeInfoBot(obj).then(async (listPair) => {
 
+    let listFromFinder = [];
+
+    for (const k of listPair) {
+        console.log(k)
+        const value = await client.get(k);
+        if (value !== null) {
+            console.log(value)
+
+            let val = JSON.parse(value)
+            console.log(val)
+            if (val.pair === k) {
+                listFromFinder.push(val.pair)
+            }
+
+        }
+    }
+
     let message = "Hi from HAL V2" + "\n" +
-        "LOADED for scanning... " + listPair.length + " pair" + "\n"
+        "LOADED for scanning... " + listFromFinder.length + " pair" + "\n"
     Telegram.sendMessage(message)
 
     setInterval(() => {
@@ -234,7 +261,7 @@ Exchange.exchangeInfoBot(obj).then(async (listPair) => {
 
     for (const time of timeFrame) {
 
-        binance.websockets.candlesticks(listPair, time, (candlesticks) => {
+        binance.websockets.candlesticks(listFromFinder, time, (candlesticks) => {
             let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
             let {
                 o: open,
@@ -246,8 +273,6 @@ Exchange.exchangeInfoBot(obj).then(async (listPair) => {
             } = ticks;
 
             let key = symbol + "_" + interval
-            let currentClose = parseFloat(close)
-
 
             if (entryArray[key] !== null) {
 
@@ -267,38 +292,27 @@ Exchange.exchangeInfoBot(obj).then(async (listPair) => {
                 obj['open'] = parseFloat(open);
                 obj['low'] = parseFloat(low);
 
+                console.log('---------------- Calculate Floating -------------------- ');
+                console.log("Pair... " + symbol + " %")
+                console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+                console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+                console.log('-------------------------------------------------------------- ');
+
                 Algorithms.checkExit(obj)
-
-                //
-                // console.log('---------------- Calculate Floating -------------------- ');
-                // console.log("Pair... " + symbol + " %")
-                // console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-                // console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-                // console.log('-------------------------------------------------------------- ');
             }
 
+            if (isFinal) {
 
-            // for (const k in entryArray) {
-            //     if (entryArray[k] !== null) {
-            //         totalEntry += 1
-            //     }
-            // }
+                obj['symbol'] = symbol;
+                obj['key'] = key;
+                obj['interval'] = interval;
+                obj['close'] = parseFloat(close);
+                obj['high'] = parseFloat(high);
+                obj['open'] = parseFloat(open);
+                obj['low'] = parseFloat(low);
 
-            /**
-             * Se ci sono piu' di 15 entrate non procedo piu' con la ricerca dei nuovi e aspetto che vengano chiusi
-             */
-            //if (totalEntry < 15) {
-
-
-            /**
-             * L'object listEntry contiene la lista di tutte le pair (chiave/valore) che hanno soddisfatto la condizione close > ema(5)
-             * Se risulta nulla allora il filtro dell'ema non ha indentificato nessun pair utile per essere lavorato
-             */
-            if (listEntry[key] !== null) {
-                Algorithms.checkEntry(listEntry[key])
+                Algorithms.checkEntry(obj)
             }
-
-            //}
 
         });
     }

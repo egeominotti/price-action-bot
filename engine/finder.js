@@ -15,7 +15,7 @@ client.on('error', (err) => {
 
 Exchange.exchangeInfo().then(async (listPair) => {
 
-    new Binance().websockets.candlesticks(listPair, '1d', async (candlesticks) => {
+    new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
         let {
             o: open,
@@ -35,12 +35,12 @@ Exchange.exchangeInfo().then(async (listPair) => {
                 .then(async (ema) => {
 
                     if (currentClose > ema) {
-                        await client.set(symbol, symbol);
+                        let obj = JSON.stringify({'ema': ema, 'pair': symbol})
+                        await client.set(symbol, obj);
                     }
                     return false;
 
-            }).catch(() => {
-                console.log();
+                }).catch(() => {
             })
         }
     });

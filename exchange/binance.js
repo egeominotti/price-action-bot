@@ -12,7 +12,6 @@ const binance = new Binance().options({
  */
 function exchangeInfo() {
 
-
     let exchangeInfoArray = [];
     return new Promise(async function (resolve, reject) {
 
