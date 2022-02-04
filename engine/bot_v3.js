@@ -29,11 +29,11 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
-    '5m',
-    '15m',
-    '1h',
-    '4h',
-    '1d',
+    '1m',
+    // '15m',
+    // '1h',
+    // '4h',
+    // '1d',
 ];
 
 let telegramEnabled = true;
@@ -44,7 +44,11 @@ let variableBalance = 0;
 let totalPercentage = 0
 let sumSizeTrade = 0;
 const sizeTrade = 200;
+let floatingValue = 0;
+let floatingPercValue = 0;
 
+let floatingPercArr = {};
+let floatingArr = {};
 let tokenArray = {}
 let exchangeInfoArray = {}
 let emaDaily = {}
@@ -64,6 +68,8 @@ app.get('/info', (req, res) => {
         'sizeTrade': sizeTrade,
         'tradeEnabled': tradeEnabled,
         'telegramEnabled': telegramEnabled,
+        'floatingperc': floatingPercValue,
+        'floating': floatingValue,
         'uptime': 0,
     }
     res.send(obj);
@@ -171,6 +177,8 @@ let obj = {
     'indexArray': indexArray,
     'tokenArray': tokenArray,
     'entryCoins': entryCoins,
+    'floatingArr': floatingArr,
+    'floatingPercArr': floatingPercArr,
     'takeProfitArray': takeProfitArray,
     'stopLossArray': stopLossArray,
     'entryArray': entryArray,
@@ -180,6 +188,25 @@ let obj = {
 
 }
 
+schedule.scheduleJob('* * * * *', function () {
+
+    console.log('------- Calculate Floating -------- ');
+
+    floatingPercValue = 0;
+    floatingValue = 0;
+
+    for (let time of timeFrame) {
+        for (const pair in exchangeInfoArray) {
+            let key = pair + "_" + time
+            floatingPercValue += floatingPercArr[key];
+            floatingValue += floatingArr[key]
+        }
+    }
+
+    console.log("Percentage... " + _.round(floatingPercValue, 2) + " %")
+    console.log("Increment/Decrement... " + _.round(floatingValue, 2) + " $")
+
+});
 
 Exchange.exchangeInfo(obj).then(async (listPair) => {
 
@@ -210,7 +237,17 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
             obj['open'] = parseFloat(open);
             obj['low'] = parseFloat(low);
 
+
             if (entryArray[key] !== null) {
+
+                let position = sizeTrade / entryArray[key]['entryprice'];
+                let floatingPosition = position * parseFloat(close);
+                let floatingtrade = floatingPosition - sizeTrade;
+                let floatingtradeperc = (floatingPosition - sizeTrade) / sizeTrade
+
+                floatingArr[key] = floatingtrade;
+                floatingPercArr[key] = floatingtradeperc;
+
                 Algorithms.checkExit(obj)
             }
 

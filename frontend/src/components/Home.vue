@@ -15,7 +15,8 @@
               Takeprofit Counter: {{ counterTP }} |
               Stoploss Counter: {{ counterSL }} |
               TradeSize: {{ sizeTrade }}$ |
-              Uptime: {{ uptime }}
+              Total floating profit/loss: {{ floating }}$ |
+              Total floating profit/loss percentage: {{ floatingperc }}$ |
             </b-card-text>
 
             <b-button v-if="entryArray.length > 0" @click="closeAllPosition()" variant="danger">Close All Position
@@ -106,6 +107,8 @@ export default {
       balance: 0,
       uptime: 0,
       sizeTrade: 0,
+      floating: 0,
+      floatingperc: 0,
       tradeEnabled: false,
       telegramEnabled: false,
       token: null,
@@ -136,6 +139,8 @@ export default {
       this.sizeTrade = infoData.sizeTrade;
       this.tradeEnabled = infoData.tradeEnabled;
       this.telegramEnabled = infoData.telegramEnabled;
+      this.floatingperc = infoData.floatingperc;
+      this.floating = infoData.floating;
 
       const entryArrayReq = await fetch(BASE_URL + '/trade/entry');
       const entryArrayData = await entryArrayReq.json();
@@ -182,9 +187,9 @@ export default {
 
     },
 
-    cancelAutoUpdate() {
-      clearInterval(this.timer);
-    },
+    // cancelAutoUpdate() {
+    //   clearInterval(this.timer);
+    // },
 
     async closeAllPosition() {
       const res = await fetch(BASE_URL + '/trade/emergency');
@@ -224,12 +229,12 @@ export default {
   mounted() {
     this.getData();
     // refresh-data each 1 minute
-    this.timer = setInterval(this.getData, 100000);
+    //this.timer = setInterval(this.getData, 100000);
   },
 
-  beforeDestroy() {
-    this.cancelAutoUpdate();
-  }
+  // beforeDestroy() {
+  //   this.cancelAutoUpdate();
+  // }
 
 }
 </script>

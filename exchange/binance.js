@@ -17,6 +17,8 @@ function exchangeInfo(obj) {
     let entryArray = obj.entryArray;
     let takeProfitArray = obj.takeProfitArray;
     let stopLossArray = obj.stopLossArray;
+    let floatingArr = obj.floatingArr;
+    let floatingPercArr = obj.floatingPercArr;
     let entryCoins = obj.entryCoins;
     let dbKey = obj.dbKey;
 
@@ -102,6 +104,8 @@ function exchangeInfo(obj) {
                         takeProfitArray[key] = null;
                         stopLossArray[key] = null;
                         entryArray[key] = null;
+                        floatingArr[key] = null;
+                        floatingPercArr[key] = null;
                     }
                 }
 
