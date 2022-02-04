@@ -463,7 +463,7 @@ function checkEntry(
                 recordPattern[key] = null;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
-                console.log("Error: Can't calculate EMA for symbol rest engine for: " + error)
+                //console.log("Error: Can't calculate EMA for symbol rest engine for: " + error)
             }
         ).finally(
             async () => {

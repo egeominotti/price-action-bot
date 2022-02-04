@@ -5,24 +5,24 @@ const Exchange = require("../exchange/binance");
 const redis = require('redis');
 
 const client = redis.createClient();
-client.connect();
 
+client.connect();
 client.flushAll('ASYNC');
 client.on('error', (err) => {
     console.log(err)
     console.log('Error occured while connecting or accessing redis server');
 });
 
+/**
+ * Finder: Si occupa di selezionare tutte le pair la cui ema(5) sul giornaliero è sotto il prezzo
+ * quindi possibile candidata alla sezione. La chiave viene scritta su redis
+ */
 Exchange.exchangeInfo().then(async (listPair) => {
 
     new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
         let {
-            o: open,
-            h: high,
-            l: low,
             c: close,
-            i: interval,
             x: isFinal,
         } = ticks;
 
@@ -36,9 +36,11 @@ Exchange.exchangeInfo().then(async (listPair) => {
 
                     if (currentClose > ema) {
                         let obj = JSON.stringify({'ema': ema, 'pair': symbol})
+                        console.log(obj)
                         await client.set(symbol, obj);
+                    } else {
+                        await client.del(symbol);
                     }
-                    return false;
 
                 }).catch(() => {
             })
