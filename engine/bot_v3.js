@@ -188,7 +188,13 @@ let obj = {
 
 }
 
-schedule.scheduleJob('* * * * *', function () {
+schedule.scheduleJob('* * * * *', function (
+    floatingPercArr,
+    floatingArr,
+    floatingPercValue,
+    floatingValue,
+    timeFrame,
+    exchangeInfoArray) {
 
     console.log('---------------- Calculate Floating -------------------- ');
 
@@ -198,8 +204,10 @@ schedule.scheduleJob('* * * * *', function () {
     for (let time of timeFrame) {
         for (const pair in exchangeInfoArray) {
             let key = pair + "_" + time
-            floatingPercValue += floatingPercArr[key];
-            floatingValue += floatingArr[key]
+            if (floatingPercArr[key] !== undefined && floatingArr[key] !== undefined) {
+                floatingPercValue += floatingPercArr[key];
+                floatingValue += floatingArr[key]
+            }
         }
     }
 
@@ -248,10 +256,30 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
                 floatingArr[key] = floatingtrade;
                 floatingPercArr[key] = floatingtradeperc;
+                console.log(floatingArr[key])
+                console.log(floatingPercArr[key])
+
+                console.log('---------------- Calculate Floating -------------------- ');
+
+                floatingPercValue = 0;
+                floatingValue = 0;
+
+                for (let time of timeFrame) {
+                    for (const pair in exchangeInfoArray) {
+                        let key = pair + "_" + time
+                        floatingPercValue += floatingPercArr[key];
+                        floatingValue += floatingArr[key]
+                    }
+                }
+
+                console.log("Percentage... " + _.round(floatingPercValue, 2) + " %")
+                console.log("Increment/Decrement... " + _.round(floatingValue, 2) + " $")
+                console.log('------------------------------------------------- ');
 
                 Algorithms.checkExit(obj)
             }
 
+            // se le entry sono 15 non devo continuare ad entrare finchè non finiscono le altre
             if (isFinal) {
 
                 obj['close'] = parseFloat(close);
