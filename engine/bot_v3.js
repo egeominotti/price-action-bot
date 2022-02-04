@@ -225,30 +225,29 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
     setInterval(() => {
 
-        let totaleFloatingPercentage = 0;
-        let totaleFloating = 0;
+        let totalFloatingPercentage = 0;
+        let totalFloating = 0;
 
         for (let time of timeFrame) {
             for (const token of listPair) {
                 let key = token + "_" + time
 
                 if (floatingArr[key] !== null && floatingPercArr[key] !== null) {
-                    totaleFloating += floatingArr[key];
-                    totaleFloatingPercentage += floatingPercArr[key];
+                    totalFloating += floatingArr[key];
+                    totalFloatingPercentage += floatingPercArr[key];
                 }
             }
         }
 
-        // console.log("Pair... " + symbol + " %")
-        // console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-        // console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + " $")
+        let totalBalanceFloating = balance + totalFloating;
 
-        let message = "Statistics Profit/Loss" + "\n" +
-            "Floating Percentage: " + totaleFloatingPercentage + " %" + "\n" +
-            "Floating Profit/Loss " + totaleFloating + " $"
+        let message = "Global Statistics Profit/Loss" + "\n" +
+            "--------------------------------------------------------------------" + "\n" +
+            "Floating Balance: " + +_.round(totalBalanceFloating, 2) + " $" + "\n" +
+            "Floating Percentage: " + _.round(totalFloatingPercentage, 2) + " %" + "\n" +
+            "Floating Profit/Loss " + _.round(totalFloating, 2) + " $"
 
-            Telegram.sendMessage(message)
-
+        Telegram.sendMessage(message)
 
     }, 30000);
 
