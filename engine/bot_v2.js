@@ -141,23 +141,23 @@ app.get('/tokenArray', async (req, res) => {
 });
 
 app.get('/exchangeInfoArray', async (req, res) => {
-    const dbData = await Bot.findOne({name: dbKey});
-    res.send(dbData.exchangeInfoArray);
+    //const dbData = await Bot.findOne({name: dbKey});
+    res.send(exchangeInfoArray);
 });
 
 app.get('/getExclusionList', async (req, res) => {
-    const dbData = await Bot.findOne({name: dbKey});
-    res.send(dbData.exclusionList);
+    //const dbData = await Bot.findOne({name: dbKey});
+    res.send(exclusionList);
 });
 
 app.get('/getEntryCoins', async (req, res) => {
-    const dbData = await Bot.findOne({name: dbKey});
-    res.send(dbData.entryCoins);
+    //const dbData = await Bot.findOne({name: dbKey});
+    res.send(entryCoins);
 });
 
 app.get('/getRecordPattern', async (req, res) => {
-    const dbData = await Bot.findOne({name: dbKey});
-    res.send(dbData.recordPattern);
+    //const dbData = await Bot.findOne({name: dbKey});
+    res.send(recordPattern);
 });
 
 let obj = {

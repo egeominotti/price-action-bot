@@ -311,15 +311,15 @@ async function checkExit(obj) {
                 recordPattern[key] = null;
                 entryCoins[key] = false;
 
-                await Bot.findOneAndUpdate({name: dbKey},
-                    {
-                        recordPattern: recordPattern,
-                        exclusionList: exclusionList,
-                        entryArray: entryArray,
-                        entryCoins: entryCoins,
-                        stopLossArray: stopLossArray,
-                        takeProfitArray: takeProfitArray,
-                    });
+                // await Bot.findOneAndUpdate({name: dbKey},
+                //     {
+                //         recordPattern: recordPattern,
+                //         exclusionList: exclusionList,
+                //         entryArray: entryArray,
+                //         entryCoins: entryCoins,
+                //         stopLossArray: stopLossArray,
+                //         takeProfitArray: takeProfitArray,
+                //     });
             }
 
         }
@@ -470,14 +470,14 @@ function checkEntry(
         ).finally(
             async () => {
 
-                await Bot.findOneAndUpdate({name: dbKey},
-                    {
-                        recordPattern: recordPattern,
-                        indexArray: indexArray,
-                        tokenArray: tokenArray,
-                        entryArray: entryArray,
-                        entryCoins: entryCoins
-                    });
+                // await Bot.findOneAndUpdate({name: dbKey},
+                //     {
+                //         recordPattern: recordPattern,
+                //         indexArray: indexArray,
+                //         tokenArray: tokenArray,
+                //         entryArray: entryArray,
+                //         entryCoins: entryCoins
+                //     });
             }
         )
     }
