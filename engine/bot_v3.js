@@ -274,7 +274,6 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
                 }
             }
 
-
             if (totalEntry < 15) {
 
                 if (isFinal) {
