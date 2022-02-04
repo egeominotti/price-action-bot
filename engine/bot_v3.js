@@ -29,11 +29,11 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
-    '1m',
-    // '15m',
-    // '1h',
-    // '4h',
-    // '1d',
+    '5m',
+    '15m',
+    '1h',
+    '4h',
+    '1d',
 ];
 
 let telegramEnabled = true;
@@ -188,36 +188,6 @@ let obj = {
     'dbKey': dbKey,
 
 }
-
-
-// schedule.scheduleJob('* * * * *', function (
-//     floatingPercArr,
-//     floatingArr,
-//     floatingPercValue,
-//     floatingValue,
-//     timeFrame,
-//     exchangeInfoArray) {
-//
-//     console.log('---------------- Calculate Floating -------------------- ');
-//
-//     floatingPercValue = 0;
-//     floatingValue = 0;
-//
-//     for (let time of timeFrame) {
-//         for (const pair in exchangeInfoArray) {
-//             let key = pair + "_" + time
-//             if (floatingPercArr[key] !== undefined && floatingArr[key] !== undefined) {
-//                 floatingPercValue += floatingPercArr[key];
-//                 floatingValue += floatingArr[key]
-//             }
-//         }
-//     }
-//
-//     console.log("Percentage... " + _.round(floatingPercValue, 2) + " %")
-//     console.log("Increment/Decrement... " + _.round(floatingValue, 2) + " $")
-//     console.log('------------------------------------------------- ');
-//
-// });
 
 let totalEntry = 0
 
