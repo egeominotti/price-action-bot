@@ -210,7 +210,7 @@ let pairs = [];
 
 Exchange.exchangeInfo().then(async (listPair) => {
 
-    new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
+    new Binance().websockets.candlesticks(listPair, '1d', async (candlesticks) => {
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
         let {
             c: close,
