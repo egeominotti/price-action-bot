@@ -226,12 +226,14 @@ Exchange.exchangeInfo().then(async (listPair) => {
                 .then((ema) => {
 
                     if (!isNaN(ema)) {
+
                         if (currentClose > ema) {
                             if (!pairs.includes(symbol)) {
                                 pairs.push(symbol)
                             }
-                        } else {
-                            // rimuovo elemento
+                        }
+
+                        if (currentClose < ema) {
                             for (let i = 0; i < pairs.length; i++) {
                                 if (pairs[i] !== null) {
                                     if (pairs[i] === symbol) {
@@ -256,7 +258,7 @@ setInterval(function () {
     console.log(pairs)
     console.log(pairs.length)
 
-    if (pairs.length > 100 && started === false) {
+    if (started === false) {
 
         for (let time of timeFrame) {
             for (const token of pairs) {
@@ -347,7 +349,7 @@ setInterval(function () {
                     obj['low'] = parseFloat(low);
 
                     console.log('---------------- Calculate Floating -------------------- ');
-                    console.log("Pair... " + symbol + " %")
+                    console.log("Pair... " + symbol)
                     console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
                     console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
                     console.log('-------------------------------------------------------------- ');
@@ -371,6 +373,7 @@ setInterval(function () {
             });
         }
     }
+
 }, 60000);
 
 
