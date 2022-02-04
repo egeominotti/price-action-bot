@@ -83,25 +83,7 @@ function exchangeInfo() {
                 }
 
 
-                // for (let time of timeFrame) {
-                //     for (const token of pairs) {
-                //
-                //         let key = token + "_" + time
-                //
-                //         exclusionList[key] = false;
-                //         indexArray[key] = -1;
-                //         tokenArray[key] = [];
-                //         entryCoins[key] = false;
-                //         recordPattern[key] = null;
-                //         takeProfitArray[key] = null;
-                //         stopLossArray[key] = null;
-                //         entryArray[key] = null;
-                //         listEntry[key] = null;
-                //         // Floating percentage
-                //         floatingArr[key] = 0;
-                //         floatingPercArr[key] = 0;
-                //     }
-                // }
+
 
                 // const dbData = await Bot.findOne({name: dbKey});
                 // if (dbData !== null) {
