@@ -1,4 +1,4 @@
-//const Telegram = require("../utility/telegram");
+const Telegram = require("../utility/telegram");
 const Binance = require('node-binance-api');
 const Indicators = require('../indicators/ema');
 const Algorithms = require('../algorithm/algorithm');
@@ -44,6 +44,7 @@ let variableBalance = 0;
 let totalPercentage = 0
 let sumSizeTrade = 0;
 const sizeTrade = 200;
+
 let floatingValue = 0;
 let floatingPercValue = 0;
 
@@ -120,23 +121,23 @@ app.get('/trade/emergency', async (req, res) => {
 
 
 app.get('/trade/entry', async (req, res) => {
-    const dbData = await Bot.findOne({name: dbKey});
-    res.send(dbData.entryArray);
+    //const dbData = await Bot.findOne({name: dbKey});
+    res.send(entryArray);
 });
 
 app.get('/trade/takeprofit', async (req, res) => {
-    const dbData = await Bot.findOne({name: dbKey});
-    res.send(dbData.takeProfitArray);
+    //const dbData = await Bot.findOne({name: dbKey});
+    res.send(takeProfitArray);
 });
 
 app.get('/trade/stoploss', async (req, res) => {
-    const dbData = await Bot.findOne({name: dbKey});
-    res.send(dbData.stopLossArray);
+    //const dbData = await Bot.findOne({name: dbKey});
+    res.send(stopLossArray);
 });
 
 app.get('/tokenArray', async (req, res) => {
-    const dbData = await Bot.findOne({name: dbKey});
-    res.send(dbData.tokenArray);
+    //const dbData = await Bot.findOne({name: dbKey});
+    res.send(tokenArray);
 });
 
 app.get('/exchangeInfoArray', async (req, res) => {
@@ -188,36 +189,68 @@ let obj = {
 
 }
 
-schedule.scheduleJob('* * * * *', function (
-    floatingPercArr,
-    floatingArr,
-    floatingPercValue,
-    floatingValue,
-    timeFrame,
-    exchangeInfoArray) {
 
-    console.log('---------------- Calculate Floating -------------------- ');
+// schedule.scheduleJob('* * * * *', function (
+//     floatingPercArr,
+//     floatingArr,
+//     floatingPercValue,
+//     floatingValue,
+//     timeFrame,
+//     exchangeInfoArray) {
+//
+//     console.log('---------------- Calculate Floating -------------------- ');
+//
+//     floatingPercValue = 0;
+//     floatingValue = 0;
+//
+//     for (let time of timeFrame) {
+//         for (const pair in exchangeInfoArray) {
+//             let key = pair + "_" + time
+//             if (floatingPercArr[key] !== undefined && floatingArr[key] !== undefined) {
+//                 floatingPercValue += floatingPercArr[key];
+//                 floatingValue += floatingArr[key]
+//             }
+//         }
+//     }
+//
+//     console.log("Percentage... " + _.round(floatingPercValue, 2) + " %")
+//     console.log("Increment/Decrement... " + _.round(floatingValue, 2) + " $")
+//     console.log('------------------------------------------------- ');
+//
+// });
 
-    floatingPercValue = 0;
-    floatingValue = 0;
-
-    for (let time of timeFrame) {
-        for (const pair in exchangeInfoArray) {
-            let key = pair + "_" + time
-            if (floatingPercArr[key] !== undefined && floatingArr[key] !== undefined) {
-                floatingPercValue += floatingPercArr[key];
-                floatingValue += floatingArr[key]
-            }
-        }
-    }
-
-    console.log("Percentage... " + _.round(floatingPercValue, 2) + " %")
-    console.log("Increment/Decrement... " + _.round(floatingValue, 2) + " $")
-    console.log('------------------------------------------------- ');
-
-});
+let totalEntry = 0
 
 Exchange.exchangeInfo(obj).then(async (listPair) => {
+
+    setInterval(() => {
+
+        let totaleFloatingPercentage = 0;
+        let totaleFloating = 0;
+
+        for (let time of timeFrame) {
+            for (const token of listPair) {
+                let key = token + "_" + time
+
+                if (floatingArr[key] !== null && floatingPercArr[key] !== null) {
+                    totaleFloating += floatingArr[key];
+                    totaleFloatingPercentage += floatingPercArr[key];
+                }
+            }
+        }
+
+        // console.log("Pair... " + symbol + " %")
+        // console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+        // console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + " $")
+
+        let message = "Statistics Profit/Loss" + "\n" +
+            "Floating Percentage: " + totaleFloatingPercentage + " %" + "\n" +
+            "Floating Profit/Loss " + totaleFloating + " $"
+
+            Telegram.sendMessage(message)
+
+
+    }, 30000);
 
     console.log("----------------------------------------------------")
     console.log("LOADED for scanning... " + listPair.length + " pair")
@@ -252,82 +285,91 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
                 let position = sizeTrade / entryArray[key]['entryprice'];
                 let floatingPosition = position * parseFloat(close);
                 let floatingtrade = floatingPosition - sizeTrade;
-                let floatingtradeperc = (floatingPosition - sizeTrade) / sizeTrade
+                let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
 
                 floatingArr[key] = floatingtrade;
                 floatingPercArr[key] = floatingtradeperc;
-                console.log(floatingArr[key])
-                console.log(floatingPercArr[key])
 
                 console.log('---------------- Calculate Floating -------------------- ');
 
-                floatingPercValue = 0;
-                floatingValue = 0;
+                // floatingPercValue += floatingtradeperc;
+                // floatingValue += floatingtrade;
 
-                for (let time of timeFrame) {
-                    for (const pair in exchangeInfoArray) {
-                        let key = pair + "_" + time
-                        floatingPercValue += floatingPercArr[key];
-                        floatingValue += floatingArr[key]
-                    }
-                }
-
-                console.log("Percentage... " + _.round(floatingPercValue, 2) + " %")
-                console.log("Increment/Decrement... " + _.round(floatingValue, 2) + " $")
-                console.log('------------------------------------------------- ');
+                // for (let time of timeFrame) {
+                //     for (const pair in exchangeInfoArray) {
+                //         let key = pair + "_" + time
+                //         floatingPercValue += floatingPercArr[key];
+                //         floatingValue += floatingArr[key]
+                //     }
+                // }
+                console.log("Pair... " + symbol + " %")
+                console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+                console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + " $")
+                console.log('-------------------------------------------------------------- ');
 
                 Algorithms.checkExit(obj)
             }
 
-            // se le entry sono 15 non devo continuare ad entrare finchè non finiscono le altre
-            if (isFinal) {
 
-                obj['close'] = parseFloat(close);
-                obj['high'] = parseFloat(high);
-                obj['open'] = parseFloat(open);
-                obj['low'] = parseFloat(low);
-
-                let closeEMA = parseFloat(close);
-                let currentClose = parseFloat(close)
-
-                if (interval === '1d') {
-                    if (exclusionList[key] === true) exclusionList[key] = false;
-                } else {
-                    closeEMA = undefined;
+            for (const k in entryArray) {
+                if (entryArray[k] !== null) {
+                    totalEntry += 1
                 }
-
-                Indicators.ema(closeEMA, symbol, '1d', 5, 150, emaDaily).then((ema) => {
-
-                    if (entryArray[key] === null) {
-
-                        if (currentClose > ema) {
-
-                            obj['symbol'] = symbol;
-                            obj['key'] = key;
-                            obj['interval'] = interval;
-
-                            //console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
-                            Algorithms.checkEntry(obj)
-                        }
-                    }
-
-                    // Se la close è sotto l'ema applico il trailing stop loss | trailing take profit
-                    if (currentClose < ema) {
-
-                        if (entryArray[key] !== null) {
-                            Algorithms.forceSell(obj)
-                        } else {
-                            recordPattern[key] = null;
-                            indexArray[key] = -1;
-                            tokenArray[key] = [];
-                        }
-                    }
-
-                }).catch((err) => {
-                    console.log(err)
-                })
-
             }
+
+
+            if (totalEntry < 15) {
+
+                if (isFinal) {
+
+                    obj['close'] = parseFloat(close);
+                    obj['high'] = parseFloat(high);
+                    obj['open'] = parseFloat(open);
+                    obj['low'] = parseFloat(low);
+
+                    let closeEMA = parseFloat(close);
+                    let currentClose = parseFloat(close)
+
+                    if (interval === '1d') {
+                        if (exclusionList[key] === true) exclusionList[key] = false;
+                    } else {
+                        closeEMA = undefined;
+                    }
+
+                    Indicators.ema(closeEMA, symbol, '1d', 5, 150, emaDaily).then((ema) => {
+
+                        if (entryArray[key] === null) {
+
+                            if (currentClose > ema) {
+
+                                obj['symbol'] = symbol;
+                                obj['key'] = key;
+                                obj['interval'] = interval;
+
+                                //console.log("TREND SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA5: " + ema + " - Close: " + close)
+                                Algorithms.checkEntry(obj)
+                            }
+                        }
+
+                        // Se la close è sotto l'ema applico il trailing stop loss | trailing take profit
+                        if (currentClose < ema) {
+
+                            if (entryArray[key] !== null) {
+                                Algorithms.forceSell(obj)
+                            } else {
+                                recordPattern[key] = null;
+                                indexArray[key] = -1;
+                                tokenArray[key] = [];
+                            }
+                        }
+
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+
+                }
+            }
+
         });
     }
 
