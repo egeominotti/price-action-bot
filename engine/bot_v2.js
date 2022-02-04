@@ -23,15 +23,15 @@ mongoose.connect(process.env.URI_MONGODB);
 const binance = new Binance().options({
     //recvWindow: 30000, // Set a higher recvWindow to increase response timeout
     //useServerTime: true,
-    verbose: false, // Add extra output when subscribing to WebSockets, etc
-    log: log => {
-        console.log(log); // You can create your own logger here, or disable console output
-    }
+    // verbose: false, // Add extra output when subscribing to WebSockets, etc
+    // log: log => {
+    //     console.log(log); // You can create your own logger here, or disable console output
+    // }
 });
 
 
 let timeFrame = [
-    '1m',
+    //'1m',
     '5m',
     // '15m',
     // '1h',
@@ -200,7 +200,6 @@ let obj = {
 }
 
 
-
 Exchange.exchangeInfo(obj).then(async (listPair) => {
 
     let message = "Hi from HAL V2" + "\n" +
@@ -255,13 +254,6 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
             let key = symbol + "_" + interval
             let currentClose = parseFloat(close)
 
-            obj['symbol'] = symbol;
-            obj['key'] = key;
-            obj['interval'] = interval;
-            obj['close'] = parseFloat(close);
-            obj['high'] = parseFloat(high);
-            obj['open'] = parseFloat(open);
-            obj['low'] = parseFloat(low);
 
             if (entryArray[key] !== null) {
 
@@ -272,6 +264,14 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
 
                 floatingArr[key] = floatingtrade;
                 floatingPercArr[key] = floatingtradeperc;
+
+                obj['symbol'] = symbol;
+                obj['key'] = key;
+                obj['interval'] = interval;
+                obj['close'] = parseFloat(close);
+                obj['high'] = parseFloat(high);
+                obj['open'] = parseFloat(open);
+                obj['low'] = parseFloat(low);
 
                 Algorithms.checkExit(obj)
 
@@ -284,67 +284,68 @@ Exchange.exchangeInfo(obj).then(async (listPair) => {
             }
 
 
-            for (const k in entryArray) {
-                if (entryArray[k] !== null) {
-                    totalEntry += 1
-                }
-            }
+            // for (const k in entryArray) {
+            //     if (entryArray[k] !== null) {
+            //         totalEntry += 1
+            //     }
+            // }
 
-            if (totalEntry < 15) {
+            /**
+             * Se ci sono piu' di 15 entrate non procedo piu' con la ricerca dei nuovi e aspetto che vengano chiusi
+             */
+            //if (totalEntry < 15) {
 
-                if (isFinal) {
+            if (isFinal) {
 
-                    /**
-                     * Quando l'intervallo è 1d controllo per il pair corrente che l'ema(5) sia sotto il prezzo e lo inserisco
-                     * all'interno di un object chiamato listEntry che verrà poi processato con la seconda parte dell'algoritmo
-                     */
-                    if (interval === '5m') {
+                /**
+                 * Quando l'intervallo è '1d' controllo per il pair corrente che l'ema(5) sia sotto il prezzo e lo inserisco
+                 * all'interno di un object chiamato listEntry che verrà poi processato con la seconda parte dell'algoritmo
+                 */
+                if (interval === '5m') {
 
-                        Indicators.emaWithoutCache(symbol, '1d', 5, 150)
+                    Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
-                            .then((ema) => {
-                                let returnValue = false;
-                                if (currentClose > ema) returnValue = true;
+                        .then((ema) => {
+                            let returnValue = false;
+                            if (currentClose > ema) returnValue = true;
 
-                                return returnValue;
+                            return returnValue;
 
-                            }).then((result) => {
+                        }).then((result) => {
 
-                            if (result) {
+                        if (result) {
 
-                                obj['close'] = parseFloat(close);
-                                obj['high'] = parseFloat(high);
-                                obj['open'] = parseFloat(open);
-                                obj['low'] = parseFloat(low);
-                                obj['symbol'] = symbol;
-                                obj['key'] = key;
-                                obj['interval'] = interval;
+                            obj['close'] = parseFloat(close);
+                            obj['high'] = parseFloat(high);
+                            obj['open'] = parseFloat(open);
+                            obj['low'] = parseFloat(low);
+                            obj['symbol'] = symbol;
+                            obj['key'] = key;
+                            obj['interval'] = interval;
 
-                                listEntry[key] = obj;
+                            listEntry[key] = obj;
 
-                            } else {
+                        } else {
 
-                                if (entryArray[key] !== null) {
-                                    Algorithms.forceSell(obj)
-                                }
-
+                            if (entryArray[key] !== null) {
+                                Algorithms.forceSell(obj)
                             }
 
-                        }).catch((err) => {
-                            console.log(err)
-                        })
-                    }
+                        }
 
-                    /**
-                     * L'object listEntry contiene la lista di tutte le pair (chiave/valore) che hanno soddisfatto la condizione close > ema(5)
-                     * Se risulta nulla allora il filtro dell'ema non ha indentificato nessun pair utile per essere lavorato
-                     */
-                    if (listEntry[key] !== null) {
-                        Algorithms.checkEntry(listEntry[key])
-                    }
-
+                    }).catch(() => {})
                 }
+
+                /**
+                 * L'object listEntry contiene la lista di tutte le pair (chiave/valore) che hanno soddisfatto la condizione close > ema(5)
+                 * Se risulta nulla allora il filtro dell'ema non ha indentificato nessun pair utile per essere lavorato
+                 */
+                if (listEntry[key] !== null) {
+                    Algorithms.checkEntry(listEntry[key])
+                }
+
             }
+            //}
 
         });
     }
