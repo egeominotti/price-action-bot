@@ -190,7 +190,7 @@ let obj = {
 
 schedule.scheduleJob('* * * * *', function () {
 
-    console.log('------- Calculate Floating -------- ');
+    console.log('---------------- Calculate Floating -------------------- ');
 
     floatingPercValue = 0;
     floatingValue = 0;
