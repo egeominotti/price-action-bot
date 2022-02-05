@@ -241,13 +241,18 @@ Exchange.exchangeInfo().then(async (listPair) => {
 
 setInterval(() => {
 
-    console.log(pairs.length)
     if (started === false && pairs.length > 0) {
+
+        let message = "Hi from HAL V2" + "\n" +
+            "LOADED for scanning... " + pairs.length + " pair" + "\n"
+        Telegram.sendMessage(message)
 
         for (let time of timeFrame) {
             for (const token of pairs) {
 
                 let key = token + "_" + time
+                console.log(floatingArr)
+                console.log(floatingPercArr)
 
                 exclusionList[key] = false;
                 indexArray[key] = -1;
@@ -262,35 +267,6 @@ setInterval(() => {
                 floatingPercArr[key] = 0;
             }
         }
-
-        let message = "Hi from HAL V2" + "\n" +
-            "LOADED for scanning... " + pairs.length + " pair" + "\n"
-        Telegram.sendMessage(message)
-
-        setInterval((totalFloatingValue, totalFloatingPercValue, totalFloatingBalance) => {
-
-            for (let time of timeFrame) {
-                for (const token of pairs) {
-                    let key = token + "_" + time
-
-                    if (floatingArr[key] !== null && floatingPercArr[key] !== null) {
-                        totalFloatingValue += floatingArr[key];
-                        totalFloatingPercValue += floatingPercArr[key];
-                    }
-                }
-            }
-
-            totalFloatingBalance = balance + totalFloatingValue;
-
-            let message = "Global Statistics Profit/Loss" + "\n" +
-                "--------------------------------------------------------------------" + "\n" +
-                "Total Floating Balance: " + +_.round(totalFloatingBalance, 2) + " $" + "\n" +
-                "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-                "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-            Telegram.sendMessage(message)
-
-        }, 1800000);
 
         console.log("----------------------------------------------------")
         console.log("LOADED for scanning... " + pairs.length + " pair")
@@ -336,6 +312,26 @@ setInterval(() => {
                     console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
                     console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
                     console.log('-------------------------------------------------------------- ');
+
+                    totalFloatingValue = 0;
+                    totalFloatingPercValue = 0;
+                    totalFloatingBalance = 0;
+
+                    totalFloatingValue += floatingArr[key];
+                    totalFloatingPercValue += floatingPercArr[key];
+                    totalFloatingBalance = balance + totalFloatingValue;
+
+                    console.log(totalFloatingBalance)
+                    console.log(totalFloatingPercValue)
+                    console.log(totalFloatingValue)
+
+                    let message = "Global Statistics Profit/Loss" + "\n" +
+                        "--------------------------------------------------------------------" + "\n" +
+                        "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+                        "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+                        "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+                    console.log(message)
 
                     Algorithms.checkExit(obj)
                 }
