@@ -366,9 +366,8 @@ setInterval(() => {
                                 console.log(message)
 
                                 let result = Algorithms.checkExit(obj)
-                                if (result) {
-                                    totalEntry -= 1;
-                                }
+                                if (result) totalEntry -= 1;
+
                             }
 
                             if (isFinal) {
