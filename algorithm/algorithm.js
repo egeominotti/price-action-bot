@@ -363,7 +363,7 @@ function checkEntry(
 
         }).catch(
             (error) => {
-                console.log(error)
+
                 recordPattern[key] = null;
                 indexArray[key] = -1;
                 tokenArray[key] = [];

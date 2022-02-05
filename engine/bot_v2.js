@@ -239,6 +239,19 @@ Exchange.exchangeInfo().then(async (listPair) => {
     console.log(err)
 });
 
+
+setInterval(() => {
+
+    let message = "Global Statistics Profit/Loss" + "\n" +
+        "--------------------------------------------------------------------" + "\n" +
+        "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+        "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+        "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+    Telegram.sendMessage(message)
+
+}, 60000);
+
 (async () => {
 
     setInterval(() => {
@@ -275,10 +288,7 @@ Exchange.exchangeInfo().then(async (listPair) => {
             started = true;
 
             for (const time of timeFrame) {
-                console.log("RIPARTO")
-                console.log("RIPARTO")
-                console.log("RIPARTO")
-                console.log("RIPARTO")
+
                 binance.websockets.candlesticks(pairs, time, (candlesticks) => {
                     let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
                     let {
@@ -293,7 +303,7 @@ Exchange.exchangeInfo().then(async (listPair) => {
                     let key = symbol + "_" + interval
 
                     // se non è stato escludo allora continuo a cercare
-                    if(exclusionList[key] === false) {
+                    if (exclusionList[key] === false) {
 
                         if (entryArray[key] !== null) {
 
@@ -334,10 +344,6 @@ Exchange.exchangeInfo().then(async (listPair) => {
                             }
 
                             totalFloatingBalance = balance + totalFloatingValue;
-
-                            console.log(totalFloatingBalance)
-                            console.log(totalFloatingPercValue)
-                            console.log(totalFloatingValue)
 
                             let message = "Global Statistics Profit/Loss" + "\n" +
                                 "--------------------------------------------------------------------" + "\n" +
