@@ -7,15 +7,6 @@ const mongoose = require("mongoose");
 const _ = require("lodash");
 const cors = require('cors')
 const express = require("express");
-const redis = require("redis");
-
-const client = redis.createClient();
-client.connect();
-
-client.on('error', (err) => {
-    console.log(err)
-    console.log('Error occured while connecting or accessing redis server');
-});
 
 const port = 3000;
 const app = express();
@@ -35,10 +26,10 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
-    '5m',
-    '15m',
-    '1h',
-    '4h',
+    '1m',
+    //'15m',
+    //'1h',
+    //'4h',
 ];
 
 let telegramEnabled = true;
@@ -205,7 +196,7 @@ let pairs = [];
 
 Exchange.exchangeInfo().then(async (listPair) => {
 
-    new Binance().websockets.candlesticks(listPair, '1d', async (candlesticks) => {
+    new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
         let {
             c: close,
@@ -248,11 +239,10 @@ Exchange.exchangeInfo().then(async (listPair) => {
     console.log(err)
 });
 
-setInterval(function () {
+setInterval(() => {
 
     console.log(pairs.length)
-
-    if (started === false && pairs.length > 50) {
+    if (started === false && pairs.length > 0) {
 
         for (let time of timeFrame) {
             for (const token of pairs) {
