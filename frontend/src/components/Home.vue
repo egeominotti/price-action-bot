@@ -9,7 +9,8 @@
               class="custom-header-b-card"
           >
             <b-card-text class="custom-data-bot">
-              Tradestatus: {{ tradeEnabled }} |
+              Tradestatus: {{ initialBalance  }} |
+              Profit: {{ tradeEnabled }} |
               Balance: {{ balance }}$ |
               Entry Counter: {{ counterEN }} |
               Takeprofit Counter: {{ counterTP }} |
@@ -109,6 +110,7 @@ export default {
       sizeTrade: 0,
       floating: 0,
       floatingperc: 0,
+      initialBalance: 0,
       tradeEnabled: false,
       telegramEnabled: false,
       token: null,
@@ -141,6 +143,7 @@ export default {
       this.telegramEnabled = infoData.telegramEnabled;
       this.floatingperc = infoData.floatingperc;
       this.floating = infoData.floating;
+      this.initialBalance = infoData.initialBalance;
 
       const entryArrayReq = await fetch(BASE_URL + '/trade/entry');
       const entryArrayData = await entryArrayReq.json();

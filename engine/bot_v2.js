@@ -64,6 +64,7 @@ let dbKey = 'prova_2';
 app.get('/info', (req, res) => {
     let obj = {
         'balance': variableBalance,
+        'initialBalance': balance,
         'sizeTrade': sizeTrade,
         'tradeEnabled': tradeEnabled,
         'telegramEnabled': telegramEnabled,
