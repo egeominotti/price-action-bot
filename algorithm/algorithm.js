@@ -24,10 +24,10 @@ function takeProfit(obj) {
     let totalPercentage = obj.totalPercentage;
     let variableBalance = obj.variableBalance;
 
-    let entryprice = recordPattern['entryprice']
-    let entrypricedate = recordPattern['entrypricedate']
-    let takeprofit = recordPattern['takeprofit']
-    let strategy = recordPattern['strategy']
+    let entryprice = recordPattern[key]['entryprice']
+    let entrypricedate = recordPattern[key]['entrypricedate']
+    let takeprofit = recordPattern[key]['takeprofit']
+    let strategy = recordPattern[key]['strategy']
 
     if (close >= takeprofit) {
 
@@ -114,10 +114,10 @@ function stopLoss(obj) {
     let sizeTrade = obj.sizeTrade;
     let totalPercentage = obj.totalPercentage;
 
-    let entryprice = recordPattern['entryprice']
-    let entrypricedate = recordPattern['entrypricedate']
-    let stoploss = recordPattern['stoploss']
-    let strategy = recordPattern['strategy']
+    let entryprice = recordPattern[key]['entryprice']
+    let entrypricedate = recordPattern[key]['entrypricedate']
+    let stoploss = recordPattern[key]['stoploss']
+    let strategy = recordPattern[key]['strategy']
 
     console.log(recordPattern[key])
     console.log(close);
@@ -385,5 +385,4 @@ module.exports = {
     checkExit,
     stopLoss,
     takeProfit,
-    forceSell
 }

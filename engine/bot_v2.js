@@ -239,19 +239,6 @@ Exchange.exchangeInfo().then(async (listPair) => {
     console.log(err)
 });
 
-
-// setInterval(() => {
-//
-//     let endpoints = binance.websockets.subscriptions();
-//
-//     for (let endpoint in endpoints) {
-//         console.log(endpoints)
-//         let ws = endpoints[endpoint];
-//         ws.terminate();
-//     }
-//
-// }, 100000);
-
 (async () => {
 
     setInterval(() => {
@@ -362,28 +349,7 @@ Exchange.exchangeInfo().then(async (listPair) => {
 
                             let result = Algorithms.checkExit(obj)
                             if (result) {
-
-                                if (pairs.length === 0) {
-                                    // chiudo il bot
-                                    process.exit(1);
-                                }
-
-                                // for (let i = 0; i < pairs.length; i++) {
-                                //     if (pairs[i] !== null) {
-                                //         if (pairs[i] === symbol) {
-                                //
-                                //             let endpoints = binance.websockets.subscriptions();
-                                //             for (let endpoint in endpoints) {
-                                //                 if (endpoints.indexOf(symbol.toLowerCase()) !== -1) {
-                                //                     let ws = endpoints[endpoint];
-                                //                     ws.terminate();
-                                //                 }
-                                //             }
-                                //             pairs.splice(i, 1);
-                                //         }
-                                //     }
-                                // }
-
+                                // elimino la pair
                             }
                         }
 
