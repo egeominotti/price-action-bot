@@ -303,73 +303,85 @@ setInterval(() => {
 
                     let key = symbol + "_" + interval
 
-                    if (exclusionList[key] === false) {
+                    totalEntry = 0;
+                    for (let k in entryArray) {
+                        if (entryArray[k] !== null) {
+                            totalEntry += 1;
+                            console.log("----- ENTRY TOTALI -----")
+                            console.log(totalEntry)
+                        }
+                    }
 
-                        if (entryArray[key] !== null) {
+                    if (totalEntry <= 14) {
 
-                            let position = sizeTrade / entryArray[key]['entryprice'];
-                            let floatingPosition = position * parseFloat(close);
-                            let floatingtrade = floatingPosition - sizeTrade;
-                            let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+                        if (exclusionList[key] === false) {
 
-                            floatingArr[key] = floatingtrade;
-                            floatingPercArr[key] = floatingtradeperc;
+                            if (entryArray[key] !== null) {
 
-                            obj['symbol'] = symbol;
-                            obj['key'] = key;
-                            obj['interval'] = interval;
-                            obj['close'] = parseFloat(close);
-                            obj['high'] = parseFloat(high);
-                            obj['open'] = parseFloat(open);
-                            obj['low'] = parseFloat(low);
+                                let position = sizeTrade / entryArray[key]['entryprice'];
+                                let floatingPosition = position * parseFloat(close);
+                                let floatingtrade = floatingPosition - sizeTrade;
+                                let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
 
-                            console.log('---------------- Calculate Floating -------------------- ');
-                            console.log("Pair... " + symbol)
-                            console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-                            console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-                            console.log('-------------------------------------------------------------- ');
+                                floatingArr[key] = floatingtrade;
+                                floatingPercArr[key] = floatingtradeperc;
 
-                            totalFloatingValue = 0;
-                            totalFloatingPercValue = 0;
-                            totalFloatingBalance = 0;
+                                obj['symbol'] = symbol;
+                                obj['key'] = key;
+                                obj['interval'] = interval;
+                                obj['close'] = parseFloat(close);
+                                obj['high'] = parseFloat(high);
+                                obj['open'] = parseFloat(open);
+                                obj['low'] = parseFloat(low);
 
-                            for (let time of timeFrame) {
-                                for (const token of pairs) {
-                                    let keyFloating = token + "_" + time
-                                    if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
-                                        totalFloatingValue += floatingArr[keyFloating];
-                                        totalFloatingPercValue += floatingPercArr[keyFloating];
+                                console.log('---------------- Calculate Floating -------------------- ');
+                                console.log("Pair... " + symbol)
+                                console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+                                console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+                                console.log('-------------------------------------------------------------- ');
+
+                                totalFloatingValue = 0;
+                                totalFloatingPercValue = 0;
+                                totalFloatingBalance = 0;
+
+                                for (let time of timeFrame) {
+                                    for (const token of pairs) {
+                                        let keyFloating = token + "_" + time
+                                        if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                                            totalFloatingValue += floatingArr[keyFloating];
+                                            totalFloatingPercValue += floatingPercArr[keyFloating];
+                                        }
                                     }
+                                }
+
+                                totalFloatingBalance = balance + totalFloatingValue;
+
+                                let message = "Global Statistics Profit/Loss" + "\n" +
+                                    "--------------------------------------------------------------------" + "\n" +
+                                    "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+                                    "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+                                    "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+                                console.log(message)
+
+                                let result = Algorithms.checkExit(obj)
+                                if (result) {
+                                    totalEntry -= 1;
                                 }
                             }
 
-                            totalFloatingBalance = balance + totalFloatingValue;
+                            if (isFinal) {
 
-                            let message = "Global Statistics Profit/Loss" + "\n" +
-                                "--------------------------------------------------------------------" + "\n" +
-                                "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-                                "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-                                "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+                                obj['symbol'] = symbol;
+                                obj['key'] = key;
+                                obj['interval'] = interval;
+                                obj['close'] = parseFloat(close);
+                                obj['high'] = parseFloat(high);
+                                obj['open'] = parseFloat(open);
+                                obj['low'] = parseFloat(low);
 
-                            console.log(message)
-
-                            let result = Algorithms.checkExit(obj)
-                            if (result) {
-                                // elimino la pair
+                                Algorithms.checkEntry(obj)
                             }
-                        }
-
-                        if (isFinal) {
-
-                            obj['symbol'] = symbol;
-                            obj['key'] = key;
-                            obj['interval'] = interval;
-                            obj['close'] = parseFloat(close);
-                            obj['high'] = parseFloat(high);
-                            obj['open'] = parseFloat(open);
-                            obj['low'] = parseFloat(low);
-
-                            Algorithms.checkEntry(obj)
                         }
                     }
 
