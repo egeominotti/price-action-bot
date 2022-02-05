@@ -250,7 +250,7 @@ setInterval(() => {
 
     Telegram.sendMessage(message)
 
-}, 60000);
+}, 300000);
 
 (async () => {
 
