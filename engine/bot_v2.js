@@ -41,6 +41,7 @@ let variableBalance = 0;
 let totalPercentage = 0
 let sumSizeTrade = 0;
 const sizeTrade = 200;
+const maxEntry = (balance - sizeTrade) -1
 
 let totalFloatingValue = 0;
 let totalFloatingPercValue = 0;
@@ -312,7 +313,7 @@ setInterval(() => {
                         }
                     }
 
-                    if (totalEntry <= 14) {
+                    if (totalEntry <= maxEntry) {
 
                         if (exclusionList[key] === false) {
 
