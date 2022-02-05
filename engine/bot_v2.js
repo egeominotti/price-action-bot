@@ -239,7 +239,10 @@ Exchange.exchangeInfo().then(async (listPair) => {
     console.log(err)
 });
 
-setInterval(() => {
+
+(async () => {
+
+    setInterval(() => {
 
     if (started === false && pairs.length > 0) {
 
@@ -251,8 +254,6 @@ setInterval(() => {
             for (const token of pairs) {
 
                 let key = token + "_" + time
-                console.log(floatingArr)
-                console.log(floatingPercArr)
 
                 exclusionList[key] = false;
                 indexArray[key] = -1;
@@ -329,7 +330,6 @@ setInterval(() => {
 
                     totalFloatingBalance = balance + totalFloatingValue;
 
-
                     console.log(totalFloatingBalance)
                     console.log(totalFloatingPercValue)
                     console.log(totalFloatingValue)
@@ -363,6 +363,10 @@ setInterval(() => {
     }
 
 }, 60000);
+
+
+})();
+
 
 
 

@@ -275,15 +275,14 @@ function checkExit(obj) {
     let key = obj.key;
     let binance = obj.binance;
     let symbol = obj.symbol;
-    let exclusionList = obj.exclusionList;
     let recordPattern = obj.recordPattern;
     let exchangeInfoArray = obj.exchangeInfoArray;
     let entryArray = obj.entryArray;
     let tradeEnabled = obj.tradeEnabled;
-    let stopLossArray = obj.stopLossArray;
-    let takeProfitArray = obj.takeProfitArray;
     let entryCoins = obj.entryCoins;
-    let dbKey = obj.dbKey;
+
+    console.log("CERCO USCITE")
+    console.log(recordPattern[key])
 
 
     // check in real time - takeprofit and stoploss
@@ -344,7 +343,7 @@ function checkEntry(
 
     if (exclusionList[key] === false && entryCoins[key] === false) {
 
-        Indicators.ema(close, symbol, interval, 200, 500, emaArray).then((ema) => {
+        Indicators.ema(close, symbol, interval, 200, 400, emaArray).then((ema) => {
 
             if (close < ema) {
                 recordPattern[key] = null;
@@ -447,7 +446,7 @@ function checkEntry(
 
         }).catch(
             (error) => {
-
+                console.log(error)
                 recordPattern[key] = null;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
