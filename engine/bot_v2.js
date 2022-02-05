@@ -26,7 +26,6 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
-    //'1m',
     '5m',
     '15m',
     '1h',
@@ -313,8 +312,6 @@ setInterval(() => {
                             console.log(totalEntry)
                         }
                     }
-                    console.log(totalEntry)
-                    console.log(maxEntry)
 
                     if (totalEntry <= maxEntry) {
 
