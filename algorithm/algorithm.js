@@ -24,6 +24,7 @@ function takeProfit(obj) {
     let totalPercentage = obj.totalPercentage;
     let variableBalance = obj.variableBalance;
 
+
     let entryprice = recordPattern[key]['entryprice']
     let entrypricedate = recordPattern[key]['entrypricedate']
     let takeprofit = recordPattern[key]['takeprofit']
@@ -57,10 +58,10 @@ function takeProfit(obj) {
             takeprofitvalue: takeprofit,
             takeprofitpercentage: takeProfitPercentage,
             takeprofitdate: new Date(),
-            hh: recordPattern['hh'],
-            ll: recordPattern['ll'],
-            lh: recordPattern['lh'],
-            hl: recordPattern['hl'],
+            hh: recordPattern[key]['hh'],
+            ll: recordPattern[key]['ll'],
+            lh: recordPattern[key]['lh'],
+            hl: recordPattern[key]['hl'],
             strategy: strategy
         }
 
@@ -83,10 +84,10 @@ function takeProfit(obj) {
                 "Balance: " + newBalance + "\n" +
                 "Entry Price: " + entryprice + "\n" +
                 "Entry date: " + entrypricedate.toUTCString() + "\n" +
-                "hh: " + recordPattern['hh'] + "\n" +
-                "ll: " + recordPattern['ll'] + "\n" +
-                "lh: " + recordPattern['lh'] + "\n" +
-                "hl: " + recordPattern['hl']
+                "hh: " + recordPattern[key]['hh'] + "\n" +
+                "ll: " + recordPattern[key]['ll'] + "\n" +
+                "lh: " + recordPattern[key]['lh'] + "\n" +
+                "hl: " + recordPattern[key]['hl']
 
             Telegram.sendMessage(message)
         }
@@ -119,10 +120,6 @@ function stopLoss(obj) {
     let stoploss = recordPattern[key]['stoploss']
     let strategy = recordPattern[key]['strategy']
 
-    console.log(recordPattern[key])
-    console.log(close);
-    console.log(stoploss);
-
     if (close <= stoploss) {
 
         let finaleTradeValue;
@@ -148,10 +145,10 @@ function stopLoss(obj) {
             stoplossvalue: stoploss,
             stoplosspercentage: stopLossPercentage,
             stoplossdate: new Date(),
-            hh: recordPattern['hh'],
-            ll: recordPattern['ll'],
-            lh: recordPattern['lh'],
-            hl: recordPattern['hl'],
+            hh: recordPattern[key]['hh'],
+            ll: recordPattern[key]['ll'],
+            lh: recordPattern[key]['lh'],
+            hl: recordPattern[key]['hl'],
             strategy: strategy
         }
 
@@ -174,10 +171,10 @@ function stopLoss(obj) {
                 "Balance: " + newBalance + "\n" +
                 "Entry Price: " + entryprice + "\n" +
                 "Entry date: " + entrypricedate.toUTCString() + "\n" +
-                "hh: " + recordPattern['hh'] + "\n" +
-                "ll: " + recordPattern['ll'] + "\n" +
-                "lh: " + recordPattern['lh'] + "\n" +
-                "hl: " + recordPattern['hl']
+                "hh: " + recordPattern[key]['hh'] + "\n" +
+                "ll: " + recordPattern[key]['ll'] + "\n" +
+                "lh: " + recordPattern[key]['lh'] + "\n" +
+                "hl: " + recordPattern[key]['hl']
 
             Telegram.sendMessage(message)
         }
@@ -199,9 +196,6 @@ function checkExit(obj) {
     let entryArray = obj.entryArray;
     let tradeEnabled = obj.tradeEnabled;
     let entryCoins = obj.entryCoins;
-
-    console.log("CERCO USCITE")
-    console.log(recordPattern[key])
 
 
     // check in real time - takeprofit and stoploss
