@@ -11,6 +11,8 @@ function strategyBreakout(symbol, interval, close, record) {
     if (close > record['lh']) {
 
         let stoploss = record['ll'] * 0.99;
+        console.log("CALCOLO STOPLOSS")
+        console.log(record['ll'])
         let takeprofit = (close - stoploss) * 2 + close;
 
         record['confirmed'] = true
