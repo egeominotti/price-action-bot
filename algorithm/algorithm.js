@@ -204,7 +204,10 @@ function stopLoss(obj) {
     let stoploss = recordPattern['stoploss']
     let strategy = recordPattern['strategy']
 
-    // Stop Loss
+    console.log(recordPattern[key])
+    console.log(close);
+    console.log(stoploss);
+
     if (close <= stoploss) {
 
         let finaleTradeValue;
@@ -308,7 +311,11 @@ function checkExit(obj) {
                 entryArray[key] = null;
                 recordPattern[key] = null;
                 entryCoins[key] = false;
+
+                return true;
             }
+
+            return false;
 
         }
     }
