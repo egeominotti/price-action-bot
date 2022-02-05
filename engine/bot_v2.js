@@ -302,7 +302,6 @@ setInterval(() => {
 
                     let key = symbol + "_" + interval
 
-                    // se non è stato escludo allora continuo a cercare
                     if (exclusionList[key] === false) {
 
                         if (entryArray[key] !== null) {
