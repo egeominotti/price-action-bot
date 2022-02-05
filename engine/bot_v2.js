@@ -320,9 +320,10 @@ setInterval(() => {
                     for (let time of timeFrame) {
                         for (const token of pairs) {
                             let keyFloating = token + "_" + time
-
-                            totalFloatingValue += floatingArr[keyFloating];
-                            totalFloatingPercValue += floatingPercArr[keyFloating];
+                            if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                                totalFloatingValue += floatingArr[keyFloating];
+                                totalFloatingPercValue += floatingPercArr[keyFloating];
+                            }
                         }
                     }
 
