@@ -247,7 +247,7 @@ setInterval(() => {
 
     let message = "Global Statistics Profit/Loss" + "\n" +
         "--------------------------------------------------------------------" + "\n" +
-        "Total pair in trading: " + totalEntry + " $" + "\n" +
+        "Total pair in trading: " + totalEntry + "\n" +
         "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
         "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
         "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
@@ -312,6 +312,8 @@ setInterval(() => {
                             totalEntry += 1;
                         }
                     }
+                    console.log(totalEntry)
+                    console.log(maxEntry)
 
                     if (totalEntry <= maxEntry) {
 
