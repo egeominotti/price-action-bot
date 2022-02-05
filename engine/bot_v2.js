@@ -317,9 +317,17 @@ setInterval(() => {
                     totalFloatingPercValue = 0;
                     totalFloatingBalance = 0;
 
-                    totalFloatingValue += floatingArr[key];
-                    totalFloatingPercValue += floatingPercArr[key];
+                    for (let time of timeFrame) {
+                        for (const token of pairs) {
+                            let keyFloating = token + "_" + time
+
+                            totalFloatingValue += floatingArr[keyFloating];
+                            totalFloatingPercValue += floatingPercArr[keyFloating];
+                        }
+                    }
+
                     totalFloatingBalance = balance + totalFloatingValue;
+
 
                     console.log(totalFloatingBalance)
                     console.log(totalFloatingPercValue)
