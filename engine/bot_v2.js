@@ -26,10 +26,11 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
-    '5m',
-    '15m',
-    '1h',
-    '4h',
+    '1m',
+    // '5m',
+    // '15m',
+    // '1h',
+    // '4h',
 ];
 
 let telegramEnabled = true;
@@ -198,7 +199,7 @@ let pairs = [];
 
 Exchange.exchangeInfo().then(async (listPair) => {
 
-    new Binance().websockets.candlesticks(listPair, '1d', async (candlesticks) => {
+    new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
         let {
             c: close,
@@ -246,7 +247,7 @@ setInterval(() => {
 
     let message = "Global Statistics Profit/Loss" + "\n" +
         "--------------------------------------------------------------------" + "\n" +
-        "Total Entry: " + totalEntry + " $" + "\n" +
+        "Total pair in trading: " + totalEntry + " $" + "\n" +
         "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
         "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
         "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
