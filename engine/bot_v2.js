@@ -26,11 +26,11 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
-    '1m',
-    // '5m',
-    // '15m',
-    // '1h',
-    // '4h',
+    //'1m',
+    '5m',
+    '15m',
+    '1h',
+    '4h',
 ];
 
 let telegramEnabled = true;
@@ -41,7 +41,7 @@ let variableBalance = 0;
 let totalPercentage = 0
 let sumSizeTrade = 0;
 const sizeTrade = 200;
-const maxEntry = (balance - sizeTrade) - 1
+const maxEntry = (balance / sizeTrade) - 1
 
 let totalFloatingValue = 0;
 let totalFloatingPercValue = 0;
@@ -199,7 +199,7 @@ let pairs = [];
 
 Exchange.exchangeInfo().then(async (listPair) => {
 
-    new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
+    new Binance().websockets.candlesticks(listPair, '1d', async (candlesticks) => {
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
         let {
             c: close,
@@ -310,6 +310,7 @@ setInterval(() => {
                     for (let k in entryArray) {
                         if (entryArray[k] !== null) {
                             totalEntry += 1;
+                            console.log(totalEntry)
                         }
                     }
                     console.log(totalEntry)
