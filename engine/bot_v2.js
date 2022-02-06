@@ -19,7 +19,7 @@ mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
     useServerTime: true,
-    verbose: false, // Add extra output when subscribing to WebSockets, etc
+    verbose: true, // Add extra output when subscribing to WebSockets, etc
     log: log => {
         console.log(log); // You can create your own logger here, or disable console output
     }
@@ -256,22 +256,23 @@ setInterval(() => {
             let key = symbol + "_" + interval
             let currentClose = parseFloat(close)
 
-            if (interval !== '5m') {
-                if (finder.includes(symbol)) {
+            if (interval !== '1m') {
+                if (finder.length > 0) {
+                    if (finder.includes(symbol)) {
 
-                    if (exclusionList[key] === false) {
-                        if (entryArray[key] !== null) {
-                            emitter.emit('checkExit', symbol, interval, key, close, low, high, open, totalEntry);
-                            emitter.emit('checkFloating', key, symbol, close);
+                        if (exclusionList[key] === false) {
+                            if (entryArray[key] !== null) {
+                                emitter.emit('checkExit', symbol, interval, key, close, low, high, open, totalEntry);
+                                emitter.emit('checkFloating', key, symbol, close);
+                            }
                         }
                     }
-
                 }
             }
 
             if (isFinal) {
 
-                if (interval === '5m') {
+                if (interval === '1m') {
 
                     let ema = await Indicators.emaWithoutCache(symbol, '1d', 5, 150);
 
@@ -279,6 +280,7 @@ setInterval(() => {
 
                         if (currentClose > ema) {
                             if (!finder.includes(symbol)) {
+                                console.log(symbol)
                                 finder.push(symbol)
                             }
                         }
@@ -295,15 +297,18 @@ setInterval(() => {
                     }
 
                 } else {
-
-                    if (finder.includes(symbol)) {
-
-                        if (totalEntry <= maxEntry) {
-                            if (exclusionList[key] === false && entryCoins[key] === false) {
-                                emitter.emit('checkEntry', symbol, interval, key, close, low, high, open, totalEntry);
+                    console.log(symbol)
+                    if (finder.length > 0) {
+                        if (finder.includes(symbol)) {
+                            console.log(symbol)
+                            console.log(totalEntry)
+                            console.log(maxEntry)
+                            if (totalEntry <= maxEntry) {
+                                if (exclusionList[key] === false && entryCoins[key] === false) {
+                                    emitter.emit('checkEntry', symbol, interval, key, close, low, high, open, totalEntry);
+                                }
                             }
                         }
-
                     }
                 }
 

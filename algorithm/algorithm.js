@@ -329,6 +329,8 @@ async function checkEntry(
     obj,
 ) {
 
+    console.log(symbol)
+
     let close = obj.close;
     let open = obj.open;
     let low = obj.low;
@@ -348,7 +350,7 @@ async function checkEntry(
     let entryCoins = obj.entryCoins;
 
     let ema = await Indicators.ema(close, symbol, interval, 200, 300, emaArray);
-    console.log(ema)
+
     if (!isNaN(ema)) {
 
         if (close < ema) {
