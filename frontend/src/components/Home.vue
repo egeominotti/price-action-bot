@@ -9,9 +9,8 @@
               class="custom-header-b-card"
           >
             <b-card-text class="custom-data-bot">
-              Tradestatus: {{ tradeEnabled  }} |
-              Profit: {{ tradeEnabled }} |
               Balance: {{ balance }}$ |
+              Tradestatus: {{ tradeEnabled  }} |
               Entry Counter: {{ counterEN }} |
               Takeprofit Counter: {{ counterTP }} |
               Stoploss Counter: {{ counterSL }} |

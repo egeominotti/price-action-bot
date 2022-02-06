@@ -199,7 +199,7 @@ let pairs = [];
 
 Exchange.exchangeInfo().then(async (listPair) => {
 
-    new Binance().websockets.candlesticks(listPair, '1d', async (candlesticks) => {
+    new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
         let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
         let {
             c: close,
@@ -315,10 +315,9 @@ setInterval(() => {
                     }
 
                     // totalEntry <= maxEntry
-
                     if (exclusionList[key] === false) {
 
-                        if (entryArray[key] !== null && totalEntry <= maxEntry) {
+                        if (entryArray[key] !== null) {
 
                             let position = sizeTrade / entryArray[key]['entryprice'];
                             let floatingPosition = position * parseFloat(close);
