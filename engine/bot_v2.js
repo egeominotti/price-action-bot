@@ -256,15 +256,12 @@ setInterval(() => {
             let key = symbol + "_" + interval
             let currentClose = parseFloat(close)
 
-            if (interval !== '1m') {
-                if (finder.length > 0) {
-                    if (finder.includes(symbol)) {
-
-                        if (exclusionList[key] === false) {
-                            if (entryArray[key] !== null) {
-                                emitter.emit('checkExit', symbol, interval, key, close, low, high, open, totalEntry);
-                                emitter.emit('checkFloating', key, symbol, close);
-                            }
+            if (finder.length > 0) {
+                if (finder.includes(symbol)) {
+                    if (exclusionList[key] === false) {
+                        if (entryArray[key] !== null) {
+                            emitter.emit('checkExit', symbol, interval, key, close, low, high, open, totalEntry);
+                            emitter.emit('checkFloating', key, symbol, close);
                         }
                     }
                 }
@@ -357,7 +354,7 @@ setInterval(() => {
 
         console.log(message)
 
-    })
+    });
 
     emitter.on('checkExit', (symbol, interval, key, close, low, high, open) => {
 
@@ -370,9 +367,10 @@ setInterval(() => {
         obj['low'] = parseFloat(low);
 
         let result = Algorithms.checkExit(obj)
-        if (result) totalEntry -= 1;
+        console.log(result)
+        if (result === true) totalEntry -= 1;
 
-    })
+    });
 
     emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
 
@@ -385,9 +383,10 @@ setInterval(() => {
         obj['low'] = parseFloat(low);
 
         let result = Algorithms.checkEntry(obj)
-        if (result) totalEntry += 1
+        console.log(result)
+        if (result === true) totalEntry += 1
 
-    })
+    });
 
 })();
 

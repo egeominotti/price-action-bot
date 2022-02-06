@@ -314,11 +314,10 @@ function checkExit(obj) {
 
                 return true;
             }
-
-            return false;
-
         }
     }
+
+    return false;
 }
 
 /**
@@ -328,8 +327,6 @@ function checkExit(obj) {
 async function checkEntry(
     obj,
 ) {
-
-    console.log(symbol)
 
     let close = obj.close;
     let open = obj.open;
@@ -436,6 +433,8 @@ async function checkEntry(
             }
         }
     }
+
+    return false;
 }
 
 
