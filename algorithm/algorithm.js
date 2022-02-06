@@ -63,7 +63,6 @@ emitter.on('stoploss',
 
             Telegram.sendMessage(message)
         }
-
         stopLossArray[key] = stopLossObj
     });
 
@@ -121,6 +120,7 @@ emitter.on('takeprofit',
             Telegram.sendMessage(message)
         }
         takeProfitArray[key] = takeprofitObj
+
     });
 
 emitter.on('entry', (symbol, interval, close, recordPatternValue, telegramEnabled) => {
