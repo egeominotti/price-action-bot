@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const _ = require("lodash");
 const cors = require('cors')
 const express = require("express");
-const eventMi = require('events')
+const eventMitter = require('events')
 const port = 3000;
 const app = express();
 app.use(cors());
@@ -196,7 +196,7 @@ let obj = {
 let pairs = [];
 let finder = [];
 
-const emitter = new eventMi();
+const emitter = new eventMitter();
 
 
 setInterval(() => {
@@ -211,6 +211,79 @@ setInterval(() => {
     Telegram.sendMessage(message)
 
 }, 300000);
+
+
+emitter.on('checkFloating', (key, symbol, close) => {
+
+    let position = sizeTrade / entryArray[key]['entryprice'];
+    let floatingPosition = position * parseFloat(close);
+    let floatingtrade = floatingPosition - sizeTrade;
+    let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+
+    floatingArr[key] = floatingtrade;
+    floatingPercArr[key] = floatingtradeperc;
+
+    console.log('---------------- Calculate Floating -------------------- ');
+    console.log("Pair... " + symbol)
+    console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+    console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+    console.log('-------------------------------------------------------------- ');
+
+    totalFloatingValue = 0;
+    totalFloatingPercValue = 0;
+    totalFloatingBalance = 0;
+
+    for (let time of timeFrame) {
+        for (const token of finder) {
+            let keyFloating = token + "_" + time
+            if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                totalFloatingValue += floatingArr[keyFloating];
+                totalFloatingPercValue += floatingPercArr[keyFloating];
+            }
+        }
+    }
+
+    totalFloatingBalance = balance + totalFloatingValue;
+
+    let message = "Global Statistics Profit/Loss" + "\n" +
+        "--------------------------------------------------------------------" + "\n" +
+        "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+        "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+        "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+    console.log(message)
+
+})
+
+emitter.on('checkExit', (symbol, interval, key, close, low, high, open) => {
+
+    obj['symbol'] = symbol;
+    obj['key'] = key;
+    obj['interval'] = interval;
+    obj['close'] = parseFloat(close);
+    obj['high'] = parseFloat(high);
+    obj['open'] = parseFloat(open);
+    obj['low'] = parseFloat(low);
+
+    let result = Algorithms.checkExit(obj)
+    if (result) totalEntry -= 1;
+
+})
+
+emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
+
+    obj['symbol'] = symbol;
+    obj['key'] = key;
+    obj['interval'] = interval;
+    obj['close'] = parseFloat(close);
+    obj['high'] = parseFloat(high);
+    obj['open'] = parseFloat(open);
+    obj['low'] = parseFloat(low);
+
+    let result = Algorithms.checkEntry(obj)
+    if (result) totalEntry += 1
+
+})
 
 (async () => {
 
@@ -308,77 +381,6 @@ setInterval(() => {
         });
     }
 
-    emitter.on('checkFloating', (key, symbol, close) => {
-
-        let position = sizeTrade / entryArray[key]['entryprice'];
-        let floatingPosition = position * parseFloat(close);
-        let floatingtrade = floatingPosition - sizeTrade;
-        let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
-
-        floatingArr[key] = floatingtrade;
-        floatingPercArr[key] = floatingtradeperc;
-
-        console.log('---------------- Calculate Floating -------------------- ');
-        console.log("Pair... " + symbol)
-        console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-        console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-        console.log('-------------------------------------------------------------- ');
-
-        totalFloatingValue = 0;
-        totalFloatingPercValue = 0;
-        totalFloatingBalance = 0;
-
-        for (let time of timeFrame) {
-            for (const token of finder) {
-                let keyFloating = token + "_" + time
-                if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
-                    totalFloatingValue += floatingArr[keyFloating];
-                    totalFloatingPercValue += floatingPercArr[keyFloating];
-                }
-            }
-        }
-
-        totalFloatingBalance = balance + totalFloatingValue;
-
-        let message = "Global Statistics Profit/Loss" + "\n" +
-            "--------------------------------------------------------------------" + "\n" +
-            "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-        console.log(message)
-
-    })
-
-    emitter.on('checkExit', (symbol, interval, key, close, low, high, open) => {
-
-        obj['symbol'] = symbol;
-        obj['key'] = key;
-        obj['interval'] = interval;
-        obj['close'] = parseFloat(close);
-        obj['high'] = parseFloat(high);
-        obj['open'] = parseFloat(open);
-        obj['low'] = parseFloat(low);
-
-        let result = Algorithms.checkExit(obj)
-        if (result) totalEntry -= 1;
-
-    })
-
-    emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
-
-        obj['symbol'] = symbol;
-        obj['key'] = key;
-        obj['interval'] = interval;
-        obj['close'] = parseFloat(close);
-        obj['high'] = parseFloat(high);
-        obj['open'] = parseFloat(open);
-        obj['low'] = parseFloat(low);
-
-        let result = Algorithms.checkEntry(obj)
-        if (result) totalEntry += 1
-
-    })
 
 })();
 
