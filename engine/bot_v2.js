@@ -297,7 +297,7 @@ setInterval(() => {
                     }
 
                 } else {
-                    console.log(symbol)
+
                     if (finder.length > 0) {
                         if (finder.includes(symbol)) {
                             console.log(symbol)
@@ -310,6 +310,7 @@ setInterval(() => {
                             }
                         }
                     }
+
                 }
 
             }
