@@ -287,7 +287,6 @@ emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
 
 (async () => {
 
-
     let exchangePair = Exchange.extractPair(await binance.exchangeInfo());
 
     let message = "Hi from HAL V2" + "\n" +
@@ -345,7 +344,9 @@ emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
             if (isFinal) {
 
                 if (interval === '5m') {
+
                     let ema = await Indicators.emaWithoutCache(symbol, '1d', 5, 150);
+
                     if (!isNaN(ema)) {
 
                         if (currentClose > ema) {
@@ -374,13 +375,13 @@ emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
                                 emitter.emit('checkEntry', symbol, interval, key, close, low, high, open, totalEntry);
                             }
                         }
+
                     }
                 }
 
             }
         });
     }
-
 
 })();
 
