@@ -226,9 +226,9 @@ setInterval(() => {
 
             let key = symbol + "_" + time
 
-            exclusionList[key] = false;
-            indexArray[key] = -1;
             tokenArray[key] = [];
+            indexArray[key] = -1;
+            exclusionList[key] = false;
             entryCoins[key] = false;
             recordPattern[key] = null;
             takeProfitArray[key] = null;
@@ -269,7 +269,7 @@ setInterval(() => {
 
             if (isFinal) {
 
-                if (interval === '1m') {
+                if (interval === '1d') {
 
                     let ema = await Indicators.emaWithoutCache(symbol, '1d', 5, 150);
 
@@ -297,9 +297,6 @@ setInterval(() => {
 
                     if (finder.length > 0) {
                         if (finder.includes(symbol)) {
-                            console.log(symbol)
-                            console.log(totalEntry)
-                            console.log(maxEntry)
                             if (totalEntry <= maxEntry) {
                                 if (exclusionList[key] === false && entryCoins[key] === false) {
                                     emitter.emit('checkEntry', symbol, interval, key, close, low, high, open, totalEntry);
@@ -367,7 +364,6 @@ setInterval(() => {
         obj['low'] = parseFloat(low);
 
         let result = Algorithms.checkExit(obj)
-        console.log(result)
         if (result === true) totalEntry -= 1;
 
     });
@@ -383,7 +379,6 @@ setInterval(() => {
         obj['low'] = parseFloat(low);
 
         let result = Algorithms.checkEntry(obj)
-        console.log(result)
         if (result === true) totalEntry += 1
 
     });

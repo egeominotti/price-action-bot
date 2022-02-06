@@ -351,9 +351,11 @@ async function checkEntry(
     if (!isNaN(ema)) {
 
         if (close < ema) {
+
             recordPattern[key] = null;
             indexArray[key] = -1;
             tokenArray[key] = [];
+
             return false;
         }
 
