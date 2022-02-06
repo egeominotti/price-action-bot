@@ -30,6 +30,7 @@ let timeFrame = [
     '15m',
     '1h',
     '4h',
+    '1d',
 ];
 
 let telegramEnabled = true;
@@ -194,7 +195,7 @@ let obj = {
 }
 
 let pairs = [];
-
+let finder = [];
 
 function info(data) {
     for (let obj of data.symbols) {
@@ -264,7 +265,7 @@ const emitter = new eventMi();
 
 (async () => {
 
-    let finder = [];
+
     let exchangeInfo = info(await binance.exchangeInfo());
 
     let message = "Hi from HAL V2" + "\n" +
@@ -308,7 +309,12 @@ const emitter = new eventMi();
 
             if (interval !== '1m') {
                 if (finder.includes(symbol)) {
-                    emitter.emit('checkExit', symbol, interval, key, close, low, high, open);
+                    if (exclusionList[key] === false) {
+                        if (entryArray[key] !== null) {
+                            emitter.emit('checkExit', symbol, interval, key, close, low, high, open);
+                            emitter.emit('checkFloating', key, symbol, close);
+                        }
+                    }
                 }
             }
 
@@ -317,16 +323,31 @@ const emitter = new eventMi();
                 if (interval === '1m') {
                     let ema = await Indicators.emaWithoutCache(symbol, '1d', 5, 150);
                     if (!isNaN(ema)) {
+
                         if (currentClose > ema) {
                             if (!finder.includes(symbol)) {
+                                finder.push(symbol)
                                 emitter.emit('finder', symbol);
                             }
                         }
+
+                        if (currentClose < ema) {
+                            for (let i = 0; i < finder.length; i++) {
+                                if (finder[i] !== null) {
+                                    if (finder[i] === symbol) {
+                                        finder.splice(i, 1);
+                                    }
+                                }
+                            }
+                        }
+
                     }
 
                 } else {
                     if (finder.includes(symbol)) {
-                        emitter.emit('checkEntry', symbol, interval, key, close, low, high, open);
+                        if (totalEntry <= maxEntry) {
+                            emitter.emit('checkEntry', symbol, interval, key, close, low, high, open);
+                        }
                     }
                 }
 
@@ -335,13 +356,51 @@ const emitter = new eventMi();
     }
 
     emitter.on('finder', (symbol) => {
-        console.log("sono finder")
-        finder.push(symbol)
+    })
+
+    emitter.on('checkFloating', (key, symbol, close) => {
+
+        let position = sizeTrade / entryArray[key]['entryprice'];
+        let floatingPosition = position * parseFloat(close);
+        let floatingtrade = floatingPosition - sizeTrade;
+        let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+
+        floatingArr[key] = floatingtrade;
+        floatingPercArr[key] = floatingtradeperc;
+
+        console.log('---------------- Calculate Floating -------------------- ');
+        console.log("Pair... " + symbol)
+        console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+        console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+        console.log('-------------------------------------------------------------- ');
+
+        totalFloatingValue = 0;
+        totalFloatingPercValue = 0;
+        totalFloatingBalance = 0;
+
+        for (let time of timeFrame) {
+            for (const token of pairs) {
+                let keyFloating = token + "_" + time
+                if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                    totalFloatingValue += floatingArr[keyFloating];
+                    totalFloatingPercValue += floatingPercArr[keyFloating];
+                }
+            }
+        }
+
+        totalFloatingBalance = balance + totalFloatingValue;
+
+        let message = "Global Statistics Profit/Loss" + "\n" +
+            "--------------------------------------------------------------------" + "\n" +
+            "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+        console.log(message)
+
     })
 
     emitter.on('checkExit', (symbol, interval, key, close, low, high, open) => {
-
-        console.log("checkExit")
 
         obj['symbol'] = symbol;
         obj['key'] = key;
@@ -351,60 +410,9 @@ const emitter = new eventMi();
         obj['open'] = parseFloat(open);
         obj['low'] = parseFloat(low);
 
-        totalEntry = 0;
-        for (let k in entryArray) {
-            if (entryArray[k] !== null) {
-                totalEntry += 1;
-            }
-        }
+        let result = Algorithms.checkExit(obj)
+        if (result) totalEntry -= 1;
 
-        if (exclusionList[key] === false) {
-
-            if (entryArray[key] !== null) {
-
-                let position = sizeTrade / entryArray[key]['entryprice'];
-                let floatingPosition = position * parseFloat(close);
-                let floatingtrade = floatingPosition - sizeTrade;
-                let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
-
-                floatingArr[key] = floatingtrade;
-                floatingPercArr[key] = floatingtradeperc;
-
-                console.log('---------------- Calculate Floating -------------------- ');
-                console.log("Pair... " + symbol)
-                console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-                console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-                console.log('-------------------------------------------------------------- ');
-
-                totalFloatingValue = 0;
-                totalFloatingPercValue = 0;
-                totalFloatingBalance = 0;
-
-                for (let time of timeFrame) {
-                    for (const token of pairs) {
-                        let keyFloating = token + "_" + time
-                        if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
-                            totalFloatingValue += floatingArr[keyFloating];
-                            totalFloatingPercValue += floatingPercArr[keyFloating];
-                        }
-                    }
-                }
-
-                totalFloatingBalance = balance + totalFloatingValue;
-
-                let message = "Global Statistics Profit/Loss" + "\n" +
-                    "--------------------------------------------------------------------" + "\n" +
-                    "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-                    "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-                    "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-                console.log(message)
-
-                let result = Algorithms.checkExit(obj)
-                if (result) totalEntry -= 1;
-
-            }
-        }
     })
 
     emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
@@ -417,9 +425,8 @@ const emitter = new eventMi();
         obj['open'] = parseFloat(open);
         obj['low'] = parseFloat(low);
 
-        if (totalEntry <= maxEntry) {
-            Algorithms.checkEntry(obj)
-        }
+        let result = Algorithms.checkEntry(obj)
+        if (result) totalEntry += 1
 
     })
 

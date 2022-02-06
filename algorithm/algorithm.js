@@ -185,7 +185,11 @@ function stopLoss(obj) {
     return false;
 }
 
-
+/**
+ *
+ * @param obj
+ * @returns {boolean}
+ */
 function checkExit(obj) {
 
     let key = obj.key;
@@ -260,7 +264,7 @@ function checkEntry(
 
     if (exclusionList[key] === false && entryCoins[key] === false) {
 
-        Indicators.ema(close, symbol, interval, 200, 400, emaArray).then((ema) => {
+        Indicators.ema(close, symbol, interval, 200, 300, emaArray).then((ema) => {
 
             if (close < ema) {
                 recordPattern[key] = null;
@@ -354,6 +358,8 @@ function checkEntry(
 
                                     Telegram.sendMessage(message)
                                 }
+
+                                return true;
                             }
                         }
                     }
