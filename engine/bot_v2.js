@@ -261,7 +261,7 @@ setInterval(() => {
 
                     if (exclusionList[key] === false) {
                         if (entryArray[key] !== null) {
-                            emitter.emit('checkExit', symbol, interval, key, close, low, high, open);
+                            emitter.emit('checkExit', symbol, interval, key, close, low, high, open, totalEntry);
                             emitter.emit('checkFloating', key, symbol, close);
                         }
                     }
@@ -297,8 +297,8 @@ setInterval(() => {
                     if (finder.includes(symbol)) {
 
                         if (totalEntry <= maxEntry) {
-                            if (exclusionList[key] === false  && entryCoins[key] === false) {
-                                emitter.emit('checkEntry', symbol, interval, key, close, low, high, open);
+                            if (exclusionList[key] === false && entryCoins[key] === false) {
+                                emitter.emit('checkEntry', symbol, interval, key, close, low, high, open, totalEntry);
                             }
                         }
                     }
@@ -350,7 +350,7 @@ setInterval(() => {
 
     })
 
-    emitter.on('checkExit', (symbol, interval, key, close, low, high, open) => {
+    emitter.on('checkExit', (symbol, interval, key, close, low, high, open, totalEntry) => {
 
         obj['symbol'] = symbol;
         obj['key'] = key;
@@ -365,7 +365,7 @@ setInterval(() => {
 
     })
 
-    emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
+    emitter.on('checkEntry', (symbol, interval, key, close, low, high, open, totalEntry) => {
 
         obj['symbol'] = symbol;
         obj['key'] = key;

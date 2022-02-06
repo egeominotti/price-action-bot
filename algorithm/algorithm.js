@@ -337,7 +337,6 @@ function checkEntry(
     let binance = obj.binance;
     let symbol = obj.symbol;
     let interval = obj.interval;
-    let exclusionList = obj.exclusionList;
     let indexArray = obj.indexArray;
     let recordPattern = obj.recordPattern;
     let tokenArray = obj.tokenArray;
@@ -429,6 +428,8 @@ function checkEntry(
 
                             return true;
                         }
+
+                        return false;
                     }
                 }
             }
@@ -437,7 +438,6 @@ function checkEntry(
 
     }).catch(
         (error) => {
-
             recordPattern[key] = null;
             indexArray[key] = -1;
             tokenArray[key] = [];
