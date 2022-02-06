@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const _ = require("lodash");
 const cors = require('cors')
 const express = require("express");
-
+const eventMi = require('events')
 const port = 3000;
 const app = express();
 app.use(cors());
@@ -16,7 +16,6 @@ app.listen(port)
 mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
-    //recvWindow: 30000, // Set a higher recvWindow to increase response timeout
     useServerTime: true,
     verbose: false, // Add extra output when subscribing to WebSockets, etc
     log: log => {
@@ -26,10 +25,12 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
+    '1m',
     '5m',
     '15m',
     '1h',
     '4h',
+    '1d',
 ];
 
 let telegramEnabled = true;
@@ -193,53 +194,10 @@ let obj = {
 
 }
 
-let started = false;
 let pairs = [];
+let finder = [];
 
-Exchange.exchangeInfo().then(async (listPair) => {
-
-    new Binance().websockets.candlesticks(listPair, '1m', async (candlesticks) => {
-        let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
-        let {
-            c: close,
-            x: isFinal,
-        } = ticks;
-
-        let currentClose = parseFloat(close)
-
-        if (isFinal) {
-
-            Indicators.emaWithoutCache(symbol, '1d', 5, 150)
-
-                .then((ema) => {
-
-                    if (!isNaN(ema)) {
-
-                        if (currentClose > ema) {
-                            if (!pairs.includes(symbol)) {
-                                pairs.push(symbol)
-                            }
-                        }
-
-                        if (currentClose < ema) {
-                            for (let i = 0; i < pairs.length; i++) {
-                                if (pairs[i] !== null) {
-                                    if (pairs[i] === symbol) {
-                                        pairs.splice(i, 1);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                }).catch(() => {
-            })
-        }
-    });
-
-}).catch((err) => {
-    console.log(err)
-});
+const emitter = new eventMi();
 
 
 setInterval(() => {
@@ -257,144 +215,176 @@ setInterval(() => {
 
 (async () => {
 
-    setInterval(() => {
 
-        if (started === false && pairs.length > 0) {
+    let exchangePair = Exchange.extractPair(await binance.exchangeInfo());
 
-            let message = "Hi from HAL V2" + "\n" +
-                "LOADED for scanning... " + pairs.length + " pair" + "\n"
-            Telegram.sendMessage(message)
+    let message = "Hi from HAL V2" + "\n" +
+        "LOADED for scanning... " + exchangePair.length + " pair" + "\n"
+    Telegram.sendMessage(message)
 
-            for (let time of timeFrame) {
-                for (const token of pairs) {
+    for (let time of timeFrame) {
+        for (const symbol of exchangePair) {
 
-                    let key = token + "_" + time
+            let key = symbol + "_" + time
 
-                    exclusionList[key] = false;
-                    indexArray[key] = -1;
-                    tokenArray[key] = [];
-                    entryCoins[key] = false;
-                    recordPattern[key] = null;
-                    takeProfitArray[key] = null;
-                    stopLossArray[key] = null;
-                    entryArray[key] = null;
-                    listEntry[key] = null;
-                    floatingArr[key] = 0;
-                    floatingPercArr[key] = 0;
+            exclusionList[key] = false;
+            indexArray[key] = -1;
+            tokenArray[key] = [];
+            entryCoins[key] = false;
+            recordPattern[key] = null;
+            takeProfitArray[key] = null;
+            stopLossArray[key] = null;
+            entryArray[key] = null;
+            listEntry[key] = null;
+            floatingArr[key] = 0;
+            floatingPercArr[key] = 0;
+        }
+    }
+
+    for (let time of timeFrame) {
+
+        binance.websockets.candlesticks(exchangePair, time, async (candlesticks) => {
+            let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
+            let {
+                o: open,
+                h: high,
+                l: low,
+                c: close,
+                i: interval,
+                x: isFinal,
+            } = ticks;
+
+            let key = symbol + "_" + interval
+            let currentClose = parseFloat(close)
+
+            if (interval !== '5m') {
+                if (finder.includes(symbol)) {
+
+                    if (exclusionList[key] === false) {
+                        if (entryArray[key] !== null) {
+                            emitter.emit('checkExit', symbol, interval, key, close, low, high, open);
+                            emitter.emit('checkFloating', key, symbol, close);
+                        }
+                    }
+
                 }
             }
 
-            console.log("----------------------------------------------------")
-            console.log("LOADED for scanning... " + pairs.length + " pair")
-            console.log("---------------------------------------------------")
+            if (isFinal) {
 
-            started = true;
+                if (interval === '5m') {
+                    let ema = await Indicators.emaWithoutCache(symbol, '1d', 5, 150);
+                    if (!isNaN(ema)) {
 
-            for (const time of timeFrame) {
-
-                binance.websockets.candlesticks(pairs, time, (candlesticks) => {
-                    let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
-                    let {
-                        o: open,
-                        h: high,
-                        l: low,
-                        c: close,
-                        i: interval,
-                        x: isFinal,
-                    } = ticks;
-
-                    let key = symbol + "_" + interval
-
-                    totalEntry = 0;
-                    for (let k in entryArray) {
-                        if (entryArray[k] !== null) {
-                            totalEntry += 1;
-                            console.log(totalEntry)
+                        if (currentClose > ema) {
+                            if (!finder.includes(symbol)) {
+                                finder.push(symbol)
+                                emitter.emit('finder', symbol);
+                            }
                         }
-                    }
 
-                    // totalEntry <= maxEntry
-                    if (exclusionList[key] === false) {
-
-                        if (entryArray[key] !== null) {
-
-                            let position = sizeTrade / entryArray[key]['entryprice'];
-                            let floatingPosition = position * parseFloat(close);
-                            let floatingtrade = floatingPosition - sizeTrade;
-                            let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
-
-                            floatingArr[key] = floatingtrade;
-                            floatingPercArr[key] = floatingtradeperc;
-
-                            obj['symbol'] = symbol;
-                            obj['key'] = key;
-                            obj['interval'] = interval;
-                            obj['close'] = parseFloat(close);
-                            obj['high'] = parseFloat(high);
-                            obj['open'] = parseFloat(open);
-                            obj['low'] = parseFloat(low);
-
-                            console.log('---------------- Calculate Floating -------------------- ');
-                            console.log("Pair... " + symbol)
-                            console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-                            console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-                            console.log('-------------------------------------------------------------- ');
-
-                            totalFloatingValue = 0;
-                            totalFloatingPercValue = 0;
-                            totalFloatingBalance = 0;
-
-                            for (let time of timeFrame) {
-                                for (const token of pairs) {
-                                    let keyFloating = token + "_" + time
-                                    if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
-                                        totalFloatingValue += floatingArr[keyFloating];
-                                        totalFloatingPercValue += floatingPercArr[keyFloating];
+                        if (currentClose < ema) {
+                            for (let i = 0; i < finder.length; i++) {
+                                if (finder[i] !== null) {
+                                    if (finder[i] === symbol) {
+                                        finder.splice(i, 1);
                                     }
                                 }
                             }
-
-                            totalFloatingBalance = balance + totalFloatingValue;
-
-                            let message = "Global Statistics Profit/Loss" + "\n" +
-                                "--------------------------------------------------------------------" + "\n" +
-                                "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-                                "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-                                "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-                            console.log(message)
-
-                            let result = Algorithms.checkExit(obj)
-                            if (result) totalEntry -= 1;
-
                         }
 
-                        if (isFinal && totalEntry <= maxEntry) {
-
-                            obj['symbol'] = symbol;
-                            obj['key'] = key;
-                            obj['interval'] = interval;
-                            obj['close'] = parseFloat(close);
-                            obj['high'] = parseFloat(high);
-                            obj['open'] = parseFloat(open);
-                            obj['low'] = parseFloat(low);
-
-                            Algorithms.checkEntry(obj)
-                        }
                     }
 
-                });
+                } else {
+
+                    if (finder.includes(symbol)) {
+
+                        if (totalEntry <= maxEntry) {
+                            if (exclusionList[key] === false) {
+                                emitter.emit('checkEntry', symbol, interval, key, close, low, high, open);
+                            }
+                        }
+                    }
+                }
+
+            }
+        });
+    }
+
+    emitter.on('finder', (symbol) => {})
+
+    emitter.on('checkFloating', (key, symbol, close) => {
+
+        let position = sizeTrade / entryArray[key]['entryprice'];
+        let floatingPosition = position * parseFloat(close);
+        let floatingtrade = floatingPosition - sizeTrade;
+        let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+
+        floatingArr[key] = floatingtrade;
+        floatingPercArr[key] = floatingtradeperc;
+
+        console.log('---------------- Calculate Floating -------------------- ');
+        console.log("Pair... " + symbol)
+        console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+        console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+        console.log('-------------------------------------------------------------- ');
+
+        totalFloatingValue = 0;
+        totalFloatingPercValue = 0;
+        totalFloatingBalance = 0;
+
+        for (let time of timeFrame) {
+            for (const token of finder) {
+                let keyFloating = token + "_" + time
+                if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                    totalFloatingValue += floatingArr[keyFloating];
+                    totalFloatingPercValue += floatingPercArr[keyFloating];
+                }
             }
         }
 
-    }, 60000);
+        totalFloatingBalance = balance + totalFloatingValue;
 
+        let message = "Global Statistics Profit/Loss" + "\n" +
+            "--------------------------------------------------------------------" + "\n" +
+            "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+        console.log(message)
+
+    })
+
+    emitter.on('checkExit', (symbol, interval, key, close, low, high, open) => {
+
+        obj['symbol'] = symbol;
+        obj['key'] = key;
+        obj['interval'] = interval;
+        obj['close'] = parseFloat(close);
+        obj['high'] = parseFloat(high);
+        obj['open'] = parseFloat(open);
+        obj['low'] = parseFloat(low);
+
+        let result = Algorithms.checkExit(obj)
+        if (result) totalEntry -= 1;
+
+    })
+
+    emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
+
+        obj['symbol'] = symbol;
+        obj['key'] = key;
+        obj['interval'] = interval;
+        obj['close'] = parseFloat(close);
+        obj['high'] = parseFloat(high);
+        obj['open'] = parseFloat(open);
+        obj['low'] = parseFloat(low);
+
+        let result = Algorithms.checkEntry(obj)
+        if (result) totalEntry += 1
+
+    })
 
 })();
-
-
-
-
-
 
 
