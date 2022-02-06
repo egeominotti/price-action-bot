@@ -271,9 +271,8 @@ setInterval(() => {
 
                 if (interval === '1d') {
 
-                    if (exclusionList[key] === true) {
+                    if (exclusionList[key] === true)
                         exclusionList[key] = false;
-                    }
 
                     let ema = await Indicators.emaWithoutCache(symbol, '1d', 5, 150);
 
