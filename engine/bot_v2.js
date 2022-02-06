@@ -26,6 +26,7 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
+    //'1m',
     '5m',
     '15m',
     '1h',
@@ -313,75 +314,74 @@ setInterval(() => {
                         }
                     }
 
-                    if (totalEntry <= maxEntry) {
+                    // totalEntry <= maxEntry
 
-                        if (exclusionList[key] === false) {
+                    if (exclusionList[key] === false) {
 
-                            if (entryArray[key] !== null) {
+                        if (entryArray[key] !== null && totalEntry <= maxEntry) {
 
-                                let position = sizeTrade / entryArray[key]['entryprice'];
-                                let floatingPosition = position * parseFloat(close);
-                                let floatingtrade = floatingPosition - sizeTrade;
-                                let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+                            let position = sizeTrade / entryArray[key]['entryprice'];
+                            let floatingPosition = position * parseFloat(close);
+                            let floatingtrade = floatingPosition - sizeTrade;
+                            let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
 
-                                floatingArr[key] = floatingtrade;
-                                floatingPercArr[key] = floatingtradeperc;
+                            floatingArr[key] = floatingtrade;
+                            floatingPercArr[key] = floatingtradeperc;
 
-                                obj['symbol'] = symbol;
-                                obj['key'] = key;
-                                obj['interval'] = interval;
-                                obj['close'] = parseFloat(close);
-                                obj['high'] = parseFloat(high);
-                                obj['open'] = parseFloat(open);
-                                obj['low'] = parseFloat(low);
+                            obj['symbol'] = symbol;
+                            obj['key'] = key;
+                            obj['interval'] = interval;
+                            obj['close'] = parseFloat(close);
+                            obj['high'] = parseFloat(high);
+                            obj['open'] = parseFloat(open);
+                            obj['low'] = parseFloat(low);
 
-                                console.log('---------------- Calculate Floating -------------------- ');
-                                console.log("Pair... " + symbol)
-                                console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-                                console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-                                console.log('-------------------------------------------------------------- ');
+                            console.log('---------------- Calculate Floating -------------------- ');
+                            console.log("Pair... " + symbol)
+                            console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+                            console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+                            console.log('-------------------------------------------------------------- ');
 
-                                totalFloatingValue = 0;
-                                totalFloatingPercValue = 0;
-                                totalFloatingBalance = 0;
+                            totalFloatingValue = 0;
+                            totalFloatingPercValue = 0;
+                            totalFloatingBalance = 0;
 
-                                for (let time of timeFrame) {
-                                    for (const token of pairs) {
-                                        let keyFloating = token + "_" + time
-                                        if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
-                                            totalFloatingValue += floatingArr[keyFloating];
-                                            totalFloatingPercValue += floatingPercArr[keyFloating];
-                                        }
+                            for (let time of timeFrame) {
+                                for (const token of pairs) {
+                                    let keyFloating = token + "_" + time
+                                    if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                                        totalFloatingValue += floatingArr[keyFloating];
+                                        totalFloatingPercValue += floatingPercArr[keyFloating];
                                     }
                                 }
-
-                                totalFloatingBalance = balance + totalFloatingValue;
-
-                                let message = "Global Statistics Profit/Loss" + "\n" +
-                                    "--------------------------------------------------------------------" + "\n" +
-                                    "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-                                    "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-                                    "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-                                console.log(message)
-
-                                let result = Algorithms.checkExit(obj)
-                                if (result) totalEntry -= 1;
-
                             }
 
-                            if (isFinal) {
+                            totalFloatingBalance = balance + totalFloatingValue;
 
-                                obj['symbol'] = symbol;
-                                obj['key'] = key;
-                                obj['interval'] = interval;
-                                obj['close'] = parseFloat(close);
-                                obj['high'] = parseFloat(high);
-                                obj['open'] = parseFloat(open);
-                                obj['low'] = parseFloat(low);
+                            let message = "Global Statistics Profit/Loss" + "\n" +
+                                "--------------------------------------------------------------------" + "\n" +
+                                "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+                                "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+                                "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
 
-                                Algorithms.checkEntry(obj)
-                            }
+                            console.log(message)
+
+                            let result = Algorithms.checkExit(obj)
+                            if (result) totalEntry -= 1;
+
+                        }
+
+                        if (isFinal && totalEntry <= maxEntry) {
+
+                            obj['symbol'] = symbol;
+                            obj['key'] = key;
+                            obj['interval'] = interval;
+                            obj['close'] = parseFloat(close);
+                            obj['high'] = parseFloat(high);
+                            obj['open'] = parseFloat(open);
+                            obj['low'] = parseFloat(low);
+
+                            Algorithms.checkEntry(obj)
                         }
                     }
 
