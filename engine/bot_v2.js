@@ -120,7 +120,6 @@ app.get('/trade/emergency', async (req, res) => {
 
 });
 
-
 app.get('/trade/entry', async (req, res) => {
     //const dbData = await Bot.findOne({name: dbKey});
     res.send(entryArray);
@@ -279,7 +278,6 @@ setInterval(() => {
                         if (currentClose > ema) {
                             if (!finder.includes(symbol)) {
                                 finder.push(symbol)
-                                emitter.emit('finder', symbol);
                             }
                         }
 
@@ -292,7 +290,6 @@ setInterval(() => {
                                 }
                             }
                         }
-
                     }
 
                 } else {
@@ -300,7 +297,7 @@ setInterval(() => {
                     if (finder.includes(symbol)) {
 
                         if (totalEntry <= maxEntry) {
-                            if (exclusionList[key] === false) {
+                            if (exclusionList[key] === false  && entryCoins[key] === false) {
                                 emitter.emit('checkEntry', symbol, interval, key, close, low, high, open);
                             }
                         }
@@ -310,8 +307,6 @@ setInterval(() => {
             }
         });
     }
-
-    emitter.on('finder', (symbol) => {})
 
     emitter.on('checkFloating', (key, symbol, close) => {
 
