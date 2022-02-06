@@ -6,7 +6,7 @@ const binance = new Binance().options({
     recvWindow: 600000
 });
 
-function extractPair(data) {
+function extractPair(data, exchangeInfoArray) {
     for (let obj of data.symbols) {
 
         if (obj.status === 'TRADING' && obj.quoteAsset === 'USDT') {
@@ -77,128 +77,126 @@ async function exchangeInfo() {
 
     let exchangeInfoArray = [];
 
-        binance.exchangeInfo(function (error, data) {
+    binance.exchangeInfo(function (error, data) {
 
-                if (error !== null) reject(error);
+            if (error !== null) reject(error);
 
-                for (let obj of data.symbols) {
+            for (let obj of data.symbols) {
 
-                    if (obj.status === 'TRADING' && obj.quoteAsset === 'USDT') {
-                        let filters = {status: obj.status};
-                        for (let filter of obj.filters) {
-                            if (filter.filterType === "MIN_NOTIONAL") {
-                                filters.minNotional = filter.minNotional;
-                            } else if (filter.filterType === "PRICE_FILTER") {
-                                filters.minPrice = filter.minPrice;
-                                filters.maxPrice = filter.maxPrice;
-                                filters.tickSize = filter.tickSize;
-                            } else if (filter.filterType === "LOT_SIZE") {
-                                filters.stepSize = filter.stepSize;
-                                filters.minQty = filter.minQty;
-                                filters.maxQty = filter.maxQty;
-                            }
+                if (obj.status === 'TRADING' && obj.quoteAsset === 'USDT') {
+                    let filters = {status: obj.status};
+                    for (let filter of obj.filters) {
+                        if (filter.filterType === "MIN_NOTIONAL") {
+                            filters.minNotional = filter.minNotional;
+                        } else if (filter.filterType === "PRICE_FILTER") {
+                            filters.minPrice = filter.minPrice;
+                            filters.maxPrice = filter.maxPrice;
+                            filters.tickSize = filter.tickSize;
+                        } else if (filter.filterType === "LOT_SIZE") {
+                            filters.stepSize = filter.stepSize;
+                            filters.minQty = filter.minQty;
+                            filters.maxQty = filter.maxQty;
                         }
-                        filters.baseAssetPrecision = obj.baseAssetPrecision;
-                        filters.quoteAssetPrecision = obj.quoteAssetPrecision;
-                        filters.icebergAllowed = obj.icebergAllowed;
-                        exchangeInfoArray[obj.symbol] = filters;
+                    }
+                    filters.baseAssetPrecision = obj.baseAssetPrecision;
+                    filters.quoteAssetPrecision = obj.quoteAssetPrecision;
+                    filters.icebergAllowed = obj.icebergAllowed;
+                    exchangeInfoArray[obj.symbol] = filters;
+                }
+            }
+
+
+            let exscluded = [
+                'BTCUPUSDT',
+                'ETHUPUSDT',
+                'ADAUPUSDT',
+                'LINKUPUSDT',
+                'BNBUPUSDT',
+                'TRXUPUSDT',
+                'XRPUPUSDT',
+                'DOTUPUSDT',
+                'BTCDOWNUSDT',
+                'ETHDOWNUSDT',
+                'ADADOWNUSDT',
+                'LINKDOWNUSDT',
+                'BNBDOWNUSDT',
+                'TRXDOWNUSDT',
+                'XRPDOWNUSDT',
+                'DOTDOWNUSDT',
+                'PERPUSDT'
+            ]
+
+            let pairs = [];
+
+            for (const pair in exchangeInfoArray) {
+
+                let discard = false;
+
+                for (const exclude of exscluded) {
+                    if (pair === exclude) {
+                        discard = true;
                     }
                 }
 
-
-                let exscluded = [
-                    'BTCUPUSDT',
-                    'ETHUPUSDT',
-                    'ADAUPUSDT',
-                    'LINKUPUSDT',
-                    'BNBUPUSDT',
-                    'TRXUPUSDT',
-                    'XRPUPUSDT',
-                    'DOTUPUSDT',
-                    'BTCDOWNUSDT',
-                    'ETHDOWNUSDT',
-                    'ADADOWNUSDT',
-                    'LINKDOWNUSDT',
-                    'BNBDOWNUSDT',
-                    'TRXDOWNUSDT',
-                    'XRPDOWNUSDT',
-                    'DOTDOWNUSDT',
-                    'PERPUSDT'
-                ]
-
-                let pairs = [];
-
-                for (const pair in exchangeInfoArray) {
-
-                    let discard = false;
-
-                    for (const exclude of exscluded) {
-                        if (pair === exclude) {
-                            discard = true;
-                        }
-                    }
-
-                    if (!discard) {
-                        pairs.push(pair);
-                    }
-
+                if (!discard) {
+                    pairs.push(pair);
                 }
-
-                return pairs;
-
-
-
-
-                // const dbData = await Bot.findOne({name: dbKey});
-                // if (dbData !== null) {
-                //
-                //     tokenArray = dbData.tokenArray;
-                //     indexArray = dbData.indexArray;
-                //     exchangeInfoArray = dbData.exchangeInfoArray;
-                //     recordPattern = dbData.recordPattern;
-                //     exclusionList = dbData.exclusionList;
-                //     entryCoins = dbData.entryCoins;
-                //     takeProfitArray = dbData.takeProfitArray;
-                //     stopLossArray = dbData.stopLossArray;
-                //     entryArray = dbData.entryArray;
-                //
-                // } else {
-                //
-                //     for (let time of timeFrame) {
-                //         for (const token in exchangeInfoArray) {
-                //
-                //             let key = token + "_" + time
-                //
-                //             exclusionList[key] = false;
-                //             indexArray[key] = -1;
-                //             tokenArray[key] = [];
-                //             entryCoins[key] = false;
-                //             recordPattern[key] = null;
-                //             takeProfitArray[key] = null;
-                //             stopLossArray[key] = null;
-                //             entryArray[key] = null;
-                //         }
-                //     }
-                //
-                //     await Bot.create({
-                //         name: dbKey,
-                //         exchangeInfoArray: exchangeInfoArray,
-                //         tokenArray: tokenArray,
-                //         indexArray: indexArray,
-                //         recordPattern: recordPattern,
-                //         exclusionList: exclusionList,
-                //         entryCoins: entryCoins,
-                //         takeProfitArray: takeProfitArray,
-                //         stopLossArray: stopLossArray,
-                //         entryArray: entryArray,
-                //     })
-                // }
-
-                // let startMessage = 'Multipattern Bot Pattern Analysis Engine System Started';
-                // Telegram.sendMessage(startMessage)
 
             }
-        );
+
+            return pairs;
+
+
+            // const dbData = await Bot.findOne({name: dbKey});
+            // if (dbData !== null) {
+            //
+            //     tokenArray = dbData.tokenArray;
+            //     indexArray = dbData.indexArray;
+            //     exchangeInfoArray = dbData.exchangeInfoArray;
+            //     recordPattern = dbData.recordPattern;
+            //     exclusionList = dbData.exclusionList;
+            //     entryCoins = dbData.entryCoins;
+            //     takeProfitArray = dbData.takeProfitArray;
+            //     stopLossArray = dbData.stopLossArray;
+            //     entryArray = dbData.entryArray;
+            //
+            // } else {
+            //
+            //     for (let time of timeFrame) {
+            //         for (const token in exchangeInfoArray) {
+            //
+            //             let key = token + "_" + time
+            //
+            //             exclusionList[key] = false;
+            //             indexArray[key] = -1;
+            //             tokenArray[key] = [];
+            //             entryCoins[key] = false;
+            //             recordPattern[key] = null;
+            //             takeProfitArray[key] = null;
+            //             stopLossArray[key] = null;
+            //             entryArray[key] = null;
+            //         }
+            //     }
+            //
+            //     await Bot.create({
+            //         name: dbKey,
+            //         exchangeInfoArray: exchangeInfoArray,
+            //         tokenArray: tokenArray,
+            //         indexArray: indexArray,
+            //         recordPattern: recordPattern,
+            //         exclusionList: exclusionList,
+            //         entryCoins: entryCoins,
+            //         takeProfitArray: takeProfitArray,
+            //         stopLossArray: stopLossArray,
+            //         entryArray: entryArray,
+            //     })
+            // }
+
+            // let startMessage = 'Multipattern Bot Pattern Analysis Engine System Started';
+            // Telegram.sendMessage(startMessage)
+
+        }
+    );
 }
 
 /**
