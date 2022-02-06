@@ -10,12 +10,11 @@ const binance = new Binance().options({
  *
  * @returns {Promise<unknown>}
  */
-function exchangeInfo() {
+async function exchangeInfo() {
 
     let exchangeInfoArray = [];
-    return new Promise(async function (resolve, reject) {
 
-        binance.exchangeInfo(async function (error, data) {
+        binance.exchangeInfo(function (error, data) {
 
                 if (error !== null) reject(error);
 
@@ -82,6 +81,8 @@ function exchangeInfo() {
 
                 }
 
+                return pairs;
+
 
 
 
@@ -133,11 +134,8 @@ function exchangeInfo() {
                 // let startMessage = 'Multipattern Bot Pattern Analysis Engine System Started';
                 // Telegram.sendMessage(startMessage)
 
-                resolve(pairs)
             }
         );
-
-    });
 }
 
 /**

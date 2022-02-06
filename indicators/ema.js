@@ -18,7 +18,7 @@ const binance = new Binance().options({
  * @param limitCandle
  * @returns {Promise<unknown>}
  */
-function emaWithoutCache(token, time, periodEma, limitCandle) {
+async function emaWithoutCache(token, time, periodEma, limitCandle) {
     return new Promise(function (resolve, reject) {
 
         binance.candlesticks(token, time, (error, ticks, symbol) => {
