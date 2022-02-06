@@ -325,7 +325,7 @@ function checkExit(obj) {
  *
  * @param obj
  */
-function checkEntry(
+async function checkEntry(
     obj,
 ) {
 
@@ -347,13 +347,15 @@ function checkEntry(
     let telegramEnabled = obj.telegramEnabled;
     let entryCoins = obj.entryCoins;
 
+    let ema = await Indicators.ema(close, symbol, interval, 200, 300, emaArray);
 
-    Indicators.ema(close, symbol, interval, 200, 300, emaArray).then((ema) => {
+    if (!isNaN(ema)) {
 
         if (close < ema) {
             recordPattern[key] = null;
             indexArray[key] = -1;
             tokenArray[key] = [];
+            return false;
         }
 
         if (close > ema) {
@@ -402,7 +404,6 @@ function checkEntry(
                 }
             }
 
-
             if (recordPattern[key] != null) {
 
                 let recordPatternValue = recordPattern[key];
@@ -428,24 +429,13 @@ function checkEntry(
 
                             return true;
                         }
-
-                        return false;
                     }
                 }
             }
-
         }
-
-    }).catch(
-        (error) => {
-            recordPattern[key] = null;
-            indexArray[key] = -1;
-            tokenArray[key] = [];
-            //console.log("Error: Can't calculate EMA for symbol rest engine for: " + error)
-        }
-    )
-
+    }
 }
+
 
 module.exports = {
     checkEntry,

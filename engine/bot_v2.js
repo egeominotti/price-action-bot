@@ -350,7 +350,7 @@ setInterval(() => {
 
     })
 
-    emitter.on('checkExit', (symbol, interval, key, close, low, high, open, totalEntry) => {
+    emitter.on('checkExit', (symbol, interval, key, close, low, high, open) => {
 
         obj['symbol'] = symbol;
         obj['key'] = key;
@@ -365,7 +365,7 @@ setInterval(() => {
 
     })
 
-    emitter.on('checkEntry', (symbol, interval, key, close, low, high, open, totalEntry) => {
+    emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
 
         obj['symbol'] = symbol;
         obj['key'] = key;

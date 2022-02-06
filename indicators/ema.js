@@ -53,7 +53,7 @@ async function emaWithoutCache(token, time, periodEma, limitCandle) {
  * @param arrayCache
  * @returns {Promise<unknown>}
  */
-function ema(close, token, time, periodEma, limitCandle, arrayCache) {
+async function ema(close, token, time, periodEma, limitCandle, arrayCache) {
     return new Promise(function (resolve, reject) {
 
         let key = token + "_" + time
