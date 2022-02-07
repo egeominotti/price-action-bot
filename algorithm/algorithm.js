@@ -334,101 +334,107 @@ async function checkEntry(
     let telegramEnabled = obj.telegramEnabled;
     let entryCoins = obj.entryCoins;
 
-    let ema = await Indicators.ema(close, symbol, interval, 200, 300, emaArray);
+    try {
+        let ema = await Indicators.ema(close, symbol, interval, 200, 300, emaArray);
 
-    if (!isNaN(ema)) {
+        if (!isNaN(ema)) {
 
-        if (close < ema) {
+            if (close < ema) {
 
-            recordPattern[key] = null;
-            indexArray[key] = -1;
-            tokenArray[key] = [];
+                recordPattern[key] = null;
+                indexArray[key] = -1;
+                tokenArray[key] = [];
 
-            return false;
-        }
-
-        if (close > ema) {
-
-            console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + close)
-
-            if (recordPattern[key] == null) {
-
-                indexArray[key] += 1
-
-                let ticker = {
-                    'index': parseInt(indexArray[key]),
-                    'symbol': symbol,
-                    'open': open,
-                    'close': close,
-                    'low': low,
-                    'high': high,
-                    'interval': interval,
-                    'time': new Date()
-                }
-
-                tokenArray[key].push(ticker)
-                let pattern = Pattern.patternMatching(tokenArray[key], symbol)
-
-                if (!_.isEmpty(pattern)) {
-
-                    recordPattern[key] = {
-                        'symbol': symbol,
-                        'interval': interval,
-                        'hh': pattern['hh'],
-                        'll': pattern['ll'],
-                        'lh': pattern['lh'],
-                        'hl': pattern['hl'],
-                        'hh_close': pattern['hh_close'],
-                        'll_open': pattern['ll_open'],
-                        'll_low': pattern['ll_low'],
-                        'll_close': pattern['ll_close'],
-                        'lh_close': pattern['lh_close'],
-                        'hl_open': pattern['hl_open'],
-                        'hh_high': pattern['hh_high'],
-                        'confirmed': false
-                    }
-
-                    tokenArray[key] = [];
-                    indexArray[key] = -1
-                }
+                return false;
             }
 
-            if (recordPattern[key] != null) {
+            if (close > ema) {
 
-                let recordPatternValue = recordPattern[key];
-                if (recordPatternValue['confirmed'] === false) {
+                console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + close)
 
-                    if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
-                        recordPattern[key] = null;
-                    } else {
+                if (recordPattern[key] == null) {
 
-                        let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
+                    indexArray[key] += 1
 
-                        if (isStrategyBreakoutFound) {
+                    let ticker = {
+                        'index': parseInt(indexArray[key]),
+                        'symbol': symbol,
+                        'open': open,
+                        'close': close,
+                        'low': low,
+                        'high': high,
+                        'interval': interval,
+                        'time': new Date()
+                    }
 
-                            if (tradeEnabled) {
+                    tokenArray[key].push(ticker)
+                    let pattern = Pattern.patternMatching(tokenArray[key], symbol)
 
-                                const userBinance = new Binance().options({
-                                    API_KEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
-                                    API_SECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
-                                });
+                    if (!_.isEmpty(pattern)) {
 
-                                let buyAmount = userBinance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
-                                userBinance.marketBuy(symbol, buyAmount);
+                        recordPattern[key] = {
+                            'symbol': symbol,
+                            'interval': interval,
+                            'hh': pattern['hh'],
+                            'll': pattern['ll'],
+                            'lh': pattern['lh'],
+                            'hl': pattern['hl'],
+                            'hh_close': pattern['hh_close'],
+                            'll_open': pattern['ll_open'],
+                            'll_low': pattern['ll_low'],
+                            'll_close': pattern['ll_close'],
+                            'lh_close': pattern['lh_close'],
+                            'hl_open': pattern['hl_open'],
+                            'hh_high': pattern['hh_high'],
+                            'confirmed': false
+                        }
+
+                        tokenArray[key] = [];
+                        indexArray[key] = -1
+                    }
+                }
+
+                if (recordPattern[key] != null) {
+
+                    let recordPatternValue = recordPattern[key];
+                    if (recordPatternValue['confirmed'] === false) {
+
+                        if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
+                            recordPattern[key] = null;
+                        } else {
+
+                            let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
+
+                            if (isStrategyBreakoutFound) {
+
+                                if (tradeEnabled) {
+
+                                    const userBinance = new Binance().options({
+                                        API_KEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
+                                        API_SECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
+                                    });
+
+                                    let buyAmount = userBinance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
+                                    userBinance.marketBuy(symbol, buyAmount);
+                                }
+
+                                entryCoins[key] = true;
+                                entryArray[key] = recordPatternValue
+
+                                emitter.emit('entry', symbol, interval, close, recordPatternValue, telegramEnabled);
+
+                                obj.totalEntry += 1;
                             }
-
-                            entryCoins[key] = true;
-                            entryArray[key] = recordPatternValue
-
-                            emitter.emit('entry', symbol, interval, close, recordPatternValue, telegramEnabled);
-
-                            obj.totalEntry += 1;
                         }
                     }
                 }
             }
         }
+    } catch (e) {
+        console.log(e)
     }
+
+
 }
 
 

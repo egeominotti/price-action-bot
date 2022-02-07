@@ -242,88 +242,94 @@ setInterval(() => {
 
     for (let time of timeFrame) {
 
-        binance.websockets.candlesticks(exchangePair, time, async (candlesticks) => {
-            let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
-            let {
-                o: open,
-                h: high,
-                l: low,
-                c: close,
-                i: interval,
-                x: isFinal,
-            } = ticks;
+        try {
 
-            let key = symbol + "_" + interval
-            let currentClose = parseFloat(close)
+            binance.websockets.candlesticks(exchangePair, time, async (candlesticks) => {
+                let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
+                let {
+                    o: open,
+                    h: high,
+                    l: low,
+                    c: close,
+                    i: interval,
+                    x: isFinal,
+                } = ticks;
 
-            if (finder.length > 0) {
-                if (finder.includes(symbol)) {
-                    if (exclusionList[key] === false) {
-                        if (entryArray[key] !== null) {
-                            emitter.emit('checkExit', obj, symbol, interval, key, close, low, high, open);
-                            emitter.emit('checkFloating', key, symbol, close);
+                let key = symbol + "_" + interval
+                let currentClose = parseFloat(close)
+
+                if (finder.length > 0) {
+                    if (finder.includes(symbol)) {
+                        if (exclusionList[key] === false) {
+                            if (entryArray[key] !== null) {
+                                emitter.emit('checkExit', obj, symbol, interval, key, close, low, high, open);
+                                emitter.emit('checkFloating', key, symbol, close);
+                            }
                         }
                     }
                 }
-            }
 
-            if (isFinal) {
+                if (isFinal) {
 
-                if (interval === '5m') {
+                    if (interval === '5m') {
 
-                    if (exclusionList[key] === true)
-                        exclusionList[key] = false;
+                        if (exclusionList[key] === true)
+                            exclusionList[key] = false;
 
-                    let ema = await Indicators.emaWithoutCache(symbol, '1d', 5, 150);
 
-                    if (!isNaN(ema)) {
+                        let ema = await Indicators.emaWithoutCache(symbol, '1d', 5, 150);
 
-                        if (currentClose > ema) {
-                            if (!finder.includes(symbol)) {
-                                finder.push(symbol)
-                            }
-                        }
+                        if (!isNaN(ema)) {
 
-                        if (currentClose < ema) {
-                            // Aggiungere che chiude tutte le posizioni che sono andate sotto ema
-                            if (finder.includes(symbol)) {
-
-                                if (entryArray[key] !== null) {
-
-                                    recordPattern[key] = null;
-                                    indexArray[key] = -1;
-                                    tokenArray[key] = [];
-
-                                    //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
+                            if (currentClose > ema) {
+                                if (!finder.includes(symbol)) {
+                                    finder.push(symbol)
                                 }
+                            }
 
-                                for (let i = 0; i < finder.length; i++) {
-                                    if (finder[i] !== null) {
-                                        if (finder[i] === symbol) {
-                                            finder.splice(i, 1);
+                            if (currentClose < ema) {
+                                // Aggiungere che chiude tutte le posizioni che sono andate sotto ema
+                                if (finder.includes(symbol)) {
+
+                                    if (entryArray[key] !== null) {
+
+                                        recordPattern[key] = null;
+                                        indexArray[key] = -1;
+                                        tokenArray[key] = [];
+
+                                        //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
+                                    }
+
+                                    for (let i = 0; i < finder.length; i++) {
+                                        if (finder[i] !== null) {
+                                            if (finder[i] === symbol) {
+                                                finder.splice(i, 1);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
 
-                } else {
 
-                    if (finder.length > 0) {
-                        if (finder.includes(symbol)) {
-                            if (totalEntry <= maxEntry) {
-                                if (exclusionList[key] === false && entryCoins[key] === false) {
-                                    emitter.emit('checkEntry', obj, symbol, interval, key, close, low, high, open, totalEntry);
+                    } else {
+
+                        if (finder.length > 0) {
+                            if (finder.includes(symbol)) {
+                                if (totalEntry <= maxEntry) {
+                                    if (exclusionList[key] === false && entryCoins[key] === false) {
+                                        emitter.emit('checkEntry', obj, symbol, interval, key, close, low, high, open, totalEntry);
+                                    }
                                 }
                             }
                         }
                     }
-
                 }
 
-            }
-        });
+            });
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     emitter.on('checkFloating', (key, symbol, close) => {
