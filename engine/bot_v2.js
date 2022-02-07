@@ -101,23 +101,23 @@ app.get('/trade/disableTelegram', async (req, res) => {
 
 app.get('/trade/emergency', async (req, res) => {
     //
-    // for (let time of timeFrame) {
-    //     for (const token of coinsArray) {
-    //         let key = token + "_" + time
-    //         if (recordPattern[key] !== null) {
-    //             if (tradeEnabled) {
-    //                 for (let objBinance in arrObjectInstanceBinance) {
-    //                     objBinance.balance((error, balances) => {
-    //                         if (error) return console.error(error);
-    //                         //console.log(exchangeInfoArray[token])
-    //                         let sellAmount = binance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
-    //                         binance.marketSell(token, sellAmount);
-    //                     });
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    for (let time of timeFrame) {
+        for (const token of finder) {
+            let key = token + "_" + time
+            if (recordPattern[key] !== null) {
+                if (tradeEnabled) {
+                    //for (let objBinance in arrObjectInstanceBinance) {
+                    objBinance.balance((error, balances) => {
+                        if (error) return console.error(error);
+                        //console.log(exchangeInfoArray[token])
+                        let sellAmount = binance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
+                        binance.marketSell(token, sellAmount);
+                    });
+                    //}
+                }
+            }
+        }
+    }
     res.send({'stop_all': true});
 
 });
@@ -199,19 +199,18 @@ const emitter = new eventMitter();
 
 setInterval(() => {
 
-    let message = "Global Statistics Profit/Loss" + "\n" +
-        "--------------------------------------------------------------------" + "\n" +
-        "Total pair in trading: " + totalEntry + "\n" +
-        "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-        "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-        "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+    if (totalEntry > 0) {
+        let message = "Global Statistics Profit/Loss" + "\n" +
+            "--------------------------------------------------------------------" + "\n" +
+            "Total pair in trading: " + totalEntry + "\n" +
+            "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
 
-    Telegram.sendMessage(message)
+        Telegram.sendMessage(message)
+    }
 
 }, 300000);
-
-
-
 
 
 (async () => {
