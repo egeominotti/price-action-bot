@@ -38,7 +38,7 @@ let timeFrame = [
 ];
 
 let telegramEnabled = true;
-let tradeEnabled = true;
+let tradeEnabled = false;
 
 let balance = 1100
 let variableBalance = 0;

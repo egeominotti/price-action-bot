@@ -333,7 +333,6 @@ async function checkEntry(
     let sizeTrade = obj.sizeTrade;
     let exchangeInfoArray = obj.exchangeInfoArray;
     let entryArray = obj.entryArray;
-    let tradeEnabled = obj.tradeEnabled;
     let telegramEnabled = obj.telegramEnabled;
     let entryCoins = obj.entryCoins;
 
@@ -409,7 +408,7 @@ async function checkEntry(
 
                             if (isStrategyBreakoutFound) {
 
-                                if (tradeEnabled) {
+                                if (obj.tradeEnabled) {
 
                                     try {
 
