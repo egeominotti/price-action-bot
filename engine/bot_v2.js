@@ -8,6 +8,9 @@ const _ = require("lodash");
 const cors = require('cors')
 const express = require("express");
 const eventMitter = require('events')
+const os = require('os');
+const process = require('process');
+
 
 const port = 3000;
 const app = express();
@@ -73,7 +76,7 @@ app.get('/info', (req, res) => {
         'floatingperc': totalFloatingPercValue,
         'floating': totalFloatingValue,
         'floatingbalance': totalFloatingBalance,
-        'uptime': 0,
+        'uptime': process.uptime(),
     }
     res.send(obj);
 });
@@ -114,52 +117,44 @@ app.get('/trade/stop', async (req, res) => {
                     console.log(exchangeInfoArray[token])
                     let sellAmount = userBinance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
                     userBinance.marketSell(token, sellAmount);
-
                 });
             }
         }
     }
+
     res.send({'stop_all': true});
 
 });
 
 app.get('/trade/entry', async (req, res) => {
-    //const dbData = await Bot.findOne({name: dbKey});
     res.send(entryArray);
 });
 
 app.get('/trade/takeprofit', async (req, res) => {
-    //const dbData = await Bot.findOne({name: dbKey});
     res.send(takeProfitArray);
 });
 
 app.get('/trade/stoploss', async (req, res) => {
-    //const dbData = await Bot.findOne({name: dbKey});
     res.send(stopLossArray);
 });
 
 app.get('/tokenArray', async (req, res) => {
-    //const dbData = await Bot.findOne({name: dbKey});
     res.send(tokenArray);
 });
 
 app.get('/exchangeInfoArray', async (req, res) => {
-    //const dbData = await Bot.findOne({name: dbKey});
     res.send(exchangeInfoArray);
 });
 
 app.get('/getExclusionList', async (req, res) => {
-    //const dbData = await Bot.findOne({name: dbKey});
     res.send(exclusionList);
 });
 
 app.get('/getEntryCoins', async (req, res) => {
-    //const dbData = await Bot.findOne({name: dbKey});
     res.send(entryCoins);
 });
 
 app.get('/getRecordPattern', async (req, res) => {
-    //const dbData = await Bot.findOne({name: dbKey});
     res.send(recordPattern);
 });
 
