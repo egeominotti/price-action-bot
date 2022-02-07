@@ -279,7 +279,6 @@ setInterval(() => {
 
                         if (currentClose > ema) {
                             if (!finder.includes(symbol)) {
-                                console.log(symbol)
                                 finder.push(symbol)
                             }
                         }
@@ -323,35 +322,38 @@ setInterval(() => {
         floatingArr[key] = floatingtrade;
         floatingPercArr[key] = floatingtradeperc;
 
-        console.log('---------------- Calculate Floating -------------------- ');
-        console.log("Pair... " + symbol)
-        console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-        console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-        console.log('-------------------------------------------------------------- ');
+        // console.log('---------------- Calculate Floating -------------------- ');
+        // console.log("Pair... " + symbol)
+        // console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+        // console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+        // console.log('-------------------------------------------------------------- ');
 
         totalFloatingValue = 0;
         totalFloatingPercValue = 0;
         totalFloatingBalance = 0;
 
-        for (let time of timeFrame) {
-            for (const token of finder) {
-                let keyFloating = token + "_" + time
-                if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
-                    totalFloatingValue += floatingArr[keyFloating];
-                    totalFloatingPercValue += floatingPercArr[keyFloating];
+        if (totalEntry > 0) {
+
+            for (let time of timeFrame) {
+                for (const token of finder) {
+                    let keyFloating = token + "_" + time
+                    if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                        totalFloatingValue += floatingArr[keyFloating];
+                        totalFloatingPercValue += floatingPercArr[keyFloating];
+                    }
                 }
             }
+
+            totalFloatingBalance = balance + totalFloatingValue;
+
+            let message = "Global Statistics Profit/Loss" + "\n" +
+                "--------------------------------------------------------------------" + "\n" +
+                "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+                "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+                "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+            console.log(message)
         }
-
-        totalFloatingBalance = balance + totalFloatingValue;
-
-        let message = "Global Statistics Profit/Loss" + "\n" +
-            "--------------------------------------------------------------------" + "\n" +
-            "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-        console.log(message)
 
     });
 
