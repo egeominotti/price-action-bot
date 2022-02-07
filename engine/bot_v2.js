@@ -27,7 +27,6 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
-    //'1m',
     '5m',
     '15m',
     '1h',
@@ -38,11 +37,11 @@ let timeFrame = [
 let telegramEnabled = true;
 let tradeEnabled = false;
 
-let balance = 1100
+let balance = 3000;
 let variableBalance = 0;
 let totalPercentage = 0
 let sumSizeTrade = 0;
-const sizeTrade = 70;
+const sizeTrade = 200;
 const maxEntry = (balance / sizeTrade) - 1
 
 let totalFloatingValue = 0;
@@ -322,7 +321,7 @@ function checkFloating(key, symbol, close) {
 
                 if (isFinal) {
 
-                    if (interval === '5m') {
+                    if (interval === '1d') {
 
                         if (exclusionList[key] === true)
                             exclusionList[key] = false;
