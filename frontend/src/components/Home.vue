@@ -10,7 +10,7 @@
           >
             <b-card-text class="custom-data-bot">
               Static Balance: {{ initialBalance }}$ |
-              Floating Balance: {{ floatingBalance }}$ |
+              Floating Balance: {{ floatingbalance }}$ |
               Tradestatus: {{ tradeEnabled }} |
               Entry Counter: {{ counterEN }} |
               Takeprofit Counter: {{ counterTP }} |
@@ -110,6 +110,7 @@ export default {
       sizeTrade: 0,
       floating: 0,
       floatingperc: 0,
+      floatingbalance: 0,
       floatingBalance: 0,
       initialBalance: 0,
       tradeEnabled: false,
@@ -145,6 +146,7 @@ export default {
       this.floatingperc = infoData.floatingperc;
       this.floating = infoData.floating;
       this.initialBalance = infoData.initialBalance;
+      this.floatingbalance = infoData.floatingbalance;
       this.totalFloatingBalance = infoData.totalFloatingBalance;
 
       const entryArrayReq = await fetch(BASE_URL + '/trade/entry');
