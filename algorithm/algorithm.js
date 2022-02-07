@@ -160,8 +160,6 @@ function takeProfit(obj) {
     let telegramEnabled = obj.telegramEnabled;
     let sumSizeTrade = obj.sumSizeTrade;
     let sizeTrade = obj.sizeTrade;
-    let totalPercentage = obj.totalPercentage;
-    let variableBalance = obj.variableBalance;
 
     let entryprice = recordPattern[key]['entryprice']
     let entrypricedate = recordPattern[key]['entrypricedate']
@@ -176,15 +174,14 @@ function takeProfit(obj) {
         let finaleSizeTrade = (sizeTrade / entryprice) * takeprofit;
 
         takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
-        totalPercentage += takeProfitPercentage
+        obj.totalPercentage += takeProfitPercentage
 
         finaleTradeValue = finaleSizeTrade - sizeTrade
 
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
+        obj.variableBalance = newBalance
 
-        // update variable balance
-        variableBalance = newBalance
         emitter.emit(
             'takeprofit',
             key,

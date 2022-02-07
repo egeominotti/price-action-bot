@@ -114,6 +114,7 @@ app.get('/trade/stop', async (req, res) => {
                     console.log(exchangeInfoArray[token])
                     let sellAmount = userBinance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
                     userBinance.marketSell(token, sellAmount);
+
                 });
             }
         }
@@ -284,6 +285,11 @@ setInterval(() => {
                         }
 
                         if (currentClose < ema) {
+                            // Aggiungere che chiude tutte le posizioni che sono andate sotto ema
+                            if (finder.includes(symbol)){
+                                //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
+                            }
+
                             for (let i = 0; i < finder.length; i++) {
                                 if (finder[i] !== null) {
                                     if (finder[i] === symbol) {
@@ -382,6 +388,7 @@ setInterval(() => {
         obj['low'] = parseFloat(low);
 
         Algorithms.checkEntry(obj)
+
     });
 
 })();
