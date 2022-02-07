@@ -18,7 +18,7 @@ app.listen(port)
 mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
-    useServerTime: true,
+    //useServerTime: true,
     log: log => {
         console.log(log); // You can create your own logger here, or disable console output
     }
@@ -28,10 +28,10 @@ const binance = new Binance().options({
 let timeFrame = [
     '1m',
     '5m',
-    '15m',
-    '1h',
-    '4h',
-    '1d',
+    //'15m',
+    //'1h',
+    //'4h',
+    //'1d',
 ];
 
 let telegramEnabled = true;
@@ -288,7 +288,12 @@ setInterval(() => {
                             // Aggiungere che chiude tutte le posizioni che sono andate sotto ema
                             if (finder.includes(symbol)) {
 
-                                if(entryArray[key] !== null){
+                                if (entryArray[key] !== null) {
+
+                                    recordPattern[key] = null;
+                                    indexArray[key] = -1;
+                                    tokenArray[key] = [];
+
                                     //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
                                 }
 
