@@ -286,14 +286,17 @@ setInterval(() => {
 
                         if (currentClose < ema) {
                             // Aggiungere che chiude tutte le posizioni che sono andate sotto ema
-                            if (finder.includes(symbol)){
-                                //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
-                            }
+                            if (finder.includes(symbol)) {
 
-                            for (let i = 0; i < finder.length; i++) {
-                                if (finder[i] !== null) {
-                                    if (finder[i] === symbol) {
-                                        finder.splice(i, 1);
+                                if(entryArray[key] !== null){
+                                    //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
+                                }
+
+                                for (let i = 0; i < finder.length; i++) {
+                                    if (finder[i] !== null) {
+                                        if (finder[i] === symbol) {
+                                            finder.splice(i, 1);
+                                        }
                                     }
                                 }
                             }
