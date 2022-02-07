@@ -19,7 +19,7 @@ mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
     useServerTime: true,
-    verbose: true, // Add extra output when subscribing to WebSockets, etc
+    //verbose: true, // Add extra output when subscribing to WebSockets, etc
     log: log => {
         console.log(log); // You can create your own logger here, or disable console output
     }
@@ -27,6 +27,7 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
+    '1m',
     '5m',
     '15m',
     '1h',
@@ -165,7 +166,6 @@ let totalEntry = 0
 let listEntry = {};
 
 let obj = {
-
     'binance': binance,
     //Settings
     'balance': balance,
@@ -189,14 +189,12 @@ let obj = {
     'stopLossArray': stopLossArray,
     'entryArray': entryArray,
     'exchangeInfoArray': exchangeInfoArray,
+    'totalEntry': totalEntry,
     //Info DB
     'dbKey': dbKey,
-
 }
 
-let pairs = [];
 let finder = [];
-
 const emitter = new eventMitter();
 
 setInterval(() => {
@@ -213,6 +211,9 @@ setInterval(() => {
 }, 300000);
 
 
+
+
+
 (async () => {
 
     let exchangePair = Exchange.extractPair(await binance.exchangeInfo(), exchangeInfoArray);
@@ -224,7 +225,6 @@ setInterval(() => {
         for (const symbol of exchangePair) {
 
             let key = symbol + "_" + time
-
             tokenArray[key] = [];
             indexArray[key] = -1;
             exclusionList[key] = false;
@@ -238,6 +238,7 @@ setInterval(() => {
             floatingPercArr[key] = 0;
         }
     }
+
 
     for (let time of timeFrame) {
 
@@ -259,7 +260,7 @@ setInterval(() => {
                 if (finder.includes(symbol)) {
                     if (exclusionList[key] === false) {
                         if (entryArray[key] !== null) {
-                            emitter.emit('checkExit', symbol, interval, key, close, low, high, open, totalEntry);
+                            emitter.emit('checkExit', obj, symbol, interval, key, close, low, high, open);
                             emitter.emit('checkFloating', key, symbol, close);
                         }
                     }
@@ -268,7 +269,7 @@ setInterval(() => {
 
             if (isFinal) {
 
-                if (interval === '1d') {
+                if (interval === '5m') {
 
                     if (exclusionList[key] === true)
                         exclusionList[key] = false;
@@ -301,7 +302,7 @@ setInterval(() => {
                         if (finder.includes(symbol)) {
                             if (totalEntry <= maxEntry) {
                                 if (exclusionList[key] === false && entryCoins[key] === false) {
-                                    emitter.emit('checkEntry', symbol, interval, key, close, low, high, open, totalEntry);
+                                    emitter.emit('checkEntry', obj, symbol, interval, key, close, low, high, open, totalEntry);
                                 }
                             }
                         }
@@ -355,7 +356,7 @@ setInterval(() => {
 
     });
 
-    emitter.on('checkExit', (symbol, interval, key, close, low, high, open) => {
+    emitter.on('checkExit', (obj, symbol, interval, key, close, low, high, open) => {
 
         obj['symbol'] = symbol;
         obj['key'] = key;
@@ -365,12 +366,11 @@ setInterval(() => {
         obj['open'] = parseFloat(open);
         obj['low'] = parseFloat(low);
 
-        let result = Algorithms.checkExit(obj)
-        if (result === true) totalEntry -= 1;
+        Algorithms.checkExit(obj)
 
     });
 
-    emitter.on('checkEntry', (symbol, interval, key, close, low, high, open) => {
+    emitter.on('checkEntry', (obj, symbol, interval, key, close, low, high, open) => {
 
         obj['symbol'] = symbol;
         obj['key'] = key;
@@ -380,9 +380,7 @@ setInterval(() => {
         obj['open'] = parseFloat(open);
         obj['low'] = parseFloat(low);
 
-        let result = Algorithms.checkEntry(obj)
-        if (result === true) totalEntry += 1
-
+        Algorithms.checkEntry(obj)
     });
 
 })();

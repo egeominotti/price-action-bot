@@ -9,14 +9,15 @@
               class="custom-header-b-card"
           >
             <b-card-text class="custom-data-bot">
-              Balance: {{ balance }}$ |
+              Static Balance: {{ balance }}$ |
+              Floating Balance: {{ floatingBalance }}$ |
               Tradestatus: {{ tradeEnabled  }} |
               Entry Counter: {{ counterEN }} |
               Takeprofit Counter: {{ counterTP }} |
               Stoploss Counter: {{ counterSL }} |
               TradeSize: {{ sizeTrade }}$ |
               Total floating profit/loss: {{ floating }}$ |
-              Total floating profit/loss percentage: {{ floatingperc }}$ |
+              Total floating profit/loss percentage: {{ floatingperc }} % |
             </b-card-text>
 
             <b-button v-if="entryArray.length > 0" @click="closeAllPosition()" variant="danger">Close All Position
@@ -109,6 +110,7 @@ export default {
       sizeTrade: 0,
       floating: 0,
       floatingperc: 0,
+      floatingBalance: 0,
       initialBalance: 0,
       tradeEnabled: false,
       telegramEnabled: false,
@@ -143,6 +145,7 @@ export default {
       this.floatingperc = infoData.floatingperc;
       this.floating = infoData.floating;
       this.initialBalance = infoData.initialBalance;
+      this.totalFloatingBalance = infoData.totalFloatingBalance;
 
       const entryArrayReq = await fetch(BASE_URL + '/trade/entry');
       const entryArrayData = await entryArrayReq.json();

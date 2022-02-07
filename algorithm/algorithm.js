@@ -63,7 +63,7 @@ emitter.on('stoploss',
 
             Telegram.sendMessage(message)
         }
-        stopLossArray[key] = stopLossObj
+        stopLossArray = stopLossObj
     });
 
 emitter.on('takeprofit',
@@ -119,7 +119,7 @@ emitter.on('takeprofit',
 
             Telegram.sendMessage(message)
         }
-        takeProfitArray[key] = takeprofitObj
+        takeProfitArray = takeprofitObj
 
     });
 
@@ -161,7 +161,6 @@ function takeProfit(obj) {
     let sizeTrade = obj.sizeTrade;
     let totalPercentage = obj.totalPercentage;
     let variableBalance = obj.variableBalance;
-
 
     let entryprice = recordPattern[key]['entryprice']
     let entrypricedate = recordPattern[key]['entrypricedate']
@@ -220,10 +219,8 @@ function stopLoss(obj) {
     let stopLossArray = obj.stopLossArray;
     let telegramEnabled = obj.telegramEnabled;
     let exclusionList = obj.exclusionList;
-    let variableBalance = obj.variableBalance;
     let sumSizeTrade = obj.sumSizeTrade;
     let sizeTrade = obj.sizeTrade;
-    let totalPercentage = obj.totalPercentage;
 
     let entryprice = recordPattern[key]['entryprice']
     let entrypricedate = recordPattern[key]['entrypricedate']
@@ -237,13 +234,11 @@ function stopLoss(obj) {
         stopLossPercentage = _.round(stopLossPercentage * 100, 2)
         let finaleSizeTrade = (sizeTrade / entryprice) * stoploss;
         finaleTradeValue = finaleSizeTrade - sizeTrade
-        totalPercentage += stopLossPercentage
+        obj.totalPercentage += stopLossPercentage
 
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
-
-        // update variable balance
-        variableBalance = newBalance
+        obj.variableBalance = newBalance
 
         emitter.emit(
             'stoploss',
@@ -260,10 +255,8 @@ function stopLoss(obj) {
             stopLossArray[key],
             telegramEnabled);
 
-
-        recordPattern[key] = null;
+        obj.recordPattern[key] = null;
         exclusionList[key] = true;
-
 
         return true;
     }
@@ -282,13 +275,7 @@ function checkExit(obj) {
     let binance = obj.binance;
     let symbol = obj.symbol;
     let recordPattern = obj.recordPattern;
-    let exchangeInfoArray = obj.exchangeInfoArray;
-    let entryArray = obj.entryArray;
-    let tradeEnabled = obj.tradeEnabled;
-    let entryCoins = obj.entryCoins;
 
-
-    // check in real time - takeprofit and stoploss
     if (recordPattern[key] !== null) {
 
         let recordPatternValue = recordPattern[key];
@@ -299,25 +286,22 @@ function checkExit(obj) {
 
             if (stoploss || takeprofit) {
 
-                if (tradeEnabled) {
+                if (obj.tradeEnabled) {
                     binance.balance((error, balances) => {
                         if (error) return console.error(error);
                         //console.log(exchangeInfoArray[symbol])
-                        let sellAmount = binance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
+                        let sellAmount = binance.roundStep(balances[symbol].available, obj.exchangeInfoArray[symbol].stepSize);
                         binance.marketSell(symbol, sellAmount);
                     });
                 }
 
-                entryArray[key] = null;
-                recordPattern[key] = null;
-                entryCoins[key] = false;
-
-                return true;
+                obj.entryArray[key] = null;
+                obj.recordPattern[key] = null;
+                obj.entryCoins[key] = false;
+                obj.totalEntry -=1;
             }
         }
     }
-
-    return false;
 }
 
 /**
@@ -340,6 +324,7 @@ async function checkEntry(
     let recordPattern = obj.recordPattern;
     let tokenArray = obj.tokenArray;
     let sizeTrade = obj.sizeTrade;
+    let totalEntry = obj.totalEntry;
     let exchangeInfoArray = obj.exchangeInfoArray;
     let entryArray = obj.entryArray;
     let tradeEnabled = obj.tradeEnabled;
@@ -428,15 +413,13 @@ async function checkEntry(
 
                             emitter.emit('entry', symbol, interval, close, recordPatternValue, telegramEnabled);
 
-                            return true;
+                            totalEntry +=1;
                         }
                     }
                 }
             }
         }
     }
-
-    return false;
 }
 
 
