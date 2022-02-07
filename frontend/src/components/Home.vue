@@ -99,7 +99,7 @@
 
 <script>
 
-const BASE_URL = 'http://188.34.189.183:3000';
+const BASE_URL = 'http://localhost:3000';
 
 export default {
   data() {
@@ -184,12 +184,6 @@ export default {
       this.counterSL = this.stopLossArray.length;
       this.counterTP = this.takeProfitArray.length;
 
-      // const exclusionListArratReq = await fetch(BASE_URL + '/getExclusionList');
-      // const exclusionListArrayDat = await exclusionListArratReq.json();
-      // console.log(exclusionListArrayDat)
-      // for (let k in exclusionListArrayDat)
-      //   if (exclusionListArrayDat[k] !== null) this.stopLossArray.push(exclusionListArrayDat[k]);
-
     },
 
     cancelAutoUpdate() {
@@ -233,7 +227,6 @@ export default {
   },
   mounted() {
     this.getData();
-    // refresh-data each 1 minute
     this.timer = setInterval(this.getData, 100000);
   },
 
@@ -244,7 +237,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
 div {
