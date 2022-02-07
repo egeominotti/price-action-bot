@@ -11,7 +11,7 @@
             <b-card-text class="custom-data-bot">
               Static Balance: {{ balance }}$ |
               Floating Balance: {{ floatingBalance }}$ |
-              Tradestatus: {{ tradeEnabled  }} |
+              Tradestatus: {{ tradeEnabled }} |
               Entry Counter: {{ counterEN }} |
               Takeprofit Counter: {{ counterTP }} |
               Stoploss Counter: {{ counterSL }} |
@@ -192,41 +192,41 @@ export default {
 
     },
 
-    // cancelAutoUpdate() {
-    //   clearInterval(this.timer);
-    // },
+    cancelAutoUpdate() {
+      clearInterval(this.timer);
+    },
 
     async closeAllPosition() {
-      const res = await fetch(BASE_URL + '/trade/emergency');
+      const res = await fetch(BASE_URL + '/trade/stop');
       const result = await res.json();
       console.log(result);
     },
 
     async enableTrade() {
-      //const res = await fetch(BASE_URL + '/trade/enableTrade');
-      //const result = await res.json();
-      //console.log(result);
+      const res = await fetch(BASE_URL + '/trade/enableTrade');
+      const result = await res.json();
+      console.log(result);
       this.tradeEnabled = true;
     },
 
     async disableTrade() {
-      //const res = await fetch(BASE_URL + '/trade/disableTrade');
-      //const result = await res.json();
-      //console.log(result);
+      const res = await fetch(BASE_URL + '/trade/disableTrade');
+      const result = await res.json();
+      console.log(result);
       this.tradeEnabled = false;
     },
 
     async enableTelegram() {
-      //const res = await fetch(BASE_URL + '/trade/enableTrade');
-      //const result = await res.json();
-      //console.log(result);
+      const res = await fetch(BASE_URL + '/trade/enableTrade');
+      const result = await res.json();
+      console.log(result);
       this.telegramEnabled = true;
     },
 
     async disbaleTelegram() {
-      //const res = await fetch(BASE_URL + '/trade/disableTrade');
-      //const result = await res.json();
-      //console.log(result);
+      const res = await fetch(BASE_URL + '/trade/disableTrade');
+      const result = await res.json();
+      console.log(result);
       this.telegramEnabled = false;
     },
 
@@ -234,12 +234,12 @@ export default {
   mounted() {
     this.getData();
     // refresh-data each 1 minute
-    //this.timer = setInterval(this.getData, 100000);
+    this.timer = setInterval(this.getData, 100000);
   },
 
-  // beforeDestroy() {
-  //   this.cancelAutoUpdate();
-  // }
+  beforeDestroy() {
+    this.cancelAutoUpdate();
+  }
 
 }
 </script>

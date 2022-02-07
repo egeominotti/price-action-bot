@@ -19,7 +19,6 @@ mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
     useServerTime: true,
-    //verbose: true, // Add extra output when subscribing to WebSockets, etc
     log: log => {
         console.log(log); // You can create your own logger here, or disable console output
     }
