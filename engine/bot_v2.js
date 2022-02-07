@@ -51,7 +51,7 @@ let totalFloatingValue = 0;
 let totalFloatingPercValue = 0;
 let totalFloatingBalance = 0;
 
-let totalEntry = 0
+let totalEntry = 0;
 let listEntry = {};
 let floatingPercArr = {};
 let floatingArr = {};
@@ -117,10 +117,12 @@ app.get('/trade/stop', async (req, res) => {
                 let key = token + "_" + time
                 if (entryCoins[key] === true) {
                     userBinance.balance((error, balances) => {
-                        if (error) return console.error(error);
-                        console.log(exchangeInfoArray[token])
-                        let sellAmount = userBinance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
-                        userBinance.marketSell(token, sellAmount);
+                        if (balances[token].available !== undefined) {
+                            if (error) return console.error(error);
+                            console.log(exchangeInfoArray[token])
+                            let sellAmount = userBinance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
+                            userBinance.marketSell(token, sellAmount);
+                        }
                     });
                 }
             }
@@ -367,7 +369,6 @@ function checkFloating(key, symbol, close) {
 
                         if (finder.length > 0) {
                             if (finder.includes(symbol)) {
-                                console.log(totalEntry)
                                 if (totalEntry <= maxEntry) {
                                     if (exclusionList[key] === false && entryCoins[key] === false) {
 

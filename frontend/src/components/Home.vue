@@ -143,11 +143,12 @@ export default {
       this.sizeTrade = infoData.sizeTrade;
       this.tradeEnabled = infoData.tradeEnabled;
       this.telegramEnabled = infoData.telegramEnabled;
-      this.floatingperc = infoData.floatingperc;
-      this.floating = infoData.floating;
-      this.initialBalance = infoData.initialBalance;
-      this.floatingbalance = infoData.floatingbalance;
-      this.totalFloatingBalance = infoData.totalFloatingBalance;
+
+      this.floatingperc = infoData.floatingperc.toFixed(2);
+      this.floating = infoData.floating.toFixed(2);
+      this.initialBalance = infoData.initialBalance.toFixed(2);
+      this.floatingbalance = infoData.floatingbalance.toFixed(2);
+      this.totalFloatingBalance = infoData.totalFloatingBalance.toFixed(2);
 
       const entryArrayReq = await fetch(BASE_URL + '/trade/entry');
       const entryArrayData = await entryArrayReq.json();
