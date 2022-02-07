@@ -40,11 +40,11 @@ let timeFrame = [
 let telegramEnabled = true;
 let tradeEnabled = true;
 
-let balance = 3000
+let balance = 1100
 let variableBalance = 0;
 let totalPercentage = 0
 let sumSizeTrade = 0;
-const sizeTrade = 200;
+const sizeTrade = 70;
 const maxEntry = (balance / sizeTrade) - 1
 
 let totalFloatingValue = 0;

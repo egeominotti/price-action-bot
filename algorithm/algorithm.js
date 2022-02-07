@@ -270,7 +270,6 @@ function stopLoss(obj) {
 function checkExit(obj) {
 
     let key = obj.key;
-    let binance = obj.binance;
     let symbol = obj.symbol;
     let recordPattern = obj.recordPattern;
 
@@ -295,7 +294,6 @@ function checkExit(obj) {
 
                         userBinance.balance((error, balances) => {
                             if (error) return console.error(error);
-                            //console.log(exchangeInfoArray[symbol])
                             let sellAmount = userBinance.roundStep(balances[symbol].available, obj.exchangeInfoArray[symbol].stepSize);
                             userBinance.marketSell(symbol, sellAmount);
                         });
@@ -327,7 +325,6 @@ async function checkEntry(
     let low = obj.low;
     let high = obj.high;
     let key = obj.key;
-    let binance = obj.binance;
     let symbol = obj.symbol;
     let interval = obj.interval;
     let indexArray = obj.indexArray;
