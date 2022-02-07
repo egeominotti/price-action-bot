@@ -7,8 +7,6 @@ const mongoose = require("mongoose");
 const _ = require("lodash");
 const cors = require('cors')
 const express = require("express");
-const os = require('os');
-const process = require('process');
 
 
 const port = 3000;
@@ -78,7 +76,7 @@ app.get('/info', (req, res) => {
         'floatingperc': totalFloatingPercValue,
         'floating': totalFloatingValue,
         'floatingbalance': totalFloatingBalance,
-        'uptime': process.uptime(),
+        'uptime': 0,
     }
     res.send(obj);
 });
