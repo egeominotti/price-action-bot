@@ -7,7 +7,6 @@ const mongoose = require("mongoose");
 const _ = require("lodash");
 const cors = require('cors')
 const express = require("express");
-const eventMitter = require('events')
 const os = require('os');
 const process = require('process');
 
@@ -21,7 +20,8 @@ app.listen(port)
 mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
-    //useServerTime: true,
+    useServerTime: true,
+    verbose: true,
     log: log => {
         console.log(log); // You can create your own logger here, or disable console output
     }
@@ -167,7 +167,6 @@ app.get('/getRecordPattern', async (req, res) => {
 });
 
 
-
 let obj = {
     'binance': binance,
     //Settings
@@ -198,7 +197,6 @@ let obj = {
 }
 
 let finder = [];
-const emitter = new eventMitter();
 
 setInterval(() => {
 
@@ -215,6 +213,72 @@ setInterval(() => {
 
 }, 300000);
 
+function checkExit(obj, symbol, interval, key, close, low, high, open) {
+
+    obj['symbol'] = symbol;
+    obj['key'] = key;
+    obj['interval'] = interval;
+    obj['close'] = parseFloat(close);
+    obj['high'] = parseFloat(high);
+    obj['open'] = parseFloat(open);
+    obj['low'] = parseFloat(low);
+
+    Algorithms.checkExit(obj)
+}
+
+function checkEntry(obj, symbol, interval, key, close, low, high, open) {
+
+    obj['symbol'] = symbol;
+    obj['key'] = key;
+    obj['interval'] = interval;
+    obj['close'] = parseFloat(close);
+    obj['high'] = parseFloat(high);
+    obj['open'] = parseFloat(open);
+    obj['low'] = parseFloat(low);
+
+    Algorithms.checkEntry(obj).then(r => console.log(r))
+}
+
+function checkFloating(key, symbol, close) {
+
+    let position = sizeTrade / entryArray[key]['entryprice'];
+    let floatingPosition = position * parseFloat(close);
+    let floatingtrade = floatingPosition - sizeTrade;
+    let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+
+    floatingArr[key] = floatingtrade;
+    floatingPercArr[key] = floatingtradeperc;
+
+    console.log('---------------- Calculate Floating -------------------- ');
+    console.log("Pair... " + symbol)
+    console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+    console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+    console.log('-------------------------------------------------------------- ');
+
+    totalFloatingValue = 0;
+    totalFloatingPercValue = 0;
+    totalFloatingBalance = 0;
+
+    for (let time of timeFrame) {
+        for (const token of finder) {
+            let keyFloating = token + "_" + time
+            if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                totalFloatingValue += floatingArr[keyFloating];
+                totalFloatingPercValue += floatingPercArr[keyFloating];
+            }
+        }
+    }
+
+    totalFloatingBalance = balance + totalFloatingValue;
+
+    let message = "Global Statistics Profit/Loss" + "\n" +
+        "--------------------------------------------------------------------" + "\n" +
+        "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+        "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+        "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+    console.log(message)
+}
 
 (async () => {
 
@@ -264,8 +328,8 @@ setInterval(() => {
                     if (finder.includes(symbol)) {
                         if (exclusionList[key] === false) {
                             if (entryArray[key] !== null) {
-                                emitter.emit('checkExit', obj, symbol, interval, key, close, low, high, open);
-                                emitter.emit('checkFloating', key, symbol, close);
+                                checkExit(obj, symbol, interval, key, close, low, high, open)
+                                checkFloating(key, symbol, close)
                             }
                         }
                     }
@@ -321,7 +385,7 @@ setInterval(() => {
                                 console.log(totalEntry)
                                 if (totalEntry <= maxEntry) {
                                     if (exclusionList[key] === false && entryCoins[key] === false) {
-                                        emitter.emit('checkEntry', obj, symbol, interval, key, close, low, high, open);
+                                        checkEntry(obj, symbol, interval, key, close, low, high, open);
                                     }
                                 }
                             }
@@ -335,77 +399,6 @@ setInterval(() => {
             console.log(e)
         }
     }
-
-    emitter.on('checkFloating', (key, symbol, close) => {
-
-        let position = sizeTrade / entryArray[key]['entryprice'];
-        let floatingPosition = position * parseFloat(close);
-        let floatingtrade = floatingPosition - sizeTrade;
-        let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
-
-        floatingArr[key] = floatingtrade;
-        floatingPercArr[key] = floatingtradeperc;
-
-        console.log('---------------- Calculate Floating -------------------- ');
-        console.log("Pair... " + symbol)
-        console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-        console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-        console.log('-------------------------------------------------------------- ');
-
-        totalFloatingValue = 0;
-        totalFloatingPercValue = 0;
-        totalFloatingBalance = 0;
-
-
-        for (let time of timeFrame) {
-            for (const token of finder) {
-                let keyFloating = token + "_" + time
-                if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
-                    totalFloatingValue += floatingArr[keyFloating];
-                    totalFloatingPercValue += floatingPercArr[keyFloating];
-                }
-            }
-        }
-
-        totalFloatingBalance = balance + totalFloatingValue;
-
-        let message = "Global Statistics Profit/Loss" + "\n" +
-            "--------------------------------------------------------------------" + "\n" +
-            "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-        console.log(message)
-
-    });
-
-    emitter.on('checkExit', (obj, symbol, interval, key, close, low, high, open) => {
-
-        obj['symbol'] = symbol;
-        obj['key'] = key;
-        obj['interval'] = interval;
-        obj['close'] = parseFloat(close);
-        obj['high'] = parseFloat(high);
-        obj['open'] = parseFloat(open);
-        obj['low'] = parseFloat(low);
-
-        Algorithms.checkExit(obj)
-
-    });
-
-    emitter.on('checkEntry', (obj, symbol, interval, key, close, low, high, open) => {
-
-        obj['symbol'] = symbol;
-        obj['key'] = key;
-        obj['interval'] = interval;
-        obj['close'] = parseFloat(close);
-        obj['high'] = parseFloat(high);
-        obj['open'] = parseFloat(open);
-        obj['low'] = parseFloat(low);
-
-        Algorithms.checkEntry(obj)
-
-    });
 
 })();
 

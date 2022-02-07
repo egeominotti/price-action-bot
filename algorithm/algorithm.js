@@ -337,8 +337,7 @@ async function checkEntry(
     let telegramEnabled = obj.telegramEnabled;
     let entryCoins = obj.entryCoins;
 
-    try {
-        let ema = await Indicators.ema(close, symbol, interval, 200, 300, emaArray);
+    Indicators.ema(close, symbol, interval, 200, 300, emaArray).then((ema) => {
 
         if (!isNaN(ema)) {
 
@@ -439,9 +438,9 @@ async function checkEntry(
                 }
             }
         }
-    } catch (e) {
+    }).catch((e) => {
         console.log(e)
-    }
+    });
 
 
 }
