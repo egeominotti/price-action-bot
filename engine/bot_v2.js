@@ -36,7 +36,7 @@ let timeFrame = [
 ];
 
 let telegramEnabled = true;
-let tradeEnabled = false;
+let tradeEnabled = true;
 
 let balance = 3000
 let variableBalance = 0;
@@ -101,25 +101,21 @@ app.get('/trade/disableTelegram', async (req, res) => {
 
 app.get('/trade/stop', async (req, res) => {
 
-    const binance = new Binance().options({
-        API_KEY: '',
-        API_SECRET: '',
+    const userBinance = new Binance().options({
+        API_KEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
+        API_SECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
     });
 
     for (let time of timeFrame) {
         for (const token of finder) {
             let key = token + "_" + time
             if (recordPattern[key] !== null) {
-                if (tradeEnabled) {
-                    //for (let objBinance in arrObjectInstanceBinance) {
-                    objBinance.balance((error, balances) => {
-                        if (error) return console.error(error);
-                        //console.log(exchangeInfoArray[token])
-                        let sellAmount = binance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
-                        binance.marketSell(token, sellAmount);
-                    });
-                    //}
-                }
+                userBinance.balance((error, balances) => {
+                    if (error) return console.error(error);
+                    console.log(exchangeInfoArray[token])
+                    let sellAmount = userBinance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
+                    userBinance.marketSell(token, sellAmount);
+                });
             }
         }
     }

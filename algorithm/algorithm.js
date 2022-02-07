@@ -6,6 +6,7 @@ const Bot = require("../models/bot");
 const Indicators = require('../indicators/ema');
 const Logger = require("../models/logger");
 const eventMi = require('events')
+const Binance = require("node-binance-api");
 
 const emitter = new eventMi();
 let emaArray = {};
@@ -287,18 +288,24 @@ function checkExit(obj) {
             if (stoploss || takeprofit) {
 
                 if (obj.tradeEnabled) {
-                    binance.balance((error, balances) => {
+
+                    const userBinance = new Binance().options({
+                        API_KEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
+                        API_SECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
+                    });
+
+                    userBinance.balance((error, balances) => {
                         if (error) return console.error(error);
                         //console.log(exchangeInfoArray[symbol])
-                        let sellAmount = binance.roundStep(balances[symbol].available, obj.exchangeInfoArray[symbol].stepSize);
-                        binance.marketSell(symbol, sellAmount);
+                        let sellAmount = userBinance.roundStep(balances[symbol].available, obj.exchangeInfoArray[symbol].stepSize);
+                        userBinance.marketSell(symbol, sellAmount);
                     });
                 }
 
                 obj.entryArray[key] = null;
                 obj.recordPattern[key] = null;
                 obj.entryCoins[key] = false;
-                obj.totalEntry -=1;
+                obj.totalEntry -= 1;
             }
         }
     }
@@ -324,7 +331,6 @@ async function checkEntry(
     let recordPattern = obj.recordPattern;
     let tokenArray = obj.tokenArray;
     let sizeTrade = obj.sizeTrade;
-    let totalEntry = obj.totalEntry;
     let exchangeInfoArray = obj.exchangeInfoArray;
     let entryArray = obj.entryArray;
     let tradeEnabled = obj.tradeEnabled;
@@ -404,8 +410,14 @@ async function checkEntry(
                         if (isStrategyBreakoutFound) {
 
                             if (tradeEnabled) {
-                                let buyAmount = binance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
-                                binance.marketBuy(symbol, buyAmount);
+
+                                const userBinance = new Binance().options({
+                                    API_KEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
+                                    API_SECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
+                                });
+
+                                let buyAmount = userBinance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
+                                userBinance.marketBuy(symbol, buyAmount);
                             }
 
                             entryCoins[key] = true;
@@ -413,7 +425,7 @@ async function checkEntry(
 
                             emitter.emit('entry', symbol, interval, close, recordPatternValue, telegramEnabled);
 
-                            totalEntry +=1;
+                            obj.totalEntry += 1;
                         }
                     }
                 }
