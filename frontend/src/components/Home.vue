@@ -9,7 +9,7 @@
               class="custom-header-b-card"
           >
             <b-card-text class="custom-data-bot">
-              Static Balance: {{ balance }}$ |
+              Static Balance: {{ initialBalance }}$ |
               Floating Balance: {{ floatingBalance }}$ |
               Tradestatus: {{ tradeEnabled }} |
               Entry Counter: {{ counterEN }} |
@@ -20,7 +20,7 @@
               Total floating profit/loss percentage: {{ floatingperc }} % |
             </b-card-text>
 
-            <b-button v-if="entryArray.length > 0" @click="closeAllPosition()" variant="danger">Close All Position
+            <b-button v-if="entryArray.length > -1" @click="closeAllPosition()" variant="danger">Close All Position
             </b-button>
             <br>
             <br>

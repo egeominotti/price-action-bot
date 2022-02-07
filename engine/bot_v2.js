@@ -51,6 +51,8 @@ let totalFloatingValue = 0;
 let totalFloatingPercValue = 0;
 let totalFloatingBalance = 0;
 
+let totalEntry = 0
+let listEntry = {};
 let floatingPercArr = {};
 let floatingArr = {};
 let tokenArray = {}
@@ -111,8 +113,9 @@ app.get('/trade/stop', async (req, res) => {
 
         for (let time of timeFrame) {
             for (const token of finder) {
+                console.log(token)
                 let key = token + "_" + time
-                if (recordPattern[key] !== null) {
+                if (entryCoins[key] === true) {
                     userBinance.balance((error, balances) => {
                         if (error) return console.error(error);
                         console.log(exchangeInfoArray[token])
@@ -163,8 +166,7 @@ app.get('/getRecordPattern', async (req, res) => {
     res.send(recordPattern);
 });
 
-let totalEntry = 0
-let listEntry = {};
+
 
 let obj = {
     'binance': binance,
@@ -316,9 +318,10 @@ setInterval(() => {
 
                         if (finder.length > 0) {
                             if (finder.includes(symbol)) {
+                                console.log(totalEntry)
                                 if (totalEntry <= maxEntry) {
                                     if (exclusionList[key] === false && entryCoins[key] === false) {
-                                        emitter.emit('checkEntry', obj, symbol, interval, key, close, low, high, open, totalEntry);
+                                        emitter.emit('checkEntry', obj, symbol, interval, key, close, low, high, open);
                                     }
                                 }
                             }
@@ -343,38 +346,36 @@ setInterval(() => {
         floatingArr[key] = floatingtrade;
         floatingPercArr[key] = floatingtradeperc;
 
-        // console.log('---------------- Calculate Floating -------------------- ');
-        // console.log("Pair... " + symbol)
-        // console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-        // console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-        // console.log('-------------------------------------------------------------- ');
+        console.log('---------------- Calculate Floating -------------------- ');
+        console.log("Pair... " + symbol)
+        console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+        console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+        console.log('-------------------------------------------------------------- ');
 
         totalFloatingValue = 0;
         totalFloatingPercValue = 0;
         totalFloatingBalance = 0;
 
-        if (totalEntry > 0) {
 
-            for (let time of timeFrame) {
-                for (const token of finder) {
-                    let keyFloating = token + "_" + time
-                    if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
-                        totalFloatingValue += floatingArr[keyFloating];
-                        totalFloatingPercValue += floatingPercArr[keyFloating];
-                    }
+        for (let time of timeFrame) {
+            for (const token of finder) {
+                let keyFloating = token + "_" + time
+                if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                    totalFloatingValue += floatingArr[keyFloating];
+                    totalFloatingPercValue += floatingPercArr[keyFloating];
                 }
             }
-
-            totalFloatingBalance = balance + totalFloatingValue;
-
-            let message = "Global Statistics Profit/Loss" + "\n" +
-                "--------------------------------------------------------------------" + "\n" +
-                "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-                "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-                "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-            console.log(message)
         }
+
+        totalFloatingBalance = balance + totalFloatingValue;
+
+        let message = "Global Statistics Profit/Loss" + "\n" +
+            "--------------------------------------------------------------------" + "\n" +
+            "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+        console.log(message)
 
     });
 
