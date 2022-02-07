@@ -99,8 +99,13 @@ app.get('/trade/disableTelegram', async (req, res) => {
     res.send({'trade': telegramEnabled});
 });
 
-app.get('/trade/emergency', async (req, res) => {
-    //
+app.get('/trade/stop', async (req, res) => {
+
+    const binance = new Binance().options({
+        API_KEY: '',
+        API_SECRET: '',
+    });
+
     for (let time of timeFrame) {
         for (const token of finder) {
             let key = token + "_" + time
