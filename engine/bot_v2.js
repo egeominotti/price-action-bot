@@ -213,32 +213,6 @@ setInterval(() => {
 
 }, 300000);
 
-function checkExit(obj, symbol, interval, key, close, low, high, open) {
-
-    obj['symbol'] = symbol;
-    obj['key'] = key;
-    obj['interval'] = interval;
-    obj['close'] = parseFloat(close);
-    obj['high'] = parseFloat(high);
-    obj['open'] = parseFloat(open);
-    obj['low'] = parseFloat(low);
-
-    Algorithms.checkExit(obj)
-}
-
-function checkEntry(obj, symbol, interval, key, close, low, high, open) {
-
-    obj['symbol'] = symbol;
-    obj['key'] = key;
-    obj['interval'] = interval;
-    obj['close'] = parseFloat(close);
-    obj['high'] = parseFloat(high);
-    obj['open'] = parseFloat(open);
-    obj['low'] = parseFloat(low);
-
-    Algorithms.checkEntry(obj).then(r => console.log(r))
-}
-
 function checkFloating(key, symbol, close) {
 
     let position = sizeTrade / entryArray[key]['entryprice'];
@@ -328,8 +302,19 @@ function checkFloating(key, symbol, close) {
                     if (finder.includes(symbol)) {
                         if (exclusionList[key] === false) {
                             if (entryArray[key] !== null) {
-                                checkExit(obj, symbol, interval, key, close, low, high, open)
+
                                 checkFloating(key, symbol, close)
+
+                                obj['symbol'] = symbol;
+                                obj['key'] = key;
+                                obj['interval'] = interval;
+                                obj['close'] = parseFloat(close);
+                                obj['high'] = parseFloat(high);
+                                obj['open'] = parseFloat(open);
+                                obj['low'] = parseFloat(low);
+
+                                Algorithms.checkExit(obj)
+
                             }
                         }
                     }
@@ -385,7 +370,16 @@ function checkFloating(key, symbol, close) {
                                 console.log(totalEntry)
                                 if (totalEntry <= maxEntry) {
                                     if (exclusionList[key] === false && entryCoins[key] === false) {
-                                        checkEntry(obj, symbol, interval, key, close, low, high, open);
+
+                                        obj['symbol'] = symbol;
+                                        obj['key'] = key;
+                                        obj['interval'] = interval;
+                                        obj['close'] = parseFloat(close);
+                                        obj['high'] = parseFloat(high);
+                                        obj['open'] = parseFloat(open);
+                                        obj['low'] = parseFloat(low);
+
+                                        Algorithms.checkEntry(obj).then(r => console.log(r))
                                     }
                                 }
                             }
