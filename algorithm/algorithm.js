@@ -286,17 +286,23 @@ function checkExit(obj) {
 
                 if (obj.tradeEnabled) {
 
-                    const userBinance = new Binance().options({
-                        API_KEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
-                        API_SECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
-                    });
+                    try {
 
-                    userBinance.balance((error, balances) => {
-                        if (error) return console.error(error);
-                        //console.log(exchangeInfoArray[symbol])
-                        let sellAmount = userBinance.roundStep(balances[symbol].available, obj.exchangeInfoArray[symbol].stepSize);
-                        userBinance.marketSell(symbol, sellAmount);
-                    });
+                        const userBinance = new Binance().options({
+                            APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
+                            APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
+                        });
+
+                        userBinance.balance((error, balances) => {
+                            if (error) return console.error(error);
+                            //console.log(exchangeInfoArray[symbol])
+                            let sellAmount = userBinance.roundStep(balances[symbol].available, obj.exchangeInfoArray[symbol].stepSize);
+                            userBinance.marketSell(symbol, sellAmount);
+                        });
+
+                    } catch (e) {
+                        console.log(e);
+                    }
                 }
 
                 obj.entryArray[key] = null;
@@ -409,13 +415,19 @@ async function checkEntry(
 
                                 if (tradeEnabled) {
 
-                                    const userBinance = new Binance().options({
-                                        API_KEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
-                                        API_SECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
-                                    });
+                                    try {
 
-                                    let buyAmount = userBinance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
-                                    userBinance.marketBuy(symbol, buyAmount);
+                                        const userBinance = new Binance().options({
+                                            APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
+                                            APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
+                                        });
+
+                                        let buyAmount = userBinance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
+                                        userBinance.marketBuy(symbol, buyAmount);
+
+                                    } catch (err) {
+                                        console.log(err)
+                                    }
                                 }
 
                                 entryCoins[key] = true;
