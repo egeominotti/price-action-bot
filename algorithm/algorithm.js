@@ -93,13 +93,13 @@ function takeProfit(obj) {
         let finaleSizeTrade = (sizeTrade / entryprice) * takeprofit;
 
         takeProfitPercentage = _.round(takeProfitPercentage * 100, 2)
-        obj.totalPercentage += takeProfitPercentage
+        totalPercentage += takeProfitPercentage
 
         finaleTradeValue = finaleSizeTrade - sizeTrade
 
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
-        obj.variableBalance = newBalance
+        variableBalance = newBalance
 
         let takeprofitObj = {
             type: 'TAKEPROFIT',
@@ -118,13 +118,13 @@ function takeProfit(obj) {
             strategy: strategy
         }
 
-        const logger = new Logger(takeprofitObj)
-
-        logger.save().then((result) => {
-            //console.log(result)
-        }).catch((err) => {
-            console.log(err)
-        });
+        // const logger = new Logger(takeprofitObj)
+        //
+        // logger.save().then((result) => {
+        //     //console.log(result)
+        // }).catch((err) => {
+        //     console.log(err)
+        // });
 
         if (telegramEnabled) {
             let message = "TAKEPROFIT: " + symbol + "\n" +
@@ -157,13 +157,6 @@ function stopLoss(obj) {
     let key = obj.key;
     let symbol = obj.symbol;
     let interval = obj.interval;
-    let recordPattern = obj.recordPattern;
-    let balance = obj.balance;
-    let stopLossArray = obj.stopLossArray;
-    let telegramEnabled = obj.telegramEnabled;
-    let exclusionList = obj.exclusionList;
-    let sumSizeTrade = obj.sumSizeTrade;
-    let sizeTrade = obj.sizeTrade;
 
     let recordPatternValue = recordPattern[key];
 
@@ -179,11 +172,12 @@ function stopLoss(obj) {
         stopLossPercentage = _.round(stopLossPercentage * 100, 2)
         let finaleSizeTrade = (sizeTrade / entryprice) * stoploss;
         finaleTradeValue = finaleSizeTrade - sizeTrade
-        obj.totalPercentage += stopLossPercentage
+
+        totalPercentage += stopLossPercentage
 
         sumSizeTrade += finaleTradeValue;
         let newBalance = _.round(balance + sumSizeTrade, 2)
-        obj.variableBalance = newBalance
+        variableBalance = newBalance
 
         let stopLossObj = {
             type: 'STOPLOSS',
@@ -201,14 +195,14 @@ function stopLoss(obj) {
             hl: recordPatternValue['hl'],
             strategy: strategy
         }
-
-        const logger = new Logger(stopLossObj)
-
-        logger.save().then((result) => {
-            console.log(result)
-        }).catch((err) => {
-            console.log(err)
-        });
+        //
+        // const logger = new Logger(stopLossObj)
+        //
+        // logger.save().then((result) => {
+        //     console.log(result)
+        // }).catch((err) => {
+        //     console.log(err)
+        // });
 
         if (telegramEnabled) {
             let message = "STOPLOSS: " + symbol + "\n" +
@@ -226,7 +220,7 @@ function stopLoss(obj) {
         }
 
         stopLossArray = stopLossObj
-        obj.recordPattern[key] = null;
+        recordPattern[key] = null;
         exclusionList[key] = true;
 
         return true;
@@ -274,6 +268,9 @@ function checkExit(obj) {
                 entryArray[key] = null;
                 recordPattern[key] = null;
                 entryCoins[key] = false;
+
+                // Decrease entry
+                totalEntry--;
             }
         }
     }
@@ -383,7 +380,7 @@ function checkEntry(
                                     }
                                 }
 
-                                totalEntry += 1;
+                                totalEntry++;
                                 console.log(totalEntry)
                                 entryCoins[key] = true;
                                 entryArray[key] = recordPatternValue
