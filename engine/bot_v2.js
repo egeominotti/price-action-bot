@@ -178,8 +178,12 @@ setInterval(() => {
 
                 } else {
 
-                    if (finder.length > 0 && finder.includes(symbol) && totalEntry <= maxEntry) {
-                        if (exclusionList[key] === false && entryCoins[key] === false) {
+                    if (finder.length > 0 &&
+                        finder.includes(symbol) &&
+                        totalEntry <= maxEntry) {
+
+                        if (exclusionList[key] === false &&
+                            entryCoins[key] === false) {
 
                             let obj = {
                                 'symbol': symbol,
