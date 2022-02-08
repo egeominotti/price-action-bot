@@ -67,7 +67,7 @@ setInterval(() => {
 
 (async () => {
 
-    let exchangePair = Exchange.extractPair(await binance.exchangeInfo(), exchangeInfoArray);
+    let exchangePair = Exchange.extractPair(await binance.exchangeInfo());
     let message = "Hi from HAL V2" + "\n" +
         "LOADED for scanning... " + exchangePair.length + " pair" + "\n"
     Telegram.sendMessage(message)
