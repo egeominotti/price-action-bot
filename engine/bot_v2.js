@@ -167,35 +167,6 @@ app.get('/getRecordPattern', async (req, res) => {
 });
 
 
-let obj = {
-    'binance': binance,
-    //Settings
-    'balance': balance,
-    'sizeTrade': sizeTrade,
-    'variableBalance': variableBalance,
-    'totalPercentage': totalPercentage,
-    'sumSizeTrade': sumSizeTrade,
-    'telegramEnabled': telegramEnabled,
-    'tradeEnabled': tradeEnabled,
-    // Array Global
-    'timeFrame': timeFrame,
-    'exclusionList': exclusionList,
-    'listEntry': listEntry,
-    'recordPattern': recordPattern,
-    'indexArray': indexArray,
-    'tokenArray': tokenArray,
-    'entryCoins': entryCoins,
-    'floatingArr': floatingArr,
-    'floatingPercArr': floatingPercArr,
-    'takeProfitArray': takeProfitArray,
-    'stopLossArray': stopLossArray,
-    'entryArray': entryArray,
-    'exchangeInfoArray': exchangeInfoArray,
-    'totalEntry': totalEntry,
-    //Info DB
-    'dbKey': dbKey,
-}
-
 let finder = [];
 
 setInterval(() => {
@@ -279,6 +250,35 @@ function checkFloating(key, symbol, close) {
         }
     }
 
+    let obj = {
+        'binance': binance,
+        //Settings
+        'balance': balance,
+        'sizeTrade': sizeTrade,
+        'variableBalance': variableBalance,
+        'totalPercentage': totalPercentage,
+        'sumSizeTrade': sumSizeTrade,
+        'telegramEnabled': telegramEnabled,
+        'tradeEnabled': tradeEnabled,
+        // Array Global
+        'timeFrame': timeFrame,
+        'exclusionList': exclusionList,
+        'listEntry': listEntry,
+        'recordPattern': recordPattern,
+        'indexArray': indexArray,
+        'tokenArray': tokenArray,
+        'entryCoins': entryCoins,
+        'floatingArr': floatingArr,
+        'floatingPercArr': floatingPercArr,
+        'takeProfitArray': takeProfitArray,
+        'stopLossArray': stopLossArray,
+        'entryArray': entryArray,
+        'exchangeInfoArray': exchangeInfoArray,
+        'totalEntry': totalEntry,
+        //Info DB
+        'dbKey': dbKey,
+    }
+
 
     for (let time of timeFrame) {
 
@@ -334,6 +334,7 @@ function checkFloating(key, symbol, close) {
 
                                 if (currentClose > ema) {
                                     if (!finder.includes(symbol)) {
+                                        console.log("FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
                                         finder.push(symbol);
                                     }
                                 }
@@ -354,6 +355,7 @@ function checkFloating(key, symbol, close) {
                                         for (let i = 0; i < finder.length; i++) {
                                             if (finder[i] !== null) {
                                                 if (finder[i] === symbol) {
+                                                    console.log("FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
                                                     finder.splice(i, 1);
                                                 }
                                             }
@@ -364,7 +366,8 @@ function checkFloating(key, symbol, close) {
                             }
 
                         })
-                        .catch((e) => {});
+                        .catch((e) => {
+                        });
 
 
                 } else {
