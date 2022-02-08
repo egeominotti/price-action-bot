@@ -51,8 +51,12 @@ global.timeFrame = [
 setInterval(() => {
 
     if (totalEntry > 0) {
+
+        let totalBalance = variableBalance + totalFloatingValue;
+
         let message = "Global Statistics Profit/Loss" + "\n" +
             "--------------------------------------------------------------------" + "\n" +
+            "Total Balance: " + totalBalance + "$" + "\n" +
             "Total pair in trading: " + totalEntry + "\n" +
             "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
             "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
@@ -92,7 +96,7 @@ setInterval(() => {
                 entryArray[key] !== null &&
                 recordPattern[key] !== null &&
                 recordPattern[key]['confirmed'] === true) {
-                console.log("SONO ENTRATO")
+
                 let obj = {
                     'symbol': symbol,
                     'key': key,
@@ -103,7 +107,6 @@ setInterval(() => {
                     'open': parseFloat(open),
                     'low': parseFloat(low)
                 }
-                console.log(obj)
 
                 Algorithms.checkFloating(obj);
                 Algorithms.checkExit(obj);

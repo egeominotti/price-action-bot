@@ -65,7 +65,7 @@ function checkFloating(obj) {
         }
     }
 
-    totalFloatingBalance = balance + totalFloatingValue;
+    totalFloatingBalance = variableBalance + totalFloatingValue;
 
     let message = "Global Statistics Profit/Loss" + "\n" +
         "--------------------------------------------------------------------" + "\n" +
