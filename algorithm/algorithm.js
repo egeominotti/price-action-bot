@@ -89,7 +89,7 @@ function takeProfit(obj) {
     let symbol = obj.symbol;
     let interval = obj.interval;
 
-    console.log(recordPattern[key])
+    //console.log(recordPattern[key])
 
     let recordPatternValue = recordPattern[key];
 

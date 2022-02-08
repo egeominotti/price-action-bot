@@ -131,16 +131,15 @@ setInterval(() => {
 
                                 if (currentClose > ema) {
                                     if (!finder.includes(symbol)) {
-                                        let currentVolume = parseFloat(volume);
                                         finder.push(symbol);
                                         console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
+                                        //let currentVolume = parseFloat(volume);
                                         // 100000000
                                         // if (currentVolume > 1000) {
                                         //     console.log("TRADABILE")
                                         //     console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
                                         //     finder.push(symbol);
                                         // }
-
                                     }
                                 }
 
