@@ -364,9 +364,7 @@ function checkFloating(key, symbol, close) {
                             }
 
                         })
-                        .catch((e) => {
-                            console.log(e);
-                        });
+                        .catch((e) => {});
 
 
                 } else {
