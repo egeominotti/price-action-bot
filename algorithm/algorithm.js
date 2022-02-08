@@ -402,10 +402,7 @@ function checkEntry(
                 }
             }
         }
-    }).catch((e) => {
-    });
-
-
+    }).catch((e) => {});
 }
 
 
