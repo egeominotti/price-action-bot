@@ -67,29 +67,10 @@ setInterval(() => {
 
 (async () => {
 
-    let exchangePair = Exchange.extractPair(await binance.exchangeInfo());
+    let exchangePair = Exchange.initData(await binance.exchangeInfo());
     let message = "Hi from HAL V2" + "\n" +
         "LOADED for scanning... " + exchangePair.length + " pair" + "\n"
     Telegram.sendMessage(message)
-
-    for (let time of timeFrame) {
-        for (const symbol of exchangePair) {
-
-            let key = symbol + "_" + time
-            tokenArray[key] = [];
-            indexArray[key] = -1;
-            exclusionList[key] = false;
-            entryCoins[key] = false;
-            recordPattern[key] = null;
-            takeProfitArray[key] = null;
-            stopLossArray[key] = null;
-            entryArray[key] = null;
-            listEntry[key] = null;
-            floatingArr[key] = 0;
-            floatingPercArr[key] = 0;
-        }
-    }
-
 
     for (let time of timeFrame) {
 
@@ -107,30 +88,29 @@ setInterval(() => {
             } = ticks;
 
             let key = symbol + "_" + interval;
-            let currentClose = parseFloat(close);
 
-            if (finder.length > 0) {
-                if (finder.includes(symbol)) {
-                    if (exclusionList[key] === false) {
-                        if (entryArray[key] !== null) {
+            if (finder.length > 0 && finder.includes(symbol) && exclusionList[key] === false) {
+                if (entryArray[key] !== null) {
 
-                            Algorithms.checkFloating(key, symbol, close)
-                            Algorithms.checkExit({
-                                'symbol': symbol,
-                                'key': key,
-                                'interval': interval,
-                                'close': parseFloat(close),
-                                'high': parseFloat(high),
-                                'open': parseFloat(open),
-                                'low': parseFloat(low)
-                            });
-
-                        }
+                    let obj = {
+                        'symbol': symbol,
+                        'key': key,
+                        'interval': interval,
+                        'close': parseFloat(close),
+                        'high': parseFloat(high),
+                        'open': parseFloat(open),
+                        'low': parseFloat(low)
                     }
+
+                    Algorithms.checkFloating(key, symbol, close);
+                    Algorithms.checkExit(obj);
                 }
             }
 
             if (isFinal) {
+
+                let key = symbol + "_" + interval;
+                let currentClose = parseFloat(close);
 
                 if (interval === '5m') {
 
@@ -145,9 +125,7 @@ setInterval(() => {
 
                                 if (currentClose > ema) {
                                     if (!finder.includes(symbol)) {
-
                                         let currentVolume = parseFloat(volume);
-
                                         finder.push(symbol);
                                         // 100000000
                                         // if (currentVolume > 1000) {
@@ -197,23 +175,21 @@ setInterval(() => {
 
                 } else {
 
-                    if (finder.length > 0) {
-                        if (finder.includes(symbol)) {
-                            if (totalEntry <= maxEntry) {
-                                if (exclusionList[key] === false && entryCoins[key] === false) {
+                    if (finder.length > 0 && finder.includes(symbol) && totalEntry <= maxEntry) {
+                        if (exclusionList[key] === false && entryCoins[key] === false) {
 
-                                    Algorithms.checkEntry({
-                                        'symbol': symbol,
-                                        'key': key,
-                                        'interval': interval,
-                                        'close': parseFloat(close),
-                                        'high': parseFloat(high),
-                                        'open': parseFloat(open),
-                                        'low': parseFloat(low)
-                                    });
-                                }
-
+                            let obj = {
+                                'symbol': symbol,
+                                'key': key,
+                                'interval': interval,
+                                'close': parseFloat(close),
+                                'high': parseFloat(high),
+                                'open': parseFloat(open),
+                                'low': parseFloat(low)
                             }
+
+                            Algorithms.checkEntry(obj);
+
                         }
                     }
                 }

@@ -3,7 +3,7 @@
  * @param data
  * @returns {*[]}
  */
-function extractPair(data) {
+function initData(data) {
 
     for (let obj of data.symbols) {
 
@@ -64,9 +64,27 @@ function extractPair(data) {
         }
     }
 
+    for (let time of timeFrame) {
+        for (const symbol of pairs) {
+
+            let key = symbol + "_" + time
+            tokenArray[key] = [];
+            indexArray[key] = -1;
+            exclusionList[key] = false;
+            entryCoins[key] = false;
+            recordPattern[key] = null;
+            takeProfitArray[key] = null;
+            stopLossArray[key] = null;
+            entryArray[key] = null;
+            listEntry[key] = null;
+            floatingArr[key] = 0;
+            floatingPercArr[key] = 0;
+        }
+    }
+
     return pairs;
 }
 
 module.exports = {
-    extractPair
+    initData
 }

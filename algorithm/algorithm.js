@@ -158,8 +158,10 @@ function stopLoss(obj) {
     let key = obj.key;
     let symbol = obj.symbol;
     let interval = obj.interval;
+    console.log(obj)
 
     let recordPatternValue = recordPattern[key];
+    console.log(recordPattern[key])
 
     let entryprice = recordPatternValue['entryprice']
     let entrypricedate = recordPatternValue['entrypricedate']
