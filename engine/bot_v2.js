@@ -19,12 +19,12 @@ global.balance = 3000;
 global.variableBalance = 0;
 global.totalPercentage = 0
 global.sumSizeTrade = 0;
-global.sizeTrade = 200;
-global.maxEntry = (balance / sizeTrade) - 1
 global.totalFloatingValue = 0;
 global.totalFloatingPercValue = 0;
 global.totalFloatingBalance = 0;
 global.totalEntry = 0;
+global.sizeTrade = 200;
+global.maxEntry = (balance / sizeTrade) - 1
 
 global.listEntry = {};
 global.emaArray = {};
