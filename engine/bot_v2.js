@@ -40,13 +40,11 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
-    '1m',
     '5m',
-    // '5m',
-    // '15m',
-    // '1h',
-    // '4h',
-    // '1d',
+    '15m',
+    '1h',
+    '4h',
+    '1d',
 ];
 
 
@@ -93,8 +91,7 @@ setInterval(() => {
                 exclusionList[key] === false &&
                 entryArray[key] !== null &&
                 recordPattern[key] !== null &&
-                recordPattern[key]['confirmed'] === true)
-            {
+                recordPattern[key]['confirmed'] === true) {
                 console.log("SONO ENTRATO")
                 let obj = {
                     'symbol': symbol,
@@ -116,7 +113,7 @@ setInterval(() => {
 
                 let currentClose = parseFloat(close);
 
-                if (interval === '5m') {
+                if (interval === '1d') {
 
                     if (exclusionList[key] === true)
                         exclusionList[key] = false;
