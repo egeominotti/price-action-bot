@@ -349,7 +349,7 @@ function checkFloating(key, symbol, close) {
                                             tokenArray[key] = [];
                                         }
 
-                                        if(entryArray[key] !== null){
+                                        if (entryArray[key] !== null) {
                                             //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
                                         }
 
