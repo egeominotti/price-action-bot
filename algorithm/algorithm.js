@@ -292,7 +292,7 @@ function checkEntry(
 
             if (close > ema) {
 
-                console.log("SCANNING... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + close)
+                console.log("SCANNER... ema below close price: " + symbol + " - " + interval + " - EMA200: " + _.round(ema, 4) + " - Close: " + close)
 
                 if (recordPattern[key] == null) {
 

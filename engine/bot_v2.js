@@ -282,7 +282,6 @@ function checkFloating(key, symbol, close) {
 
     for (let time of timeFrame) {
 
-
         binance.websockets.candlesticks(exchangePair, time, async (candlesticks) => {
             let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
             let {
@@ -334,7 +333,7 @@ function checkFloating(key, symbol, close) {
 
                                 if (currentClose > ema) {
                                     if (!finder.includes(symbol)) {
-                                        console.log("FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
+                                        console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
                                         finder.push(symbol);
                                     }
                                 }
@@ -343,19 +342,21 @@ function checkFloating(key, symbol, close) {
                                     // Aggiungere che chiude tutte le posizioni che sono andate sotto ema
                                     if (finder.includes(symbol)) {
 
-                                        if (entryArray[key] !== null) {
-
+                                        // cancello i record
+                                        if (entryArray[key] == null) {
                                             recordPattern[key] = null;
                                             indexArray[key] = -1;
                                             tokenArray[key] = [];
+                                        }
 
+                                        if(entryArray[key] !== null){
                                             //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
                                         }
 
                                         for (let i = 0; i < finder.length; i++) {
                                             if (finder[i] !== null) {
                                                 if (finder[i] === symbol) {
-                                                    console.log("FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
+                                                    console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
                                                     finder.splice(i, 1);
                                                 }
                                             }
