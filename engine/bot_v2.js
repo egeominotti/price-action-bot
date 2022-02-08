@@ -13,17 +13,6 @@ const binance = new Binance().options({
     }
 });
 
-
-global.timeFrame = [
-    '1m',
-    '5m',
-    // '5m',
-    // '15m',
-    // '1h',
-    // '4h',
-    // '1d',
-];
-
 global.telegramEnabled = true;
 global.tradeEnabled = false;
 global.balance = 3000;
@@ -48,10 +37,34 @@ global.entryCoins = {}
 global.takeProfitArray = {}
 global.stopLossArray = {}
 global.entryArray = {}
+global.finder = [];
 global.dbKey = 'prova_2';
 
+global.timeFrame = [
+    '1m',
+    '5m',
+    // '5m',
+    // '15m',
+    // '1h',
+    // '4h',
+    // '1d',
+];
 
-let finder = [];
+
+setInterval(() => {
+
+    if (totalEntry > 0) {
+        let message = "Global Statistics Profit/Loss" + "\n" +
+            "--------------------------------------------------------------------" + "\n" +
+            "Total pair in trading: " + totalEntry + "\n" +
+            "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+        Telegram.sendMessage(message)
+    }
+
+}, 300000);
 
 (async () => {
 
@@ -78,21 +91,6 @@ let finder = [];
         }
     }
 
-    setInterval(() => {
-
-        if (totalEntry > 0) {
-            let message = "Global Statistics Profit/Loss" + "\n" +
-                "--------------------------------------------------------------------" + "\n" +
-                "Total pair in trading: " + totalEntry + "\n" +
-                "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-                "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-                "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-            Telegram.sendMessage(message)
-        }
-
-    }, 300000);
-
 
     for (let time of timeFrame) {
 
@@ -109,7 +107,6 @@ let finder = [];
                 x: isFinal,
             } = ticks;
 
-
             let key = symbol + "_" + interval;
             let currentClose = parseFloat(close);
 
@@ -119,8 +116,7 @@ let finder = [];
                         if (entryArray[key] !== null) {
 
                             Algorithms.checkFloating(key, symbol, close)
-
-                            let obj = {
+                            Algorithms.checkExit({
                                 'symbol': symbol,
                                 'key': key,
                                 'interval': interval,
@@ -128,9 +124,7 @@ let finder = [];
                                 'high': parseFloat(high),
                                 'open': parseFloat(open),
                                 'low': parseFloat(low)
-                            }
-
-                            Algorithms.checkExit(obj);
+                            });
 
                         }
                     }
@@ -209,8 +203,7 @@ let finder = [];
                             if (totalEntry <= maxEntry) {
                                 if (exclusionList[key] === false && entryCoins[key] === false) {
 
-
-                                    let obj = {
+                                    Algorithms.checkEntry({
                                         'symbol': symbol,
                                         'key': key,
                                         'interval': interval,
@@ -218,10 +211,9 @@ let finder = [];
                                         'high': parseFloat(high),
                                         'open': parseFloat(open),
                                         'low': parseFloat(low)
-                                    }
-
-                                    Algorithms.checkEntry(obj);
+                                    });
                                 }
+
                             }
                         }
                     }
