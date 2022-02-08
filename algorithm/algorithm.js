@@ -211,6 +211,8 @@ function checkExit(obj) {
 
     let key = obj.key;
     let symbol = obj.symbol;
+    let entryArray = obj.entryArray;
+    let totalEntry = obj.totalEntry;
     let recordPattern = obj.recordPattern;
 
     if (recordPattern[key] !== null) {
@@ -243,10 +245,11 @@ function checkExit(obj) {
                     }
                 }
 
-                obj.entryArray[key] = null;
-                obj.recordPattern[key] = null;
+                entryArray[key] = null;
+                recordPattern[key] = null;
                 obj.entryCoins[key] = false;
-                obj.totalEntry -= 1;
+                totalEntry -= 1;
+                console.log(totalEntry)
             }
         }
     }
@@ -267,6 +270,7 @@ function checkEntry(
     let key = obj.key;
     let symbol = obj.symbol;
     let interval = obj.interval;
+    let totalEntry = obj.totalEntry;
     let indexArray = obj.indexArray;
     let tradeEnabled = obj.tradeEnabled;
     let recordPattern = obj.recordPattern;
@@ -366,12 +370,14 @@ function checkEntry(
                                     }
                                 }
 
+                                totalEntry +=1;
+                                console.log(totalEntry)
                                 entryCoins[key] = true;
                                 entryArray[key] = recordPatternValue
 
                                 entry(symbol, interval, close, recordPatternValue, telegramEnabled);
 
-                                obj.totalEntry += 1;
+
                             }
                         }
                     }

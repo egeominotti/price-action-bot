@@ -169,20 +169,6 @@ app.get('/getRecordPattern', async (req, res) => {
 
 let finder = [];
 
-setInterval(() => {
-
-    if (totalEntry > 0) {
-        let message = "Global Statistics Profit/Loss" + "\n" +
-            "--------------------------------------------------------------------" + "\n" +
-            "Total pair in trading: " + totalEntry + "\n" +
-            "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-            "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-        Telegram.sendMessage(message)
-    }
-
-}, 300000);
 
 function checkFloating(key, symbol, close) {
 
@@ -279,6 +265,21 @@ function checkFloating(key, symbol, close) {
         'dbKey': dbKey,
     }
 
+    setInterval(() => {
+
+        if (totalEntry > 0) {
+            let message = "Global Statistics Profit/Loss" + "\n" +
+                "--------------------------------------------------------------------" + "\n" +
+                "Total pair in trading: " + totalEntry + "\n" +
+                "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+                "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+                "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+            Telegram.sendMessage(message)
+        }
+
+    }, 300000);
+
 
     for (let time of timeFrame) {
 
@@ -300,7 +301,7 @@ function checkFloating(key, symbol, close) {
                 if (finder.includes(symbol)) {
                     if (exclusionList[key] === false) {
                         if (entryArray[key] !== null) {
-
+                            console.log(totalEntry)
                             checkFloating(key, symbol, close)
 
                             obj['symbol'] = symbol;
@@ -375,6 +376,7 @@ function checkFloating(key, symbol, close) {
 
                     if (finder.length > 0) {
                         if (finder.includes(symbol)) {
+                            console.log(totalEntry)
                             if (totalEntry <= maxEntry) {
                                 if (exclusionList[key] === false && entryCoins[key] === false) {
 
