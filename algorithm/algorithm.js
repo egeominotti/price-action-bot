@@ -2,7 +2,6 @@ const _ = require("lodash");
 const Pattern = require("../pattern/triangle");
 const Strategy = require("../strategy/strategy");
 const Telegram = require("../utility/telegram");
-const Bot = require("../models/bot");
 const Indicators = require('../indicators/ema');
 const Logger = require("../models/logger");
 const Binance = require("node-binance-api");
@@ -31,19 +30,53 @@ function entry(symbol, interval, close, recordPatternValue, telegramEnabled) {
     }
 }
 
+function checkFloating(key, symbol, close) {
+
+    let position = sizeTrade / entryArray[key]['entryprice'];
+    let floatingPosition = position * parseFloat(close);
+    let floatingtrade = floatingPosition - sizeTrade;
+    let floatingtradeperc = ((floatingPosition - sizeTrade) / sizeTrade) * 100
+
+    floatingArr[key] = floatingtrade;
+    floatingPercArr[key] = floatingtradeperc;
+
+    console.log('---------------- Calculate Floating -------------------- ');
+    console.log("Pair... " + symbol)
+    console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+    console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+    console.log('-------------------------------------------------------------- ');
+
+    totalFloatingValue = 0;
+    totalFloatingPercValue = 0;
+    totalFloatingBalance = 0;
+
+    for (let time of timeFrame) {
+        for (const token of finder) {
+            let keyFloating = token + "_" + time
+            if (!isNaN(floatingArr[keyFloating]) && !isNaN(floatingPercArr[keyFloating])) {
+                totalFloatingValue += floatingArr[keyFloating];
+                totalFloatingPercValue += floatingPercArr[keyFloating];
+            }
+        }
+    }
+
+    totalFloatingBalance = balance + totalFloatingValue;
+
+    let message = "Global Statistics Profit/Loss" + "\n" +
+        "--------------------------------------------------------------------" + "\n" +
+        "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+        "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+        "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+
+    console.log(message)
+}
+
 function takeProfit(obj) {
 
     let close = obj.close;
     let key = obj.key;
     let symbol = obj.symbol;
     let interval = obj.interval;
-    let exclusionList = obj.exclusionList;
-    let recordPattern = obj.recordPattern;
-    let balance = obj.balance;
-    let takeProfitArray = obj.takeProfitArray;
-    let telegramEnabled = obj.telegramEnabled;
-    let sumSizeTrade = obj.sumSizeTrade;
-    let sizeTrade = obj.sizeTrade;
 
     let recordPatternValue = recordPattern[key];
 
@@ -202,30 +235,23 @@ function stopLoss(obj) {
     return false;
 }
 
-/**
- *
- * @param obj
- * @returns {boolean}
- */
+
 function checkExit(obj) {
 
     let key = obj.key;
     let symbol = obj.symbol;
-    let entryArray = obj.entryArray;
-    let totalEntry = obj.totalEntry;
-    let recordPattern = obj.recordPattern;
 
     if (recordPattern[key] !== null) {
 
         let recordPatternValue = recordPattern[key];
         if (recordPatternValue['confirmed'] === true) {
 
-            let stoploss = stopLoss(obj)
-            let takeprofit = takeProfit(obj)
+            let stoploss = stopLoss(key)
+            let takeprofit = takeProfit(key)
 
             if (stoploss || takeprofit) {
 
-                if (obj.tradeEnabled) {
+                if (tradeEnabled) {
 
                     try {
 
@@ -236,7 +262,7 @@ function checkExit(obj) {
 
                         userBinance.balance((error, balances) => {
                             if (error) return console.error(error);
-                            let sellAmount = userBinance.roundStep(balances[symbol].available, obj.exchangeInfoArray[symbol].stepSize);
+                            let sellAmount = userBinance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
                             userBinance.marketSell(symbol, sellAmount);
                         });
 
@@ -247,9 +273,7 @@ function checkExit(obj) {
 
                 entryArray[key] = null;
                 recordPattern[key] = null;
-                obj.entryCoins[key] = false;
-                totalEntry -= 1;
-                console.log(totalEntry)
+                entryCoins[key] = false;
             }
         }
     }
@@ -262,24 +286,13 @@ function checkExit(obj) {
 function checkEntry(
     obj,
 ) {
-
+    let key = obj.key;
     let close = obj.close;
     let open = obj.open;
     let low = obj.low;
     let high = obj.high;
-    let key = obj.key;
     let symbol = obj.symbol;
     let interval = obj.interval;
-    let totalEntry = obj.totalEntry;
-    let indexArray = obj.indexArray;
-    let tradeEnabled = obj.tradeEnabled;
-    let recordPattern = obj.recordPattern;
-    let tokenArray = obj.tokenArray;
-    let sizeTrade = obj.sizeTrade;
-    let exchangeInfoArray = obj.exchangeInfoArray;
-    let entryArray = obj.entryArray;
-    let telegramEnabled = obj.telegramEnabled;
-    let entryCoins = obj.entryCoins;
 
     Indicators.ema(close, symbol, interval, 200, 300, emaArray).then((ema) => {
 
@@ -370,7 +383,7 @@ function checkEntry(
                                     }
                                 }
 
-                                totalEntry +=1;
+                                totalEntry += 1;
                                 console.log(totalEntry)
                                 entryCoins[key] = true;
                                 entryArray[key] = recordPatternValue
@@ -397,4 +410,5 @@ module.exports = {
     checkExit,
     stopLoss,
     takeProfit,
+    checkFloating
 }

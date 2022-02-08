@@ -1,18 +1,21 @@
-const Bot = require("../models/bot");
-const cors = require('cors')
 const express = require("express");
+const cors = require("cors");
+const Binance = require("node-binance-api");
 const app = express();
-
-app.use(cors());
 const port = 3000;
-app.listen(port)
+app.use(cors());
+app.listen(port, () => console.log(`TAS bot app listening on port ${port}!`))
 
 app.get('/info', (req, res) => {
     let obj = {
         'balance': variableBalance,
+        'initialBalance': balance,
         'sizeTrade': sizeTrade,
         'tradeEnabled': tradeEnabled,
         'telegramEnabled': telegramEnabled,
+        'floatingperc': totalFloatingPercValue,
+        'floating': totalFloatingValue,
+        'floatingbalance': totalFloatingBalance,
         'uptime': 0,
     }
     res.send(obj);
@@ -38,66 +41,67 @@ app.get('/trade/disableTelegram', async (req, res) => {
     res.send({'trade': telegramEnabled});
 });
 
-app.get('/trade/emergency', async (req, res) => {
+app.get('/trade/stop', async (req, res) => {
 
-    for (let time of timeFrame) {
-        for (const token of coinsArray) {
-            let key = token + "_" + time
-            if (recordPattern[key] !== null) {
-                if (tradeEnabled) {
-                    for (let objBinance in arrObjectInstanceBinance) {
-                        objBinance.balance((error, balances) => {
+    try {
+        const userBinance = new Binance().options({
+            APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
+            APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
+        });
+
+        for (let time of timeFrame) {
+            for (const token of finder) {
+                console.log(token)
+                let key = token + "_" + time
+                if (entryCoins[key] === true) {
+                    userBinance.balance((error, balances) => {
+                        if (balances[token].available !== undefined) {
                             if (error) return console.error(error);
-                            //console.log(exchangeInfoArray[token])
-                            let sellAmount = binance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
-                            binance.marketSell(token, sellAmount);
-                        });
-                    }
+                            console.log(exchangeInfoArray[token])
+                            let sellAmount = userBinance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
+                            userBinance.marketSell(token, sellAmount);
+                        }
+                    });
                 }
             }
         }
+
+    } catch (e) {
+        console.log(e);
     }
+
     res.send({'stop_all': true});
 
 });
 
-
 app.get('/trade/entry', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
-    res.send(dbData.entryArray);
+    res.send(entryArray);
 });
 
 app.get('/trade/takeprofit', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
-    res.send(dbData.takeProfitArray);
+    res.send(takeProfitArray);
 });
 
 app.get('/trade/stoploss', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
-    res.send(dbData.stopLossArray);
+    res.send(stopLossArray);
 });
 
 app.get('/tokenArray', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
-    res.send(dbData.tokenArray);
+    res.send(tokenArray);
 });
 
 app.get('/exchangeInfoArray', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
-    res.send(dbData.exchangeInfoArray);
+    res.send(exchangeInfoArray);
 });
 
 app.get('/getExclusionList', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
-    res.send(dbData.exclusionList);
+    res.send(exclusionList);
 });
 
 app.get('/getEntryCoins', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
-    res.send(dbData.entryCoins);
+    res.send(entryCoins);
 });
 
 app.get('/getRecordPattern', async (req, res) => {
-    const dbData = await Bot.findOne({name: keyDbModel});
-    res.send(dbData.recordPattern);
+    res.send(recordPattern);
 });
