@@ -5,126 +5,11 @@ const Telegram = require("../utility/telegram");
 const Bot = require("../models/bot");
 const Indicators = require('../indicators/ema');
 const Logger = require("../models/logger");
-const eventMi = require('events')
 const Binance = require("node-binance-api");
 
-const emitter = new eventMi();
 let emaArray = {};
 
-emitter.on('stoploss',
-    (key,
-     symbol,
-     interval,
-     newBalance,
-     entryprice,
-     entrypricedate,
-     stoploss,
-     stopLossPercentage,
-     recordPattern,
-     strategy,
-     stopLossArray,
-     telegramEnabled) => {
-
-        let stopLossObj = {
-            type: 'STOPLOSS',
-            symbol: symbol,
-            interval: interval,
-            balance: newBalance,
-            entryprice: entryprice,
-            entrypricedate: entrypricedate,
-            stoplossvalue: stoploss,
-            stoplosspercentage: stopLossPercentage,
-            stoplossdate: new Date(),
-            hh: recordPattern['hh'],
-            ll: recordPattern['ll'],
-            lh: recordPattern['lh'],
-            hl: recordPattern['hl'],
-            strategy: strategy
-        }
-
-        const logger = new Logger(stopLossObj)
-
-        logger.save().then((result) => {
-            console.log(result)
-        }).catch((err) => {
-            console.log(err)
-        });
-
-        if (telegramEnabled) {
-            let message = "STOPLOSS: " + symbol + "\n" +
-                "Interval: " + interval + "\n" +
-                "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
-                "Balance: " + newBalance + "\n" +
-                "Entry Price: " + entryprice + "\n" +
-                "Entry date: " + entrypricedate.toUTCString() + "\n" +
-                "hh: " + recordPattern['hh'] + "\n" +
-                "ll: " + recordPattern['ll'] + "\n" +
-                "lh: " + recordPattern['lh'] + "\n" +
-                "hl: " + recordPattern['hl']
-
-            Telegram.sendMessage(message)
-        }
-        stopLossArray = stopLossObj
-    });
-
-emitter.on('takeprofit',
-    (key,
-     symbol,
-     interval,
-     newBalance,
-     entryprice,
-     entrypricedate,
-     takeprofit,
-     takeProfitPercentage,
-     recordPattern,
-     strategy,
-     takeProfitArray,
-     telegramEnabled) => {
-
-        let takeprofitObj = {
-            type: 'TAKEPROFIT',
-            symbol: symbol,
-            interval: interval,
-            balance: newBalance,
-            entryprice: entryprice,
-            entrypricedate: entrypricedate,
-            takeprofitvalue: takeprofit,
-            takeprofitpercentage: takeProfitPercentage,
-            takeprofitdate: new Date(),
-            hh: recordPattern['hh'],
-            ll: recordPattern['ll'],
-            lh: recordPattern['lh'],
-            hl: recordPattern['hl'],
-            strategy: strategy
-        }
-
-        const logger = new Logger(takeprofitObj)
-
-        logger.save().then((result) => {
-            //console.log(result)
-        }).catch((err) => {
-            console.log(err)
-        });
-
-        if (telegramEnabled) {
-            let message = "TAKEPROFIT: " + symbol + "\n" +
-                "Interval: " + interval + "\n" +
-                "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
-                "Balance: " + newBalance + "\n" +
-                "Entry Price: " + entryprice + "\n" +
-                "Entry date: " + entrypricedate.toUTCString() + "\n" +
-                "hh: " + recordPattern['hh'] + "\n" +
-                "ll: " + recordPattern['ll'] + "\n" +
-                "lh: " + recordPattern['lh'] + "\n" +
-                "hl: " + recordPattern['hl']
-
-            Telegram.sendMessage(message)
-        }
-        takeProfitArray = takeprofitObj
-
-    });
-
-emitter.on('entry', (symbol, interval, close, recordPatternValue, telegramEnabled) => {
+function entry(symbol, interval, close, recordPatternValue, telegramEnabled) {
 
     console.log("--------------------------------------------------------------")
     console.log("ENTRY FOUND... symbol - " + symbol + " timeframe - " + interval)
@@ -144,8 +29,7 @@ emitter.on('entry', (symbol, interval, close, recordPatternValue, telegramEnable
 
         Telegram.sendMessage(message)
     }
-
-})
+}
 
 function takeProfit(obj) {
 
@@ -161,10 +45,12 @@ function takeProfit(obj) {
     let sumSizeTrade = obj.sumSizeTrade;
     let sizeTrade = obj.sizeTrade;
 
-    let entryprice = recordPattern[key]['entryprice']
-    let entrypricedate = recordPattern[key]['entrypricedate']
-    let takeprofit = recordPattern[key]['takeprofit']
-    let strategy = recordPattern[key]['strategy']
+    let recordPatternValue = recordPattern[key];
+
+    let entryprice = recordPatternValue['entryprice']
+    let entrypricedate = recordPatternValue['entrypricedate']
+    let takeprofit = recordPatternValue['takeprofit']
+    let strategy = recordPatternValue['strategy']
 
     if (close >= takeprofit) {
 
@@ -182,21 +68,47 @@ function takeProfit(obj) {
         let newBalance = _.round(balance + sumSizeTrade, 2)
         obj.variableBalance = newBalance
 
-        emitter.emit(
-            'takeprofit',
-            key,
-            symbol,
-            interval,
-            newBalance,
-            entryprice,
-            entrypricedate,
-            takeprofit,
-            takeProfitPercentage,
-            recordPattern[key],
-            strategy,
-            takeProfitArray[key],
-            telegramEnabled);
+        let takeprofitObj = {
+            type: 'TAKEPROFIT',
+            symbol: symbol,
+            interval: interval,
+            balance: newBalance,
+            entryprice: entryprice,
+            entrypricedate: entrypricedate,
+            takeprofitvalue: takeprofit,
+            takeprofitpercentage: takeProfitPercentage,
+            takeprofitdate: new Date(),
+            hh: recordPatternValue['hh'],
+            ll: recordPatternValue['ll'],
+            lh: recordPatternValue['lh'],
+            hl: recordPatternValue['hl'],
+            strategy: strategy
+        }
 
+        const logger = new Logger(takeprofitObj)
+
+        logger.save().then((result) => {
+            //console.log(result)
+        }).catch((err) => {
+            console.log(err)
+        });
+
+        if (telegramEnabled) {
+            let message = "TAKEPROFIT: " + symbol + "\n" +
+                "Interval: " + interval + "\n" +
+                "Takeprofit percentage: " + takeProfitPercentage + "%" + "\n" +
+                "Balance: " + newBalance + "\n" +
+                "Entry Price: " + entryprice + "\n" +
+                "Entry date: " + entrypricedate.toUTCString() + "\n" +
+                "hh: " + recordPatternValue['hh'] + "\n" +
+                "ll: " + recordPatternValue['ll'] + "\n" +
+                "lh: " + recordPatternValue['lh'] + "\n" +
+                "hl: " + recordPatternValue['hl']
+
+            Telegram.sendMessage(message)
+        }
+
+        takeProfitArray = takeprofitObj
         exclusionList[key] = true;
 
         return true;
@@ -220,10 +132,12 @@ function stopLoss(obj) {
     let sumSizeTrade = obj.sumSizeTrade;
     let sizeTrade = obj.sizeTrade;
 
-    let entryprice = recordPattern[key]['entryprice']
-    let entrypricedate = recordPattern[key]['entrypricedate']
-    let stoploss = recordPattern[key]['stoploss']
-    let strategy = recordPattern[key]['strategy']
+    let recordPatternValue = recordPattern[key];
+
+    let entryprice = recordPatternValue['entryprice']
+    let entrypricedate = recordPatternValue['entrypricedate']
+    let stoploss = recordPatternValue['stoploss']
+    let strategy = recordPatternValue['strategy']
 
     if (close <= stoploss) {
 
@@ -238,21 +152,47 @@ function stopLoss(obj) {
         let newBalance = _.round(balance + sumSizeTrade, 2)
         obj.variableBalance = newBalance
 
-        emitter.emit(
-            'stoploss',
-            key,
-            symbol,
-            interval,
-            newBalance,
-            entryprice,
-            entrypricedate,
-            stoploss,
-            stopLossPercentage,
-            recordPattern[key],
-            strategy,
-            stopLossArray[key],
-            telegramEnabled);
+        let stopLossObj = {
+            type: 'STOPLOSS',
+            symbol: symbol,
+            interval: interval,
+            balance: newBalance,
+            entryprice: entryprice,
+            entrypricedate: entrypricedate,
+            stoplossvalue: stoploss,
+            stoplosspercentage: stopLossPercentage,
+            stoplossdate: new Date(),
+            hh: recordPatternValue['hh'],
+            ll: recordPatternValue['ll'],
+            lh: recordPatternValue['lh'],
+            hl: recordPatternValue['hl'],
+            strategy: strategy
+        }
 
+        const logger = new Logger(stopLossObj)
+
+        logger.save().then((result) => {
+            console.log(result)
+        }).catch((err) => {
+            console.log(err)
+        });
+
+        if (telegramEnabled) {
+            let message = "STOPLOSS: " + symbol + "\n" +
+                "Interval: " + interval + "\n" +
+                "Stop loss percentage: " + stopLossPercentage + "%" + "\n" +
+                "Balance: " + newBalance + "\n" +
+                "Entry Price: " + entryprice + "\n" +
+                "Entry date: " + entrypricedate.toUTCString() + "\n" +
+                "hh: " + recordPatternValue['hh'] + "\n" +
+                "ll: " + recordPatternValue['ll'] + "\n" +
+                "lh: " + recordPatternValue['lh'] + "\n" +
+                "hl: " + recordPatternValue['hl']
+
+            Telegram.sendMessage(message)
+        }
+
+        stopLossArray = stopLossObj
         obj.recordPattern[key] = null;
         exclusionList[key] = true;
 
@@ -316,7 +256,7 @@ function checkExit(obj) {
  *
  * @param obj
  */
-async function checkEntry(
+function checkEntry(
     obj,
 ) {
 
@@ -328,6 +268,7 @@ async function checkEntry(
     let symbol = obj.symbol;
     let interval = obj.interval;
     let indexArray = obj.indexArray;
+    let tradeEnabled = obj.tradeEnabled;
     let recordPattern = obj.recordPattern;
     let tokenArray = obj.tokenArray;
     let sizeTrade = obj.sizeTrade;
@@ -408,7 +349,7 @@ async function checkEntry(
 
                             if (isStrategyBreakoutFound) {
 
-                                if (obj.tradeEnabled) {
+                                if (tradeEnabled) {
 
                                     try {
 
@@ -428,7 +369,7 @@ async function checkEntry(
                                 entryCoins[key] = true;
                                 entryArray[key] = recordPatternValue
 
-                                emitter.emit('entry', symbol, interval, close, recordPatternValue, telegramEnabled);
+                                entry(symbol, interval, close, recordPatternValue, telegramEnabled);
 
                                 obj.totalEntry += 1;
                             }

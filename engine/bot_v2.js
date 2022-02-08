@@ -27,11 +27,13 @@ const binance = new Binance().options({
 
 
 let timeFrame = [
+    '1m',
     '5m',
-    '15m',
-    '1h',
-    '4h',
-    '1d',
+    // '5m',
+    // '15m',
+    // '1h',
+    // '4h',
+    // '1d',
 ];
 
 let telegramEnabled = true;
@@ -281,115 +283,118 @@ function checkFloating(key, symbol, close) {
 
     for (let time of timeFrame) {
 
-        try {
 
-            binance.websockets.candlesticks(exchangePair, time, async (candlesticks) => {
-                let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
-                let {
-                    o: open,
-                    h: high,
-                    l: low,
-                    c: close,
-                    i: interval,
-                    x: isFinal,
-                } = ticks;
+        binance.websockets.candlesticks(exchangePair, time, async (candlesticks) => {
+            let {e: eventType, E: eventTime, s: symbol, k: ticks} = candlesticks;
+            let {
+                o: open,
+                h: high,
+                l: low,
+                c: close,
+                i: interval,
+                x: isFinal,
+            } = ticks;
 
-                let key = symbol + "_" + interval
-                let currentClose = parseFloat(close)
+            let key = symbol + "_" + interval;
+            let currentClose = parseFloat(close);
 
-                if (finder.length > 0) {
-                    if (finder.includes(symbol)) {
-                        if (exclusionList[key] === false) {
-                            if (entryArray[key] !== null) {
+            if (finder.length > 0) {
+                if (finder.includes(symbol)) {
+                    if (exclusionList[key] === false) {
+                        if (entryArray[key] !== null) {
 
-                                checkFloating(key, symbol, close)
+                            checkFloating(key, symbol, close)
 
-                                obj['symbol'] = symbol;
-                                obj['key'] = key;
-                                obj['interval'] = interval;
-                                obj['close'] = parseFloat(close);
-                                obj['high'] = parseFloat(high);
-                                obj['open'] = parseFloat(open);
-                                obj['low'] = parseFloat(low);
+                            obj['symbol'] = symbol;
+                            obj['key'] = key;
+                            obj['interval'] = interval;
+                            obj['close'] = parseFloat(close);
+                            obj['high'] = parseFloat(high);
+                            obj['open'] = parseFloat(open);
+                            obj['low'] = parseFloat(low);
 
-                                Algorithms.checkExit(obj)
+                            Algorithms.checkExit(obj);
 
-                            }
                         }
                     }
                 }
+            }
 
-                if (isFinal) {
+            if (isFinal) {
 
-                    if (interval === '1d') {
+                if (interval === '5m') {
 
-                        if (exclusionList[key] === true)
-                            exclusionList[key] = false;
+                    if (exclusionList[key] === true)
+                        exclusionList[key] = false;
 
-                        let ema = await Indicators.emaWithoutCache(symbol, '1d', 5, 150);
+                    Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
-                        if (!isNaN(ema)) {
+                        .then((ema) => {
 
-                            if (currentClose > ema) {
-                                if (!finder.includes(symbol)) {
-                                    finder.push(symbol)
-                                }
-                            }
+                            if (!isNaN(ema)) {
 
-                            if (currentClose < ema) {
-                                // Aggiungere che chiude tutte le posizioni che sono andate sotto ema
-                                if (finder.includes(symbol)) {
-
-                                    if (entryArray[key] !== null) {
-
-                                        recordPattern[key] = null;
-                                        indexArray[key] = -1;
-                                        tokenArray[key] = [];
-
-                                        //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
+                                if (currentClose > ema) {
+                                    if (!finder.includes(symbol)) {
+                                        finder.push(symbol);
                                     }
+                                }
 
-                                    for (let i = 0; i < finder.length; i++) {
-                                        if (finder[i] !== null) {
-                                            if (finder[i] === symbol) {
-                                                finder.splice(i, 1);
+                                if (currentClose < ema) {
+                                    // Aggiungere che chiude tutte le posizioni che sono andate sotto ema
+                                    if (finder.includes(symbol)) {
+
+                                        if (entryArray[key] !== null) {
+
+                                            recordPattern[key] = null;
+                                            indexArray[key] = -1;
+                                            tokenArray[key] = [];
+
+                                            //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
+                                        }
+
+                                        for (let i = 0; i < finder.length; i++) {
+                                            if (finder[i] !== null) {
+                                                if (finder[i] === symbol) {
+                                                    finder.splice(i, 1);
+                                                }
                                             }
                                         }
-                                    }
 
+                                    }
                                 }
                             }
-                        }
+
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                        });
 
 
-                    } else {
+                } else {
 
-                        if (finder.length > 0) {
-                            if (finder.includes(symbol)) {
-                                if (totalEntry <= maxEntry) {
-                                    if (exclusionList[key] === false && entryCoins[key] === false) {
+                    if (finder.length > 0) {
+                        if (finder.includes(symbol)) {
+                            if (totalEntry <= maxEntry) {
+                                if (exclusionList[key] === false && entryCoins[key] === false) {
 
-                                        obj['symbol'] = symbol;
-                                        obj['key'] = key;
-                                        obj['interval'] = interval;
-                                        obj['close'] = parseFloat(close);
-                                        obj['high'] = parseFloat(high);
-                                        obj['open'] = parseFloat(open);
-                                        obj['low'] = parseFloat(low);
+                                    obj['symbol'] = symbol;
+                                    obj['key'] = key;
+                                    obj['interval'] = interval;
+                                    obj['close'] = parseFloat(close);
+                                    obj['high'] = parseFloat(high);
+                                    obj['open'] = parseFloat(open);
+                                    obj['low'] = parseFloat(low);
 
-                                        Algorithms.checkEntry(obj).then(r => console.log(r))
-                                    }
+                                    Algorithms.checkEntry(obj);
                                 }
                             }
                         }
                     }
                 }
+            }
 
-            });
+        });
 
-        } catch (e) {
-            console.log(e)
-        }
     }
 
 })();
