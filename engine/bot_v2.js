@@ -18,7 +18,6 @@ app.listen(port)
 mongoose.connect(process.env.URI_MONGODB);
 
 const binance = new Binance().options({
-    useServerTime: true,
     verbose: true,
     log: log => {
         console.log(log); // You can create your own logger here, or disable console output
