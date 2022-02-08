@@ -1,11 +1,9 @@
-const Bot = require("../models/bot");
-const Binance = require("node-binance-api");
-
-
-const binance = new Binance().options({
-    recvWindow: 600000
-});
-
+/**
+ *
+ * @param data
+ * @param exchangeInfoArray
+ * @returns {*[]}
+ */
 function extractPair(data, exchangeInfoArray) {
     for (let obj of data.symbols) {
 
@@ -70,8 +68,8 @@ function extractPair(data, exchangeInfoArray) {
 }
 
 /**
- *
- * @returns {Promise<unknown>}
+ * 
+ * @returns {Promise<void>}
  */
 async function exchangeInfo() {
 

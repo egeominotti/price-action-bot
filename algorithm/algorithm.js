@@ -1,10 +1,11 @@
-const _ = require("lodash");
 const Pattern = require("../pattern/triangle");
 const Strategy = require("../strategy/strategy");
 const Telegram = require("../utility/telegram");
 const Indicators = require('../indicators/ema');
-const Logger = require("../models/logger");
 const Binance = require("node-binance-api");
+const _ = require("lodash");
+//const Logger = require("../models/logger");
+
 
 let emaArray = {};
 

@@ -6,8 +6,8 @@ const Exchange = require("../exchange/binance");
 const API = require("../api/api");
 const _ = require("lodash");
 
-const binance = new Binance().options({
-    verbose: true,
+global.binance = new Binance().options({
+    verbose: false,
     log: log => {
         console.log(log);
     }
@@ -38,7 +38,6 @@ global.takeProfitArray = {}
 global.stopLossArray = {}
 global.entryArray = {}
 global.finder = [];
-global.dbKey = 'prova_2';
 
 global.timeFrame = [
     '1m',
