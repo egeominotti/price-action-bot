@@ -7,8 +7,6 @@ const _ = require("lodash");
 //const Logger = require("../models/logger");
 
 
-let emaArray = {};
-
 function entry(symbol, interval, close, recordPatternValue) {
 
     console.log("--------------------------------------------------------------")
@@ -285,6 +283,7 @@ function checkExit(obj) {
 function checkEntry(
     obj,
 ) {
+
     let key = obj.key;
     let close = obj.close;
     let open = obj.open;
@@ -293,7 +292,7 @@ function checkEntry(
     let symbol = obj.symbol;
     let interval = obj.interval;
 
-    Indicators.ema(close, symbol, interval, 200, 300, emaArray).then((ema) => {
+    Indicators.ema(close, symbol, interval, 200, 300).then((ema) => {
 
         if (!isNaN(ema)) {
 
@@ -326,6 +325,7 @@ function checkEntry(
                     }
 
                     tokenArray[key].push(ticker)
+
                     let pattern = Pattern.patternMatching(tokenArray[key], symbol)
 
                     if (!_.isEmpty(pattern)) {
@@ -394,9 +394,7 @@ function checkEntry(
                 }
             }
         }
-    }).catch((e) => {
-        console.log(e)
-    });
+    }).catch((e) => {});
 
 
 }

@@ -26,6 +26,7 @@ global.totalFloatingPercValue = 0;
 global.totalFloatingBalance = 0;
 global.totalEntry = 0;
 global.listEntry = {};
+global.emaArray = {};
 global.floatingPercArr = {};
 global.floatingArr = {};
 global.tokenArray = {}
@@ -131,12 +132,10 @@ setInterval(() => {
                                     if (!finder.includes(symbol)) {
                                         let currentVolume = parseFloat(volume);
                                         finder.push(symbol);
+                                        console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
                                         // 100000000
                                         // if (currentVolume > 1000) {
                                         //     console.log("TRADABILE")
-                                        //     console.log(symbol)
-                                        //     console.log(currentVolume)
-                                        //     console.log(trades)
                                         //     console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
                                         //     finder.push(symbol);
                                         // }

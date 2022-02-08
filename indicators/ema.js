@@ -1,14 +1,5 @@
 const {EMA} = require("technicalindicators");
 const _ = require("lodash");
-const Binance = require("node-binance-api");
-
-
-const binance = new Binance().options({
-    verbose: true,
-    log: log => {
-        console.log(log);
-    }
-});
 
 /**
  *
@@ -50,22 +41,21 @@ async function emaWithoutCache(token, time, periodEma, limitCandle) {
  * @param time
  * @param periodEma
  * @param limitCandle
- * @param arrayCache
  * @returns {Promise<unknown>}
  */
-async function ema(close, token, time, periodEma, limitCandle, arrayCache) {
+async function ema(close, token, time, periodEma, limitCandle) {
     return new Promise(function (resolve, reject) {
 
         let key = token + "_" + time
 
-        if (arrayCache[key] !== undefined) {
+        if (emaArray[key] !== undefined) {
 
             if (close !== undefined) {
-                arrayCache[key].shift();
-                arrayCache[key].push(parseFloat(close))
+                emaArray[key].shift();
+                emaArray[key].push(parseFloat(close))
             }
 
-            let ema = EMA.calculate({period: periodEma, values: arrayCache[key]})
+            let ema = EMA.calculate({period: periodEma, values: emaArray[key]})
             resolve(_.last(ema))
 
         } else {
@@ -82,7 +72,7 @@ async function ema(close, token, time, periodEma, limitCandle, arrayCache) {
                         closeArray.push(parseFloat(close));
                     }
                     closeArray.pop()
-                    arrayCache[key] = closeArray
+                    emaArray[key] = closeArray
 
                     let ema = EMA.calculate({period: periodEma, values: closeArray})
                     resolve(_.last(ema))
