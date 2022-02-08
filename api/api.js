@@ -3,8 +3,9 @@ const cors = require("cors");
 const Binance = require("node-binance-api");
 const app = express();
 const port = 3000;
+
 app.use(cors());
-app.listen(port, () => console.log(`TAS bot app listening on port ${port}!`))
+app.listen(port);
 
 app.get('/info', (req, res) => {
     let obj = {

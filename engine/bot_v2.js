@@ -81,7 +81,6 @@ setInterval(() => {
                 h: high,
                 l: low,
                 v: volume,
-                n: trades,
                 c: close,
                 i: interval,
                 x: isFinal,
@@ -89,27 +88,32 @@ setInterval(() => {
 
             let key = symbol + "_" + interval;
 
-            if (finder.length > 0 && finder.includes(symbol) && exclusionList[key] === false) {
-                if (entryArray[key] !== null) {
-
-                    let obj = {
-                        'symbol': symbol,
-                        'key': key,
-                        'interval': interval,
-                        'close': parseFloat(close),
-                        'high': parseFloat(high),
-                        'open': parseFloat(open),
-                        'low': parseFloat(low)
-                    }
-
-                    Algorithms.checkFloating(key, symbol, close);
-                    Algorithms.checkExit(obj);
+            if (finder.length > 0 &&
+                finder.includes(symbol) &&
+                exclusionList[key] === false &&
+                entryArray[key] !== null &&
+                recordPattern[key] !== null &&
+                recordPattern[key]['confirmed'] === true)
+            {
+                console.log("SONO ENTRATO")
+                let obj = {
+                    'symbol': symbol,
+                    'key': key,
+                    'recordPattern': recordPattern[key],
+                    'interval': interval,
+                    'close': parseFloat(close),
+                    'high': parseFloat(high),
+                    'open': parseFloat(open),
+                    'low': parseFloat(low)
                 }
+                console.log(obj)
+
+                Algorithms.checkFloating(obj);
+                Algorithms.checkExit(obj);
             }
 
             if (isFinal) {
 
-                let key = symbol + "_" + interval;
                 let currentClose = parseFloat(close);
 
                 if (interval === '5m') {

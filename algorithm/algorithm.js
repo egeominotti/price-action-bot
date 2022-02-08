@@ -9,7 +9,7 @@ const _ = require("lodash");
 
 let emaArray = {};
 
-function entry(symbol, interval, close, recordPatternValue, telegramEnabled) {
+function entry(symbol, interval, close, recordPatternValue) {
 
     console.log("--------------------------------------------------------------")
     console.log("ENTRY FOUND... symbol - " + symbol + " timeframe - " + interval)
@@ -31,7 +31,11 @@ function entry(symbol, interval, close, recordPatternValue, telegramEnabled) {
     }
 }
 
-function checkFloating(key, symbol, close) {
+function checkFloating(obj) {
+
+    let key = obj.key;
+    let symbol = obj.symbol;
+    let close = obj.close;
 
     let position = sizeTrade / entryArray[key]['entryprice'];
     let floatingPosition = position * parseFloat(close);
@@ -79,12 +83,15 @@ function takeProfit(obj) {
     let symbol = obj.symbol;
     let interval = obj.interval;
 
+    console.log(recordPattern[key])
+
     let recordPatternValue = recordPattern[key];
 
     let entryprice = recordPatternValue['entryprice']
     let entrypricedate = recordPatternValue['entrypricedate']
     let takeprofit = recordPatternValue['takeprofit']
     let strategy = recordPatternValue['strategy']
+
 
     if (close >= takeprofit) {
 
@@ -155,13 +162,10 @@ function takeProfit(obj) {
 function stopLoss(obj) {
 
     let close = obj.close;
+    let recordPatternValue = obj.recordPattern;
     let key = obj.key;
     let symbol = obj.symbol;
     let interval = obj.interval;
-    console.log(obj)
-
-    let recordPatternValue = recordPattern[key];
-    console.log(recordPattern[key])
 
     let entryprice = recordPatternValue['entryprice']
     let entrypricedate = recordPatternValue['entrypricedate']
@@ -233,49 +237,44 @@ function stopLoss(obj) {
 }
 
 
+/**
+ *
+ * @param obj
+ */
 function checkExit(obj) {
 
     let key = obj.key;
     let symbol = obj.symbol;
+    let exit = stopLoss(obj) || takeProfit(obj);
 
-    if (recordPattern[key] !== null) {
+    if (exit) {
 
-        let recordPatternValue = recordPattern[key];
-        if (recordPatternValue['confirmed'] === true) {
+        // PROCESSO PARALLELO - BLOCCANTE
+        if (tradeEnabled) {
 
-            let stoploss = stopLoss(key)
-            let takeprofit = takeProfit(key)
+            try {
 
-            if (stoploss || takeprofit) {
+                const userBinance = new Binance().options({
+                    APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
+                    APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
+                });
 
-                if (tradeEnabled) {
+                userBinance.balance((error, balances) => {
+                    if (error) return console.error(error);
+                    let sellAmount = userBinance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
+                    userBinance.marketSell(symbol, sellAmount);
+                });
 
-                    try {
-
-                        const userBinance = new Binance().options({
-                            APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
-                            APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
-                        });
-
-                        userBinance.balance((error, balances) => {
-                            if (error) return console.error(error);
-                            let sellAmount = userBinance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
-                            userBinance.marketSell(symbol, sellAmount);
-                        });
-
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-
-                entryArray[key] = null;
-                recordPattern[key] = null;
-                entryCoins[key] = false;
-
-                // Decrease entry
-                totalEntry--;
+            } catch (e) {
+                console.log(e);
             }
         }
+
+        entryArray[key] = null;
+        recordPattern[key] = null;
+        entryCoins[key] = false;
+        totalEntry--;
+
     }
 }
 
@@ -384,11 +383,9 @@ function checkEntry(
                                 }
 
                                 totalEntry++;
-                                console.log(totalEntry)
                                 entryCoins[key] = true;
                                 entryArray[key] = recordPatternValue
-
-                                entry(symbol, interval, close, recordPatternValue, telegramEnabled);
+                                entry(symbol, interval, close, recordPatternValue);
 
 
                             }
