@@ -62,7 +62,7 @@ setInterval(() => {
             "Total pair purchased: " + totalEntry + "\n" +
             "Start Balance: " + balance + "\n" +
             "Size Trade: " + sizeTrade + "\n" +
-            "Total Balance: " + _.round(totalBalance, 2) + "$" + "\n" +
+            //"Total Balance: " + _.round(totalBalance, 2) + "$" + "\n" +
             "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
             "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
             "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
@@ -202,6 +202,12 @@ setInterval(() => {
                             Algorithms.checkEntry(obj);
 
                         }
+                    }
+
+                    if (totalEntry === maxEntry + 1) {
+                        recordPattern[key] = null;
+                        indexArray[key] = -1;
+                        tokenArray[key] = [];
                     }
                 }
             }

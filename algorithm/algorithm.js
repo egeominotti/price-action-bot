@@ -4,6 +4,7 @@ const Telegram = require("../utility/telegram");
 const Indicators = require('../indicators/ema');
 const Binance = require("node-binance-api");
 const _ = require("lodash");
+
 //const Logger = require("../models/logger");
 
 
@@ -63,7 +64,14 @@ function checkFloating(obj) {
         }
     }
 
-    totalFloatingBalance = variableBalance + totalFloatingValue;
+    let bb = 0;
+    if (variableBalance === 0) {
+        bb = balance;
+    } else {
+        bb = variableBalance;
+    }
+
+    totalFloatingBalance = bb + totalFloatingValue;
 
     let message = "Global Statistics Profit/Loss" + "\n" +
         "--------------------------------------------------------------------" + "\n" +
@@ -394,7 +402,8 @@ function checkEntry(
                 }
             }
         }
-    }).catch((e) => {});
+    }).catch((e) => {
+    });
 
 
 }
