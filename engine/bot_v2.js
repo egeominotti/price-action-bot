@@ -25,6 +25,7 @@ global.totalFloatingValue = 0;
 global.totalFloatingPercValue = 0;
 global.totalFloatingBalance = 0;
 global.totalEntry = 0;
+
 global.listEntry = {};
 global.emaArray = {};
 global.floatingPercArr = {};
@@ -38,6 +39,7 @@ global.entryCoins = {}
 global.takeProfitArray = {}
 global.stopLossArray = {}
 global.entryArray = {}
+
 global.finder = [];
 
 global.timeFrame = [
@@ -57,8 +59,10 @@ setInterval(() => {
 
         let message = "Global Statistics Profit/Loss" + "\n" +
             "--------------------------------------------------------------------" + "\n" +
-            "Total Balance: " + totalBalance + "$" + "\n" +
-            "Total pair in trading: " + totalEntry + "\n" +
+            "Total pair purchased: " + totalEntry + "\n" +
+            "Start Balance: " + balance + "\n" +
+            "Size Trade: " + sizeTrade + "\n" +
+            "Total Balance: " + _.round(totalBalance, 2) + "$" + "\n" +
             "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
             "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
             "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
