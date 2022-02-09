@@ -56,16 +56,16 @@ global.timeFrame = [
 ];
 
 
-schedule.scheduleJob('* * * * *', function () {
+schedule.scheduleJob('*/15 * * * *', function () {
 
     if (totalEntry > 0) {
 
         let message = "Global Statistics Profit/Loss" + "\n" +
             "---------------------------------------" + "\n" +
             "Total pair purchased: " + totalEntry + "\n" +
-            "Start Balance: " + balance + "\n" +
-            "Variable Balance: " + variableBalance + "\n" +
-            "Size Trade: " + sizeTrade + "\n" +
+            "Start Balance: " + balance + " $" + "\n" +
+            "Variable Balance: " + variableBalance + " $" +"\n" +
+            "Size Trade: " + sizeTrade + " $" + "\n" +
             "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
             "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
             "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
