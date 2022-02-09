@@ -5,6 +5,8 @@ const Algorithms = require('../algorithm/algorithm');
 const Exchange = require("../exchange/binance");
 const API = require("../api/api");
 const _ = require("lodash");
+const schedule = require('node-schedule');
+
 
 global.binance = new Binance().options({
     verbose: false,
@@ -23,7 +25,7 @@ global.totalFloatingValue = 0;
 global.totalFloatingPercValue = 0;
 global.totalFloatingBalance = 0;
 global.totalEntry = 0;
-global.sizeTrade = 200;
+global.sizeTrade = 1000;
 global.maxEntry = (balance / sizeTrade) - 1
 
 global.listEntry = {};
@@ -43,15 +45,16 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
+    '1m',
     '5m',
-    '15m',
-    '1h',
-    '4h',
-    '1d',
+    // '15m',
+    // '1h',
+    // '4h',
+    // '1d',
 ];
 
 
-setInterval(() => {
+schedule.scheduleJob('* * * * *', function () {
 
     if (totalEntry > 0) {
 
@@ -68,7 +71,7 @@ setInterval(() => {
         Telegram.sendMessage(message)
     }
 
-}, 30 * 60 * 1000);
+});
 
 (async () => {
 
@@ -98,7 +101,8 @@ setInterval(() => {
                 exclusionList[key] === false &&
                 entryArray[key] !== null &&
                 recordPattern[key] !== null &&
-                recordPattern[key]['confirmed'] === true) {
+                recordPattern[key]['confirmed'] === true
+            ) {
 
                 let obj = {
                     'symbol': symbol,
@@ -120,7 +124,7 @@ setInterval(() => {
                 let currentClose = parseFloat(close);
                 let currentVolume = parseFloat(volume);
 
-                if (interval === '1d') {
+                if (interval === '5m') {
 
                     if (exclusionList[key] === true)
                         exclusionList[key] = false;
@@ -175,7 +179,8 @@ setInterval(() => {
 
                     if (finder.length > 0 &&
                         finder.includes(symbol) &&
-                        totalEntry <= maxEntry) {
+                        totalEntry <= maxEntry
+                    ) {
 
                         if (exclusionList[key] === false &&
                             entryCoins[key] === false) {
@@ -195,7 +200,9 @@ setInterval(() => {
                         }
                     }
 
-                    if (totalEntry === maxEntry + 1) {
+                    if (totalEntry === maxEntry + 1 &&
+                        entryArray[key] == null
+                    ) {
                         recordPattern[key] = null;
                         indexArray[key] = -1;
                         tokenArray[key] = [];
