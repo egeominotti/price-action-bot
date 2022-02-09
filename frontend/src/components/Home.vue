@@ -99,7 +99,7 @@
 
 <script>
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://188.34.189.183:3000';
 
 export default {
   data() {
