@@ -59,6 +59,7 @@ setInterval(() => {
             "--------------------------------------------------------------------" + "\n" +
             "Total pair purchased: " + totalEntry + "\n" +
             "Start Balance: " + balance + "\n" +
+            "Variable Balance: " + variableBalance + "\n" +
             "Size Trade: " + sizeTrade + "\n" +
             "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
             "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
@@ -67,7 +68,7 @@ setInterval(() => {
         Telegram.sendMessage(message)
     }
 
-}, 300000);
+}, 30 * 60 * 1000);
 
 (async () => {
 
@@ -117,6 +118,7 @@ setInterval(() => {
             if (isFinal) {
 
                 let currentClose = parseFloat(close);
+                let currentVolume = parseFloat(volume);
 
                 if (interval === '1d') {
 
@@ -129,17 +131,10 @@ setInterval(() => {
 
                             if (!isNaN(ema)) {
 
-                                if (currentClose > ema) {
+                                if (currentClose > ema && currentVolume > 100000000) {
                                     if (!finder.includes(symbol)) {
-                                        finder.push(symbol);
                                         console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
-                                        //let currentVolume = parseFloat(volume);
-                                        // 100000000
-                                        // if (currentVolume > 1000) {
-                                        //     console.log("TRADABILE")
-                                        //     console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
-                                        //     finder.push(symbol);
-                                        // }
+                                        finder.push(symbol);
                                     }
                                 }
 
