@@ -6,6 +6,7 @@ const Exchange = require("../exchange/binance");
 const API = require("../api/api");
 const _ = require("lodash");
 const schedule = require('node-schedule');
+const {parse} = require("dotenv");
 
 
 global.binance = new Binance().options({
@@ -17,6 +18,7 @@ global.binance = new Binance().options({
 
 global.telegramEnabled = true;
 global.tradeEnabled = false;
+global.volumeMetrics = 500000
 global.balance = 3000;
 global.variableBalance = 0;
 global.totalPercentage = 0
@@ -59,7 +61,7 @@ schedule.scheduleJob('* * * * *', function () {
     if (totalEntry > 0) {
 
         let message = "Global Statistics Profit/Loss" + "\n" +
-            "--------------------------------------------------------------------" + "\n" +
+            "---------------------------------------" + "\n" +
             "Total pair purchased: " + totalEntry + "\n" +
             "Start Balance: " + balance + "\n" +
             "Variable Balance: " + variableBalance + "\n" +
@@ -88,10 +90,14 @@ schedule.scheduleJob('* * * * *', function () {
                 o: open,
                 h: high,
                 l: low,
-                v: volume,
                 c: close,
+                v: volume,
+                n: trades,
                 i: interval,
                 x: isFinal,
+                q: quoteVolume,
+                V: buyVolume,
+                Q: quoteBuyVolume
             } = ticks;
 
             let key = symbol + "_" + interval;
@@ -122,7 +128,6 @@ schedule.scheduleJob('* * * * *', function () {
             if (isFinal) {
 
                 let currentClose = parseFloat(close);
-                let currentVolume = parseFloat(volume);
 
                 if (interval === '5m') {
 
@@ -135,9 +140,9 @@ schedule.scheduleJob('* * * * *', function () {
 
                             if (!isNaN(ema)) {
 
-                                if (currentClose > ema && currentVolume > 100000000) {
+                                if (currentClose > ema && parseFloat(quoteVolume) > volumeMetrics) {
                                     if (!finder.includes(symbol)) {
-                                        console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
+                                        console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
                                         finder.push(symbol);
                                     }
                                 }
@@ -160,7 +165,7 @@ schedule.scheduleJob('* * * * *', function () {
                                         for (let i = 0; i < finder.length; i++) {
                                             if (finder[i] !== null) {
                                                 if (finder[i] === symbol) {
-                                                    console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema)
+                                                    console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
                                                     finder.splice(i, 1);
                                                 }
                                             }
@@ -196,7 +201,6 @@ schedule.scheduleJob('* * * * *', function () {
                             }
 
                             Algorithms.checkEntry(obj);
-
                         }
                     }
 
