@@ -16,11 +16,12 @@ global.binance = new Binance().options({
     }
 });
 
-global.telegramEnabled = true;
-global.tradeEnabled = false;
-global.volumeMetrics = 100000
 global.balance = 3000;
 global.sizeTrade = 200;
+
+global.telegramEnabled = true;
+global.tradeEnabled = false;
+global.volumeMetrics = 200000
 global.variableBalance = 0;
 global.totalPercentage = 0
 global.sumSizeTrade = 0;
@@ -28,7 +29,6 @@ global.totalFloatingValue = 0;
 global.totalFloatingPercValue = 0;
 global.totalFloatingBalance = 0;
 global.totalEntry = 0;
-
 global.maxEntry = (balance / sizeTrade) - 1
 
 global.listEntry = {};
