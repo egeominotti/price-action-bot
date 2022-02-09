@@ -16,11 +16,11 @@ global.binance = new Binance().options({
     }
 });
 
-global.balance = 3000;
-global.sizeTrade = 200;
+global.balance = 1000;
+global.sizeTrade = 100;
 
 global.telegramEnabled = true;
-global.tradeEnabled = false;
+global.tradeEnabled = true;
 global.volumeMetrics = 200000
 global.variableBalance = 0;
 global.totalPercentage = 0
@@ -48,7 +48,6 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
-    '1m',
     '5m',
     '15m',
     '1h',
@@ -130,7 +129,7 @@ schedule.scheduleJob('*/15 * * * *', function () {
 
                 let currentClose = parseFloat(close);
 
-                if (interval === '5m') {
+                if (interval === '1d') {
 
                     if (exclusionList[key] === true)
                         exclusionList[key] = false;
@@ -160,7 +159,7 @@ schedule.scheduleJob('*/15 * * * *', function () {
                                         }
 
                                         if (entryArray[key] !== null) {
-                                            //CLOSE POSITION - TRAILING STOP LOSS O TAKE PROFIT
+                                            Exchange.sell(symbol);
                                         }
 
                                         for (let i = 0; i < finder.length; i++) {

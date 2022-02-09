@@ -1,6 +1,7 @@
 const Pattern = require("../pattern/triangle");
 const Strategy = require("../strategy/strategy");
 const Telegram = require("../utility/telegram");
+const Exchange = require("../exchange/binance");
 const Indicators = require('../indicators/ema');
 const Binance = require("node-binance-api");
 const _ = require("lodash");
@@ -254,33 +255,11 @@ function checkExit(obj) {
     let exit = stopLoss(obj) || takeProfit(obj);
 
     if (exit) {
-
-        // PROCESSO PARALLELO - BLOCCANTE
-        if (tradeEnabled) {
-
-            try {
-
-                const userBinance = new Binance().options({
-                    APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
-                    APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
-                });
-
-                userBinance.balance((error, balances) => {
-                    if (error) return console.error(error);
-                    let sellAmount = userBinance.roundStep(balances[symbol].available, exchangeInfoArray[symbol].stepSize);
-                    userBinance.marketSell(symbol, sellAmount);
-                });
-
-            } catch (e) {
-                console.log(e);
-            }
-        }
-
+        Exchange.sell(symbol);
         entryArray[key] = null;
         recordPattern[key] = null;
         entryCoins[key] = false;
         totalEntry--;
-
     }
 }
 
@@ -373,28 +352,12 @@ function checkEntry(
 
                             if (isStrategyBreakoutFound) {
 
-                                if (tradeEnabled) {
-
-                                    try {
-
-                                        const userBinance = new Binance().options({
-                                            APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
-                                            APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
-                                        });
-
-                                        let buyAmount = userBinance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
-                                        userBinance.marketBuy(symbol, buyAmount);
-
-                                    } catch (err) {
-                                        console.log(err)
-                                    }
-                                }
+                                Exchange.buy(symbol, close)
 
                                 totalEntry++;
                                 entryCoins[key] = true;
                                 entryArray[key] = recordPatternValue
                                 entry(symbol, interval, close, recordPatternValue);
-
 
                             }
                         }
@@ -402,7 +365,8 @@ function checkEntry(
                 }
             }
         }
-    }).catch((e) => {});
+    }).catch((e) => {
+    });
 }
 
 
@@ -411,5 +375,5 @@ module.exports = {
     checkExit,
     stopLoss,
     takeProfit,
-    checkFloating
+    checkFloating,
 }
