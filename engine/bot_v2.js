@@ -20,6 +20,7 @@ global.telegramEnabled = true;
 global.tradeEnabled = false;
 global.volumeMetrics = 500000
 global.balance = 3000;
+global.sizeTrade = 200;
 global.variableBalance = 0;
 global.totalPercentage = 0
 global.sumSizeTrade = 0;
@@ -27,7 +28,7 @@ global.totalFloatingValue = 0;
 global.totalFloatingPercValue = 0;
 global.totalFloatingBalance = 0;
 global.totalEntry = 0;
-global.sizeTrade = 1000;
+
 global.maxEntry = (balance / sizeTrade) - 1
 
 global.listEntry = {};
@@ -49,10 +50,10 @@ global.finder = [];
 global.timeFrame = [
     '1m',
     '5m',
-    // '15m',
-    // '1h',
-    // '4h',
-    // '1d',
+    '15m',
+    '1h',
+    '4h',
+    '1d',
 ];
 
 
@@ -64,7 +65,7 @@ schedule.scheduleJob('*/15 * * * *', function () {
             "---------------------------------------" + "\n" +
             "Total pair purchased: " + totalEntry + "\n" +
             "Start Balance: " + balance + " $" + "\n" +
-            "Variable Balance: " + variableBalance + " $" +"\n" +
+            "Variable Balance: " + variableBalance + " $" + "\n" +
             "Size Trade: " + sizeTrade + " $" + "\n" +
             "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
             "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
