@@ -18,7 +18,7 @@ global.binance = new Binance().options({
 
 global.telegramEnabled = true;
 global.tradeEnabled = false;
-global.volumeMetrics = 500000
+global.volumeMetrics = 100000
 global.balance = 3000;
 global.sizeTrade = 200;
 global.variableBalance = 0;
