@@ -14,8 +14,8 @@ global.binance = new Binance().options({
     }
 });
 
-global.balance = 200;
-global.sizeTrade = 15;
+global.balance = 1000;
+global.sizeTrade = 100;
 
 global.telegramEnabled = true;
 global.tradeEnabled = true;
@@ -46,7 +46,6 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
-    '1m',
     '5m',
     '15m',
     '1h',
@@ -128,7 +127,7 @@ schedule.scheduleJob('*/30 * * * *', function () {
 
                 let currentClose = parseFloat(close);
 
-                if (interval === '5m') {
+                if (interval === '1d') {
 
                     if (exclusionList[key] === true)
                         exclusionList[key] = false;
