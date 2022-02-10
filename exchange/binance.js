@@ -104,6 +104,31 @@ function buy(symbol, close) {
             });
 
 
+            // [Object: null prototype] {
+            //   symbol: 'THETAUSDT',
+            //   orderId: 1670146976,
+            //   orderListId: -1,
+            //   clientOrderId: 'C60Grd7qLs8ASSGttdAmfW',
+            //   transactTime: 1644496681243,
+            //   price: '0.00000000',
+            //   origQty: '3.90000000',
+            //   executedQty: '3.90000000',
+            //   cummulativeQuoteQty: '14.90580000',
+            //   status: 'FILLED',
+            //   timeInForce: 'GTC',
+            //   type: 'MARKET',
+            //   side: 'BUY',
+            //   fills: [
+            //     [Object: null prototype] {
+            //       price: '3.82200000',
+            //       qty: '3.90000000',
+            //       commission: '0.00002617',
+            //       commissionAsset: 'BNB',
+            //       tradeId: 124540630
+            //     }
+            //   ]
+            // }
+
             let qty = sizeTrade / close;
             let stepSize = exchangeInfoArray[symbol].stepSize;
             let buyAmount = userBinance.roundStep(qty, stepSize);

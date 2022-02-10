@@ -55,7 +55,7 @@ global.timeFrame = [
 ];
 
 
-schedule.scheduleJob('*/15 * * * *', function () {
+schedule.scheduleJob('*/30 * * * *', function () {
 
     if (totalEntry > 0) {
 

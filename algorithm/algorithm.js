@@ -358,6 +358,7 @@ function checkEntry(
                                 totalEntry++;
                                 entryCoins[key] = true;
                                 entryArray[key] = recordPatternValue
+
                                 entry(symbol, interval, close, recordPatternValue);
 
                             }
