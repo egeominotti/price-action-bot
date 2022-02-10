@@ -184,6 +184,11 @@ function sell(symbol) {
                             .then((r) => {
                                 console.log("VENDITA: " + symbol)
                                 console.log(r)
+                                // if (r.status === 'FILLED') {
+                                //     let orderId = r.orderId;
+                                //     let clientOrderId = r.clientOrderId;
+                                // }
+
                             }).catch((e) => {
                             console.log("ERRORE VENDITA: " + symbol)
                             console.log(e)
