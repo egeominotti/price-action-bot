@@ -156,9 +156,10 @@ schedule.scheduleJob('*/30 * * * *', function () {
                                             tokenArray[key] = [];
                                         }
 
-                                        if (entryArray[key] !== null) {
-                                            Exchange.sell(symbol);
-                                        }
+                                        // Trailing stop-loss | trailing-profit
+                                        // if (entryArray[key] !== null) {
+                                        //     Exchange.sell(symbol);
+                                        // }
 
                                         for (let i = 0; i < finder.length; i++) {
                                             if (finder[i] !== null) {
