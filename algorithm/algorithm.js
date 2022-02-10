@@ -165,7 +165,6 @@ function takeProfit(obj) {
     return false;
 }
 
-
 function stopLoss(obj) {
 
     let close = obj.close;
@@ -255,7 +254,9 @@ function checkExit(obj) {
     let exit = stopLoss(obj) || takeProfit(obj);
 
     if (exit) {
+
         Exchange.sell(symbol);
+
         entryArray[key] = null;
         recordPattern[key] = null;
         entryCoins[key] = false;

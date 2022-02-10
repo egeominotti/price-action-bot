@@ -97,13 +97,26 @@ function buy(symbol, close) {
     try {
 
         if (tradeEnabled) {
+
             const userBinance = new Binance().options({
                 APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
                 APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
             });
 
-            let buyAmount = userBinance.roundStep(sizeTrade / close, exchangeInfoArray[symbol].stepSize);
-            userBinance.marketBuy(symbol, buyAmount);
+
+            let qty = sizeTrade / close;
+            let stepSize = exchangeInfoArray[symbol].stepSize;
+            let buyAmount = userBinance.roundStep(qty, stepSize);
+
+            userBinance
+                .marketBuy(symbol, buyAmount)
+                .then((r) => {
+                    console.log("ACQUISTO: " + symbol)
+                    console.log(r)
+                }).catch((e) => {
+                console.log("ERRORE ACQUISTO: " + symbol)
+                console.log(e);
+            });
         }
 
     } catch (e) {
@@ -123,6 +136,7 @@ function sell(symbol) {
     try {
 
         if (tradeEnabled) {
+
             const userBinance = new Binance().options({
                 APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
                 APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
@@ -131,8 +145,27 @@ function sell(symbol) {
             userBinance.balance((error, balances) => {
 
                 if (error) return console.error(error);
-                let qty = userBinance.roundStep(balances[replacedSymbol].available, exchangeInfoArray[symbol].stepSize);
-                userBinance.marketSell(symbol, qty);
+                if (!error) {
+
+                    if (balances[replacedSymbol] !== undefined || balances[replacedSymbol] !== null) {
+
+                        let stepSize = exchangeInfoArray[symbol].stepSize;
+                        let available = balances[replacedSymbol].available
+
+                        let qty = userBinance.roundStep(available, stepSize);
+
+                        userBinance
+                            .marketSell(symbol, qty)
+                            .then((r) => {
+                                console.log("VENDITA: " + symbol)
+                                console.log(r)
+                            }).catch((e) => {
+                            console.log("ERRORE VENDITA: " + symbol)
+                            console.log(e)
+                        });
+                    }
+                }
+
             });
         }
 
