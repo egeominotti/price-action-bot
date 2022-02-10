@@ -1,13 +1,11 @@
+const _ = require("lodash");
 const Telegram = require("../utility/telegram");
 const Binance = require('node-binance-api');
 const Indicators = require('../indicators/ema');
 const Algorithms = require('../algorithm/algorithm');
 const Exchange = require("../exchange/binance");
 const API = require("../api/api");
-const _ = require("lodash");
 const schedule = require('node-schedule');
-const {parse} = require("dotenv");
-
 
 global.binance = new Binance().options({
     verbose: false,
