@@ -54,7 +54,7 @@ global.timeFrame = [
 ];
 
 
-schedule.scheduleJob('*/30 * * * *', function () {
+schedule.scheduleJob('0 * * * *', function () {
 
     if (totalEntry > 0) {
 
@@ -204,7 +204,8 @@ schedule.scheduleJob('*/30 * * * *', function () {
                     }
 
                     if (totalEntry === maxEntry + 1 &&
-                        entryArray[key] == null
+                        entryArray[key] !== null &&
+                        entryArray[key]['confirmed'] === true
                     ) {
                         recordPattern[key] = null;
                         indexArray[key] = -1;
