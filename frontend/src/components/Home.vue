@@ -144,11 +144,11 @@ export default {
       this.tradeEnabled = infoData.tradeEnabled;
       this.telegramEnabled = infoData.telegramEnabled;
 
-      this.floatingperc = infoData.floatingperc.toFixed(2);
-      this.floating = infoData.floating.toFixed(2);
-      this.initialBalance = infoData.initialBalance.toFixed(2);
-      this.floatingbalance = infoData.floatingbalance.toFixed(2);
-      this.totalFloatingBalance = infoData.totalFloatingBalance.toFixed(2);
+      this.floatingperc = infoData.floatingperc
+      this.floating = infoData.floating
+      this.initialBalance = infoData.initialBalance
+      this.floatingbalance = infoData.floatingbalance
+      this.totalFloatingBalance = infoData.totalFloatingBalance
 
       const entryArrayReq = await fetch(BASE_URL + '/trade/entry');
       const entryArrayData = await entryArrayReq.json();
@@ -160,10 +160,9 @@ export default {
         return a.entrypricedate < b.entrypricedate ? 1 : a.entrypricedate > b.entrypricedate ? -1 : 0
       });
 
-
       const takeProfitArrayReq = await fetch(BASE_URL + '/trade/takeprofit');
       const takeProfitArrayData = await takeProfitArrayReq.json();
-
+      console.log(takeProfitArrayData)
       for (let k in takeProfitArrayData)
         if (takeProfitArrayData[k] !== null) this.takeProfitArray.push(takeProfitArrayData[k]);
 
@@ -181,7 +180,6 @@ export default {
       this.stopLossArray = this.stopLossArray.sort(function (a, b) {
         return a.stoplossdate < b.stoplossdate ? 1 : a.stoplossdate > b.stoplossdate ? -1 : 0
       });
-
 
       this.counterEN = this.entryArray.length;
       this.counterSL = this.stopLossArray.length;

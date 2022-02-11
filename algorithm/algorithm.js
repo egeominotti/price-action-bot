@@ -156,7 +156,7 @@ function takeProfit(obj) {
             Telegram.sendMessage(message)
         }
 
-        takeProfitArray = takeprofitObj
+        takeProfitArray[key] = takeprofitObj
         exclusionList[key] = true;
 
         return true;
@@ -208,6 +208,7 @@ function stopLoss(obj) {
             hl: recordPatternValue['hl'],
             strategy: strategy
         }
+
         //
         // const logger = new Logger(stopLossObj)
         //
@@ -232,9 +233,9 @@ function stopLoss(obj) {
             Telegram.sendMessage(message)
         }
 
-        stopLossArray = stopLossObj
+        stopLossArray[key] = stopLossObj
         recordPattern[key] = null;
-        exclusionList[key] = true;
+        //exclusionList[key] = true;
 
         return true;
     }

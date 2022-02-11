@@ -48,7 +48,8 @@ function initData(data) {
         'TRXDOWNUSDT',
         'XRPDOWNUSDT',
         'DOTDOWNUSDT',
-        'PERPUSDT'
+        'PERPUSDT',
+        'BTCSTUSDT',
     ]
 
     let pairs = [];
