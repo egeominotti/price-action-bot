@@ -59,14 +59,15 @@ schedule.scheduleJob('0 * * * *', function () {
     if (totalEntry > 0) {
 
         let message = "Global Statistics Profit/Loss" + "\n" +
-            "---------------------------------------" + "\n" +
+            "-------------------------------------------------" + "\n" +
             "Total pair purchased: " + totalEntry + "\n" +
             "Start Balance: " + balance + " $" + "\n" +
             "Variable Balance: " + variableBalance + " $" + "\n" +
             "Size Trade: " + sizeTrade + " $" + "\n" +
             "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
             "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+            "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $" + "\n" +
+            "-------------------------------------------------"
 
         Telegram.sendMessage(message)
     }
@@ -210,6 +211,9 @@ schedule.scheduleJob('0 * * * *', function () {
                         recordPattern[key] = null;
                         indexArray[key] = -1;
                         tokenArray[key] = [];
+                        entryCoins[key] = false;
+                        entryArray[key] = null;
+                        totalEntry--;
                     }
                 }
             }
