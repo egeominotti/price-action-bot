@@ -36,6 +36,7 @@ function initData(data) {
         'ETHUPUSDT',
         'ADAUPUSDT',
         'LINKUPUSDT',
+        'BNBUSDT',
         'BNBUPUSDT',
         'TRXUPUSDT',
         'XRPUPUSDT',
@@ -50,6 +51,8 @@ function initData(data) {
         'DOTDOWNUSDT',
         'PERPUSDT',
         'BTCSTUSDT',
+        'USDPUSDT',
+        'USTUSDT',
     ]
 
     let pairs = [];
