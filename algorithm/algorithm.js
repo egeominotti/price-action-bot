@@ -90,8 +90,6 @@ function takeProfit(obj) {
     let symbol = obj.symbol;
     let interval = obj.interval;
 
-    //console.log(recordPattern[key])
-
     let recordPatternValue = recordPattern[key];
 
     let entryprice = recordPatternValue['entryprice']
@@ -235,7 +233,6 @@ function stopLoss(obj) {
 
         stopLossArray[key] = stopLossObj
         recordPattern[key] = null;
-        //exclusionList[key] = true;
 
         return true;
     }
@@ -243,6 +240,15 @@ function stopLoss(obj) {
     return false;
 }
 
+
+function decreasePosition(key) {
+    recordPattern[key] = null;
+    indexArray[key] = -1;
+    tokenArray[key] = [];
+    entryCoins[key] = false;
+    entryArray[key] = null;
+    totalEntry--;
+}
 
 /**
  *
@@ -255,13 +261,8 @@ function checkExit(obj) {
     let exit = stopLoss(obj) || takeProfit(obj);
 
     if (exit) {
-
         Exchange.sell(symbol);
-
-        entryArray[key] = null;
-        recordPattern[key] = null;
-        entryCoins[key] = false;
-        totalEntry--;
+        decreasePosition(key);
     }
 }
 
@@ -379,4 +380,5 @@ module.exports = {
     stopLoss,
     takeProfit,
     checkFloating,
+    decreasePosition,
 }

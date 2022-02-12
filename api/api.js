@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const Exchange = require("../exchange/binance");
+const Algorithms = require('../algorithm/algorithm');
 const Binance = require("node-binance-api");
 const app = express();
 const port = 3000;
@@ -45,24 +47,14 @@ app.get('/trade/disableTelegram', async (req, res) => {
 app.get('/trade/stop', async (req, res) => {
 
     try {
-        const userBinance = new Binance().options({
-            APIKEY: '46AQQyECQ8V56kJcyUSTjrDNPz59zRS6J50qP1UVq95hkqBqMYjBS8Kxg8xumQOI',
-            APISECRET: 'DKsyTKQ6UueotZ7d9FlXNDJAx1hSzT8V09G58BGgA85O6SVhlE1STWLWwEMEFFYa',
-        });
 
         for (let time of timeFrame) {
             for (const token of finder) {
                 console.log(token)
                 let key = token + "_" + time
                 if (entryCoins[key] === true) {
-                    userBinance.balance((error, balances) => {
-                        if (balances[token].available !== undefined) {
-                            if (error) return console.error(error);
-                            console.log(exchangeInfoArray[token])
-                            let sellAmount = userBinance.roundStep(balances[token].available, exchangeInfoArray[token].stepSize);
-                            userBinance.marketSell(token, sellAmount);
-                        }
-                    });
+                    Exchange.sell(token);
+                    Algorithms.decreasePosition(key);
                 }
             }
         }

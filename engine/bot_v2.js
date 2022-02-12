@@ -14,8 +14,8 @@ global.binance = new Binance().options({
     }
 });
 
-global.balance = 1000;
-global.sizeTrade = 100;
+global.balance = 2400;
+global.sizeTrade = 200;
 
 global.telegramEnabled = true;
 global.tradeEnabled = true;
@@ -139,44 +139,44 @@ schedule.scheduleJob('0 * * * *', function () {
 
                             if (!isNaN(ema)) {
 
-                                if (parseFloat(quoteVolume) > volumeMetrics) {
 
-                                    if (currentClose > ema) {
-                                        if (!finder.includes(symbol)) {
+                                if (currentClose > ema) {
+                                    if (!finder.includes(symbol)) {
+                                        if (parseFloat(quoteVolume) > volumeMetrics) {
                                             console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
                                             finder.push(symbol);
                                         }
                                     }
+                                }
 
-                                    if (currentClose < ema) {
+                                if (currentClose < ema) {
 
-                                        if (finder.includes(symbol)) {
+                                    if (finder.includes(symbol)) {
 
-                                            // cancello i record
-                                            if (entryArray[key] == null) {
-                                                recordPattern[key] = null;
-                                                indexArray[key] = -1;
-                                                tokenArray[key] = [];
-                                            }
+                                        // cancello i record
+                                        if (entryArray[key] == null) {
+                                            recordPattern[key] = null;
+                                            indexArray[key] = -1;
+                                            tokenArray[key] = [];
+                                        }
 
-                                            // Trailing stop-loss | trailing-profit
-                                            // if (entryArray[key] !== null) {
-                                            //     Exchange.sell(symbol);
-                                            // }
+                                        // Trailing stop-loss | trailing-profit
+                                        // if (entryArray[key] !== null) {
+                                        //     Exchange.sell(symbol);
+                                        // }
 
-                                            for (let i = 0; i < finder.length; i++) {
-                                                if (finder[i] !== null) {
-                                                    if (finder[i] === symbol) {
-                                                        console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
-                                                        finder.splice(i, 1);
-                                                    }
+                                        for (let i = 0; i < finder.length; i++) {
+                                            if (finder[i] !== null) {
+                                                if (finder[i] === symbol) {
+                                                    console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
+                                                    finder.splice(i, 1);
                                                 }
                                             }
-
                                         }
-                                    }
 
+                                    }
                                 }
+
                             }
 
                         })
@@ -212,12 +212,7 @@ schedule.scheduleJob('0 * * * *', function () {
                         recordPattern[key] !== null &&
                         recordPattern[key]['confirmed'] === true
                     ) {
-                        recordPattern[key] = null;
-                        indexArray[key] = -1;
-                        tokenArray[key] = [];
-                        entryCoins[key] = false;
-                        entryArray[key] = null;
-                        totalEntry--;
+                        Algorithms.decreasePosition(key)
                     }
                 }
             }
