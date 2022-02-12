@@ -147,7 +147,7 @@ schedule.scheduleJob('0 * * * *', function () {
                                 }
 
                                 if (currentClose < ema) {
-                                    // Aggiungere che chiude tutte le posizioni che sono andate sotto ema
+
                                     if (finder.includes(symbol)) {
 
                                         // cancello i record
