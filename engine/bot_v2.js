@@ -205,8 +205,8 @@ schedule.scheduleJob('0 * * * *', function () {
                     }
 
                     if (totalEntry === maxEntry + 1 &&
-                        entryArray[key] !== null &&
-                        entryArray[key]['confirmed'] === true
+                        recordPattern[key] !== null &&
+                        recordPattern[key]['confirmed'] === true
                     ) {
                         recordPattern[key] = null;
                         indexArray[key] = -1;
