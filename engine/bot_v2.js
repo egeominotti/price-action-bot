@@ -14,12 +14,16 @@ global.binance = new Binance().options({
     }
 });
 
+
+// BOT CONFIGURATION
 global.balance = 2400;
 global.sizeTrade = 200;
-
+global.volumeMetrics = 200000
+global.maxEntry = (balance / sizeTrade) - 1
 global.telegramEnabled = true;
 global.tradeEnabled = true;
-global.volumeMetrics = 200000
+// END-BOT-CONFIGURATION
+
 global.variableBalance = 0;
 global.totalPercentage = 0
 global.sumSizeTrade = 0;
@@ -27,7 +31,7 @@ global.totalFloatingValue = 0;
 global.totalFloatingPercValue = 0;
 global.totalFloatingBalance = 0;
 global.totalEntry = 0;
-global.maxEntry = (balance / sizeTrade) - 1
+
 
 global.listEntry = {};
 global.emaArray = {};
