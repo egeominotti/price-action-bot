@@ -22,7 +22,7 @@ global.sizeTrade = 250;
 global.volumeMetrics = 200000
 global.maxEntry = (balance / sizeTrade) - 1
 global.telegramEnabled = true;
-global.tradeEnabled = false;
+global.tradeEnabled = true;
 // END-BOT-CONFIGURATION
 
 global.variableBalance = 0;
