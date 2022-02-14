@@ -136,7 +136,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                 let currentClose = parseFloat(close);
 
-                if (interval === '1m') {
+                if (interval === '5m') {
 
                     binance.prevDay(symbol, (error, prevDay, symbol) => {
 
@@ -146,8 +146,8 @@ schedule.scheduleJob('0 * * * *', function () {
 
                             //console.info(symbol + " volume:" + prevDay.volume + " change: " + prevDay.priceChangePercent + "%");
 
-                            if (exclusionList[key] === true)
-                                exclusionList[key] = false;
+                            // if (exclusionList[key] === true)
+                            //     exclusionList[key] = false;00
 
                             Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
