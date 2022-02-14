@@ -89,7 +89,6 @@ schedule.scheduleJob('0 * * * *', function () {
         "LOADED for scanning... " + exchangePair.length + " pair" + "\n"
     Telegram.sendMessage(message)
 
-
     for (let time of timeFrame) {
 
         binance.websockets.candlesticks(exchangePair, time, async (candlesticks) => {
@@ -148,7 +147,7 @@ schedule.scheduleJob('0 * * * *', function () {
                             //console.info(symbol + " volume:" + prevDay.volume + " change: " + prevDay.priceChangePercent + "%");
 
                             // if (exclusionList[key] === true)
-                            //     exclusionList[key] = false;00
+                            //     exclusionList[key] = false;
 
                             Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
