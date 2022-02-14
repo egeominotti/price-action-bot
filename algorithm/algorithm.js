@@ -45,12 +45,19 @@ function checkFloating(obj) {
     floatingArr[key] = floatingtrade;
     floatingPercArr[key] = floatingtradeperc;
 
-    console.log('---------------- Calculate Floating -------------------- ');
-    console.log("Pair... " + symbol)
-    console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
-    console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
-    console.log('-------------------------------------------------------------- ');
+    // console.log('---------------- Calculate Floating -------------------- ');
+    // console.log("Pair... " + symbol)
+    // console.log("Floating Percentage... " + _.round(floatingtradeperc, 2) + " %")
+    // console.log("Floating Profit/Loss... " + _.round(floatingtrade, 2) + "$")
+    // console.log('-------------------------------------------------------------- ');
 
+    // let message = "Global Statistics Profit/Loss" + "\n" +
+    //     "--------------------------------------------------------------------" + "\n" +
+    //     "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
+    //     "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
+    //     "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
+    //
+    // console.log(message)
     totalFloatingValue = 0;
     totalFloatingPercValue = 0;
     totalFloatingBalance = 0;
@@ -73,14 +80,6 @@ function checkFloating(obj) {
     }
 
     totalFloatingBalance = bb + totalFloatingValue;
-
-    let message = "Global Statistics Profit/Loss" + "\n" +
-        "--------------------------------------------------------------------" + "\n" +
-        "Total Floating Balance: " + _.round(totalFloatingBalance, 2) + " $" + "\n" +
-        "Total Floating Percentage: " + _.round(totalFloatingPercValue, 2) + " %" + "\n" +
-        "Total Floating Profit/Loss: " + _.round(totalFloatingValue, 2) + " $"
-
-    console.log(message)
 }
 
 function takeProfit(obj) {
