@@ -18,7 +18,7 @@ global.binance = new Binance().options({
 
 // BOT CONFIGURATION
 global.balance = 2400;
-global.sizeTrade = 200;
+global.sizeTrade = 250;
 global.volumeMetrics = 200000
 global.maxEntry = (balance / sizeTrade) - 1
 global.telegramEnabled = true;
