@@ -53,6 +53,8 @@ function initData(data) {
         'BTCSTUSDT',
         'USDPUSDT',
         'USTUSDT',
+        'BUSDUSDT',
+        'EURUSDT',
     ]
 
     let pairs = [];

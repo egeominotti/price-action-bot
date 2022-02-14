@@ -51,9 +51,10 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
-    '1m',
-    '5m',
+    //'1m',
+    //'5m',
     '15m',
+    '30m',
     '1h',
     '4h',
     '1d',
@@ -136,7 +137,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                 let currentClose = parseFloat(close);
 
-                if (interval === '5m') {
+                if (interval === '1d') {
 
                     binance.prevDay(symbol, (error, prevDay, symbol) => {
 
