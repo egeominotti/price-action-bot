@@ -50,7 +50,6 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
-    '1m',
     '5m',
     '15m',
     '1h',
@@ -135,7 +134,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                 let currentClose = parseFloat(close);
 
-                if (interval === '1m') {
+                if (interval === '1d') {
 
                     binance.prevDay(symbol, (error, prevDay, symbol) => {
 
@@ -167,6 +166,12 @@ schedule.scheduleJob('0 * * * *', function () {
 
                                             if (finder.includes(symbol)) {
 
+                                                // TODO: fixare per forzaa va eliminata la entry se l'ema va sotto""
+                                                // Trailing stop-loss | trailing-profit // deve essere chiuso per forza
+                                                // if (entryArray[key] !== null) {
+                                                //     Exchange.sell(symbol);
+                                                // }
+
                                                 // cancello i record
                                                 if (entryArray[key] == null) {
                                                     recordPattern[key] = null;
@@ -174,10 +179,7 @@ schedule.scheduleJob('0 * * * *', function () {
                                                     tokenArray[key] = [];
                                                 }
 
-                                                // Trailing stop-loss | trailing-profit
-                                                // if (entryArray[key] !== null) {
-                                                //     Exchange.sell(symbol);
-                                                // }
+
 
                                                 for (let i = 0; i < finder.length; i++) {
                                                     if (finder[i] !== null) {
