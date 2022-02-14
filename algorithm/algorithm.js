@@ -8,7 +8,13 @@ const _ = require("lodash");
 
 //const Logger = require("../models/logger");
 
-
+/**
+ *
+ * @param symbol
+ * @param interval
+ * @param close
+ * @param recordPatternValue
+ */
 function entry(symbol, interval, close, recordPatternValue) {
 
     console.log("--------------------------------------------------------------")
@@ -31,6 +37,10 @@ function entry(symbol, interval, close, recordPatternValue) {
     }
 }
 
+/**
+ *
+ * @param obj
+ */
 function checkFloating(obj) {
 
     let key = obj.key;
@@ -82,6 +92,11 @@ function checkFloating(obj) {
     totalFloatingBalance = bb + totalFloatingValue;
 }
 
+/**
+ *
+ * @param obj
+ * @returns {boolean}
+ */
 function takeProfit(obj) {
 
     let close = obj.close;
@@ -162,6 +177,11 @@ function takeProfit(obj) {
     return false;
 }
 
+/**
+ *
+ * @param obj
+ * @returns {boolean}
+ */
 function stopLoss(obj) {
 
     let close = obj.close;
@@ -239,7 +259,10 @@ function stopLoss(obj) {
     return false;
 }
 
-
+/**
+ *
+ * @param key
+ */
 function decreasePosition(key) {
     recordPattern[key] = null;
     indexArray[key] = -1;
