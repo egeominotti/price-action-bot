@@ -169,7 +169,7 @@ function takeProfit(obj) {
         }
 
         takeProfitArray[key] = takeprofitObj
-        exclusionList[key] = true;
+        //exclusionList[key] = true;
 
         return true;
     }

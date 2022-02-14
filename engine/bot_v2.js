@@ -22,7 +22,7 @@ global.sizeTrade = 200;
 global.volumeMetrics = 200000
 global.maxEntry = (balance / sizeTrade) - 1
 global.telegramEnabled = true;
-global.tradeEnabled = true;
+global.tradeEnabled = false;
 // END-BOT-CONFIGURATION
 
 global.variableBalance = 0;
@@ -51,6 +51,7 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
+    '1m',
     '5m',
     '15m',
     '1h',
@@ -135,13 +136,13 @@ schedule.scheduleJob('0 * * * *', function () {
 
                 let currentClose = parseFloat(close);
 
-                if (interval === '1d') {
+                if (interval === '1m') {
 
                     binance.prevDay(symbol, (error, prevDay, symbol) => {
 
                         // Controllo ulteriore per filtrare le pair che hanno fatto meglio
 
-                        if (prevDay.priceChangePercent > 3) {
+                        if (prevDay.priceChangePercent > 1) {
 
                             //console.info(symbol + " volume:" + prevDay.volume + " change: " + prevDay.priceChangePercent + "%");
 
@@ -156,10 +157,10 @@ schedule.scheduleJob('0 * * * *', function () {
 
                                         if (currentClose > ema) {
                                             if (!finder.includes(symbol)) {
-                                                if (prevDay.volume > volumeMetrics) {
-                                                    console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
-                                                    finder.push(symbol);
-                                                }
+                                                //if (prevDay.volume > volumeMetrics) {
+                                                console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
+                                                finder.push(symbol);
+                                                //}
                                             }
                                         }
 
@@ -167,8 +168,6 @@ schedule.scheduleJob('0 * * * *', function () {
 
                                             if (finder.includes(symbol)) {
 
-                                                // TODO: fixare per forzaa va eliminata la entry se l'ema va sotto""
-                                                // Trailing stop-loss | trailing-profit // deve essere chiuso per forza
                                                 if (entryArray[key] !== null) {
                                                     Algorithms.closePosition(symbol);
                                                     decreasePosition(key)
