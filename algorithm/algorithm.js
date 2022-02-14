@@ -272,6 +272,19 @@ function decreasePosition(key) {
     totalEntry--;
 }
 
+
+function closePosition(symbol, key) {
+
+    console.log("CLOSE POSITION FOR: " + symbol + " KEY: " + key)
+    Exchange.sell(symbol);
+    decreasePosition(key);
+
+    if (telegramEnabled) {
+        let message = "CLOSE POSITION EMA5 > PRICE: " + symbol
+        Telegram.sendMessage(message)
+    }
+}
+
 /**
  *
  * @param obj
@@ -403,4 +416,5 @@ module.exports = {
     takeProfit,
     checkFloating,
     decreasePosition,
+    closePosition,
 }

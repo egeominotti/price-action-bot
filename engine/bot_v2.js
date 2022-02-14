@@ -6,6 +6,7 @@ const Algorithms = require('../algorithm/algorithm');
 const Exchange = require("../exchange/binance");
 const API = require("../api/api");
 const schedule = require('node-schedule');
+const {decreasePosition} = require("../algorithm/algorithm");
 
 global.binance = new Binance().options({
     verbose: false,
@@ -156,7 +157,7 @@ schedule.scheduleJob('0 * * * *', function () {
                                         if (currentClose > ema) {
                                             if (!finder.includes(symbol)) {
                                                 if (prevDay.volume > volumeMetrics) {
-                                                    console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %" );
+                                                    console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
                                                     finder.push(symbol);
                                                 }
                                             }
@@ -168,9 +169,10 @@ schedule.scheduleJob('0 * * * *', function () {
 
                                                 // TODO: fixare per forzaa va eliminata la entry se l'ema va sotto""
                                                 // Trailing stop-loss | trailing-profit // deve essere chiuso per forza
-                                                // if (entryArray[key] !== null) {
-                                                //     Exchange.sell(symbol);
-                                                // }
+                                                if (entryArray[key] !== null) {
+                                                    Algorithms.closePosition(symbol);
+                                                    decreasePosition(key)
+                                                }
 
                                                 // cancello i record
                                                 if (entryArray[key] == null) {
@@ -180,11 +182,10 @@ schedule.scheduleJob('0 * * * *', function () {
                                                 }
 
 
-
                                                 for (let i = 0; i < finder.length; i++) {
                                                     if (finder[i] !== null) {
                                                         if (finder[i] === symbol) {
-                                                            console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
+                                                            console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
                                                             finder.splice(i, 1);
                                                         }
                                                     }
