@@ -78,12 +78,14 @@ schedule.scheduleJob('0 * * * *', function () {
 
 });
 
+
 (async () => {
 
     let exchangePair = Exchange.initData(await binance.exchangeInfo());
     let message = "Hi from HAL V2" + "\n" +
         "LOADED for scanning... " + exchangePair.length + " pair" + "\n"
     Telegram.sendMessage(message)
+
 
     for (let time of timeFrame) {
 
@@ -134,58 +136,69 @@ schedule.scheduleJob('0 * * * *', function () {
 
                 if (interval === '1d') {
 
-                    if (exclusionList[key] === true)
-                        exclusionList[key] = false;
+                    binance.prevDay(symbol, (error, prevDay, symbol) => {
 
-                    Indicators.emaWithoutCache(symbol, '1d', 5, 150)
+                        // Controllo ulteriore per filtrare le pair che hanno fatto meglio
 
-                        .then((ema) => {
+                        if (prevDay.priceChangePercent > 3) {
 
-                            if (!isNaN(ema)) {
+                            //console.info(symbol + " volume:" + prevDay.volume + " change: " + prevDay.priceChangePercent + "%");
+
+                            if (exclusionList[key] === true)
+                                exclusionList[key] = false;
+
+                            Indicators.emaWithoutCache(symbol, '1d', 5, 150)
+
+                                .then((ema) => {
+
+                                    if (!isNaN(ema)) {
 
 
-                                if (currentClose > ema) {
-                                    if (!finder.includes(symbol)) {
-                                        if (parseFloat(quoteVolume) > volumeMetrics) {
-                                            console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
-                                            finder.push(symbol);
-                                        }
-                                    }
-                                }
-
-                                if (currentClose < ema) {
-
-                                    if (finder.includes(symbol)) {
-
-                                        // cancello i record
-                                        if (entryArray[key] == null) {
-                                            recordPattern[key] = null;
-                                            indexArray[key] = -1;
-                                            tokenArray[key] = [];
-                                        }
-
-                                        // Trailing stop-loss | trailing-profit
-                                        // if (entryArray[key] !== null) {
-                                        //     Exchange.sell(symbol);
-                                        // }
-
-                                        for (let i = 0; i < finder.length; i++) {
-                                            if (finder[i] !== null) {
-                                                if (finder[i] === symbol) {
-                                                    console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
-                                                    finder.splice(i, 1);
+                                        if (currentClose > ema) {
+                                            if (!finder.includes(symbol)) {
+                                                if (prevDay.volume > volumeMetrics) {
+                                                    console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
+                                                    finder.push(symbol);
                                                 }
                                             }
                                         }
 
+                                        if (currentClose < ema) {
+
+                                            if (finder.includes(symbol)) {
+
+                                                // cancello i record
+                                                if (entryArray[key] == null) {
+                                                    recordPattern[key] = null;
+                                                    indexArray[key] = -1;
+                                                    tokenArray[key] = [];
+                                                }
+
+                                                // Trailing stop-loss | trailing-profit
+                                                // if (entryArray[key] !== null) {
+                                                //     Exchange.sell(symbol);
+                                                // }
+
+                                                for (let i = 0; i < finder.length; i++) {
+                                                    if (finder[i] !== null) {
+                                                        if (finder[i] === symbol) {
+                                                            console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume);
+                                                            finder.splice(i, 1);
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                        }
+
                                     }
-                                }
 
-                            }
+                                })
+                                .catch((e) => {
+                                });
 
-                        })
-                        .catch((e) => {
-                        });
+                        }
+                    });
 
 
                 } else {
