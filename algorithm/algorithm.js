@@ -406,7 +406,7 @@ function checkEntry(
         }
     }).catch((e) => {
         console.log(e)
-        console.log("RESET SYMBOL: " + symbol)
+        console.log("SCANNER:ERROR:RESET SYMBOL: " + symbol)
         recordPattern[key] = null;
         indexArray[key] = -1;
         tokenArray[key] = [];
