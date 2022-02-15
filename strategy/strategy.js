@@ -8,10 +8,14 @@
  */
 function strategyBreakout(symbol, interval, close, record) {
 
-    //if (close > record['lh']) {
+    //if (close > record['lh']) {}
 
     let stoploss = record['ll'] * 0.99;
     let takeprofit = (close - stoploss) * 2 + close;
+
+    if (interval === '5m') {
+        takeprofit = (close - stoploss) * 1.7 + close;
+    }
 
     record['confirmed'] = true
     record['entryprice'] = close
@@ -21,9 +25,6 @@ function strategyBreakout(symbol, interval, close, record) {
     record['strategy'] = 'breakout'
 
     return true;
-    //}
-
-    //return false;
 }
 
 module.exports = {

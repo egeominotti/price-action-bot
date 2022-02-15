@@ -51,6 +51,7 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
+    '5m',
     '15m',
     '1h',
     '4h',
@@ -145,8 +146,8 @@ schedule.scheduleJob('0 * * * *', function () {
 
                                 //console.info(symbol + " volume:" + prevDay.volume + " change: " + prevDay.priceChangePercent + "%");
 
-                                // if (exclusionList[key] === true)
-                                //     exclusionList[key] = false;
+                                if (exclusionList[key] === true)
+                                    exclusionList[key] = false;
 
                                 Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 

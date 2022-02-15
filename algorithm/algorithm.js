@@ -169,7 +169,7 @@ function takeProfit(obj) {
         }
 
         takeProfitArray[key] = takeprofitObj
-        //exclusionList[key] = true;
+        exclusionList[key] = true;
 
         return true;
     }
@@ -317,7 +317,12 @@ function checkEntry(
     let symbol = obj.symbol;
     let interval = obj.interval;
 
-    Indicators.ema(close, symbol, interval, 200, 300).then((ema) => {
+    let periodEma = 200;
+    if (interval === '5m') {
+        periodEma = 60
+    }
+
+    Indicators.ema(close, symbol, interval, periodEma, 300).then((ema) => {
 
         if (!isNaN(ema) && ema > 0.1) {
 
