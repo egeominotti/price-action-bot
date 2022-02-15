@@ -55,6 +55,9 @@ function initData(data) {
         'USTUSDT',
         'BUSDUSDT',
         'EURUSDT',
+        'BTTCUSDT',
+        'SHIBUSDT',
+        'XMRUSDT',
     ]
 
     let pairs = [];

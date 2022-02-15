@@ -319,7 +319,7 @@ function checkEntry(
 
     Indicators.ema(close, symbol, interval, 200, 300).then((ema) => {
 
-        if (!isNaN(ema) && ema > 0) {
+        if (!isNaN(ema) && ema > 0.1) {
 
             if (close < ema) {
 

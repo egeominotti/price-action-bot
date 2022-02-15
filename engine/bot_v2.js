@@ -133,112 +133,117 @@ schedule.scheduleJob('0 * * * *', function () {
 
                 let currentClose = parseFloat(close);
 
-                if (interval === '1d') {
+                if (currentClose > 0.1) {
 
-                    binance.prevDay(symbol, (error, prevDay, symbol) => {
+                    if (interval === '1d') {
 
-                        // Controllo ulteriore per filtrare le pair che hanno fatto meglio
+                        binance.prevDay(symbol, (error, prevDay, symbol) => {
 
-                        if (prevDay.priceChangePercent > 1) {
+                            // Controllo ulteriore per filtrare le pair che hanno fatto meglio
 
-                            //console.info(symbol + " volume:" + prevDay.volume + " change: " + prevDay.priceChangePercent + "%");
+                            if (prevDay.priceChangePercent > 2) {
 
-                            // if (exclusionList[key] === true)
-                            //     exclusionList[key] = false;
+                                //console.info(symbol + " volume:" + prevDay.volume + " change: " + prevDay.priceChangePercent + "%");
 
-                            Indicators.emaWithoutCache(symbol, '1d', 5, 150)
+                                // if (exclusionList[key] === true)
+                                //     exclusionList[key] = false;
 
-                                .then((ema) => {
+                                Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
-                                    if (!isNaN(ema) && ema > 0) {
+                                    .then((ema) => {
 
-                                        if (currentClose > ema) {
-                                            if (!finder.includes(symbol)) {
-                                                //if (prevDay.volume > volumeMetrics) {
-                                                console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
-                                                finder.push(symbol);
-                                                //}
+                                        if (!isNaN(ema) && ema > 0.1) {
+
+                                            if (currentClose > ema) {
+                                                if (!finder.includes(symbol)) {
+                                                    //if (prevDay.volume > volumeMetrics) {
+                                                    console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
+                                                    finder.push(symbol);
+                                                    //}
+                                                }
                                             }
-                                        }
 
-                                        if (currentClose < ema) {
+                                            if (currentClose < ema) {
 
-                                            if (finder.includes(symbol)) {
+                                                if (finder.includes(symbol)) {
 
-                                                if (entryArray[key] !== null) {
-                                                    Algorithms.closePosition(symbol);
-                                                    decreasePosition(key)
-                                                }
+                                                    if (entryArray[key] !== null) {
+                                                        Algorithms.closePosition(symbol);
+                                                        decreasePosition(key)
+                                                    }
 
-                                                // cancello i record
-                                                if (entryArray[key] == null) {
-                                                    recordPattern[key] = null;
-                                                    indexArray[key] = -1;
-                                                    tokenArray[key] = [];
-                                                }
+                                                    // cancello i record
+                                                    if (entryArray[key] == null) {
+                                                        recordPattern[key] = null;
+                                                        indexArray[key] = -1;
+                                                        tokenArray[key] = [];
+                                                    }
 
-                                                for (let i = 0; i < finder.length; i++) {
-                                                    if (finder[i] !== null) {
-                                                        if (finder[i] === symbol) {
-                                                            console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
-                                                            finder.splice(i, 1);
+                                                    for (let i = 0; i < finder.length; i++) {
+                                                        if (finder[i] !== null) {
+                                                            if (finder[i] === symbol) {
+                                                                console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
+                                                                finder.splice(i, 1);
+                                                            }
                                                         }
                                                     }
+
                                                 }
-
                                             }
+
                                         }
 
-                                    }
-
-                                })
-                                .catch((e) => {
-                                    console.log(e);
-                                    for (let i = 0; i < finder.length; i++) {
-                                        if (finder[i] !== null) {
-                                            if (finder[i] === symbol) {
-                                                console.log("ERROR:REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
-                                                finder.splice(i, 1);
+                                    })
+                                    .catch((e) => {
+                                        console.log(e);
+                                        for (let i = 0; i < finder.length; i++) {
+                                            if (finder[i] !== null) {
+                                                if (finder[i] === symbol) {
+                                                    console.log("ERROR:REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
+                                                    finder.splice(i, 1);
+                                                }
                                             }
                                         }
-                                    }
-                                });
+                                    });
 
-                        }
-                    });
-
-
-                } else {
-
-                    if (finder.length > 0 &&
-                        finder.includes(symbol) &&
-                        totalEntry <= maxEntry
-                    ) {
-
-                        if (exclusionList[key] === false &&
-                            entryCoins[key] === false) {
-
-                            let obj = {
-                                'symbol': symbol,
-                                'key': key,
-                                'interval': interval,
-                                'close': parseFloat(close),
-                                'high': parseFloat(high),
-                                'open': parseFloat(open),
-                                'low': parseFloat(low)
                             }
+                        });
 
-                            Algorithms.checkEntry(obj);
+
+                    } else {
+
+                        if (finder.length > 0 &&
+                            finder.includes(symbol) &&
+                            totalEntry <= maxEntry
+                        ) {
+
+                            if (exclusionList[key] === false &&
+                                entryCoins[key] === false) {
+
+                                let obj = {
+                                    'symbol': symbol,
+                                    'key': key,
+                                    'interval': interval,
+                                    'close': parseFloat(close),
+                                    'high': parseFloat(high),
+                                    'open': parseFloat(open),
+                                    'low': parseFloat(low)
+                                }
+
+                                Algorithms.checkEntry(obj);
+                            }
                         }
-                    }
 
-                    if (totalEntry === maxEntry + 1 &&
-                        recordPattern[key] !== null &&
-                        recordPattern[key]['confirmed'] === true
-                    ) {
-                        Algorithms.decreasePosition(key)
+                        if (totalEntry === maxEntry + 1 &&
+                            recordPattern[key] !== null &&
+                            recordPattern[key]['confirmed'] === true
+                        ) {
+                            Algorithms.decreasePosition(key)
+                        }
                     }
                 }
+
+
             }
 
         });
