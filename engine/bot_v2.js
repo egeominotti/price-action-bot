@@ -33,7 +33,6 @@ global.totalFloatingPercValue = 0;
 global.totalFloatingBalance = 0;
 global.totalEntry = 0;
 
-
 global.listEntry = {};
 global.emaArray = {};
 global.floatingPercArr = {};
@@ -140,11 +139,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                         binance.prevDay(symbol, (error, prevDay, symbol) => {
 
-                            // Controllo ulteriore per filtrare le pair che hanno fatto meglio
-
                             if (prevDay.priceChangePercent > 2) {
-
-                                //console.info(symbol + " volume:" + prevDay.volume + " change: " + prevDay.priceChangePercent + "%");
 
                                 if (exclusionList[key] === true)
                                     exclusionList[key] = false;
