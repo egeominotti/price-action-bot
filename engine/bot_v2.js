@@ -51,10 +51,7 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
-    //'1m',
-    //'5m',
     '15m',
-    '30m',
     '1h',
     '4h',
     '1d',
@@ -153,7 +150,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                                 .then((ema) => {
 
-                                    if (!isNaN(ema)) {
+                                    if (!isNaN(ema) && ema > 0) {
 
                                         if (currentClose > ema) {
                                             if (!finder.includes(symbol)) {

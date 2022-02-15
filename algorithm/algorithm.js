@@ -319,14 +319,13 @@ function checkEntry(
 
     Indicators.ema(close, symbol, interval, 200, 300).then((ema) => {
 
-        if (!isNaN(ema)) {
+        if (!isNaN(ema) && ema > 0) {
 
             if (close < ema) {
 
                 recordPattern[key] = null;
                 indexArray[key] = -1;
                 tokenArray[key] = [];
-
                 return false;
             }
 
@@ -395,6 +394,7 @@ function checkEntry(
                                 totalEntry++;
                                 entryCoins[key] = true;
                                 entryArray[key] = recordPatternValue
+                                emaArray[key] = undefined;
 
                                 entry(symbol, interval, close, recordPatternValue);
 
@@ -405,6 +405,14 @@ function checkEntry(
             }
         }
     }).catch((e) => {
+        console.log(e)
+        console.log("RESET SYMBOL: " + symbol)
+        recordPattern[key] = null;
+        indexArray[key] = -1;
+        tokenArray[key] = [];
+        entryCoins[key] = false;
+        entryArray[key] = null;
+        emaArray[key] = undefined;
     });
 }
 
