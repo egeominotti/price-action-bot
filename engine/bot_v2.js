@@ -186,15 +186,8 @@ schedule.scheduleJob('0 * * * *', function () {
 
                                     })
                                     .catch((e) => {
+                                        console.log('ERROR:FINDER..');
                                         console.log(e);
-                                        for (let i = 0; i < finder.length; i++) {
-                                            if (finder[i] !== null) {
-                                                if (finder[i] === symbol) {
-                                                    console.log("ERROR:REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
-                                                    finder.splice(i, 1);
-                                                }
-                                            }
-                                        }
                                     });
                             }
                         });
