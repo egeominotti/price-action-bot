@@ -130,17 +130,16 @@ schedule.scheduleJob('0 * * * *', function () {
             if (isFinal) {
 
                 let currentClose = parseFloat(close);
-
                 if (currentClose > 0.1) {
 
                     if (interval === '1d') {
 
+                        if (exclusionList[key] === true)
+                            exclusionList[key] = false;
+
                         binance.prevDay(symbol, (error, prevDay, symbol) => {
 
                             if (prevDay.priceChangePercent > 2) {
-
-                                if (exclusionList[key] === true)
-                                    exclusionList[key] = false;
 
                                 Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
