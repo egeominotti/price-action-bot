@@ -149,10 +149,8 @@ schedule.scheduleJob('0 * * * *', function () {
 
                                             if (currentClose > ema) {
                                                 if (!finder.includes(symbol)) {
-                                                    //if (prevDay.volume > volumeMetrics) {
                                                     console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
                                                     finder.push(symbol);
-                                                    //}
                                                 }
                                             }
 

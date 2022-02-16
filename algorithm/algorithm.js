@@ -317,12 +317,12 @@ function checkEntry(
     let symbol = obj.symbol;
     let interval = obj.interval;
 
-    let periodEma = 200;
-    if (interval === '5m') {
-        periodEma = 60
-    }
+    // let periodEma = 200;
+    // if (interval === '5m') {
+    //     periodEma = 60
+    // }
 
-    Indicators.ema(close, symbol, interval, periodEma, 300).then((ema) => {
+    Indicators.ema(close, symbol, interval, 200, 300).then((ema) => {
 
         if (!isNaN(ema) && ema > 0.1) {
 
