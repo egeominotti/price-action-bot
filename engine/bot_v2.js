@@ -52,8 +52,8 @@ global.finder = [];
 global.timeFrame = [
     '5m',
     '15m',
-    '1h',
-    '4h',
+    //'1h',
+    //'4h',
     '1d',
 ];
 
@@ -200,12 +200,6 @@ schedule.scheduleJob('0 * * * *', function () {
                                             }
                                         }
                                     });
-
-                            } else {
-                                if (entryArray[key] !== null) {
-                                    Algorithms.closePosition(symbol);
-                                    decreasePosition(key)
-                                }
                             }
                         });
 
