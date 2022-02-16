@@ -18,7 +18,7 @@ global.binance = new Binance().options({
 
 // BOT CONFIGURATION
 global.balance = 2400;
-global.sizeTrade = 250;
+global.sizeTrade = 200;
 global.volumeMetrics = 200000
 global.maxEntry = (balance / sizeTrade) - 1
 global.telegramEnabled = true;
@@ -50,7 +50,6 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
-    '1m',
     '5m',
     '15m',
     '1h',
@@ -136,7 +135,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                 if (currentClose > 0.1) {
 
-                    if (interval === '1m') {
+                    if (interval === '1d') {
 
                         binance.prevDay(symbol, (error, prevDay, symbol) => {
 
