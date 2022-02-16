@@ -50,6 +50,7 @@ global.entryArray = {}
 global.finder = [];
 
 global.timeFrame = [
+    '1m',
     '5m',
     '15m',
     '1h',
@@ -135,7 +136,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                 if (currentClose > 0.1) {
 
-                    if (interval === '1d') {
+                    if (interval === '1m') {
 
                         binance.prevDay(symbol, (error, prevDay, symbol) => {
 
@@ -147,7 +148,6 @@ schedule.scheduleJob('0 * * * *', function () {
                                 Indicators.emaWithoutCache(symbol, '1d', 5, 150)
 
                                     .then((ema) => {
-
                                         if (!isNaN(ema) && ema > 0.1) {
 
                                             if (currentClose > ema) {
