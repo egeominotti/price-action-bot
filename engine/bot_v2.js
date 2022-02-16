@@ -133,7 +133,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                 if (currentClose > 0.1) {
 
-                    if (interval === '1h') {
+                    if (interval === '1d') {
 
                         binance.prevDay(symbol, (error, prevDay, symbol) => {
 
