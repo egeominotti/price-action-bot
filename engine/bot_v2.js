@@ -111,7 +111,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                         binance.prevDay(symbol, (error, prevDay, symbol) => {
 
-                            if (prevDay.priceChangePercent > 2 && prevDay.volume > 1000000) {
+                            if (prevDay.priceChangePercent > 2) {
 
                                 let ema = _.last(EMA.calculate({period: 5, values: emaArray[key]}))
 
@@ -119,7 +119,7 @@ schedule.scheduleJob('0 * * * *', function () {
 
                                     if (currentClose > ema) {
                                         if (!finder.includes(symbol)) {
-                                            console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
+                                            console.log("FINDER:ADD: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
                                             finder.push(symbol);
                                         }
                                     }
@@ -143,7 +143,7 @@ schedule.scheduleJob('0 * * * *', function () {
                                             for (let i = 0; i < finder.length; i++) {
                                                 if (finder[i] !== null) {
                                                     if (finder[i] === symbol) {
-                                                        console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
+                                                        console.log("FINDER:REMOVE: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
                                                         finder.splice(i, 1);
                                                     }
                                                 }

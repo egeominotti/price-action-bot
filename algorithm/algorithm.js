@@ -403,8 +403,6 @@ function checkEntry(
                             totalEntry++;
                             entryCoins[key] = true;
                             entryArray[key] = recordPatternValue
-                            emaArray[key] = undefined;
-
                             entry(symbol, interval, close, recordPatternValue);
 
                         }
