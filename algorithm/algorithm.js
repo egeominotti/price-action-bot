@@ -318,12 +318,8 @@ function checkEntry(
     let symbol = obj.symbol;
     let interval = obj.interval;
 
-    let periodEma = 200;
-    if (interval === '5m') {
-        periodEma = 60
-    }
 
-    let ema = _.last(EMA.calculate({period: periodEma, values: emaArray[key]}))
+    let ema = _.last(EMA.calculate({period: 200, values: emaArray[key]}))
 
     if (!isNaN(ema) && ema > 0.1) {
 

@@ -1,7 +1,6 @@
 const Binance = require('node-binance-api');
 
 global.binance = new Binance().options({
-    //verbose: true,
     useServerTime: true,
     recvWindow: 10000,
     log: log => {
@@ -11,22 +10,18 @@ global.binance = new Binance().options({
 
 
 global.timeFrame = [
-    '5m',
     '15m',
     '1d',
 ];
 
 
-// BOT CONFIGURATION
 global.finder = [];
 
 global.balance = 2400;
 global.sizeTrade = 200;
 global.maxEntry = (balance / sizeTrade) - 1
-
 global.telegramEnabled = true;
 global.tradeEnabled = false;
-// END-BOT-CONFIGURATION
 
 global.variableBalance = 0;
 global.totalPercentage = 0

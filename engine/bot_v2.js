@@ -104,7 +104,7 @@ schedule.scheduleJob('0 * * * *', function () {
                 let currentClose = parseFloat(close);
                 if (currentClose > 0.1) {
 
-                    if (interval === '1d' && emaArray[key] !== undefined) {
+                    if (interval === '5m' && emaArray[key] !== undefined) {
 
                         if (exclusionList[key] === true)
                             exclusionList[key] = false;
