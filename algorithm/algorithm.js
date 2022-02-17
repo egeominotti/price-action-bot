@@ -5,6 +5,7 @@ const Exchange = require("../exchange/binance");
 const Indicators = require('../indicators/ema');
 const Binance = require("node-binance-api");
 const _ = require("lodash");
+const {EMA} = require("technicalindicators");
 
 //const Logger = require("../models/logger");
 
@@ -322,103 +323,96 @@ function checkEntry(
         periodEma = 60
     }
 
-    Indicators.ema(close, symbol, interval, periodEma, 300).then((ema) => {
 
-        if (!isNaN(ema) && ema > 0.1) {
+    //Indicators.ema(close, symbol, interval, periodEma, 300).then((ema) => {
+    let ema = _.last(EMA.calculate({period: periodEma, values: emaArray[key]}))
 
-            if (close < ema) {
+    if (!isNaN(ema) && ema > 0.1) {
 
-                recordPattern[key] = null;
-                indexArray[key] = -1;
-                tokenArray[key] = [];
-                return false;
-            }
+        if (close < ema) {
 
-            if (close > ema) {
+            recordPattern[key] = null;
+            indexArray[key] = -1;
+            tokenArray[key] = [];
 
-                console.log("SCANNER... ema below close price: " + symbol + " - " + interval + " - EMA: " + _.round(ema, 4) + " - Close: " + close)
+            return false;
+        }
 
-                if (recordPattern[key] == null) {
+        if (close > ema) {
 
-                    indexArray[key] += 1
+            console.log("SCANNER... ema below close price: " + symbol + " - " + interval + " - EMA: " + _.round(ema, 4) + " - Close: " + close)
 
-                    let ticker = {
-                        'index': parseInt(indexArray[key]),
-                        'symbol': symbol,
-                        'open': open,
-                        'close': close,
-                        'low': low,
-                        'high': high,
-                        'interval': interval,
-                        'time': new Date()
-                    }
+            if (recordPattern[key] == null) {
 
-                    tokenArray[key].push(ticker)
+                indexArray[key] += 1
 
-                    let pattern = Pattern.patternMatching(tokenArray[key], symbol)
-
-                    if (!_.isEmpty(pattern)) {
-
-                        recordPattern[key] = {
-                            'symbol': symbol,
-                            'interval': interval,
-                            'hh': pattern['hh'],
-                            'll': pattern['ll'],
-                            'lh': pattern['lh'],
-                            'hl': pattern['hl'],
-                            'hh_close': pattern['hh_close'],
-                            'll_open': pattern['ll_open'],
-                            'll_low': pattern['ll_low'],
-                            'll_close': pattern['ll_close'],
-                            'lh_close': pattern['lh_close'],
-                            'hl_open': pattern['hl_open'],
-                            'hh_high': pattern['hh_high'],
-                            'confirmed': false
-                        }
-
-                        tokenArray[key] = [];
-                        indexArray[key] = -1
-                    }
+                let ticker = {
+                    'index': parseInt(indexArray[key]),
+                    'symbol': symbol,
+                    'open': open,
+                    'close': close,
+                    'low': low,
+                    'high': high,
+                    'interval': interval,
+                    'time': new Date()
                 }
 
-                if (recordPattern[key] != null) {
+                tokenArray[key].push(ticker)
 
-                    let recordPatternValue = recordPattern[key];
-                    if (recordPatternValue['confirmed'] === false) {
+                let pattern = Pattern.patternMatching(tokenArray[key], symbol)
 
-                        if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
-                            recordPattern[key] = null;
-                        } else {
+                if (!_.isEmpty(pattern)) {
 
-                            let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
+                    recordPattern[key] = {
+                        'symbol': symbol,
+                        'interval': interval,
+                        'hh': pattern['hh'],
+                        'll': pattern['ll'],
+                        'lh': pattern['lh'],
+                        'hl': pattern['hl'],
+                        'hh_close': pattern['hh_close'],
+                        'll_open': pattern['ll_open'],
+                        'll_low': pattern['ll_low'],
+                        'll_close': pattern['ll_close'],
+                        'lh_close': pattern['lh_close'],
+                        'hl_open': pattern['hl_open'],
+                        'hh_high': pattern['hh_high'],
+                        'confirmed': false
+                    }
 
-                            if (isStrategyBreakoutFound) {
+                    tokenArray[key] = [];
+                    indexArray[key] = -1
+                }
+            }
 
-                                Exchange.buy(symbol, close)
+            if (recordPattern[key] != null) {
 
-                                totalEntry++;
-                                entryCoins[key] = true;
-                                entryArray[key] = recordPatternValue
-                                emaArray[key] = undefined;
+                let recordPatternValue = recordPattern[key];
+                if (recordPatternValue['confirmed'] === false) {
 
-                                entry(symbol, interval, close, recordPatternValue);
+                    if (low < recordPatternValue['ll'] || close > recordPatternValue['hh']) {
+                        recordPattern[key] = null;
+                    } else {
 
-                            }
+                        let isStrategyBreakoutFound = Strategy.strategyBreakout(symbol, interval, close, recordPatternValue)
+
+                        if (isStrategyBreakoutFound) {
+
+                            Exchange.buy(symbol, close)
+
+                            totalEntry++;
+                            entryCoins[key] = true;
+                            entryArray[key] = recordPatternValue
+                            emaArray[key] = undefined;
+
+                            entry(symbol, interval, close, recordPatternValue);
+
                         }
                     }
                 }
             }
         }
-    }).catch((e) => {
-        console.log(e)
-        console.log("SCANNER:ERROR:RESET SYMBOL: " + symbol)
-        recordPattern[key] = null;
-        indexArray[key] = -1;
-        tokenArray[key] = [];
-        entryCoins[key] = false;
-        entryArray[key] = null;
-        emaArray[key] = undefined;
-    });
+    }
 }
 
 

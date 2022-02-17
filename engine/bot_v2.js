@@ -1,59 +1,12 @@
+const config = require('../config');
 const _ = require("lodash");
 const Telegram = require("../utility/telegram");
 const Binance = require('node-binance-api');
-const Indicators = require('../indicators/ema');
 const Algorithms = require('../algorithm/algorithm');
 const Exchange = require("../exchange/binance");
 const API = require("../api/api");
 const schedule = require('node-schedule');
-const {decreasePosition} = require("../algorithm/algorithm");
-
-global.binance = new Binance().options({
-    verbose: false,
-    log: log => {
-        console.log(log);
-    }
-});
-
-
-// BOT CONFIGURATION
-global.balance = 2400;
-global.sizeTrade = 200;
-global.volumeMetrics = 200000
-global.maxEntry = (balance / sizeTrade) - 1
-global.telegramEnabled = true;
-global.tradeEnabled = true;
-// END-BOT-CONFIGURATION
-
-global.variableBalance = 0;
-global.totalPercentage = 0
-global.sumSizeTrade = 0;
-global.totalFloatingValue = 0;
-global.totalFloatingPercValue = 0;
-global.totalFloatingBalance = 0;
-global.totalEntry = 0;
-
-global.listEntry = {};
-global.emaArray = {};
-global.floatingPercArr = {};
-global.floatingArr = {};
-global.tokenArray = {}
-global.exchangeInfoArray = {}
-global.indexArray = {}
-global.recordPattern = {}
-global.exclusionList = {}
-global.entryCoins = {}
-global.takeProfitArray = {}
-global.stopLossArray = {}
-global.entryArray = {}
-
-global.finder = [];
-
-global.timeFrame = [
-    '5m',
-    '15m',
-    '1d',
-];
+const {EMA} = require("technicalindicators");
 
 
 schedule.scheduleJob('0 * * * *', function () {
@@ -73,7 +26,6 @@ schedule.scheduleJob('0 * * * *', function () {
 
         Telegram.sendMessage(message)
     }
-
 });
 
 
@@ -129,65 +81,78 @@ schedule.scheduleJob('0 * * * *', function () {
 
             if (isFinal) {
 
+                if (emaArray[key] !== undefined) {
+                    emaArray[key].shift();
+                    emaArray[key].push(parseFloat(close))
+
+                } else {
+
+                    binance.candlesticks(symbol, time, (error, ticks, symbol) => {
+                        if (!_.isEmpty(ticks)) {
+                            let closeArray = [];
+                            for (let t of ticks) {
+                                let [time, open, high, low, close, ignored] = t;
+                                closeArray.push(parseFloat(close));
+                            }
+                            closeArray.pop()
+                            emaArray[key] = closeArray
+                        }
+
+                    }, {limit: 500});
+                }
+
                 let currentClose = parseFloat(close);
                 if (currentClose > 0.1) {
 
-                    if (interval === '1d') {
+                    if (interval === '1m' && emaArray[key] !== undefined) {
 
                         if (exclusionList[key] === true)
                             exclusionList[key] = false;
 
                         binance.prevDay(symbol, (error, prevDay, symbol) => {
 
-                            if (prevDay.priceChangePercent > 2) {
+                            if (prevDay.priceChangePercent > 2 && prevDay.volume > 1000000) {
 
-                                Indicators.emaWithoutCache(symbol, '1d', 5, 150)
+                                let ema = _.last(EMA.calculate({period: 5, values: emaArray[key]}))
 
-                                    .then((ema) => {
-                                        if (!isNaN(ema) && ema > 0.1) {
+                                if (!isNaN(ema) && ema > 0.1) {
 
-                                            if (currentClose > ema) {
-                                                if (!finder.includes(symbol)) {
-                                                    console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
-                                                    finder.push(symbol);
-                                                }
+                                    if (currentClose > ema) {
+                                        if (!finder.includes(symbol)) {
+                                            console.log("ADD:FINDER... add new pair in scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + prevDay.volume + " - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
+                                            finder.push(symbol);
+                                        }
+                                    }
+
+                                    if (currentClose < ema) {
+
+                                        if (finder.includes(symbol)) {
+
+                                            if (entryArray[key] !== null) {
+                                                Algorithms.closePosition(symbol);
+                                                Algorithms.decreasePosition(key)
                                             }
 
-                                            if (currentClose < ema) {
+                                            // cancello i record
+                                            if (entryArray[key] == null) {
+                                                recordPattern[key] = null;
+                                                indexArray[key] = -1;
+                                                tokenArray[key] = [];
+                                            }
 
-                                                if (finder.includes(symbol)) {
-
-                                                    if (entryArray[key] !== null) {
-                                                        Algorithms.closePosition(symbol);
-                                                        decreasePosition(key)
+                                            for (let i = 0; i < finder.length; i++) {
+                                                if (finder[i] !== null) {
+                                                    if (finder[i] === symbol) {
+                                                        console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
+                                                        finder.splice(i, 1);
                                                     }
-
-                                                    // cancello i record
-                                                    if (entryArray[key] == null) {
-                                                        recordPattern[key] = null;
-                                                        indexArray[key] = -1;
-                                                        tokenArray[key] = [];
-                                                    }
-
-                                                    for (let i = 0; i < finder.length; i++) {
-                                                        if (finder[i] !== null) {
-                                                            if (finder[i] === symbol) {
-                                                                console.log("REMOVE:FINDER... remove pair from scanning: " + symbol + " - " + interval + " - EMA5 " + ema + " - QUOTEVOLUME - " + quoteBuyVolume + +" - PRICE CHANGED - " + prevDay.priceChangePercent + " %");
-                                                                finder.splice(i, 1);
-                                                            }
-                                                        }
-                                                    }
-
                                                 }
                                             }
 
                                         }
+                                    }
 
-                                    })
-                                    .catch((e) => {
-                                        console.log('ERROR:FINDER..');
-                                        console.log(e);
-                                    });
+                                }
                             }
                         });
 
@@ -196,7 +161,8 @@ schedule.scheduleJob('0 * * * *', function () {
 
                         if (finder.length > 0 &&
                             finder.includes(symbol) &&
-                            totalEntry <= maxEntry
+                            totalEntry <= maxEntry &&
+                            emaArray[key] !== undefined
                         ) {
 
                             if (exclusionList[key] === false &&
