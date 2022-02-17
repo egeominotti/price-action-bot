@@ -323,8 +323,6 @@ function checkEntry(
         periodEma = 60
     }
 
-
-    //Indicators.ema(close, symbol, interval, periodEma, 300).then((ema) => {
     let ema = _.last(EMA.calculate({period: periodEma, values: emaArray[key]}))
 
     if (!isNaN(ema) && ema > 0.1) {
@@ -404,6 +402,8 @@ function checkEntry(
                             entryCoins[key] = true;
                             entryArray[key] = recordPatternValue
                             entry(symbol, interval, close, recordPatternValue);
+
+                            return true;
 
                         }
                     }
