@@ -13,8 +13,9 @@ const {EMA} = require("technicalindicators");
 
     let exchangePair = Exchange.initData(await binance.exchangeInfo());
     console.log(exchangePair)
-    // let message = "Hi from HAL V2" + "\n" +
-    //     "LOADED for scanning... " + exchangePair.length + " pair" + "\n"
+    let message = "Hi from HAL V2" + "\n" +
+        "LOADED for scanning... " + exchangePair.length + " pair" + "\n"
+    console.log(message)
     // Telegram.sendMessage(message)
 
     for (let time of timeFrame) {
