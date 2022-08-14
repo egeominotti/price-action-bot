@@ -16,7 +16,7 @@ const {EMA} = require("technicalindicators");
     let message = "Hi from HAL V2" + "\n" +
         "LOADED for scanning... " + exchangePair.length + " pair" + "\n"
     console.log(message)
-    // Telegram.sendMessage(message)
+    Telegram.sendMessage(message)
 
     for (let time of timeFrame) {
 
